@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.snapNodesToRoad module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.snapNodesToRoad.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.snapNodesToRoad">
+<span id="veroviz-snapnodestoroad-module"></span><h1>veroviz.snapNodesToRoad module<a class="headerlink" href="#module-veroviz.snapNodesToRoad" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.snapNodesToRoad.getSnapLoc">
+<code class="sig-name descname">getSnapLoc</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/snapNodesToRoad.html#getSnapLoc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.snapNodesToRoad.getSnapLoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Snap a given single location, given by [lat, lon] coordinates, to the nearest location on a road network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – Coordinates of a location, expressed as either [lat, lon, alt] or [lat, lon].  Note: This function returns only latitude and longitude; any altitude values provided as inputs will be lost in the return.</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for finding routes or generate nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements of options.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data provider, veroviz need some extra parameters such as API keys or database name. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the keys required for different data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A snapped location in the format of [lat, lon].  Any altitude values provided as inputs in the <cite>loc</cite> parameter will be lost in the return.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function returns only latitude and longitude.  Any altitude values provided as inputs in the <cite>loc</cite> parameter will be lost in the return.</p>
+</div>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Snap a given location to the nearest street:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snapLoc</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getSnapLoc</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">loc</span>          <span class="o">=</span> <span class="n">loc</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snapLoc</span>
+<span class="go">[41.999401, -78.003876]</span>
+</pre></div>
+</div>
+</dd>
+<dt>View the original (red) and snapped (green) locations on a map</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">snapLoc</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>NOTE: This function returns only latitude and longitude. Any altitude values provided as inputs in the loc parameter will be lost in the return.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc3D</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snapLoc</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getSnapLoc</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">loc</span>          <span class="o">=</span> <span class="n">loc3D</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snapLoc</span>
+<span class="go">[41.999401, -78.003876]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.snapNodesToRoad.getSnapLocBatch">
+<code class="sig-name descname">getSnapLocBatch</code><span class="sig-paren">(</span><em class="sig-param">locs=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/snapNodesToRoad.html#getSnapLocBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.snapNodesToRoad.getSnapLocBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Snap multiple locations, each given by [lat, lon] coordinates, to their nearest locations on a road network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>locs</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of GPS coordinates of node locations, in the form of [[lat, lon], [lat, lon], …]</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for finding routes or generate nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements of options.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data provider, veroviz need some extra parameters such as API keys or database name. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the keys required for different data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of snapped locations in the format of [[lat, lon], [lat, lon], …].  Note: Any altitude values provided as inputs in the <cite>loc</cite> parameter will be lost in the return.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Also, import os so we can use environment variables for data provider API keys:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+</dd>
+<dt>Snap a given list of location to their nearest streets:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.20</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snapLocs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getSnapLocBatch</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locs</span>             <span class="o">=</span> <span class="n">locs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;MapQuest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MAPQUESTKEY&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snapLocs</span>
+<span class="go">[[41.999401, -78.003876], [42.100021, -77.995549], [42.1993, -78.001011]]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.snapNodesToRoad.snapNodesToRoad">
+<code class="sig-name descname">snapNodesToRoad</code><span class="sig-paren">(</span><em class="sig-param">nodes=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/snapNodesToRoad.html#snapNodesToRoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.snapNodesToRoad.snapNodesToRoad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the locations of nodes within a dataframe, such that each node becomes located on a road network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Required, default as None) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe containing an existing set of nodes.</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for generating nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A copy of the input <cite>nodes</cite> dataframe, with updated lat/lon values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Also, import os so we can use environment variables for data provider API keys:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe by <a class="reference internal" href="veroviz.generateNodes.html#veroviz.generateNodes.createNodesFromLocs" title="veroviz.generateNodes.createNodesFromLocs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">createNodesFromLocs()</span></code></a> with two nodes that are off the road network:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="p">[</span><span class="mf">42.81</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.004</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>These nodes are not aligned with the road network.  The following examples demonstrate how to move the nodes to lat/lon locations that correspond to roads.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use OSRM as data provider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">snapNodesToRoad</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>        <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Display the original (red) and OSRM-snapped (green) nodes to see the effects of snapping.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">exampleNodes</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="s1">&#39;Stamen Toner&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">snappedNodesOSRM</span><span class="p">,</span> <span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>We can also use ORS, MapQuest, or pgRouting as the data source.  In these cases, an API key or database name should be provided.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use MapQuest as data provider, and change node colors to purple:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodesMQ</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">snapNodesToRoad</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>            <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;MapQuest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;APIkey&#39;</span> <span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MAPQUESTKEY&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodesMQ</span><span class="p">[</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;purple&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add the MapQuest-snapped (purple) nodes to our map:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">snappedNodesMQ</span><span class="p">,</span> <span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use ORS as data provider, and change node colors to blue:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodesORS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">snapNodesToRoad</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>            <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ORS-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodesORS</span><span class="p">[</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add the ORS-snapped (blue) nodes to our map:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">snappedNodesORS</span><span class="p">,</span> <span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use pgRouting as data provider, and change node colors to black:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodesPGR</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">snapNodesToRoad</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>        <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;pgRouting&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;databaseName&#39;</span><span class="p">:</span> <span class="s1">&#39;YOUR_DATABASENAME&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snappedNodesPGR</span><span class="p">[</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add the pgRouting-snapped (black) nodes to our map:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">snappedNodesPGR</span><span class="p">,</span> <span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

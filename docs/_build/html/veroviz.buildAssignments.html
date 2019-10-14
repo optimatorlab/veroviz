@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.buildAssignments module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.buildAssignments.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.buildAssignments">
+<span id="veroviz-buildassignments-module"></span><h1>veroviz.buildAssignments module<a class="headerlink" href="#module-veroviz.buildAssignments" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.buildAssignments.addStaticAssignment">
+<code class="sig-name descname">addStaticAssignment</code><span class="sig-paren">(</span><em class="sig-param">initAssignments=None</em>, <em class="sig-param">odID=1</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">modelFile=None</em>, <em class="sig-param">modelScale=100</em>, <em class="sig-param">modelMinPxSize=75</em>, <em class="sig-param">loc=None</em>, <em class="sig-param">startTimeSec=None</em>, <em class="sig-param">endTimeSec=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/buildAssignments.html#addStaticAssignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.buildAssignments.addStaticAssignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function adds an “object” to an assignments dataframe.  One use of this function is to add a package or other stationary 3D model to be displayed in Cesium.  This function is also useful for holding a vehicle stationary at a location (e.g., during service or loitering).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initAssignments</strong> (<a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe, Optional, default as None) – If provided, the function will append a row to this dataframe.</p></li>
+<li><p><strong>odID</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</p></li>
+<li><p><strong>objectID</strong> (<em>int/string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A descriptive name or index for this object.  In the case of adding a stationary vehicle performing a service activity, the <cite>objectID</cite> should typically be the same as the <cite>objectID</cite> used by the vehicle when it was in motion.</p></li>
+<li><p><strong>modelFile</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of <cite>.gltf</cite> or <cite>.glb</cite>, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the <cite>modelFile</cite> should exist within the Cesium root directory).</p></li>
+<li><p><strong>modelScale</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 100</em>) – The scale of the 3D model (specified by the <cite>modelFile</cite> argument) when displayed in Cesium, such that 100 represents 100%.</p></li>
+<li><p><strong>modelMinPxSize</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 75</em>) – The minimum pixel size of the 3D model (specified by the <cite>modelFile</cite> argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model.</p></li>
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – The coordinate of the static object, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</p></li>
+<li><p><strong>startTimeSec</strong> (<em>int</em><em>, </em><em>Required</em><em>, </em><em>default as None</em><em>,</em>) – Specifies the time at which this object appears.</p></li>
+<li><p><strong>endTimeSec</strong> (<em>int</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies when the object is no longer displayed.  To keep the object displayed forever, set <cite>endTimeSec = -1</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An assignments dataframe with a new row associated with this stationary object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> pandas.dataframe</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check the latest version.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create two nodes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span>
+</pre></div>
+</div>
+</dd>
+<dt>Move the truck from one node to the other.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>           <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>       <span class="o">=</span> <span class="s1">&#39;truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>      <span class="o">=</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelScale</span>     <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelMinPxSize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>       <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myNodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>         <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myNodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">routeType</span>      <span class="o">=</span> <span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">speedMPS</span>       <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertSpeed</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="s1">&#39;miles&#39;</span><span class="p">,</span> <span class="s1">&#39;hr&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd>
+<dt>Make the truck wait at the destination.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addStaticAssignment</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">odID</span>            <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>       <span class="o">=</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelScale</span>      <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">loc</span>             <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myAssignments</span><span class="p">[</span><span class="n">myAssignments</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;truck&#39;</span><span class="p">][[</span><span class="s1">&#39;endLat&#39;</span><span class="p">,</span> <span class="s1">&#39;endLon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">myAssignments</span><span class="p">[</span><span class="n">myAssignments</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;truck&#39;</span><span class="p">][</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endTimeSec</span>      <span class="o">=</span> <span class="n">myAssignments</span><span class="p">[</span><span class="n">myAssignments</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;truck&#39;</span><span class="p">][</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Drop off a package.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addStaticAssignment</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">odID</span>            <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;package&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>       <span class="o">=</span> <span class="s1">&#39;veroviz/models/box_blue.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelScale</span>      <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">loc</span>             <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myAssignments</span><span class="p">[</span><span class="n">myAssignments</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;truck&#39;</span><span class="p">][[</span><span class="s1">&#39;endLat&#39;</span><span class="p">,</span> <span class="s1">&#39;endLon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">myAssignments</span><span class="p">[</span><span class="n">myAssignments</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;truck&#39;</span><span class="p">][</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">endTimeSec</span>      <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>View in Leaflet.  Note that we can’t see the truck waiting.  Also, the package doesn’t show up in Leaflet.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">myNodes</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="n">myAssignments</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create Cesium output, so we can observe our truck and package.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createCesium</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">assignments</span> <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodes</span>       <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startTime</span>   <span class="o">=</span> <span class="s1">&#39;08:00:00&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumDir</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CESIUMDIR&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">problemDir</span>  <span class="o">=</span> <span class="s1">&#39;static_object_demo&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

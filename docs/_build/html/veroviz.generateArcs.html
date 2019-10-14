@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.generateArcs module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.generateArcs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.generateArcs">
+<span id="veroviz-generatearcs-module"></span><h1>veroviz.generateArcs module<a class="headerlink" href="#module-veroviz.generateArcs" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.generateArcs.createArcsFromLocSeq">
+<code class="sig-name descname">createArcsFromLocSeq</code><span class="sig-paren">(</span><em class="sig-param">locSeq=None</em>, <em class="sig-param">initArcs=None</em>, <em class="sig-param">startArc=1</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateArcs.html#createArcsFromLocSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateArcs.createArcsFromLocSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an “arcs” dataframe from an ordered list of coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>locSeq</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – An ordered list of locations that will be converted into an <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe. The list should be formated as [[lat1, lon1], [lat2, lon2], …, [latn, lonn]].</p></li>
+<li><p><strong>initArcs</strong> (<a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, Optional, default as None) – An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If provided, the arcs to be created will be appended to this dataframe.</p></li>
+<li><p><strong>startArc</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – Specifies the starting index number for the arcs.  This will be reflected in the <cite>odID</cite> column of the resulting <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If <cite>startArc</cite> is less than the minimum value of the <cite>odID</cite> found in the dataframe specified by <cite>initArcs</cite>, the value of <cite>startArc</cite> will be ignored in favor of the smallest integer greater than the maximum existing <cite>odID</cite> value.</p></li>
+<li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;orange&quot;</em>) – The color of the arcs when displayed in Leaflet.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>leafletWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the arcs when displayed in Leaflet.</p></li>
+<li><p><strong>leafletStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the arcs when displayed in Leaflet.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>leafletOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the arcs when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+<li><p><strong>useArrows</strong> (<em>bool</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Indicates whether arrows should be shown on the arcs when displayed in Leaflet.</p></li>
+<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;Cesium.Color.ORANGE&quot;</em>) – The color of the arcs when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>cesiumWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the arcs when displayed in Cesium.</p></li>
+<li><p><strong>cesiumStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the arcs when displayed in Cesium.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for more information.</p></li>
+<li><p><strong>cesiumOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the arcs when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An Arcs dataframe</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>First import veroviz and check if it is the latest version</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Generate arcs from a given ordered list of coordinates:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">arcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locSeq</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1325</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.2134</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.5341</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.3252</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.3424</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6424</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arcs</span>
+</pre></div>
+</div>
+</dd>
+<dt>Display the arcs on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="n">arcs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>This example includes all of the available function arguments.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">arcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>         <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1325</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.2134</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="p">[</span><span class="mf">42.5341</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.3252</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="p">[</span><span class="mf">42.3424</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6424</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">initArcs</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startArc</span>       <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>   <span class="o">=</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletWeight</span>  <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletStyle</span>   <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletOpacity</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">useArrows</span>      <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>    <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumWeight</span>   <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumStyle</span>    <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumOpacity</span>  <span class="o">=</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="n">arcs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.generateArcs.createArcsFromNodeSeq">
+<code class="sig-name descname">createArcsFromNodeSeq</code><span class="sig-paren">(</span><em class="sig-param">nodeSeq=None</em>, <em class="sig-param">nodes=None</em>, <em class="sig-param">initArcs=None</em>, <em class="sig-param">startArc=1</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateArcs.html#createArcsFromNodeSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateArcs.createArcsFromNodeSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an “arcs” dataframe from an ordered list of node IDs.  The “nodes” dataframe from which these node IDs are drawn must also be specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodeSeq</strong> (<em>list</em><em>, </em><em>Required</em>) – An ordered list of node IDs.  These IDs must be included in the <cite>id</cite> column of the <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe specified in the <cite>nodes</cite> input argument to this function. The format for <cite>nodeSeq</cite> is [node_id_1, node_id_2, …].</p></li>
+<li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Required) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe, which must contain the individual node IDs specified in the <cite>nodeSeq</cite> input argument.</p></li>
+<li><p><strong>initArcs</strong> (<a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, Optional, default as None) – An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If provided, the arcs to be created will be appended to this dataframe.</p></li>
+<li><p><strong>startArc</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – Specifies the starting index number for the arcs.  This will be reflected in the <cite>odID</cite> column of the resulting <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If <cite>startArc</cite> is less than the minimum value of the <cite>odID</cite> found in the dataframe specified by <cite>initArcs</cite>, the value of <cite>startArc</cite> will be ignored in favor of the smallest integer greater than the maximum existing <cite>odID</cite> value.</p></li>
+<li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;orange&quot;</em>) – The color of the arcs when displayed in Leaflet.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>leafletWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the arcs when displayed in Leaflet.</p></li>
+<li><p><strong>leafletStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the arcs when displayed in Leaflet.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>leafletOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the arcs when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+<li><p><strong>useArrows</strong> (<em>bool</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Indicates whether arrows should be shown on the arcs when displayed in Leaflet.</p></li>
+<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;Cesium.Color.ORANGE&quot;</em>) – The color of the arcs when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>cesiumWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the arcs when displayed in Cesium.</p></li>
+<li><p><strong>cesiumStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the arcs when displayed in Cesium.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for more information.</p></li>
+<li><p><strong>cesiumOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the arcs when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An Arcs dataframe</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>First import veroviz and check if it is the latest version</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a collection of 20 nodes:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">numNodes</span>        <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeType</span>        <span class="o">=</span> <span class="s1">&#39;depot&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeDistrib</span>     <span class="o">=</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeDistribArgs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;center&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">42.30</span><span class="p">,</span> <span class="mf">78.00</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;stdDev&#39;</span> <span class="p">:</span> <span class="mi">1000</span>
+<span class="gp">... </span>    <span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span>
+</pre></div>
+</div>
+</dd>
+<dt>Generate arcs from nodes 2-to-15 and from 15-to-8.  These node IDs are found in the <cite>id</cite> column of the given Nodes dataframe.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromNodeSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodeSeq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">nodes</span>   <span class="o">=</span> <span class="n">myNodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myArcs</span>
+</pre></div>
+</div>
+</dd>
+<dt>Display the nodes and arcs on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="n">myArcs</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">myNodes</span><span class="p">)</span>
+<span class="go">    &gt;&gt;&gt; myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>This example includes all of the available function arguments:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">moreArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromNodeSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodeSeq</span>        <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">nodes</span>          <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">initArcs</span>       <span class="o">=</span> <span class="n">myArcs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startArc</span>       <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>   <span class="o">=</span> <span class="s1">&#39;cadetblue&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletWeight</span>  <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletStyle</span>   <span class="o">=</span> <span class="s1">&#39;dotted&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletOpacity</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">useArrows</span>      <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>    <span class="o">=</span> <span class="s1">&#39;Cesium.Color.CADETBLUE&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumWeight</span>   <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumStyle</span>    <span class="o">=</span> <span class="s1">&#39;dotted&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumOpacity</span>  <span class="o">=</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">moreArcs</span>
+</pre></div>
+</div>
+</dd>
+<dt>Display the nodes and arcs on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">arcs</span> <span class="o">=</span> <span class="n">moreArcs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,551 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Assignments &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Units" href="units.html" />
+    <link rel="prev" title="Arcs" href="arcs.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="Units"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="arcs.html" title="Arcs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="arcs.html"
+                        title="previous chapter">Arcs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="units.html"
+                        title="next chapter">Units</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/assignments.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="assignments">
+<span id="id1"></span><h1>Assignments<a class="headerlink" href="#assignments" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>Assignments</cite> dataframe is used as the input for the <a class="reference internal" href="veroviz.createCesium.html#veroviz.createCesium.createCesium" title="veroviz.createCesium.createCesium"><code class="xref py py-meth docutils literal notranslate"><span class="pre">createCesium()</span></code></a> function to
+generate time-dynamic visualization of vehicle routes on a 3D map.</p>
+<p>While there is no “standard” function for generating all of the rows of
+an <cite>Assignments</cite> dataframe, <em>VeRoViz</em> does provide some functions that
+can be used to construct individual rows of the dataframe.  Users may
+then append these rows into an <cite>Assignments</cite> dataframe.  For example,
+<a class="reference internal" href="veroviz.getShapepoints2D.html#veroviz.getShapepoints2D.getShapepoints2D" title="veroviz.getShapepoints2D.getShapepoints2D"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getShapepoints2D()</span></code></a> returns an assignment
+dataframe describing the detailed navigation on a road network between
+a pair of origin/destination locations.  By iteratively calling that function
+for all O/D pairs of a route, a complete assignments dataframe can be constructed.
+Similarly, <a class="reference internal" href="veroviz.getShapepoints3D.html#veroviz.getShapepoints3D.getShapepoints3D" title="veroviz.getShapepoints3D.getShapepoints3D"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getShapepoints3D()</span></code></a> returns
+an assignment dataframe describing the flight profile/path for aircraft
+(e.g., drones) for a given O/D pair.</p>
+<p>A blank/empty <cite>Assignments</cite> dataframe can be created by <code class="xref py py-meth docutils literal notranslate"><span class="pre">initDataframe()</span></code>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Data Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>odID</p></td>
+<td><p>int</p></td>
+<td><p><cite>odID</cite> is an abbreviation for “origin/
+destination identifier”. It is
+a group identifier.  Arc segments which
+are part of the same origin/destination
+share the same odID.</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectID</p></td>
+<td><p>string</p></td>
+<td><p>Identifier for each object (e.g. truck,
+package, drone, etc.) shown in Cesium.</p></td>
+</tr>
+<tr class="row-even"><td><p>modelFile</p></td>
+<td><p>string</p></td>
+<td><p>The 3D model used for the object. See
+<a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for a list of
+available 3D Cesium models . You
+can also generate your own <cite>gltf</cite> files.</p></td>
+</tr>
+<tr class="row-odd"><td><p>modelScale</p></td>
+<td><p>int</p></td>
+<td><p>The scale of Cesium 3D model in percent.</p></td>
+</tr>
+<tr class="row-even"><td><p>modelMinPxSize</p></td>
+<td><p>int</p></td>
+<td><p>The minimum pixel size of Cesium 3D model</p></td>
+</tr>
+<tr class="row-odd"><td><p>startTimeSec</p></td>
+<td><p>int</p></td>
+<td><p>In a sequence of coordinates that
+navigates between origin and destination,
+the time  to arrive at the start
+coordinate ([startLat,startLon]).</p></td>
+</tr>
+<tr class="row-even"><td><p>startLat</p></td>
+<td><p>float</p></td>
+<td><p>Latitude of the start of the arc,
+in [degrees].  0-degrees latitude is
+the equator.  Negative latitudes are
+south of the equator; positive
+latitudes are north.  The range is from
+-90 to +90.</p></td>
+</tr>
+<tr class="row-odd"><td><p>startLon</p></td>
+<td><p>float</p></td>
+<td><p>Longitude of the start of the arc,
+in [degrees].  0-degrees longitude is
+Greenich, England.  Negative longitudes
+are west of Greenich; positive
+longitudes are east.  The range is from
+-180 to +180.</p></td>
+</tr>
+<tr class="row-even"><td><p>startAltMeters</p></td>
+<td><p>float</p></td>
+<td><p>Altitude of the object at the start
+time, in units of [meters above ground
+level] (AGL).</p></td>
+</tr>
+<tr class="row-odd"><td><p>endTimeSec</p></td>
+<td><p>int</p></td>
+<td><p>The arrival time (in seconds) to this
+coordinate ([endLat,endLon]).</p></td>
+</tr>
+<tr class="row-even"><td><p>endLat</p></td>
+<td><p>float</p></td>
+<td><p>Latitude of the end of the arc, in
+[degrees].  The range is from -90 to +90.</p></td>
+</tr>
+<tr class="row-odd"><td><p>endLon</p></td>
+<td><p>float</p></td>
+<td><p>Longitude of the end of the arc, in
+[degrees].  The range is from -180 to
++180.</p></td>
+</tr>
+<tr class="row-even"><td><p>endAltMeters</p></td>
+<td><p>float</p></td>
+<td><p>Altitude of the object at the end
+time, in units of [meters AGL].</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletColor</p></td>
+<td><p>string</p></td>
+<td><p>Color of the arc when displayed in
+Leaflet. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for
+options of colors.</p></td>
+</tr>
+<tr class="row-even"><td><p>leafletOpacity</p></td>
+<td><p>float in
+[0, 1]</p></td>
+<td><p>Amount of transparency for the arc.
+A value of 1 indicates no transparency;
+0 indicates completely transparent.</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletStyle</p></td>
+<td><p>string</p></td>
+<td><p>Styling of the line, valid options are
+“solid”, “dotted” or “dashed”. See
+<a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more details</p></td>
+</tr>
+<tr class="row-even"><td><p>useArrows</p></td>
+<td><p>bool</p></td>
+<td><p>True if the arrows will be used when
+creating Leaflet map, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumWeight</p></td>
+<td><p>int</p></td>
+<td><p>Pixel width of the line/arc.</p></td>
+</tr>
+<tr class="row-even"><td><p>cesiumColor</p></td>
+<td><p>string</p></td>
+<td><p>Color of the arc when displayed in
+Cesium. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for
+color options.</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumOpacity</p></td>
+<td><p>float in
+[0, 1]</p></td>
+<td><p>The amount of transparency for the arc.
+A value of 1 indicates no transparency;
+0 indicates completely transparent.</p></td>
+</tr>
+<tr class="row-even"><td><p>cesiumStyle</p></td>
+<td><p>string</p></td>
+<td><p>Styling of the line, valid options are
+“solid”, “dotted” or “dashed”. See
+<a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for options.</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumWeight</p></td>
+<td><p>int</p></td>
+<td><p>Pixel width of the line/arc.</p></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> and <a class="reference internal" href="#assignments"><span class="std std-ref">Assignments</span></a> dataframes are similar,
+see <a class="reference internal" href="dataframes.html#dataframes-comparison"><span class="std std-ref">Dataframes Comparison</span></a> for the similarity and differences between them.</p>
+<hr class="docutils" />
+<p>An <cite>Assignments</cite> dataframe can be used in <a class="reference internal" href="veroviz.createLeaflet.html#veroviz.createLeaflet.createLeaflet" title="veroviz.createLeaflet.createLeaflet"><code class="xref py py-meth docutils literal notranslate"><span class="pre">createLeaflet()</span></code></a>. The table below indicates whether a given field (column) of the dataframe is required/optional/ignored.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some explaination about “Required”, “Optional”, “Ignored”:</p>
+<ul class="simple">
+<li><p>“Required” means the function needs info from that field/column. That info can not be overridden by the function that uses the dataframe.</p></li>
+<li><p>“Optional” means the function will use the info from that field/column as a default value.  However, some functions allow the user to temporarily “override” the optional values in the dataframe with different values provided in the function call.</p></li>
+<li><p>“Ignored” means the function neither needs nor uses info from that field/column.</p></li>
+</ul>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+<th class="head"><p>Ignored</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>odID</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>objectID</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>modelFile</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>modelScale</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>modelMinPxSize</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>startTimeSec</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>startLat</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>startLon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>startAltMeters</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>endTimeSec</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>endLat</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>endLon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>endAltMeters</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletColor</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>leafletOpacity</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>leafletStyle</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>leafletWeight</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>useArrows</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cesiumColor</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumOpacity</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>cesiumStyle</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumWeight</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<p>An <cite>Assignments</cite> dataframe can be used in <a class="reference internal" href="veroviz.createCesium.html#veroviz.createCesium.createCesium" title="veroviz.createCesium.createCesium"><code class="xref py py-meth docutils literal notranslate"><span class="pre">createCesium()</span></code></a> to generate
+a Cesium-based 4D WebGIS video. The video can be displayed on a
+Cesium web page.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Optional</p></th>
+<th class="head"><p>Ignored</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>odID</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>objectID</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>modelFile</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>modelScale</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>modelMinPxSize</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>icon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>startTimeSec</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>startLat</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>startLon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>startAltMeters</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>endTimeSec</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>endLat</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>endLon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>endAltMeters</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>leafletColor</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletOpacity</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>leafletStyle</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletWeight</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>useArrows</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumColor</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cesiumOpacity</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumStyle</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cesiumWeight</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <cite>Assignments</cite> dataframe may have duplicated <cite>odID</cite> values for different
+paths.  When <cite>veroviz.createLeaflet</cite> generates a Leaflet map, it will combine
+<cite>odID</cite> with <cite>objectID</cite> to form a new/unique <cite>odID</cite>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="Units"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="arcs.html" title="Arcs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

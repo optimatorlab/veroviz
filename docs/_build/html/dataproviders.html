@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Data Providers &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dataframes" href="dataframes.html" />
+    <link rel="prev" title="Install Dependencies" href="install.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dataframes.html" title="Dataframes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Install Dependencies"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Providers</a><ul>
+<li><a class="reference internal" href="#none">None</a></li>
+<li><a class="reference internal" href="#pgrouting">pgRouting</a></li>
+<li><a class="reference internal" href="#mapquest">MapQuest</a></li>
+<li><a class="reference internal" href="#osrm">OSRM</a></li>
+<li><a class="reference internal" href="#ors">ORS</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Install Dependencies</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dataframes.html"
+                        title="next chapter">Dataframes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/dataproviders.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-providers">
+<span id="id1"></span><h1>Data Providers<a class="headerlink" href="#data-providers" title="Permalink to this headline">¶</a></h1>
+<p><em>VeRoViz</em> supports the use of several data providers for querying travel directions, travel time/distance matrices, and snapping nodes to a road network.  Integration with additional data providers is planned for a future <em>VeRoViz</em> release.</p>
+<p>Functions that employ data from these providers require specification of the <cite>dataProvider</cite> itself, as well as additional arguments that are unique to the chosen <cite>dataProvider</cite> (e.g., an <cite>APIkey</cite> or a <cite>databaseName</cite>).  The <cite>routeType</cite> field can be used to differentiate between a ‘fastest’ route, a ‘shortest’ route, ‘pedestrian’ routes, etc.</p>
+<p>The following table summarizes the options and requirements for each data provider currently supported by <em>VeRoViz</em>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"></th>
+<th class="head" colspan="5"><p><cite>dataProvider</cite> field options</p></th>
+</tr>
+<tr class="row-even"><th class="head" colspan="2"></th>
+<th class="head"><p>None</p></th>
+<th class="head"><p>‘pgRouting’</p></th>
+<th class="head"><p>‘MapQuest’</p></th>
+<th class="head"><p>‘OSRM-online’</p></th>
+<th class="head"><p>‘ORS-online’</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>required key
+in
+<cite>dataProviderArgs</cite></p></td>
+<td><p>“databaseName”</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>“APIkey”</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>allowed?</p></td>
+<td><p>snapNodesToRoad</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td rowspan="7"><p><cite>routetype</cite>
+field
+options</p></td>
+<td><p>“fastest”</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>“shortest”</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>“pedestrian”</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>“cycling”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>“truck”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>“euclidean2d”</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>“manhattan”</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="none">
+<h2>None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h2>
+<p>No data provider is chosen. Nodes and arcs are generated without consideration of any underlying road networks. Only simple types of node distributions or route types can be applied without a data provider.</p>
+</div>
+<div class="section" id="pgrouting">
+<h2>pgRouting<a class="headerlink" href="#pgrouting" title="Permalink to this headline">¶</a></h2>
+<p>pgRouting is an open-source database application that must be installed locally on the user’s computer.  You will need to <a class="reference internal" href="install.html#install-pgrouting"><span class="std std-ref">Install pgRouting</span></a> before
+using related functions.</p>
+<p>We recommend that users update their local pgRouting database frequently, as the source data (from OpenStreetMap) changes over time.</p>
+<p>If you find odd results when using pgRouting, (e.g. unexpected values of “0”
+from <code class="xref py py-meth docutils literal notranslate"><span class="pre">getTravelMatrice2D()</span></code>) or if nodes are not being snapped properly to road, please check if the data in the pgRouting database is sufficient
+to cover the region of interest. VeRoViz can not calculate the coordinates outside
+the boundary of pgRouting data.</p>
+<p>See the <a class="reference external" href="http://docs.pgrouting.org/latest/en/index.html">pgRouting documentation</a> for more details.</p>
+</div>
+<div class="section" id="mapquest">
+<h2>MapQuest<a class="headerlink" href="#mapquest" title="Permalink to this headline">¶</a></h2>
+<p>MapQuest is a commercial data source, but users may issue a limited number of requests for free.  You will need to <a class="reference internal" href="install.html#apply-for-mapquest-apikey"><span class="std std-ref">Apply for MapQuest API key</span></a>
+before using related functions.  MapQuest provides perhaps the most detailed results of the data providers.  However, keep in mind that the free API key has a monthly limit on the number of queries.</p>
+<p>See the <a class="reference external" href="https://developer.mapquest.com/documentation/">MapQuest documentation</a> for more details.</p>
+</div>
+<div class="section" id="osrm">
+<h2>OSRM<a class="headerlink" href="#osrm" title="Permalink to this headline">¶</a></h2>
+<p>The Open Source Routing Machine is available via both an online API (in which case no installation is required) or as a local installation.  Currently, however, VeRoViz only supports the online API.</p>
+<p>For the online API, no API key is required.  Please note, though, that this API is hosted on a “demo” server, which is not intended for high-volume user requests.  It is recommended that users use OSRM only for small-scale testing/evaluation; please don’t overload the OSRM demo server with large-scale problems.  Be advised that excessive OSRM requests will often result in server timeouts.</p>
+<p>The routes and travel matrix data provided by OSRM are based on OpenStreetMaps.  OSRM’s results are typically less detailed than those provided by MapQuest.</p>
+<p>See the <a class="reference external" href="http://project-osrm.org/docs/v5.22.0/api/#general-options">OSRM documentation</a> for more details.</p>
+</div>
+<div class="section" id="ors">
+<h2>ORS<a class="headerlink" href="#ors" title="Permalink to this headline">¶</a></h2>
+<p>OpenRouteService is currently the suggested data provider for VeRoViz.  Like OSRM, it uses data from OpenStreetMaps.  ORS offers a free API key with a generous daily query limit.  Although ORS also provides an open-source engine that can be installed locally, this option is not currently enabled in VeRoViz.</p>
+<p>See the <a class="reference external" href="https://openrouteservice.org">ORS documentation</a> for more information.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dataframes.html" title="Dataframes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Install Dependencies"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

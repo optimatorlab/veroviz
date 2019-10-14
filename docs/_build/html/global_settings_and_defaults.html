@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Global Settings and Defaults &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Cesium Style" href="cesium_style.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cesium_style.html" title="Cesium Style"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Global Settings and Defaults</a><ul>
+<li><a class="reference internal" href="#constants">Constants</a></li>
+<li><a class="reference internal" href="#default-leaflet-styles">Default Leaflet Styles</a></li>
+<li><a class="reference internal" href="#default-cesium-styles">Default Cesium Styles</a></li>
+<li><a class="reference internal" href="#settings">Settings</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cesium_style.html"
+                        title="previous chapter">Cesium Style</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/global_settings_and_defaults.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="global-settings-and-defaults">
+<span id="id1"></span><h1>Global Settings and Defaults<a class="headerlink" href="#global-settings-and-defaults" title="Permalink to this headline">¶</a></h1>
+<p>The following items are found in <cite>params.py</cite>, which defines default
+constants and settings for for the ‘veroviz’ package.  If you desire,
+you may modify these values (although this is not recommended).</p>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>Distance conversions</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_KILOMETER</span> <span class="o">=</span> <span class="mf">1000.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_MILE</span> <span class="o">=</span> <span class="mf">1609.34</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_YARD</span> <span class="o">=</span> <span class="mf">0.9144</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_FEET</span> <span class="o">=</span> <span class="mf">0.3048</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_NAUTICAL_MILE</span> <span class="o">=</span> <span class="mf">1852.0</span>
+</pre></div>
+</div>
+</dd>
+<dt>Speed conversions</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_MPS_TO_KPH</span> <span class="o">=</span> <span class="mf">3.6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_MPS_TO_MPH</span> <span class="o">=</span> <span class="mf">2.23694</span>
+</pre></div>
+</div>
+</dd>
+<dt>Time conversions</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_SECONDS_PER_HOUR</span> <span class="o">=</span> <span class="mf">3600.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_SECONDS_PER_MINUTE</span> <span class="o">=</span> <span class="mf">60.0</span>
+</pre></div>
+</div>
+</dd>
+<dt>Area conversions</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_SQKM_PER_SQMETER</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_SQMILES_PER_SQMETER</span> <span class="o">=</span> <span class="mf">3.861e-7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_SQFT_PER_SQMETER</span> <span class="o">=</span> <span class="mf">10.7639</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="default-leaflet-styles">
+<h2>Default Leaflet Styles<a class="headerlink" href="#default-leaflet-styles" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>Defaults for adding Leaflet objects (e.g., circles, polygons, text)</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_FILL</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_FONTSIZE</span> <span class="o">=</span> <span class="mi">24</span>       <span class="c1"># pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_FONTCOLOR</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span> <span class="o">=</span> <span class="s1">&#39;CartoDB positron&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>For the nodes/icons</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETICONPREFIX</span> <span class="o">=</span> <span class="s1">&#39;glyphicon&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETICONTYPE</span> <span class="o">=</span> <span class="s1">&#39;info-sign&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETICONCOLOR</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>For the arcs</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>For the boundings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGOPACITY</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGSTYLE</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGCOLOR</span> <span class="o">=</span> <span class="s1">&#39;brown&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="default-cesium-styles">
+<h2>Default Cesium Styles<a class="headerlink" href="#default-cesium-styles" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>For the nodes/icons</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMICONTYPE</span> <span class="o">=</span> <span class="s1">&#39;pin&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMICONSIZE</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMICONCOLOR</span> <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLUE&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>For the assignments</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span> <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span> <span class="o">=</span> <span class="mf">0.8</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>pgRouting database settings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_PGROUTING_USERNAME</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_PGROUTING_HOST</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_PGROUTING_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>Information and message settings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cesium_style.html" title="Cesium Style"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Leaflet Style &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Cesium Style" href="cesium_style.html" />
+    <link rel="prev" title="Flight Profile and Flight Path" href="flight_profile_and_flight_path.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cesium_style.html" title="Cesium Style"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Leaflet Style</a><ul>
+<li><a class="reference internal" href="#leaflet-map-background-map-tiles">Leaflet Map Background (Map Tiles)</a></li>
+<li><a class="reference internal" href="#leaflet-colors">Leaflet Colors</a></li>
+<li><a class="reference internal" href="#leaflet-prefix-and-leaflet-type">Leaflet Prefix and Leaflet Type</a></li>
+<li><a class="reference internal" href="#leaflet-line-styles">Leaflet Line Styles</a></li>
+<li><a class="reference internal" href="#default-settings-for-leaflet">Default settings for Leaflet</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="flight_profile_and_flight_path.html"
+                        title="previous chapter">Flight Profile and Flight Path</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cesium_style.html"
+                        title="next chapter">Cesium Style</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/leaflet_style.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="leaflet-style">
+<span id="id1"></span><h1>Leaflet Style<a class="headerlink" href="#leaflet-style" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="leaflet-map-background-map-tiles">
+<h2>Leaflet Map Background (Map Tiles)<a class="headerlink" href="#leaflet-map-background-map-tiles" title="Permalink to this headline">¶</a></h2>
+<p><em>VeRoViz</em> provides several options for the <cite>mapBackground</cite> field:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><cite>mapBackground</cite> options</p></th>
+<th class="head"><p>Preview</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘Cartodb Positron’</p></td>
+<td><p><a class="reference internal" href="_images/Cartodb_Positron.png"><img alt="Cartodb_Positron" src="_images/Cartodb_Positron.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Cartodb Dark_matter’,</p></td>
+<td><p><a class="reference internal" href="_images/Cartodb_Dark_matter.png"><img alt="Cartodb_Dark_matter" src="_images/Cartodb_Dark_matter.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘Openstreetmap’,</p></td>
+<td><p><a class="reference internal" href="_images/Openstreetmap.png"><img alt="Openstreetmap'" src="_images/Openstreetmap.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Stamen Terrain’,</p></td>
+<td><p><a class="reference internal" href="_images/Stamen_Terrain.png"><img alt="Stamen_Terrain" src="_images/Stamen_Terrain.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘Stamen Toner’,</p></td>
+<td><p><a class="reference internal" href="_images/Stamen_Toner.png"><img alt="Stamen_Toner" src="_images/Stamen_Toner.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Stamen Watercolor’,</p></td>
+<td><p><a class="reference internal" href="_images/Stamen_Watercolor.png"><img alt="Stamen_Watercolor" src="_images/Stamen_Watercolor.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘Arcgis Aerial’,</p></td>
+<td><p><a class="reference internal" href="_images/ArcGIS_Aerial.png"><img alt="Arcgis_Aerial" src="_images/ArcGIS_Aerial.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Arcgis Gray’,</p></td>
+<td><p><a class="reference internal" href="_images/ArcGIS_Gray.png"><img alt="Arcgis_Gray" src="_images/ArcGIS_Gray.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘Arcgis Ocean’,</p></td>
+<td><p><a class="reference internal" href="_images/ArcGIS_Ocean.png"><img alt="Arcgis_Ocean" src="_images/ArcGIS_Ocean.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Arcgis Roadmap’,</p></td>
+<td><p><a class="reference internal" href="_images/ArcGIS_Roadmap.png"><img alt="Arcgis_Roadmap" src="_images/ArcGIS_Roadmap.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘Arcgis Shaded Relief’,</p></td>
+<td><p><a class="reference internal" href="_images/ArcGIS_Shaded_Relief.png"><img alt="Arcgis_Shaded_Relief" src="_images/ArcGIS_Shaded_Relief.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Arcgis Topo’,</p></td>
+<td><p><a class="reference internal" href="_images/ArcGIS_Topo.png"><img alt="Arcgis_Topo" src="_images/ArcGIS_Topo.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘Open Topo’</p></td>
+<td><p><a class="reference internal" href="_images/Open_Topo.png"><img alt="Open_Topo" src="_images/Open_Topo.png" style="height: 200px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="leaflet-colors">
+<h2>Leaflet Colors<a class="headerlink" href="#leaflet-colors" title="Permalink to this headline">¶</a></h2>
+<p>Leaflet supports the following colors: ‘beige’, ‘black’, ‘blue’, ‘cadetblue’, ‘darkblue’, ‘darkgreen’, ‘gray’,
+‘darkpurple’, ‘darkred’,  ‘green’, ‘lightblue’, ‘lightgray’,
+‘lightgreen’, ‘lightred’, ‘orange’, ‘pink’, ‘purple’, and ‘red’.</p>
+</div>
+<div class="section" id="leaflet-prefix-and-leaflet-type">
+<h2>Leaflet Prefix and Leaflet Type<a class="headerlink" href="#leaflet-prefix-and-leaflet-type" title="Permalink to this headline">¶</a></h2>
+<p>Leaflet provides numerous icons.  Both an <cite>iconPrefix</cite> and an
+<cite>iconType</cite> are required to specify a particular icon.  Some of the available options
+for both of the icon prefixes are shown below:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><cite>iconPrefix</cite> options</p></th>
+<th class="head"><p><cite>iconType</cite> options</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘glyphicon’</p></td>
+<td><p>‘info-sign’, ‘home’, ‘glass’, ‘flag’,
+‘star’, ‘user’, ‘cloud’, ‘bookmark’, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘fa’</p></td>
+<td><p>‘ambulance’, ‘bicycle’, ‘bus’, ‘car’,
+‘flag’, ‘home’, ‘heartbeat’, ‘plane’,
+‘motorcycle’, ‘question’, ‘ship’,
+‘shopping-bag’, ‘shopping-basket’,
+‘shopping-cart’, ‘star’, ‘subway’, ‘taxi’,
+‘truck’, ‘university’, ‘user’, ‘users’, etc.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additional options may be available (but have not been tested):
+- For ‘glyphicon’, see
+<a class="reference external" href="https://www.w3schools.com/bootstrap/bootstrap_ref_comp_glyphs.asp">https://www.w3schools.com/bootstrap/bootstrap_ref_comp_glyphs.asp</a> and
+<a class="reference external" href="https://getbootstrap.com/docs/3.3/components/">https://getbootstrap.com/docs/3.3/components</a></p>
+<p>For ‘fa’, see
+<a class="reference external" href="https://fontawesome.com/icons?d=gallery&amp;m=free">https://fontawesome.com/icons?d=gallery&amp;m=free</a></p>
+</div>
+<div class="section" id="leaflet-line-styles">
+<h2>Leaflet Line Styles<a class="headerlink" href="#leaflet-line-styles" title="Permalink to this headline">¶</a></h2>
+<p>The following line styles are available: ‘solid’, ‘dashed’, ‘dotted’</p>
+</div>
+<div class="section" id="default-settings-for-leaflet">
+<h2>Default settings for Leaflet<a class="headerlink" href="#default-settings-for-leaflet" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Default colors</dt><dd><ul>
+<li><p>For Nodes (Icons): ‘blue’</p></li>
+<li><p>For Arcs/Assignments: ‘orange’</p></li>
+<li><p>For BoundingRegion: ‘brown’</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Default icons</dt><dd><ul>
+<li><p>iconPrefix: ‘glyphicon’</p></li>
+<li><p>iconType: ‘info-sign’</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Default arc style</dt><dd><ul>
+<li><p>style: ‘solid’</p></li>
+<li><p>weight: 3</p></li>
+<li><p>opacity: 0.8</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>For more default settings, see <a class="reference internal" href="global_settings_and_defaults.html#global-settings-and-defaults"><span class="std std-ref">Global Settings and Defaults</span></a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cesium_style.html" title="Cesium Style"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

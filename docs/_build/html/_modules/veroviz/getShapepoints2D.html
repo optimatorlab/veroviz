@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.getShapepoints2D &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="../../_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for veroviz.getShapepoints2D</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valGetShapepoints2D</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetShapepointsTimeDist</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">distributeTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">locs2Dict</span>
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">loc2Dict</span>
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">replaceBackslashToSlash</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoDistance2D</span>
+
+<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">convertDistance</span>
+<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">initDataframe</span>
+
+<div class="viewcode-block" id="getShapepoints2D"><a class="viewcode-back" href="../../veroviz.getShapepoints2D.html#veroviz.getShapepoints2D.getShapepoints2D">[docs]</a><span class="k">def</span> <span class="nf">getShapepoints2D</span><span class="p">(</span><span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+	<span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   
+	<span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+	<span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span><span class="p">,</span> 
+	<span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function generates all of the &quot;shapepoints&quot; between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   </span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `getShapepoints3D()`.</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	odID: int, Optional, default as 1</span>
+<span class="sd">		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</span>
+<span class="sd">	objectID: int/string, Optional, default as None</span>
+<span class="sd">		A descriptive name or index for a particular vehicle or object (e.g., &#39;truck 1&#39;, or &#39;red car&#39;). </span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).</span>
+<span class="sd">	startLoc: list, Required, default as None</span>
+<span class="sd">		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	endLoc: list, Required, default as None</span>
+<span class="sd">		The ending location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	startTimeSec: float, Optional, default as 0.0 </span>
+<span class="sd">		The time, in seconds, at which the vehicle may leave the starting location.</span>
+<span class="sd">	expDurationSec: float, Optional, default as None</span>
+<span class="sd">		This is the number of seconds we expect to travel from the start to the end location. This value typically comes from the traval time matrix (see the getTimeDist functions).  Including an expected duration will help keep these two values in alignment.  If necessary, travel times for the individual shapepoints will be redistributed.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;euclidean2D&#39;</span>
+<span class="sd">		This describes a characteristic of the travel mode.  Possible values are: &#39;euclidean2D&#39;, &#39;manhattan&#39;, &#39;fastest&#39;, &#39;shortest&#39;, &#39;pedestrian&#39;, &#39;cycling&#39;, and &#39;truck&#39;.  The &#39;euclidean2D&#39; and &#39;manhattan&#39; options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.</span>
+<span class="sd">	speedMPS: float, Conditional, default as None</span>
+<span class="sd">		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., &#39;euclidean2D&#39; and &#39;manhattan&#39;), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., &#39;fastest&#39;, &#39;shortest&#39;, and &#39;pedestrain&#39;), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.</span>
+<span class="sd">	leafletColor: string, Optional, default as &quot;orange&quot;</span>
+<span class="sd">		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.</span>
+<span class="sd">	leafletWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Leaflet. </span>
+<span class="sd">	leafletStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Leaflet.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Leaflet style` for more information.</span>
+<span class="sd">	leafletOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	useArrows: bool, Optional, default as True</span>
+<span class="sd">		Indicates whether arrows should be shown on the route when displayed in Leaflet.</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. </span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.ORANGE&quot;</span>
+<span class="sd">		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.</span>
+<span class="sd">	cesiumWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Cesium. </span>
+<span class="sd">	cesiumStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Cesium.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Cesium Style` for more information.</span>
+<span class="sd">	cesiumOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Optional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Assignments` dataframe</span>
+<span class="sd">		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel from a start location to an end location.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">	</span>
+<span class="sd">	Example 1 - A minimal example, using the fastest car route.  The ORS-online data provider requires an API key.</span>
+<span class="sd">		&gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">		...     odID=1,</span>
+<span class="sd">		...     startLoc=[42.80, -78.80],</span>
+<span class="sd">		...     endLoc=[42.90, -78.80],</span>
+<span class="sd">		...     routeType=&#39;fastest&#39;,</span>
+<span class="sd">		...     dataProvider=&#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: &#39;YOUR_ORSKEY&#39;})</span>
+
+<span class="sd">	View the route in Leaflet.  The green marker is the start, the red marker is the end:</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(arcs=shapepoints2D)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.80, -78.80], fillColor=&#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.90, -78.80], fillColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	    </span>
+<span class="sd">	Example 2 - Shapepoints with Euclidean travel can also be generated:</span>
+<span class="sd">		&gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">		...     odID             = 1,</span>
+<span class="sd">		...     startLoc         = [42.80, -78.80],</span>
+<span class="sd">		...     endLoc           = [42.90, -78.80],</span>
+<span class="sd">		...     routeType        = &#39;euclidean2D&#39;,</span>
+<span class="sd">		...     speedMPS         = vrv.convertSpeed(55, &#39;mi&#39;, &#39;hr&#39;, &#39;m&#39;, &#39;s&#39;),</span>
+<span class="sd">		...     dataProvider     = None,</span>
+<span class="sd">		...     dataProviderArgs = None)</span>
+<span class="sd">		&gt;&gt;&gt; shapepoints2D</span>
+<span class="sd">	    </span>
+<span class="sd">	View the route in Leaflet.  The green marker is the start, the red marker is the end:</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(arcs=shapepoints2D)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.80, -78.80], fillColor=&#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.90, -78.80], fillColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">	Example 3 - Generate an Assignments dataframe that starts from 520 seconds and assumes the vehicle is driving at a constant constant speed of 16 m/s (or 35.8 mph).  The OSRM-online data provider does not require an API key.</span>
+<span class="sd">	    &gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">	    ...     odID         = 1, </span>
+<span class="sd">	    ...     startLoc     = [42.80, -78.80], </span>
+<span class="sd">	    ...     endLoc       = [42.90, -78.80], </span>
+<span class="sd">	    ...     startTimeSec = 520,</span>
+<span class="sd">	    ...     routeType    = &#39;fastest&#39;,</span>
+<span class="sd">	    ...     dataProvider = &#39;OSRM-online&#39;,</span>
+<span class="sd">	    ...     speedMPS     = 16)</span>
+
+<span class="sd">	View the route in Leaflet.  The green marker is the start, the red marker is the end:</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(arcs=shapepoints2D)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.80, -78.80], fillColor=&#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.90, -78.80], fillColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">	Example 4 - The `expDurationSec` argument ensures that the vehicle reaches the ending location at time `startTimeSec + expDurationSec`. This is useful when you are using data from different sources (e.g., time matrix data from pgRouting and shapepoints created by ORS) and you want to maintain consistency in timing. If `expDurationSec` and `speedMPS` are both provided, `expDurationSec` will override the `speedMPS`.</span>
+<span class="sd">	    &gt;&gt;&gt; [travelTimeSec, travelDistMeters]  = vrv.getTimeDistScalar2D(</span>
+<span class="sd">	    ...     startLoc         = [42.80, -78.80],</span>
+<span class="sd">	    ...     endLoc           = [42.90, -78.80],</span>
+<span class="sd">	    ...     outputDistUnits  = &#39;meters&#39;,</span>
+<span class="sd">	    ...     outputTimeUnits  = &#39;seconds&#39;,</span>
+<span class="sd">	    ...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">	    ...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">	    ...     dataProviderArgs = {&#39;APIkey&#39; : ORS_API_KEY})</span>
+<span class="sd">	    &gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">	    ...     odID             = 1, </span>
+<span class="sd">	    ...     startLoc         = [42.80, -78.80], </span>
+<span class="sd">	    ...     endLoc           = [42.90, -78.80], </span>
+<span class="sd">	    ...     startTimeSec     = 520,</span>
+<span class="sd">	    ...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">	    ...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">	    ...     dataProviderArgs = {&#39;APIkey&#39; : ORS_API_KEY},</span>
+<span class="sd">	    ...     expDurationSec   = travelTimeSec)</span>
+<span class="sd">	    &gt;&gt;&gt; shapepoints2D</span>
+
+<span class="sd">	Example 5 - Note that `getShapepoints2D()` sometimes displays messages like &quot;The origin/destination point is XXX meters away from the road&quot;.  This occurs if the start and/or end location provided is too far away from the nearest road.  VeRoViz does not attempt to find a path from an arbitrary location to the nearest road.  To avoid these warnings, one option is to snap the start/end locations to the road network before attempting to get the shapepoints.  In this case, it is highly recommended to use the same data provider for both the snapping and shapepoint activities.</span>
+<span class="sd">	    &gt;&gt;&gt; startLoc = vrv.getSnapLoc(loc              = [42.80, -78.80], </span>
+<span class="sd">	    ...                           dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">	    ...                           dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">	    &gt;&gt;&gt; endLoc   = vrv.getSnapLoc(loc              = [42.90, -78.80], </span>
+<span class="sd">	    ...                           dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">	    ...                           dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">	    &gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">	    ...          odID             = 1, </span>
+<span class="sd">	    ...          startLoc         = startLoc,</span>
+<span class="sd">	    ...          endLoc           = endLoc,</span>
+<span class="sd">	    ...          startTimeSec     = 520,</span>
+<span class="sd">	    ...          routeType        = &#39;fastest&#39;,</span>
+<span class="sd">	    ...          dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">	    ...          dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">	    &gt;&gt;&gt; shapepoints2D</span>
+<span class="sd">	    </span>
+<span class="sd">	View the route in Leaflet.  The green filled marker is the original start, the green outlined marker is the snapped start.  The red filled marker is the original end, the red outlined marker is the snapped end.</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(arcs=shapepoints2D)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.80, -78.80], </span>
+<span class="sd">		...                              fillColor=&#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=[42.90, -78.80], </span>
+<span class="sd">		...                              fillColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=startLoc, </span>
+<span class="sd">		...                              fillColor=None, lineColor=&#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=endLoc, </span>
+<span class="sd">		...                              fillColor=None, lineColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">		</span>
+<span class="sd">	Example 6 - If you are constructing the Assignments dataframe for use with Cesium, then the `objectID` and `modelFile` arguments are required. If you are just using it to generate Leaflet maps, those arguments can be left as default (None).</span>
+<span class="sd">		&gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">		...     odID             = 1, </span>
+<span class="sd">		...     objectID         = &#39;Blue Car&#39;,</span>
+<span class="sd">		...     modelFile        = &#39;/veroviz/models/car_blue.gltf&#39;,</span>
+<span class="sd">		...     startLoc         = vrv.getSnapLoc(</span>
+<span class="sd">		...                          loc          = [42.80, -78.80], </span>
+<span class="sd">		...                          dataProvider = &#39;OSRM-online&#39;),</span>
+<span class="sd">		...     endLoc           = vrv.getSnapLoc(</span>
+<span class="sd">		...                          loc          = [42.90, -78.80], </span>
+<span class="sd">		...                          dataProvider = &#39;OSRM-online&#39;),</span>
+<span class="sd">		...     startTimeSec     = 520,</span>
+<span class="sd">		...     routeType        = &#39;shortest&#39;,</span>
+<span class="sd">		...     dataProvider     = &#39;MapQuest&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: os.environ[&#39;MAPQUESTKEY&#39;]},</span>
+<span class="sd">		...     expDurationSec   = 1500)</span>
+<span class="sd">		&gt;&gt;&gt; shapepoints2D</span>
+<span class="sd">		</span>
+<span class="sd">	Example 7 - This example includes all of the functional arguments:</span>
+<span class="sd">		&gt;&gt;&gt; start = [42.80, -78.80]</span>
+<span class="sd">		&gt;&gt;&gt; end   = [42.90, -78.80]</span>
+<span class="sd">		&gt;&gt;&gt; shapepoints2D = vrv.getShapepoints2D(</span>
+<span class="sd">		...     odID             = 1, </span>
+<span class="sd">		...     objectID         = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile        = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     modelScale       = 100,</span>
+<span class="sd">		...     modelMinPxSize   = 75,</span>
+<span class="sd">		...     startLoc         = start, </span>
+<span class="sd">		...     endLoc           = end, </span>
+<span class="sd">		...     startTimeSec     = 30.0, </span>
+<span class="sd">		...     expDurationSec   = 90, </span>
+<span class="sd">		...     routeType        = &#39;shortest&#39;, </span>
+<span class="sd">		...     speedMPS         = 5.2, </span>
+<span class="sd">		...     leafletColor     = &#39;blue&#39;, </span>
+<span class="sd">		...     leafletWeight    = 3, </span>
+<span class="sd">		...     leafletStyle     = &#39;dashed&#39;, </span>
+<span class="sd">		...     leafletOpacity   = 0.8, </span>
+<span class="sd">		...     useArrows        = True, </span>
+<span class="sd">		...     cesiumColor      = &#39;Cesium.Color.BLUE&#39;, </span>
+<span class="sd">		...     cesiumWeight     = 3, </span>
+<span class="sd">		...     cesiumStyle      = &#39;solid&#39;, </span>
+<span class="sd">		...     cesiumOpacity    = 0.8, </span>
+<span class="sd">		...     dataProvider     = &#39;MapQuest&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: os.environ[&#39;MAPQUESTKEY&#39;]})</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(arcs = shapepoints2D)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=start, fillColor=&#39;green&#39;, lineColor=&#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(mapObject=myMap, center=end, fillColor=&#39;red&#39;, lineColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">		</span>
+<span class="sd">	Generate a Cesium movie:	</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(</span>
+<span class="sd">		...     assignments = shapepoints2D, </span>
+<span class="sd">		...     cesiumDir   = os.environ[&#39;CESIUMDIR&#39;],</span>
+<span class="sd">		...     problemDir  = &#39;/examples/shapepoints&#39;)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGetShapepoints2D</span><span class="p">(</span><span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="c1"># Replace backslash</span>
+	<span class="n">modelFile</span> <span class="o">=</span> <span class="n">replaceBackslashToSlash</span><span class="p">(</span><span class="n">modelFile</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">dataProvider</span> <span class="o">=</span> <span class="n">dataProvider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">routeType</span> <span class="o">=</span> <span class="n">routeType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+			
+	<span class="k">if</span> <span class="p">(</span><span class="n">startLoc</span> <span class="o">!=</span> <span class="n">endLoc</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;euclidean2d&#39;</span><span class="p">):</span>
+			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">_eucGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;manhattan&#39;</span><span class="p">):</span>
+			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">_manGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;fastest&#39;</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;pgrouting&#39;</span><span class="p">):</span>
+			<span class="n">databaseName</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">[</span><span class="s1">&#39;databaseName&#39;</span><span class="p">]</span>
+			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">pgrGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;fastest&#39;</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;osrm-online&#39;</span><span class="p">):</span>
+			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">osrmGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fastest&#39;</span><span class="p">,</span> <span class="s1">&#39;shortest&#39;</span><span class="p">,</span> <span class="s1">&#39;pedestrian&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mapquest&#39;</span><span class="p">):</span>
+			<span class="n">APIkey</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">[</span><span class="s1">&#39;APIkey&#39;</span><span class="p">]</span>
+			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">mqGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">APIkey</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fastest&#39;</span><span class="p">,</span> <span class="s1">&#39;pedestrian&#39;</span><span class="p">,</span> <span class="s1">&#39;cycling&#39;</span><span class="p">,</span> <span class="s1">&#39;truck&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">):</span>
+			<span class="n">APIkey</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">[</span><span class="s1">&#39;APIkey&#39;</span><span class="p">]</span>
+			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">orsGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">APIkey</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span>
+
+		<span class="c1"># Check if the original point is too far away from the actual start point of the shapepoints from query</span>
+		<span class="n">distOri</span> <span class="o">=</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">distOri</span> <span class="o">&gt;=</span> <span class="n">VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE</span><span class="p">):</span> <span class="c1"># Go back to 10m after testing</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: The origin point (lat: </span><span class="si">%s</span><span class="s2">, lon: </span><span class="si">%s</span><span class="s2">) is </span><span class="si">%.1f</span><span class="s2"> meters away from the road. You might find a gap between the origin point and the route.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">distOri</span><span class="p">))</span>
+
+		<span class="c1"># Check if the actual end point is too far away from destination point</span>
+		<span class="n">distDes</span> <span class="o">=</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">distDes</span> <span class="o">&gt;=</span> <span class="n">VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE</span><span class="p">):</span> <span class="c1"># Go back to 10m after testing</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: The destination point (lat: </span><span class="si">%s</span><span class="s2">, lon: </span><span class="si">%s</span><span class="s2">) is </span><span class="si">%.1f</span><span class="s2"> meters away from the road. You might find a gap between destination point and the route.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">distDes</span><span class="p">))</span>
+
+		<span class="c1"># convert distance to accumulated distance</span>
+		<span class="n">accDist</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">accDist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)):</span>
+			<span class="n">accDist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accDist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+		<span class="c1"># If `expDurationSec` is provided, override `speedMPS` and datasource, otherwise, if `speedMPS` is provided, override datasource</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="p">[</span><span class="n">newTime</span><span class="p">,</span> <span class="n">newDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">distributeTimeDist</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">)</span>
+			<span class="n">time</span> <span class="o">=</span> <span class="n">newTime</span>
+			<span class="n">dist</span> <span class="o">=</span> <span class="n">newDist</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">speedMPS</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">expDurationSec</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newExpDurationSec</span> <span class="o">=</span> <span class="n">accDist</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">accDist</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span>
+			<span class="p">[</span><span class="n">newTime</span><span class="p">,</span> <span class="n">newDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">distributeTimeDist</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">newExpDurationSec</span><span class="p">)</span>
+			<span class="n">time</span> <span class="o">=</span> <span class="n">newTime</span>
+			<span class="n">dist</span> <span class="o">=</span> <span class="n">newDist</span>
+
+		<span class="c1"># convert time to accumulated time</span>
+		<span class="n">accTime</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">accTime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">startTimeSec</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)):</span>
+			<span class="n">accTime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accTime</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+		<span class="c1"># For maintainability, convert locs into dictionary</span>
+		<span class="n">dicPath</span> <span class="o">=</span> <span class="n">locs2Dict</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+		<span class="c1"># shapepoint dataframe</span>
+		<span class="n">assignments</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;Assignments&#39;</span><span class="p">)</span>
+
+		<span class="c1"># generate assignments</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+			<span class="n">assignments</span> <span class="o">=</span> <span class="n">assignments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+				<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">odID</span><span class="p">,</span>
+				<span class="s1">&#39;objectID&#39;</span> <span class="p">:</span> <span class="n">objectID</span><span class="p">,</span> 
+				<span class="s1">&#39;modelFile&#39;</span> <span class="p">:</span> <span class="n">modelFile</span><span class="p">,</span>
+				<span class="s1">&#39;startTimeSec&#39;</span> <span class="p">:</span> <span class="n">accTime</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+				<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;startAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;endTimeSec&#39;</span> <span class="p">:</span> <span class="n">accTime</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+				<span class="s1">&#39;endLat&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;endLon&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;endAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;leafletColor&#39;</span> <span class="p">:</span> <span class="n">leafletColor</span><span class="p">,</span>
+				<span class="s1">&#39;leafletWeight&#39;</span> <span class="p">:</span> <span class="n">leafletWeight</span><span class="p">,</span>
+				<span class="s1">&#39;leafletStyle&#39;</span> <span class="p">:</span> <span class="n">leafletStyle</span><span class="p">,</span>
+				<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">useArrows</span><span class="p">,</span>
+				<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">leafletOpacity</span><span class="p">,</span>
+				<span class="s1">&#39;modelScale&#39;</span> <span class="p">:</span> <span class="n">modelScale</span><span class="p">,</span>
+				<span class="s1">&#39;modelMinPxSize&#39;</span> <span class="p">:</span> <span class="n">modelMinPxSize</span><span class="p">,</span>
+				<span class="s1">&#39;cesiumColor&#39;</span> <span class="p">:</span> <span class="n">cesiumColor</span><span class="p">,</span>
+				<span class="s1">&#39;cesiumWeight&#39;</span> <span class="p">:</span> <span class="n">cesiumWeight</span><span class="p">,</span>
+				<span class="s1">&#39;cesiumStyle&#39;</span> <span class="p">:</span> <span class="n">cesiumStyle</span><span class="p">,</span>
+				<span class="s1">&#39;cesiumOpacity&#39;</span> <span class="p">:</span> <span class="n">cesiumOpacity</span>
+				<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="c1"># For maintainability, convert locs into dictionary</span>
+		<span class="n">dicStartLoc</span> <span class="o">=</span> <span class="n">loc2Dict</span><span class="p">(</span><span class="n">startLoc</span><span class="p">)</span>
+
+		<span class="n">assignments</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;Assignments&#39;</span><span class="p">)</span>
+		<span class="n">assignments</span> <span class="o">=</span> <span class="n">assignments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+			<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">odID</span><span class="p">,</span>
+			<span class="s1">&#39;objectID&#39;</span> <span class="p">:</span> <span class="n">objectID</span><span class="p">,</span> 
+			<span class="s1">&#39;modelFile&#39;</span> <span class="p">:</span> <span class="n">modelFile</span><span class="p">,</span>
+			<span class="s1">&#39;startTimeSec&#39;</span> <span class="p">:</span> <span class="n">startTimeSec</span><span class="p">,</span>
+			<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+			<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
+			<span class="s1">&#39;startAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
+			<span class="s1">&#39;endTimeSec&#39;</span> <span class="p">:</span> <span class="n">expDurationSec</span> <span class="o">+</span> <span class="n">startTimeSec</span> <span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">startTimeSec</span><span class="p">,</span>
+			<span class="s1">&#39;endLat&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+			<span class="s1">&#39;endLon&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
+			<span class="s1">&#39;endAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
+			<span class="s1">&#39;leafletColor&#39;</span> <span class="p">:</span> <span class="n">leafletColor</span><span class="p">,</span>
+			<span class="s1">&#39;leafletWeight&#39;</span> <span class="p">:</span> <span class="n">leafletWeight</span><span class="p">,</span>
+			<span class="s1">&#39;leafletStyle&#39;</span> <span class="p">:</span> <span class="n">leafletStyle</span><span class="p">,</span>
+			<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">useArrows</span><span class="p">,</span>
+			<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">leafletOpacity</span><span class="p">,</span>
+			<span class="s1">&#39;modelScale&#39;</span> <span class="p">:</span> <span class="n">modelScale</span><span class="p">,</span>
+			<span class="s1">&#39;modelMinPxSize&#39;</span> <span class="p">:</span> <span class="n">modelMinPxSize</span><span class="p">,</span>
+			<span class="s1">&#39;cesiumColor&#39;</span> <span class="p">:</span> <span class="n">cesiumColor</span><span class="p">,</span>
+			<span class="s1">&#39;cesiumWeight&#39;</span> <span class="p">:</span> <span class="n">cesiumWeight</span><span class="p">,</span>
+			<span class="s1">&#39;cesiumStyle&#39;</span> <span class="p">:</span> <span class="n">cesiumStyle</span><span class="p">,</span>
+			<span class="s1">&#39;cesiumOpacity&#39;</span> <span class="p">:</span> <span class="n">cesiumOpacity</span>
+			<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">assignments</span></div>
+
+<span class="k">def</span> <span class="nf">_eucGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">):</span>
+	<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">]</span>
+	<span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">)]</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span><span class="p">]</span>	
+	<span class="k">return</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_manGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">,</span> <span class="n">verticalFirst</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="c1"># if verticalFirst is true, it means go north/south firt then go east/west</span>
+	<span class="k">if</span> <span class="n">verticalFirst</span><span class="p">:</span>
+		<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">]</span>
+		<span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">geoDistance2D</span><span class="p">([</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">)]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">]</span>
+		<span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">geoDistance2D</span><span class="p">([</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">)]</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">expDurationSec</span> <span class="o">*</span> <span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">expDurationSec</span> <span class="o">*</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span><span class="p">]</span>
+
+	<span class="k">return</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>
