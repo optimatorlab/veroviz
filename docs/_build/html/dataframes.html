@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dataframes &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Nodes" href="nodes.html" />
+    <link rel="prev" title="Data Providers" href="dataproviders.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nodes.html" title="Nodes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dataproviders.html" title="Data Providers"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Dataframes</a><ul>
+<li><a class="reference internal" href="#dataframes-comparison">Dataframes Comparison</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dataproviders.html"
+                        title="previous chapter">Data Providers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nodes.html"
+                        title="next chapter">Nodes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/dataframes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dataframes">
+<h1>Dataframes<a class="headerlink" href="#dataframes" title="Permalink to this headline">¶</a></h1>
+<p><em>VeRoViz</em> uses three particular pandas dataframes, as listed below.
+Each dataframe serves a specific purpose.  The columns of each dataframe
+that are used depend on the function that is referencing the dataframe.
+While each dataframe has a number of required columns, users are encouraged
+to add new columns as necessary to support a particular research project.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataframe type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a></p></td>
+<td><p>Specifies information about single locations
+(nodes or vertices).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a></p></td>
+<td><p>Used to draw lines between pairs of locations on a
+Leaflet map.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a></p></td>
+<td><p>Allows Cesium to generate 3D video for routing
+visualization.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The “Arcs” and “Assignments” dataframes are very similar.
+See <a class="reference internal" href="#dataframes-comparison"><span class="std std-ref">Dataframes Comparison</span></a> for more information.</p>
+<div class="section" id="dataframes-comparison">
+<span id="id1"></span><h2>Dataframes Comparison<a class="headerlink" href="#dataframes-comparison" title="Permalink to this headline">¶</a></h2>
+<p>The “Arcs” dataframe contains a subset of the “Assignments” dataframe
+columns.  Most notably, the “Arcs” dataframe does not contain information
+about timing, nor does it contain information related to the display of
+3D models in Cesium.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 23%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field Name</p></th>
+<th class="head"><p>Arcs</p></th>
+<th class="head"><p>Assignments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>objectID</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>modelFile</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>modelScale</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>modelMinPxSize</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>startTimeSec</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>startLat</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>startLon</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>startAltMeters</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>endTimeSec</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>endLat</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>endLon</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>endAltMeters</p></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletColor</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>leafletWeight</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletStyle</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>leafletOpacity</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>useArrows</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>cesiumColor</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumWeight</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>cesiumStyle</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumOpacity</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nodes.html" title="Nodes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dataproviders.html" title="Data Providers"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

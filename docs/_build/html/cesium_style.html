@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cesium Style &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Global Settings and Defaults" href="global_settings_and_defaults.html" />
+    <link rel="prev" title="Leaflet Style" href="leaflet_style.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="global_settings_and_defaults.html" title="Global Settings and Defaults"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="leaflet_style.html" title="Leaflet Style"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cesium Style</a><ul>
+<li><a class="reference internal" href="#cesium-colors">Cesium Colors</a></li>
+<li><a class="reference internal" href="#cesium-node-icons">Cesium Node Icons</a></li>
+<li><a class="reference internal" href="#cesium-assignment-models">Cesium Assignment Models</a></li>
+<li><a class="reference internal" href="#cesium-line-styles">Cesium Line Styles</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="leaflet_style.html"
+                        title="previous chapter">Leaflet Style</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="global_settings_and_defaults.html"
+                        title="next chapter">Global Settings and Defaults</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cesium_style.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cesium-style">
+<span id="id1"></span><h1>Cesium Style<a class="headerlink" href="#cesium-style" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cesium-colors">
+<h2>Cesium Colors<a class="headerlink" href="#cesium-colors" title="Permalink to this headline">¶</a></h2>
+<p>See the cesium color documentation <a class="reference external" href="https://cesiumjs.org/Cesium/Build/Documentation/Color.html">here</a>
+for all available color options.</p>
+</div>
+<div class="section" id="cesium-node-icons">
+<h2>Cesium Node Icons<a class="headerlink" href="#cesium-node-icons" title="Permalink to this headline">¶</a></h2>
+<p><em>VeRoViz</em> currently uses <cite>PinBuilder</cite> from Cesium, which only
+supports icons with short strings (e.g., a number, or a short symbol like “?” or “!”).
+These short strings should be denoted in the <cite>cesiumIconText</cite> column of a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.
+Note that <cite>cesiumIconText</cite> differs from <cite>leafletIconText</cite>, in that the former will display text that is visible directly within the icon itself, while the latter will only be displayed if you click on the icon.</p>
+</div>
+<div class="section" id="cesium-assignment-models">
+<h2>Cesium Assignment Models<a class="headerlink" href="#cesium-assignment-models" title="Permalink to this headline">¶</a></h2>
+<p><em>VeRoViz</em> ships with the following 3D models, which may be specified in the <cite>modelFile</cite> column of an <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Filename</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>“ub_truck.gltf”</p></td>
+<td><p>UB truck</p></td>
+</tr>
+<tr class="row-odd"><td><p>“drone.gltf”</p></td>
+<td><p>drone (without package)</p></td>
+</tr>
+<tr class="row-even"><td><p>“drone_package.gltf”</p></td>
+<td><p>drone (with package)</p></td>
+</tr>
+<tr class="row-odd"><td><p>“car_red.gltf”</p></td>
+<td><p>red car</p></td>
+</tr>
+<tr class="row-even"><td><p>“car_green.gltf”</p></td>
+<td><p>green car</p></td>
+</tr>
+<tr class="row-odd"><td><p>“car_blue.gltf”</p></td>
+<td><p>blue car</p></td>
+</tr>
+<tr class="row-even"><td><p>“box_blue.gltf”</p></td>
+<td><p>blue box</p></td>
+</tr>
+<tr class="row-odd"><td><p>“box_yellow.gltf”</p></td>
+<td><p>yellow box</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cesium-line-styles">
+<h2>Cesium Line Styles<a class="headerlink" href="#cesium-line-styles" title="Permalink to this headline">¶</a></h2>
+<p>The following line styles are available: ‘solid’, ‘dashed’, ‘dotted’</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="global_settings_and_defaults.html" title="Global Settings and Defaults"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="leaflet_style.html" title="Leaflet Style"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

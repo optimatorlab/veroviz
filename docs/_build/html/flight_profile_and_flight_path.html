@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Flight Profile and Flight Path &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Leaflet Style" href="leaflet_style.html" />
+    <link rel="prev" title="Units" href="units.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="leaflet_style.html" title="Leaflet Style"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="Units"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="units.html"
+                        title="previous chapter">Units</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="leaflet_style.html"
+                        title="next chapter">Leaflet Style</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/flight_profile_and_flight_path.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="flight-profile-and-flight-path">
+<span id="id1"></span><h1>Flight Profile and Flight Path<a class="headerlink" href="#flight-profile-and-flight-path" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="veroviz.getTimeDist3D.html#veroviz.getTimeDist3D.getTimeDist3D" title="veroviz.getTimeDist3D.getTimeDist3D"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTimeDist3D()</span></code></a> and
+<a class="reference internal" href="veroviz.getShapepoints3D.html#veroviz.getShapepoints3D.getShapepoints3D" title="veroviz.getShapepoints3D.getShapepoints3D"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getShapepoints3D()</span></code></a> functions accommodate
+different types of flight profiles/paths, which are specified in the <cite>routeType</cite>
+input argument.  These profiles describe the aircraft’s change
+in altitude over time, and are used to mimic certain types of flight.</p>
+<p>Specifically, <em>VeRoViz</em> defines four pre-determined flight profiles/paths:
+- ‘square’ - The aircraft takes off vertically to a cruise altitude, flies at the cruise altitude to the destination, then lands vertically.  This type of profile is common with quadcopter drones.
+- ‘triangular’ - The aircraft climbs to a cruising altitude and then immediately descends to the destination.
+- ‘trapezoidal’ - A hybrid of the ‘square’ and ‘triangular’ profiles, in the ‘trapezoidal’ profile the aircraft takes off while also moving toward the destination.  It then flies at the cruise altitude before descending while also moving toward the destination.
+- ‘straight’ - The aircraft flies directly from the origin to the destination.  This would typically be useful if the origin and destination are at different altitudes, or if both locations have a positive altitude.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The “flight profiles” employed in <em>VeRoViz</em> are approximations, and do
+not necessarily correspond to flight paths that are feasible for
+certain aircraft.  These flight profiles are intended to be used for
+visualization purposes.</p>
+</div>
+<p>Each profile is fully characterized
+by a specific combination of parameters, as described in the table below.
+If a parameter is provided, but is not required, it will be ignored.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 14%" />
+<col style="width: 20%" />
+<col style="width: 21%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="4"><p><cite>routeType</cite> options</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Field name</p></th>
+<th class="head"><p>‘square’</p></th>
+<th class="head"><p>‘triangular’</p></th>
+<th class="head"><p>‘trapezoidal’</p></th>
+<th class="head"><p>‘straight’</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>takeoffSpeedMPS</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>climbRateMPS</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>cruiseSpeedMPS</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>cruiseAltMetersAGL</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>landSpeedMPS</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>descentRateMPS</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>For problems involving coordinated vehicles, it is often necessary for one
+vehicle to wait for another.  The <a class="reference internal" href="veroviz.getShapepoints3D.html#veroviz.getShapepoints3D.getShapepoints3D" title="veroviz.getShapepoints3D.getShapepoints3D"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getShapepoints3D()</span></code></a>
+function includes <cite>loiterPosition</cite> and <cite>earliestLandTime</cite> arguments,
+which are used to specify where an aircraft would wait (loiter) and the
+earliest time at which the aircraft can land.</p>
+<p>The available loiter positions are specific to each flight profile.  The table below describes the <cite>loiterPosition</cite> options for each <cite>routeType</cite>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 14%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head" colspan="4"><p><cite>routeType</cite> options</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p><cite>loiterPosition</cite></p></th>
+<th class="head"><p>‘square’</p></th>
+<th class="head"><p>‘triangular’</p></th>
+<th class="head"><p>‘trapezoidal’</p></th>
+<th class="head"><p>‘straight’</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>‘beforeTakeoff’</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>‘takeoffAtAlt’</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>‘arrivalAtAlt’</p></td>
+<td><p>✓</p></td>
+<td><p>✓ (same as
+takeoffAtAlts)</p></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>‘afterLand’</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>‘beforeTakeoff’ - Loitering occurs before the aircraft leaves its starting location.</p></li>
+<li><p>‘takeoffAtAlt’ - Loitering occurs when the aircraft reaches its cruise altitude.</p></li>
+<li><p>‘arrivalAtAlt’ - Loitering occurs at the cruise altitude when the aircraft reaches the [lat,lon] coordinate of the destination.</p></li>
+<li><p>‘afterLand’ - Loitering occurs after the aircraft completes its route to the destination.  The aircraft will then be held in place until <cite>earliestLandTime</cite> (the name of this parameter is misleading in this case, as the aircraft will have already landed before that time).</p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="leaflet_style.html" title="Leaflet Style"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="Units"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

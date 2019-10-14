@@ -1,0 +1,25 @@
+.DS_Store
+
+**/.ipynb_checkpoints
+**/*.pyc
+
+**/*.log
+**/keys.js
+
+# update jupyter notebook before release
+# **/*.ipynb
+# !examples/*.ipynb
+
+**/~*
+**/.~*
+
+# */_build
+
+**/*.aux
+**/*.gz
+**/*.bbl
+**/*.blg
+
+dist
+*.egg-info
+build

@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.getShapepoints3D module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.getShapepoints3D.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.getShapepoints3D">
+<span id="veroviz-getshapepoints3d-module"></span><h1>veroviz.getShapepoints3D module<a class="headerlink" href="#module-veroviz.getShapepoints3D" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.getShapepoints3D.getShapepoints3D">
+<code class="sig-name descname">getShapepoints3D</code><span class="sig-paren">(</span><em class="sig-param">odID=1</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">modelFile=None</em>, <em class="sig-param">startTimeSec=0.0</em>, <em class="sig-param">startLoc=None</em>, <em class="sig-param">endLoc=None</em>, <em class="sig-param">takeoffSpeedMPS=None</em>, <em class="sig-param">cruiseSpeedMPS=None</em>, <em class="sig-param">landSpeedMPS=None</em>, <em class="sig-param">cruiseAltMetersAGL=None</em>, <em class="sig-param">routeType='square'</em>, <em class="sig-param">climbRateMPS=None</em>, <em class="sig-param">descentRateMPS=None</em>, <em class="sig-param">earliestLandTime=-1</em>, <em class="sig-param">loiterPosition='arrivalAtAlt'</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">modelScale=100</em>, <em class="sig-param">modelMinPxSize=75</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/getShapepoints3D.html#getShapepoints3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.getShapepoints3D.getShapepoints3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates 3-dimensional “shapepoints” between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates (and altitudes) that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define movement in three dimensions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is for vehicles whose travel path includes changes in altitude (e.g., drones).  For ground vehicles traveling on a ground plane, a 2-dimensional version of this function is provided by <cite>getShapepoints2D()</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>odID</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</p></li>
+<li><p><strong>objectID</strong> (<em>int/string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A descriptive name or index for a particular vehicle or object (e.g., ‘plane 1’, or ‘blue drone’).</p></li>
+<li><p><strong>modelFile</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of <cite>.gltf</cite> or <cite>.glb</cite>, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the <cite>modelFile</cite> should exist within the Cesium root directory).</p></li>
+<li><p><strong>startTimeSec</strong> (<em>float</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.0</em>) – The time, in seconds, at which the vehicle may leave the starting location.</p></li>
+<li><p><strong>startLoc</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as 'None'</em>) – The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</p></li>
+<li><p><strong>endLoc</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as 'None'</em>) – The ending location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</p></li>
+<li><p><strong>takeoffSpeedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The speed of the aircraft, in meters per second, during the “takeoff” phase.  This will apply only to ‘square’ and ‘trapezoidal’ route types.  The takeoff phase is the first component of these route types, and is associated with an increase in altitude.  The takeoff speed is assumed to be constant, and ignores acceleration.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional information.</p></li>
+<li><p><strong>cruiseSpeedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The speed of the aircraft, in meters per second, during the “cruising” phase.  This will apply to all of the route options.  Typically, the cruising phase occurs at a constant altitude, as specified by <cite>cruiseAltMetersAGL</cite>.  However, for the ‘triangular’ route type, cruiseSpeedMPS specifies the constant travel speed during both the ascent to, and immediate descent from, the cruise altitude.  In the ‘triangle’ route type, the aircraft has no horizontal travel at the cruise altitude.  In all cases, the cruise speed is assumed to be constant, and ignores acceleration.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional information.</p></li>
+<li><p><strong>landSpeedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The speed of the aircraft, in meters per second, during the “landing” phase. This will apply to only the ‘square’ and ‘trapezoidal’ route types.  The landing phase is the last component of these route types, and is associated with a decrease in altitude.  The landing speed is assumed to be constant, and ignore deceleration.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional information.</p></li>
+<li><p><strong>cruiseAltMetersAGL</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The altitude, in meters above ground level, at which the aircraft is in the “cruise” phase.  This phase is typically associated with horizontal movement at a fixed altitude.  The exception is for the ‘triangular’ route type, in which case the aircraft instantaneously transitions from ascent to descent at the cruise altitude (i.e., there is no horizontal travel at this altitude).  All but the ‘straight’ route type require/use the cruise altitude.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional details.</p></li>
+<li><p><strong>routeType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'square'</em>) – Specifies the basic shape of the flight profile.  Valid options include ‘square’, ‘triangular’, ‘trapezoidal’, and ‘straight’.  The square profile involves a vertical takeoff to a cruising altitude, horizontal travel at the cruising altitude, and a vertical landing.  The trapezoidal profile describes a takeoff phase in which the aircraft increases altitude and travels horizontally towards the destination until reaching the cruising altitude, horizontal travel at the cruising altitude, and a landing phase in which the aircraft decreases altitude and travels horizontally until reaching the destination.  For the trapezoidal profile, the horizontal movement during the takeoff and landing phases is a function of the <cite>climbRateMPS</cite> and <cite>descentRateMPS</cite>, respectively.  The triangular profile describes an ascent to the cruising altitude followed immediately by a descent to the destination.  Finally, the straight profile describes straight-line flight directly from the starting location to the ending location; the altitudes of these two locations may differ.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for a description of these flight profiles.</p></li>
+<li><p><strong>climbRateMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – This parameter is used only for the ‘trapezoidal’ route type, and is in units of meters per second.  It describes the rate at which the aircraft increases its altitude, relative to the value of <cite>takeoffSpeedMPS</cite>.  If <cite>climbRateMPS == takeoffSpeedMPS</cite>, then the takeoff phase will be purely vertical.  If <cite>climbRateMPS</cite> is close to zero, then the takeoff phase will be characterized by a slow increase in altitude (and longer horizontal flight).  The aircraft’s actual travel speed during the climb will be <cite>takeoffSpeedMPS</cite>.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional details.</p></li>
+<li><p><strong>descentRateMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – This parameter is used only for the ‘trapezoidal’ route type, and is in units of meters per second.  It describes the rate at which the aircraft decreases its altitude, relative to the value of <cite>landSpeedMPS</cite>.  If <cite>descentRateMPS == landSpeedMPS</cite>, then the landing phase will be purely vertical.  If <cite>descentRateMPS</cite> is close to zero, then the landing phase will be characterized by a slow decrease in altitude (and longer horizontal flight).  The aircraft’s actual travel speed during the descent will be <cite>landSpeedMPS</cite>.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional details.</p></li>
+<li><p><strong>earliestLandTime</strong> (<em>float</em><em>, </em><em>Optional</em><em>, </em><em>default as -1</em>) – Specifies the earliest time, in seconds, that the vehicle is allowed to complete travel to the ending location.  This parameter is useful in cases where time windows exist, or if a flying vehicle must wait for another vehicle (e.g., a drone that cannot land until a truck has arrived to recover it).  The default value of <cite>-1</cite> indicates that there is no restriction on the earliest landing time.</p></li>
+<li><p><strong>loiterPosition</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'arrivalAtAlt'</em>) – The position where the vehicle loiters if its un-delayed travel time from start to end would result in an arrival before <cite>earliestLandTime</cite>.  Valid options are ‘beforeTakeoff’, ‘takeoffAtAlt’, ‘arrivalAtAlt’, ‘afterLand’. See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for details.</p></li>
+<li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;orange&quot;</em>) – The color of the route when displayed in Leaflet.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>leafletWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the route when displayed in Leaflet.</p></li>
+<li><p><strong>leafletStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the route when displayed in Leaflet.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>leafletOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+<li><p><strong>useArrows</strong> (<em>bool</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Indicates whether arrows should be shown on the route when displayed in Leaflet.</p></li>
+<li><p><strong>modelScale</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 100</em>) – The scale of the 3D model (specified by the <cite>modelFile</cite> argument) when displayed in Cesium, such that 100 represents 100%.</p></li>
+<li><p><strong>modelMinPxSize</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 75</em>) – The minimum pixel size of the 3D model (specified by the <cite>modelFile</cite> argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model.</p></li>
+<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;Cesium.Color.ORANGE&quot;</em>) – The color of the route when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>cesiumWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the route when displayed in Cesium.</p></li>
+<li><p><strong>cesiumStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the route when displayed in Cesium.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for more information.</p></li>
+<li><p><strong>cesiumOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe containing an ordered sequence of paired GPS coordinates and altitudes describing the collection of straight-line segments required to travel from a start location to an end location.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if a newer version exists:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Square profile (takeoff and land vertically, like a quadcopter).</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_1</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>               <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;square flight&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>             <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.77</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;square&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.RED&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_1</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - Straight profile (fly directly from start to end).</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>               <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;straight flight&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>             <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.77</span><span class="p">,</span> <span class="mi">219</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;straight&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.GREEN&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_2</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - Trapezoidal profiles (with different climb/descent rates).</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_3a</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>               <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;trapezoid a&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>             <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.77</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;trapezoidal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLACK&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_3a</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_3b</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>               <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;trapezoid b&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>             <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.77</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;trapezoidal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLACK&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumStyle</span>        <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_3b</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 4 - Triangular profile</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_4</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>               <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;triangle&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>             <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.77</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;triangular&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.LIGHTPINK&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D_4</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 5 - Compare the profiles from Examples 1-4.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># We&#39;ll need pandas to concatenate all of our dataframes.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize an empty &quot;assignments&quot; dataframe:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Append to the assignments dataframe.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The assignments dataframe will hold all shapepoints for all vehicles.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">shapepoints3D_1</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">shapepoints3D_2</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">shapepoints3D_3a</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">shapepoints3D_3b</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">shapepoints3D_4</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate Cesium materials to view all flight profiles:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createCesium</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">assignments</span> <span class="o">=</span> <span class="n">assignmentsDF</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumDir</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CESIUMDIR&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">problemDir</span>  <span class="o">=</span> <span class="s1">&#39;/examples/shapepoints3D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 6 - This example includes all of the functional arguments.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapepoints3D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>               <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;drone&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startTimeSec</span>       <span class="o">=</span> <span class="mf">120.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>             <span class="o">=</span> <span class="p">[</span><span class="mf">42.85</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.95</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;trapezoidal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">earliestLandTime</span>   <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">loiterPosition</span>     <span class="o">=</span> <span class="s1">&#39;arrivalAtAlt&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>       <span class="o">=</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletWeight</span>      <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletStyle</span>       <span class="o">=</span> <span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletOpacity</span>     <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">useArrows</span>          <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumWeight</span>       <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumStyle</span>        <span class="o">=</span> <span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumOpacity</span>      <span class="o">=</span> <span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createCesium</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">assignments</span> <span class="o">=</span> <span class="n">shapepoints3D</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumDir</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CESIUMDIR&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">problemDir</span>  <span class="o">=</span> <span class="s1">&#39;examples/shapepoints3D/ex6&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>3D Shapepoints Demo - This final example combines several VeRoViz functions.  In this example, a truck and a drone start at the same location (node 1). The drone will travel to nodes 2 and 3; the truck will travel directly to node 3. The drone cannot land at node 3 until the truck arrives.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Define 3 nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">locs</span>             <span class="o">=</span> <span class="p">[[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>                       <span class="p">[</span><span class="mf">42.83</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.75</span><span class="p">],</span>
+<span class="gp">... </span>                       <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.70</span><span class="p">]],</span>
+<span class="gp">... </span>   <span class="n">snapToRoad</span>       <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ORS-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the truck&#39;s travel time from node 1 to node 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">truckTimeSec</span><span class="p">,</span> <span class="n">truckDistMeters</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDistScalar2D</span><span class="p">(</span>
+<span class="gp">... </span>     <span class="n">startLoc</span>         <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>     <span class="n">endLoc</span>           <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>     <span class="n">routeType</span>        <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>     <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ORS-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>     <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truckTimeSec</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get the truck shapepoints, using expected duration</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truckShapepoints</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints2D</span><span class="p">(</span>
+<span class="gp">... </span>       <span class="n">odID</span>             <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">objectID</span>         <span class="o">=</span> <span class="s1">&#39;truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">modelFile</span>        <span class="o">=</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">modelScale</span>       <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">modelMinPxSize</span>   <span class="o">=</span> <span class="mi">75</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">startTimeSec</span>     <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">startLoc</span>         <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">endLoc</span>           <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">expDurationSec</span>   <span class="o">=</span> <span class="n">truckTimeSec</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">routeType</span>        <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ORS-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]},</span>
+<span class="gp">... </span>       <span class="n">leafletColor</span>     <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">cesiumColor</span>      <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLUE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the truck stay idle when it arrives at node 3:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truckShapepoints</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addStaticAssignment</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">truckShapepoints</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">odID</span>            <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">modelFile</span>       <span class="o">=</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">modelScale</span>      <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="mi">75</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="n">loc</span>             <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>   <span class="n">startTimeSec</span>    <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">truckShapepoints</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>   <span class="n">endTimeSec</span>      <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Route the drone from 1 to 2:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">droneShapepoints_1</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>       <span class="n">odID</span>               <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;drone&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">startTimeSec</span>       <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">startLoc</span>           <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">endLoc</span>             <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;square&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">earliestLandTime</span>   <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>      <span class="c1"># Can land as soon as it arrives.</span>
+<span class="gp">... </span>       <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Route the drone from 2 to 3, but wait for the truck before landing:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">droneShapepoints_2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints3D</span><span class="p">(</span>
+<span class="gp">... </span>       <span class="n">odID</span>               <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">objectID</span>           <span class="o">=</span> <span class="s1">&#39;drone&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">modelFile</span>          <span class="o">=</span> <span class="s1">&#39;/veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">startTimeSec</span>       <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">droneShapepoints_1</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">startLoc</span>           <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">endLoc</span>             <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>       <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;square&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">earliestLandTime</span>   <span class="o">=</span> <span class="n">truckTimeSec</span><span class="p">,</span>    <span class="c1"># Must wait for truck to arrive.</span>
+<span class="gp">... </span>       <span class="n">loiterPosition</span>     <span class="o">=</span> <span class="s1">&#39;arrivalAtAlt&#39;</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">cesiumColor</span>        <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize an empty &quot;assignments&quot; dataframe:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Append to the assignments dataframe.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The assignments dataframe will hold all shapepoints for both vehicles.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">truckShapepoints</span><span class="p">,</span> <span class="n">droneShapepoints_1</span><span class="p">,</span> <span class="n">droneShapepoints_2</span><span class="p">],</span>
+<span class="gp">... </span>                         <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">assignmentsDF</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Look at the routes in Leaflet.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># We can&#39;t see timing or altitude changes here.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="n">assignmentsDF</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate Cesium materials so we can watch the vehicle movements:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createCesium</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">assignments</span> <span class="o">=</span> <span class="n">assignmentsDF</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumDir</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CESIUMDIR&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">problemDir</span>  <span class="o">=</span> <span class="s1">&#39;/examples/shapepoints3D/demo&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.createCesium module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.createCesium.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.createCesium">
+<span id="veroviz-createcesium-module"></span><h1>veroviz.createCesium module<a class="headerlink" href="#module-veroviz.createCesium" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.createCesium.createCesium">
+<code class="sig-name descname">createCesium</code><span class="sig-paren">(</span><em class="sig-param">assignments=None</em>, <em class="sig-param">nodes=None</em>, <em class="sig-param">startDate=None</em>, <em class="sig-param">startTime='08:00:00'</em>, <em class="sig-param">postBuffer=30</em>, <em class="sig-param">cesiumDir=None</em>, <em class="sig-param">problemDir=None</em>, <em class="sig-param">nodeColor=None</em>, <em class="sig-param">nodeStyle=None</em>, <em class="sig-param">pathColor=None</em>, <em class="sig-param">pathWeight=None</em>, <em class="sig-param">pathStyle=None</em>, <em class="sig-param">pathOpacity=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createCesium.html#createCesium"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createCesium.createCesium" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates several files required to view a solution in Cesium. The function requires assignments and/or nodes dataframes as input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>assignments</strong> (<a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a>, Conditional, <cite>assignments</cite> and <cite>nodes</cite> can not be None at the same time) – An <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe describing vehicle movement over time.  The assignments will be displayed as routes/paths in Cesium.  If a 3D model is defined in the <cite>modelFile</cite> column of the assignments dataframe, this object will also be displayed.</p></li>
+<li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Conditional, <cite>assignments</cite> and <cite>nodes</cite> can not be None at the same time) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe describing the locations of nodes.  These nodes will be displayed on the map in Cesium.</p></li>
+<li><p><strong>startDate</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>format is &quot;YYYY-MM-DD&quot;</em><em>, </em><em>default as today</em>) – Defines the start date to be displayed in Cesium.</p></li>
+<li><p><strong>startTime</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>format is &quot;HH:MM:SS&quot;</em><em>, </em><em>default as '08:00:00'</em>) – Defines the time at which the Cesium video begins, on the start date.</p></li>
+<li><p><strong>postBuffer</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 30</em>) – Specifies the additional time (in seconds) that the Cesium video will continue to run after the last assignment is completed.</p></li>
+<li><p><strong>cesiumDir</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – This should be the full absolute path to the directory where Cesium is installed. For example, for Windows it might be “D:/Cesium”; for Linux it might be “/home/user/Cesium”.</p></li>
+<li><p><strong>problemDir</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – The path name of the generated problem directory. This path is relative to the root of Cesium. For example, if <cite>cesiumDir = ‘/home/user/Cesium’</cite> and <cite>problemDir = ‘veroviz/problems/TSP’</cite> then the files will be generated in the directory <cite>‘/home/user/Cesium/veroviz/problems/TSP’</cite>.</p></li>
+<li><p><strong>nodeColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>cesiumColor</cite> column of the input <cite>nodes</cite> dataframe.  This will define the color of all nodes displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for the collection of available colors.</p></li>
+<li><p><strong>nodeStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>cesiumIconType</cite> column of the input <cite>nodes</cite> dataframe.  Currently, the only option is ‘pin’.</p></li>
+<li><p><strong>pathColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>cesiumColor</cite> column of the input <cite>assignments</cite> dataframe.  This will define the color of all arcs displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for the collection of available colors.</p></li>
+<li><p><strong>pathWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>cesiumWeight</cite> column of the input <cite>assignments</cite> dataframe. This will define the weight (in pixels) of all arcs displayed in Cesium. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for more information.</p></li>
+<li><p><strong>pathStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>cesiumStyle</cite> column of the input <cite>assignments</cite> dataframe. This will define the style of all arcs displayed in Cesium. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for available options.</p></li>
+<li><p><strong>pathOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>cesiumOpacity</cite> column of the input <cite>assignments</cite> dataframe.  This will define the opacity of all arcs displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for more information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>N/A</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function generates the following files within the directory specified by input argument <cite>problemDir</cite>:</p>
+<ul class="simple">
+<li><p>[problemDir].vrv (where [problemDir] is replaced by the value of <cite>problemDir</cite>);</p></li>
+<li><p>config.js</p></li>
+<li><p>displayNodes.js</p></li>
+<li><p>displayPath.js</p></li>
+<li><p>routes.czml</p></li>
+</ul>
+<p>Instructions for starting Cesium are provided at <a class="reference external" href="https://veroviz.org/documentation.html">https://veroviz.org/documentation.html</a></p>
+</div>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check the latest version.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create two nodes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span>
+</pre></div>
+</div>
+</dd>
+<dt>Move the truck from one node to the other.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getShapepoints2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">odID</span>           <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>       <span class="o">=</span> <span class="s1">&#39;truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelFile</span>      <span class="o">=</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelScale</span>     <span class="o">=</span> <span class="mi">80</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">modelMinPxSize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startLoc</span>       <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myNodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">endLoc</span>         <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myNodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">routeType</span>      <span class="o">=</span> <span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">speedMPS</span>       <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertSpeed</span><span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="s1">&#39;miles&#39;</span><span class="p">,</span> <span class="s1">&#39;hr&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create Cesium output.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createCesium</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">assignments</span> <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodes</span>       <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startTime</span>   <span class="o">=</span> <span class="s1">&#39;08:00:00&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumDir</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CESIUMDIR&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">problemDir</span>  <span class="o">=</span> <span class="s1">&#39;createCesium_example&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Units &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Flight Profile and Flight Path" href="flight_profile_and_flight_path.html" />
+    <link rel="prev" title="Assignments" href="assignments.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="assignments.html" title="Assignments"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Units</a><ul>
+<li><a class="reference internal" href="#distance-units">Distance Units</a></li>
+<li><a class="reference internal" href="#time-units">Time Units</a></li>
+<li><a class="reference internal" href="#area-units">Area Units</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="assignments.html"
+                        title="previous chapter">Assignments</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="flight_profile_and_flight_path.html"
+                        title="next chapter">Flight Profile and Flight Path</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/units.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="units">
+<span id="id1"></span><h1>Units<a class="headerlink" href="#units" title="Permalink to this headline">¶</a></h1>
+<p><em>VeRoViz</em> uses specific strings to denote units for the output
+values from different functions (e.g., for distance, time and area).
+All abbreviation below are case insensitive.</p>
+<p>For input values, the units are defined in the names of fields (e.g.,
+units of ‘speedMPS’ are [meters per second]).</p>
+<div class="section" id="distance-units">
+<h2>Distance Units<a class="headerlink" href="#distance-units" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Units</p></th>
+<th class="head"><p>Valid <em>VeRoViz</em> Abbreviations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Meters (default)</p></td>
+<td><p>‘meters’, ‘m’</p></td>
+</tr>
+<tr class="row-odd"><td><p>Kilometers</p></td>
+<td><p>‘kilometers’, ‘km’</p></td>
+</tr>
+<tr class="row-even"><td><p>Miles</p></td>
+<td><p>‘miles’, ‘mi’</p></td>
+</tr>
+<tr class="row-odd"><td><p>Feet</p></td>
+<td><p>‘feet’, ‘ft’</p></td>
+</tr>
+<tr class="row-even"><td><p>Nautical Miles</p></td>
+<td><p>‘nm’, ‘nmi’</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="time-units">
+<h2>Time Units<a class="headerlink" href="#time-units" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Units</p></th>
+<th class="head"><p>Valid <em>VeRoViz</em> Abbreviations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Seconds (default)</p></td>
+<td><p>‘seconds’, ‘sec’, ‘s’</p></td>
+</tr>
+<tr class="row-odd"><td><p>Minutes</p></td>
+<td><p>‘minutes’, ‘min’</p></td>
+</tr>
+<tr class="row-even"><td><p>Hours</p></td>
+<td><p>‘hours’, ‘h’</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="area-units">
+<h2>Area Units<a class="headerlink" href="#area-units" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Units</p></th>
+<th class="head"><p>Valid <em>VeRoViz</em> Abbreviations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Square meters</p></td>
+<td><p>‘sqm’, ‘sqmeters’, ‘sm’</p></td>
+</tr>
+<tr class="row-odd"><td><p>Square feet</p></td>
+<td><p>‘sqft’, ‘sqfeet’, ‘sf’</p></td>
+</tr>
+<tr class="row-even"><td><p>Square miles</p></td>
+<td><p>‘sqmi’, ‘sqmiles’, ‘smi’</p></td>
+</tr>
+<tr class="row-odd"><td><p>Square kilometers</p></td>
+<td><p>‘sqkm’, ‘sqkilometers’, ‘skm’</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>VeRoViz</em> provides utility functions to help the user transform units.
+See <a class="reference internal" href="veroviz.utilities.html#veroviz.utilities.convertDistance" title="veroviz.utilities.convertDistance"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convertDistance()</span></code></a>, <a class="reference internal" href="veroviz.utilities.html#veroviz.utilities.convertTime" title="veroviz.utilities.convertTime"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convertTime()</span></code></a>,
+<a class="reference internal" href="veroviz.utilities.html#veroviz.utilities.convertSpeed" title="veroviz.utilities.convertSpeed"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convertSpeed()</span></code></a> and <a class="reference internal" href="veroviz.utilities.html#veroviz.utilities.convertArea" title="veroviz.utilities.convertArea"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convertArea()</span></code></a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="assignments.html" title="Assignments"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

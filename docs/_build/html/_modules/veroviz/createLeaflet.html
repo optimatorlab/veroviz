@@ -1,0 +1,1434 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.createLeaflet &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="../../_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for veroviz.createLeaflet</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valCreateLeaflet</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletCircle</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletMarker</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletPolygon</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletPolyline</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletText</span>
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">replaceBackslashToSlash</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._deconstructAssignments</span> <span class="k">import</span> <span class="n">deconstructAssignments</span>
+
+<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">getMapBoundary</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoDistancePath2D</span>
+<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoMileageInPath2D</span>
+<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoDistance2D</span>
+
+<span class="n">foliumMaps</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="s1">&#39;cartodb positron&#39;</span><span class="p">,</span> 
+	<span class="s1">&#39;cartodb dark_matter&#39;</span><span class="p">,</span> 
+	<span class="s1">&#39;openstreetmap&#39;</span><span class="p">,</span> 
+	<span class="s1">&#39;stamen terrain&#39;</span><span class="p">,</span> 
+	<span class="s1">&#39;stamen toner&#39;</span><span class="p">,</span> 
+	<span class="s1">&#39;stamen watercolor&#39;</span>
+<span class="p">]</span>
+
+<span class="n">customMaps</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="s1">&#39;arcgis aerial&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Tiles &amp;copy; Esri &amp;mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community&#39;</span>
+	<span class="p">},</span>
+
+	<span class="s1">&#39;arcgis gray&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Tiles &amp;copy; Esri &amp;mdash; Esri, DeLorme, NAVTEQ&#39;</span>
+	<span class="p">},</span>
+
+	<span class="s1">&#39;arcgis ocean&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Tiles &amp;copy; Esri &amp;mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri&#39;</span>
+	<span class="p">},</span>
+
+	<span class="s1">&#39;arcgis roadmap&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Tiles &amp;copy; Esri &amp;mdash; Source: Esri&#39;</span>
+	<span class="p">},</span>
+
+	<span class="s1">&#39;arcgis shaded relief&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Tiles &amp;copy; Esri &amp;mdash; Source: Esri&#39;</span>
+	<span class="p">},</span>
+
+	<span class="s1">&#39;arcgis topo&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Tiles &amp;copy; Esri &amp;mdash; Source: Esri&#39;</span>
+	<span class="p">},</span>
+
+	<span class="s1">&#39;open topo&#39;</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://</span><span class="si">{s}</span><span class="s1">.tile.opentopomap.org/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">.png&#39;</span><span class="p">,</span>
+		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;Map data: &amp;copy; &lt;a href=&quot;https://www.openstreetmap.org/copyright&quot;&gt;OpenStreetMap&lt;/a&gt; contributors, &lt;a href=&quot;http://viewfinderpanoramas.org&quot;&gt;SRTM&lt;/a&gt; | Map style: &amp;copy; &lt;a href=&quot;https://opentopomap.org&quot;&gt;OpenTopoMap&lt;/a&gt; (&lt;a href=&quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;&gt;CC-BY-SA&lt;/a&gt;)&#39;</span>
+	<span class="p">},</span>
+<span class="p">}</span>
+	
+<div class="viewcode-block" id="createLeaflet"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.createLeaflet">[docs]</a><span class="k">def</span> <span class="nf">createLeaflet</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT</span><span class="p">,</span> <span class="n">boundingOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGOPACITY</span><span class="p">,</span> <span class="n">boundingStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGSTYLE</span><span class="p">,</span> <span class="n">boundingColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGCOLOR</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	createLeaflet is used to generate Leaflet objects using folium. The function takes a boundingRegion polygon, `Nodes`, `Arcs`, and `Assignments` dataframes as inputs, and creates a folium/leaflet map showing boundings, nodes and/or arcs. </span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Optional, default as None</span>
+<span class="sd">		If you already have a map (as a Folium object), you can provide that object and add content to that map.</span>
+<span class="sd">	mapFilename: string, Optional, default as None</span>
+<span class="sd">		This is the name of the map file that will be created (e.g., &quot;../output/map.html&quot; or &quot;map.html&quot;).  The filename should have a `.html` extension.  If `mapFilename` is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.</span>
+<span class="sd">	mapBackground: string, Optional, default as &#39;CartoDB positron&#39;</span>
+<span class="sd">		Sets the background tiles of the map.  See :ref:`Leaflet Style` for the list of options.</span>
+<span class="sd">	mapBoundary: list of lists, Optional, default as None</span>
+<span class="sd">		Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</span>
+<span class="sd">	zoomStart: int, Optional, default as None</span>
+<span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
+<span class="sd">	nodes: :ref:`Nodes`, Conditional, `nodes`, `arcs`, and `boundingRegion` can not be None at the same time</span>
+<span class="sd">		A Nodes dataframe describing the collection of nodes to be displayed on the Leaflet map.  See :ref:`Nodes` for documentation on this type of dataframe.</span>
+<span class="sd">	iconPrefix: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletIconPrefix` column of an input :ref:`Nodes` dataframe.  If provided, all nodes will use this icon prefix.  Valid options are &quot;glyphicon&quot; or &quot;fa&quot;. See :ref:`Leaflet Style` for details.</span>
+<span class="sd">	iconType: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletIconType` column of an input :ref:`Nodes` dataframe.  If provided, all nodes will use this icon type.  The valid `iconType` options depend on the choice of `iconPrefix`.  See :ref:`Leaflet Style` for the collection of valid icon prefix/type combinations.</span>
+<span class="sd">	iconColor: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletColor` column of an input :ref:`Nodes` dataframe.  If provided, all icons will use this color when displayed on this Leaflet map.  See :ref:`Leaflet Style` for the list of available color options.</span>
+<span class="sd">	iconText: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletIconText` column of an input :ref:`Nodes` dataframe.  If provided, all node markers in this Leaflet map will include this text as a label (you will need to click on the marker in the map to see this label).  </span>
+<span class="sd">	arcs: :ref:`Arcs` or :ref:`Assignments`, Conditional, `nodes`, `arcs` and `boundingRegion` can not be None at the same time</span>
+<span class="sd">		An :ref:`Arcs` or :ref:`Assignments` dataframe describing vehicle routes.  Each row of this dataframe will be shown as a line on the Leaflet map.  See the documentation on :ref:`Arcs` and :ref:`Assignments` for more information.</span>
+<span class="sd">	arcWeight: int, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletWeight` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this line thickness (in pixels).  </span>
+<span class="sd">	arcStyle: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletStyle` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe. If provided, all arcs will be displayed with this stype.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, or &#39;dashed&#39;.  See :ref:`Leaflet Style` for more information.</span>
+<span class="sd">	arcOpacity: float in [0, 1], Optional, default as None</span>
+<span class="sd">		Overrides the `leafletOpacity` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	arcColor: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletColor` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.</span>
+<span class="sd">	useArrows: boolean, Optional, default as None</span>
+<span class="sd">		Indicates whether arrows should be shown on all arcs on the Leaflet map.</span>
+<span class="sd">	boundingRegion: list of lists, Conditional, `nodes`, `arcs` and `boundingRegion` can not be None at the same time</span>
+<span class="sd">		A sequence of lat/lon coordinates defining a boundary polygon. The format is [[lat, lon], [lat, lon], ..., [lat, lon]].</span>
+<span class="sd">	boundingWeight: int, Optional, default as 3</span>
+<span class="sd">		Specifies the weight (in pixels) of the line defining the `boundingRegion` (if provided) when displayed in Leaflet.</span>
+<span class="sd">	boundingStyle: string, Optional, default as &#39;dashed&#39;</span>
+<span class="sd">		Specifies the line style of the `boundingRegion` (if provided).  Valid options are &#39;solid&#39;, &#39;dotted&#39;, &#39;dashed&#39;.  See :ref:`Leaflet Style` for more information.</span>
+<span class="sd">	boundingOpacity: float in [0, 1], Optional, default as 0.6</span>
+<span class="sd">		Specifies the opacity of the `boundingRegion` (if provided) when displayed in Leaflet.  Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	boundingColor: string, Optional, default as &#39;brown&#39;</span>
+<span class="sd">		Specifies the line color of the `boundingRegion` (if provided) when displayed in Leaflet. See :ref:`Leaflet Style` for a list of available colors.</span>
+
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A new/updated map that displays the nodes, arcs, and/or bounding region.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	First, import veroviz and check the latest version</span>
+<span class="sd">	    &gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">	    &gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Now, generate some example nodes inside a bounding region</span>
+<span class="sd">	    &gt;&gt;&gt; bounding = [</span>
+<span class="sd">	    ...     [42.98355351219673, -78.90518188476564], </span>
+<span class="sd">	    ...     [43.04731443361136, -78.83857727050783], </span>
+<span class="sd">	    ...     [43.02221961002041, -78.7108612060547], </span>
+<span class="sd">	    ...     [42.92777124914475, -78.68957519531251], </span>
+<span class="sd">	    ...     [42.866402688514626, -78.75343322753908], </span>
+<span class="sd">	    ...     [42.874957707517865, -78.82415771484375], </span>
+<span class="sd">	    ...     [42.90111863978987, -78.86878967285158], </span>
+<span class="sd">	    ...     [42.92224052343343, -78.8921356201172]]</span>
+
+<span class="sd">	    &gt;&gt;&gt; exampleNodes = vrv.generateNodes(</span>
+<span class="sd">	    ...     nodeType         = &#39;customer&#39;, </span>
+<span class="sd">	    ...     nodeDistrib      = &#39;normalBB&#39;, </span>
+<span class="sd">	    ...     nodeDistribArgs  = {</span>
+<span class="sd">	    ...         &#39;center&#39;         : [42.90, -78.80], </span>
+<span class="sd">	    ...         &#39;stdDev&#39;         : 10000,</span>
+<span class="sd">	    ...         &#39;boundingRegion&#39; : bounding</span>
+<span class="sd">	    ...     },</span>
+<span class="sd">	    ...     numNodes         = 3,</span>
+<span class="sd">	    ...     leafletColor     = &#39;orange&#39;)</span>
+
+<span class="sd">	The first example is using all default setting for generating a set of given nodes in Nodes dataframe.</span>
+<span class="sd">	    &gt;&gt;&gt; vrv.createLeaflet(nodes=exampleNodes)</span>
+
+<span class="sd">	Define some arcs based on the nodes we just generated:</span>
+<span class="sd">	    &gt;&gt;&gt; exampleArcs = vrv.createArcsFromNodeSeq(</span>
+<span class="sd">	    ...     nodes   = exampleNodes,</span>
+<span class="sd">	    ...     nodeSeq = [1, 2, 3])</span>
+<span class="sd">	    &gt;&gt;&gt; exampleArcs</span>
+
+<span class="sd">	Display the nodes, arcs, and bounding region simultaneously:</span>
+<span class="sd">	    &gt;&gt;&gt; vrv.createLeaflet(</span>
+<span class="sd">	    ...     nodes          = exampleNodes,</span>
+<span class="sd">	    ...     arcs           = exampleArcs,</span>
+<span class="sd">	    ...     boundingRegion = bounding)</span>
+
+<span class="sd">	The createLeaflet function provides options to override styles that were defined in the input nodes and/or arcs dataframes.  Note:  These overrides will not change the contents in the dataframes.</span>
+<span class="sd">		&gt;&gt;&gt; nodesAndArcsMap = vrv.createLeaflet(</span>
+<span class="sd">		...     nodes      = exampleNodes,</span>
+<span class="sd">		...     iconPrefix = &#39;fa&#39;,</span>
+<span class="sd">		...     iconType   = &#39;car&#39;,</span>
+<span class="sd">		...     iconColor  = &#39;blue&#39;,</span>
+<span class="sd">		...     arcs       = exampleArcs,</span>
+<span class="sd">		...     arcStyle   = &#39;dotted&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; nodesAndArcsMap</span>
+
+<span class="sd">	If you already have a folium map object, you can add more into it.</span>
+<span class="sd">	Here, we add a bounding region to the `nodesAndArcsMap` object defined above.</span>
+<span class="sd">		&gt;&gt;&gt; nodesAndArcsMap = vrv.createLeaflet(</span>
+<span class="sd">		...     mapObject      = nodesAndArcsMap,</span>
+<span class="sd">		...     boundingRegion = bounding)</span>
+<span class="sd">		&gt;&gt;&gt; nodesAndArcsMap</span>
+<span class="sd">		</span>
+<span class="sd">	A new collection of nodes is defined here:</span>
+<span class="sd">		&gt;&gt;&gt; newNodes = vrv.generateNodes(</span>
+<span class="sd">		...     nodeType        = &#39;customer&#39;, </span>
+<span class="sd">		...     nodeDistrib     = &#39;uniformBB&#39;, </span>
+<span class="sd">		...     nodeDistribArgs = {</span>
+<span class="sd">		...         &#39;boundingRegion&#39; : bounding</span>
+<span class="sd">		...     },</span>
+<span class="sd">		...     numNodes        = 4,</span>
+<span class="sd">		...     leafletColor    = &#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; newNodes</span>
+<span class="sd">		</span>
+<span class="sd">	We will add these nodes to our existing map,</span>
+<span class="sd">	but we&#39;re overriding these new nodes with a green color:	</span>
+<span class="sd">	Notice that the addition of new entities will not change the style of previous entities that were already added into the map.</span>
+<span class="sd">		&gt;&gt;&gt; newMapWithArcsAndMoreNodes = vrv.createLeaflet(</span>
+<span class="sd">		...     mapObject = nodesAndArcsMap,</span>
+<span class="sd">		...     nodes     = newNodes,</span>
+<span class="sd">		...     iconColor = &#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; newMapWithArcsAndMoreNodes</span>
+
+<span class="sd">	The following example includes all of the function arguments.</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(</span>
+<span class="sd">		...     mapObject       = None, </span>
+<span class="sd">		...     mapFilename     = &#39;example.html&#39;, </span>
+<span class="sd">		...     mapBackground   = &#39;CartoDB positron&#39;, </span>
+<span class="sd">		...     mapBoundary     = None, </span>
+<span class="sd">		...     zoomStart       = 10, </span>
+<span class="sd">		...     nodes           = exampleNodes, </span>
+<span class="sd">		...     iconPrefix      = &#39;fa&#39;, </span>
+<span class="sd">		...     iconType        = &#39;flag&#39;, </span>
+<span class="sd">		...     iconColor       = &#39;red&#39;, </span>
+<span class="sd">		...     iconText        = &#39;Here are some nodes&#39;, </span>
+<span class="sd">		...     arcs            = exampleArcs, </span>
+<span class="sd">		...     arcWeight       = 5, </span>
+<span class="sd">		...     arcStyle        = &#39;dashed&#39;, </span>
+<span class="sd">		...     arcOpacity      = 1, </span>
+<span class="sd">		...     arcColor        = &#39;green&#39;, </span>
+<span class="sd">		...     useArrows       = True, </span>
+<span class="sd">		...     boundingRegion  = bounding, </span>
+<span class="sd">		...     boundingWeight  = 1, </span>
+<span class="sd">		...     boundingOpacity = 0.8, </span>
+<span class="sd">		...     boundingStyle   = &#39;dotted&#39;, </span>
+<span class="sd">		...     boundingColor   = &#39;black&#39;)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valCreateLeaflet</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">mapFilename</span><span class="p">,</span> <span class="n">mapBackground</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="p">,</span> <span class="n">zoomStart</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="p">,</span> <span class="n">iconType</span><span class="p">,</span> <span class="n">iconColor</span><span class="p">,</span> <span class="n">iconText</span><span class="p">,</span> <span class="n">arcs</span><span class="p">,</span> <span class="n">arcWeight</span><span class="p">,</span> <span class="n">arcStyle</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="p">,</span> <span class="n">arcColor</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="p">,</span> <span class="n">boundingOpacity</span><span class="p">,</span> <span class="n">boundingStyle</span><span class="p">,</span> <span class="n">boundingColor</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="c1"># Replace backslash</span>
+	<span class="n">mapFilename</span> <span class="o">=</span> <span class="n">replaceBackslashToSlash</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+
+	<span class="c1"># Adjust the scope of the map to proper bounds</span>
+	<span class="p">[[</span><span class="n">minLat</span><span class="p">,</span> <span class="n">maxLon</span><span class="p">],</span> <span class="p">[</span><span class="n">maxLat</span><span class="p">,</span> <span class="n">minLon</span><span class="p">]]</span> <span class="o">=</span> <span class="n">getMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">arcs</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="c1"># If no mapObject exists, set a new mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapObject</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">midLat</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxLat</span> <span class="o">+</span> <span class="n">minLat</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+		<span class="n">midLon</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxLon</span> <span class="o">+</span> <span class="n">minLon</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">midLat</span><span class="p">,</span> <span class="n">midLon</span><span class="p">],</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">mapBackground</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">midLat</span><span class="p">,</span> <span class="n">midLon</span><span class="p">],</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
+				<span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span>
+
+	<span class="c1"># set the map boundary for mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">getMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">arcs</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="p">))</span>
+	
+	<span class="c1"># Plot node markers</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">mapObject</span> <span class="o">=</span> <span class="n">_createLeafletNodes</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="p">,</span> <span class="n">iconType</span><span class="p">,</span> <span class="n">iconColor</span><span class="p">,</span> <span class="n">iconText</span><span class="p">)</span>
+	
+	<span class="c1"># Plot arcs</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">arcs</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">mapObject</span> <span class="o">=</span> <span class="n">_createLeafletArcs</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">arcs</span><span class="p">,</span> <span class="n">arcWeight</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="p">,</span> <span class="n">arcStyle</span><span class="p">,</span> <span class="n">arcColor</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">VRV_DEFAULT_LEAFLET_ARROWSIZE</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+	
+	<span class="c1"># Plot bounding</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">boundingRegion</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">):</span>
+		<span class="n">mapObject</span> <span class="o">=</span> <span class="n">_createLeafletBoundingRegion</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="p">,</span> <span class="n">boundingOpacity</span><span class="p">,</span> <span class="n">boundingStyle</span><span class="p">,</span> <span class="n">boundingColor</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>		
+		<span class="n">mapDirectory</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="n">strList</span> <span class="o">=</span> <span class="n">mapFilename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">strList</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="n">mapDirectory</span> <span class="o">+=</span> <span class="n">strList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapDirectory</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+			<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mapDirectory</span><span class="p">)):</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">mapDirectory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
+	
+	<span class="k">return</span> <span class="n">mapObject</span></div>
+
+<span class="k">def</span> <span class="nf">_createLeafletNodes</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	A sub-function to create leaflet nodes</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Required</span>
+<span class="sd">		Add content to a folium map.</span>
+<span class="sd">	nodes: :ref:`Nodes`, Required</span>
+<span class="sd">		The Nodes dataframe to be generated in Leaflet</span>
+<span class="sd">	iconPrefix: string, Optional</span>
+<span class="sd">		The collection of Leaflet icons.  Options are &quot;glyphicon&quot; or &quot;fa&quot;. See :ref:`Leaflet Style`</span>
+<span class="sd">	iconType: string, Optional</span>
+<span class="sd">		The specific icon to be used for all generated nodes.  The list of available options depends on the choice of the iconType. See :ref:`Leaflet Style`</span>
+<span class="sd">	iconColor: string, Optional</span>
+<span class="sd">		The icon color of the generated nodes when displayed in Leaflet.  One of a collection of pre-specified colors. See :ref:`Leaflet Style`</span>
+<span class="sd">	iconText: string, Optional</span>
+<span class="sd">		Text that will be displayed within the node on a Leaflet map. See :ref:`Leaflet Style`</span>
+
+<span class="sd">	return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A new/updated map that contains the nodes</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># Note: In nodes dataframe, we already checked &#39;leaflet-&#39; columns, and those columns have default values, for sake of consistency in here I delete the &#39;fail safes&#39;</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)):</span>
+		<span class="c1"># If not overrided, use the info in nodes dataframe</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">iconColor</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newColor</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newColor</span> <span class="o">=</span> <span class="n">iconColor</span>
+			
+		<span class="k">if</span> <span class="p">((</span><span class="n">iconPrefix</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">iconType</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)):</span>
+			<span class="n">newPrefix</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletIconPrefix&#39;</span><span class="p">]</span>
+			<span class="n">newType</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletIconType&#39;</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newPrefix</span> <span class="o">=</span> <span class="n">iconPrefix</span>
+			<span class="n">newType</span> <span class="o">=</span> <span class="n">iconType</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">iconText</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newText</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletIconText&#39;</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newText</span> <span class="o">=</span> <span class="n">iconText</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">newColor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newColor</span> <span class="o">=</span> <span class="n">newColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">newPrefix</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newPrefix</span> <span class="o">=</span> <span class="n">newPrefix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">newType</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newType</span> <span class="o">=</span> <span class="n">newType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+					
+		<span class="c1"># Folium draw nodes</span>
+		<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span>
+			<span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span> <span class="n">nodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">]],</span> 
+			<span class="n">icon</span><span class="o">=</span><span class="n">folium</span><span class="o">.</span><span class="n">Icon</span><span class="p">(</span>
+				<span class="n">color</span><span class="o">=</span><span class="n">newColor</span><span class="p">,</span> 
+				<span class="n">prefix</span><span class="o">=</span><span class="n">newPrefix</span><span class="p">,</span> 
+				<span class="n">icon</span><span class="o">=</span><span class="n">newType</span><span class="p">),</span> 
+			<span class="n">popup</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">newText</span><span class="p">)</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span>
+
+<span class="k">def</span> <span class="nf">_createLeafletArcs</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arrowSize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	A sub-function to create leaflet arcs</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Required</span>
+<span class="sd">		Add content to a folium map.</span>
+<span class="sd">	arcs: ref:`Arcs`/:ref:`Assignments`, Required</span>
+<span class="sd">		The Arc dataframe to be generated in Leaflet</span>
+<span class="sd">	arcWeight: string, Optional</span>
+<span class="sd">		The weight of generated route when displayed in Leaflet. See :ref:`Leaflet Style`</span>
+<span class="sd">	arcStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of geneareted route, options are &#39;solid&#39;, &#39;dotted&#39;, &#39;dashed&#39;. See :ref:`Leaflet Style`</span>
+<span class="sd">	arcOpacity: string, Optional</span>
+<span class="sd">		The opacity of generated route when displayed in Leaflet, range from 0 (invisible) to 1. See :ref:`Leaflet Style`</span>
+<span class="sd">	arcColor: string, Optional</span>
+<span class="sd">		The color of generated route when displayed in Leaflet.  One of a collection of pre-specified colors. See :ref:`Leaflet Style`</span>
+<span class="sd">	useArrows: boolean, Optional, default as None</span>
+<span class="sd">		Whether or not to add arrows to leaflet map.</span>
+<span class="sd">	arrowSize: int Optional, default as </span>
+<span class="sd">		Size of arrows</span>
+
+<span class="sd">	return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A new/updated map that contains the arcs</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># In here &quot;arcs&quot; can be Arcs/Assignments, each path should have its own odID. Use lstPath as a list of Arcs/Assignments dataframe, each item in it is a path, with the same styles</span>
+	<span class="n">lstPath</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="c1"># For Arcs dataframe, each row is a path, i.e. each row should have different odID</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">{</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">arcs</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arcs</span><span class="p">)):</span>
+			<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;odID&#39;</span><span class="p">,</span> <span class="s1">&#39;startLat&#39;</span><span class="p">,</span> <span class="s1">&#39;startLon&#39;</span><span class="p">,</span> <span class="s1">&#39;endLat&#39;</span><span class="p">,</span> <span class="s1">&#39;endLon&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletColor&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletWeight&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletStyle&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletOpacity&#39;</span><span class="p">,</span> <span class="s1">&#39;useArrows&#39;</span><span class="p">])</span>
+			<span class="n">newPath</span> <span class="o">=</span> <span class="n">newPath</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+				<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;odID&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;endLat&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;endLon&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;leafletColor&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;leafletWeight&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletWeight&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;leafletStyle&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletStyle&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">],</span>
+				<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">]</span>
+				<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+			<span class="n">lstPath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newPath</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+	<span class="c1"># For Assignments dataframe, use deconstructAssignments to generate a list of assignments dataframe</span>
+	<span class="k">if</span> <span class="p">({</span><span class="s1">&#39;objectID&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">arcs</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">{</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">arcs</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+		<span class="n">lstPath</span> <span class="o">=</span> <span class="n">deconstructAssignments</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="n">arcs</span><span class="p">)</span>
+
+	<span class="c1"># For each path, generate the arcs and arrows accordingly</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lstPath</span><span class="p">)):</span>
+		<span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="n">arcPath</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">arcPath</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+		<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+			<span class="n">arcPath</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]])</span>
+
+		<span class="c1"># If not overrided, use the info in arcs dataframe</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">arcColor</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newColor</span> <span class="o">=</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newColor</span> <span class="o">=</span> <span class="n">arcColor</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">arcWeight</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newWeight</span> <span class="o">=</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletWeight&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newWeight</span> <span class="o">=</span> <span class="n">arcWeight</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">arcOpacity</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newOpacity</span> <span class="o">=</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newOpacity</span> <span class="o">=</span> <span class="n">arcOpacity</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">arcStyle</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">newStyle</span> <span class="o">=</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletStyle&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">newStyle</span> <span class="o">=</span> <span class="n">arcStyle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+		<span class="c1"># Interpret arc style</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">newStyle</span> <span class="o">==</span> <span class="s1">&#39;dashed&#39;</span><span class="p">):</span>
+			<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;30 10&#39;</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">newStyle</span> <span class="o">==</span> <span class="s1">&#39;dotted&#39;</span><span class="p">):</span>
+			<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;1 6&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">dashArray</span> <span class="o">=</span> <span class="kc">None</span>
+		
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">newColor</span> <span class="o">=</span> <span class="n">newColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">pass</span>
+			
+		<span class="c1"># Folium draw arcs	</span>
+		<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span>
+			<span class="n">arcPath</span><span class="p">,</span> 
+			<span class="n">color</span> <span class="o">=</span> <span class="n">newColor</span><span class="p">,</span> 
+			<span class="n">weight</span> <span class="o">=</span> <span class="n">newWeight</span><span class="p">,</span> 
+			<span class="n">opacity</span> <span class="o">=</span> <span class="n">newOpacity</span><span class="p">,</span> 
+			<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>	
+
+		<span class="c1"># Check if we add arrows</span>
+		<span class="n">arrowFlag</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">useArrows</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+			<span class="n">arrowFlag</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">useArrows</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="k">if</span> <span class="p">({</span><span class="s1">&#39;useArrows&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
+					<span class="n">arrowFlag</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">arrowFlag</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">useArrows</span> <span class="o">==</span> <span class="kc">False</span><span class="p">):</span>
+			<span class="n">arrowFlag</span> <span class="o">=</span> <span class="kc">False</span>			
+		<span class="k">if</span> <span class="p">(</span><span class="n">arrowFlag</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">_createLeafletArrowsPath</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">arcPath</span><span class="p">,</span> <span class="n">newColor</span><span class="p">,</span> <span class="n">arrowSize</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="n">arrowsPerArc</span><span class="p">,</span> <span class="n">arrowDistanceInMeters</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span>
+
+<span class="k">def</span> <span class="nf">_createLeafletBoundingRegion</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT</span><span class="p">,</span> <span class="n">boundingOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGOPACITY</span><span class="p">,</span> <span class="n">boundingStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGSTYLE</span><span class="p">,</span> <span class="n">boundingColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGCOLOR</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	A sub-function to create leaflet bounding region</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Required</span>
+<span class="sd">		Add content to a folium map.</span>
+<span class="sd">	boundingRegion: list of lists, Required</span>
+<span class="sd">		A sequence of lat/lon coordinates defining the boundary of the objects.</span>
+<span class="sd">	boundingWeight: string, Optional</span>
+<span class="sd">		The weight of bounding region when displayed in Leaflet. See :ref:`Leaflet Style`</span>
+<span class="sd">	boundingStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of bounding region, options are &#39;solid&#39;, &#39;dotted&#39;, &#39;dashed&#39;. See :ref:`Leaflet Style`</span>
+<span class="sd">	boundingOpacity: string, Optional</span>
+<span class="sd">		The opacity of bounding region when displayed in Leaflet, range from 0 (invisible) to 1. See :ref:`Leaflet Style`</span>
+<span class="sd">	boundingColor: string, Optional</span>
+<span class="sd">		The color of bounding region when displayed in Leaflet.  One of a collection of pre-specified colors. See :ref:`Leaflet Style`</span>
+
+<span class="sd">	return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A new/updated map that contains the boundings</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># Make the bounding region a closed circle</span>
+	<span class="n">boundings</span> <span class="o">=</span> <span class="n">boundingRegion</span><span class="p">[:]</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">boundings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">boundings</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">boundings</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]):</span>
+		<span class="n">boundings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">boundings</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+	<span class="c1"># Interpret bounding style</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">boundingStyle</span> <span class="o">=</span> <span class="n">boundingStyle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="k">if</span> <span class="p">(</span><span class="n">boundingStyle</span> <span class="o">==</span> <span class="s1">&#39;dashed&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;30 10&#39;</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">boundingStyle</span> <span class="o">==</span> <span class="s1">&#39;dotted&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;1 6&#39;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">boundingColor</span> <span class="o">=</span> <span class="n">boundingColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="c1"># Draw bounding region in folium (for now is not filled)</span>
+	<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span>
+		<span class="n">boundings</span><span class="p">,</span> 
+		<span class="n">color</span> <span class="o">=</span> <span class="n">boundingColor</span><span class="p">,</span>
+		<span class="n">weight</span> <span class="o">=</span> <span class="n">boundingWeight</span><span class="p">,</span>
+		<span class="n">opacity</span> <span class="o">=</span> <span class="n">boundingOpacity</span><span class="p">,</span>
+		<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span>
+	<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span>
+
+<span class="k">def</span> <span class="nf">_createLeafletArrowsPath</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowDistanceInMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	A sub-function to generate arrows for one path (i.e. with the same odID)</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Required</span>
+<span class="sd">		Add content to a folium map.</span>
+<span class="sd">	lats: list, Required</span>
+<span class="sd">		A list of latitudes</span>
+<span class="sd">	lons: list, Required</span>
+<span class="sd">		A list of longitudes</span>
+<span class="sd">	color: string, Required</span>
+<span class="sd">		The color for arrow, we are not providing any default value here because it has to be consistent with the color of arcs/assignments</span>
+<span class="sd">	size: int, Optional, default as 7</span>
+<span class="sd">		The size of the arrow</span>
+<span class="sd">	mode: string, Optional, default as &#39;equal_division_spacing&#39;</span>
+<span class="sd">		For &#39;equal_division_spacing&#39;, divide the entire path equally in to several parts and add arrows accordingly. For &#39;equal_distance_spacing&#39;, add arrow for every given distance.</span>
+<span class="sd">	arrowsPerArc: int, Optional, default as 1</span>
+<span class="sd">		If we are using &#39;equal_division_spacing&#39;, it defines the number of arrows in the path, otherwise it will be ignored</span>
+<span class="sd">	arrowDistanceInMeters: float, Optional</span>
+<span class="sd">		If we are using &#39;equal_distance_spacing&#39;, it defines the distance between arrows</span>
+
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A map that contains arrows above the arcs</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># Calculate totalDistance</span>
+	<span class="n">totalDistance</span> <span class="o">=</span> <span class="n">geoDistancePath2D</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+	<span class="c1"># Use different modes to decide how many arrows to be generated and where are them</span>
+	<span class="n">lstMilages</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowsPerArc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="n">lstMilages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">totalDistance</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="n">arrowsPerArc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;equal_distance_spacing&#39;</span><span class="p">):</span>
+		<span class="n">accuDistance</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">while</span> <span class="n">accuDistance</span> <span class="o">&lt;</span> <span class="n">totalDistance</span><span class="p">:</span>
+			<span class="n">accuDistance</span> <span class="o">+=</span> <span class="n">arrowDistanceInMeters</span>
+			<span class="n">lstMilages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accuDistance</span><span class="p">)</span>
+		<span class="n">remainingDistance</span> <span class="o">=</span> <span class="n">totalDistance</span> <span class="o">-</span> <span class="n">accuDistance</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lstMilages</span><span class="p">)):</span>
+			<span class="n">lstMilages</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lstMilages</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">remainingDistance</span><span class="o">/</span><span class="mi">2</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="c1"># Draw arrows</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lstMilages</span><span class="p">)):</span>
+		<span class="p">[</span><span class="n">loc</span><span class="p">,</span> <span class="n">inPathFlag</span><span class="p">,</span> <span class="n">bearingInDegree</span><span class="p">]</span> <span class="o">=</span> <span class="n">geoMileageInPath2D</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">lstMilages</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+		<span class="n">folium</span><span class="o">.</span><span class="n">RegularPolygonMarker</span><span class="p">(</span>
+			<span class="n">location</span> <span class="o">=</span> <span class="n">loc</span><span class="p">,</span>
+			<span class="n">number_of_sides</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="n">rotation</span> <span class="o">=</span> <span class="n">bearingInDegree</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span>
+			<span class="n">radius</span> <span class="o">=</span> <span class="n">size</span><span class="p">,</span>
+			<span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span>
+			<span class="n">fill_color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span>
+			<span class="n">fill_opacity</span> <span class="o">=</span> <span class="mf">1.0</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+	
+	<span class="k">return</span> <span class="n">mapObject</span>
+
+<div class="viewcode-block" id="addLeafletCircle"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletCircle">[docs]</a><span class="k">def</span> <span class="nf">addLeafletCircle</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Add a circle, with a radius specified in [meters], to a Leaflet map.</span>
+<span class="sd">	</span>
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	This function differs from addLeafletMarker, in which the circle&#39;s radius is specified in [pixels].</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Optional, default None</span>
+<span class="sd">		A Folium map object.  If provided, the circle will be added to an existing map.  Otherwise, a new map will be created.</span>
+<span class="sd">	mapFilename: string, Optional, default as None</span>
+<span class="sd">		This is the name of the map file that will be created (e.g., &quot;../output/map.html&quot; or &quot;map.html&quot;).  The filename should have a `.html` extension.  If `mapFilename` is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.</span>
+<span class="sd">	mapBackground: string, Optional, default as &#39;CartoDB positron&#39;</span>
+<span class="sd">		Sets the background tiles of the map.  See :ref:`Leaflet Style` for the list of options.</span>
+<span class="sd">	mapBoundary: list of lists, Optional, default as None</span>
+<span class="sd">		Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</span>
+<span class="sd">	zoomStart: int, Optional, default as None</span>
+<span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
+<span class="sd">	center: list, Required, default None</span>
+<span class="sd">		Specifies the center point of the circle.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).</span>
+<span class="sd">	radius: float, Required, default None</span>
+<span class="sd">		The radius of the circle, in units of [meters]. </span>
+<span class="sd">	lineWeight: int, Optional, default 3</span>
+<span class="sd">		The width of the circle&#39;s outline, in units of [pixels].  This value is ignored if `lineColor = None`. </span>
+<span class="sd">	lineColor: string, Optional, default None</span>
+<span class="sd">		The color of the circle&#39;s outline.  `lineColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). No line will be drawn if `lineColor = None`. </span>
+<span class="sd">	lineOpacity: float in [0, 1], Optional, default 0.8</span>
+<span class="sd">		Specifies the opacity of the circle&#39;s outline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</span>
+<span class="sd">	lineStyle: string, Optional, default &#39;solid&#39;</span>
+<span class="sd">		The style of the circle&#39;s outline.  See :ref:`Leaflet Style` for a list of valid options.  </span>
+<span class="sd">	fillColor: string, Optional, default &#39;red&#39;</span>
+<span class="sd">		The color of the interior of the circle. `fillColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). The circle will not be filled if `fillColor = None`.  </span>
+<span class="sd">	fillOpacity: float in [0, 1], Optional, default 0.3</span>
+<span class="sd">		Specifies the opacity of the circle&#39;s interior.  Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A Folium map object containing a circle (and pre-existing items previously specified in mapObject).</span>
+<span class="sd">		</span>
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">		&gt;&gt;&gt; # Draw a circle of radius 10 meters, centered on the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # Save this as &quot;a_circle.html&quot;.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletCircle(</span>
+<span class="sd">		...     zoomStart=18,</span>
+<span class="sd">		...     center=[43.00154, -78.7871],</span>
+<span class="sd">		...     radius=100,</span>
+<span class="sd">		...     mapFilename=&quot;a_circle.html&quot;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">		&gt;&gt;&gt; # Draw a circle of radius 2000 meters, centered on the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available function arguments.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletCircle(</span>
+<span class="sd">		...     mapObject = None,</span>
+<span class="sd">		...     mapFilename = None,</span>
+<span class="sd">		...     mapBackground = &#39;OpenStreetMap&#39;,</span>
+<span class="sd">		...     mapBoundary = None,</span>
+<span class="sd">		...     zoomStart = 13,</span>
+<span class="sd">		...     center = [43.00154, -78.7871],</span>
+<span class="sd">		...     radius = 2000,</span>
+<span class="sd">		...     lineWeight = 6,</span>
+<span class="sd">		...     lineColor = &#39;#ff66ff&#39;,</span>
+<span class="sd">		...     lineOpacity = 0.7,</span>
+<span class="sd">		...     lineStyle = &#39;dotted&#39;,</span>
+<span class="sd">		...     fillColor = &#39;green&#39;,</span>
+<span class="sd">		...     fillOpacity = 0.4)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddLeafletCircle</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">mapFilename</span><span class="p">,</span> <span class="n">mapBackground</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="p">,</span> <span class="n">zoomStart</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">lineWeight</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="p">,</span> <span class="n">lineStyle</span><span class="p">,</span> <span class="n">fillColor</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+	
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+	<span class="c1"># If no mapObject exists, set a new mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapObject</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">mapBackground</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
+				<span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span>
+
+	<span class="c1"># set the map boundary for mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineStyle</span> <span class="o">=</span> <span class="n">lineStyle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+	
+	<span class="c1"># Interpret line style</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dashed&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;30 10&#39;</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dotted&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;1 6&#39;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineColor</span> <span class="o">=</span> <span class="n">lineColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">fillColor</span> <span class="o">=</span> <span class="n">fillColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="n">folium</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> 
+		<span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span><span class="p">,</span>  
+		<span class="n">stroke</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+		<span class="n">weight</span> <span class="o">=</span> <span class="n">lineWeight</span><span class="p">,</span> 
+		<span class="n">color</span> <span class="o">=</span> <span class="n">lineColor</span><span class="p">,</span> 
+		<span class="n">opacity</span> <span class="o">=</span> <span class="n">lineOpacity</span><span class="p">,</span> 
+		<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span><span class="p">,</span>
+		<span class="n">fill_color</span> <span class="o">=</span> <span class="n">fillColor</span><span class="p">,</span>
+		<span class="n">fill_opacity</span> <span class="o">=</span> <span class="n">fillOpacity</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span></div>
+	
+<div class="viewcode-block" id="addLeafletMarker"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletMarker">[docs]</a><span class="k">def</span> <span class="nf">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Add a circle-shaped marker, with a radius specified in [pixels], to a Leaflet map.</span>
+<span class="sd">	</span>
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	This function differs from addLeafletCircle, in which the circle&#39;s radius is specified in [meters].</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Optional, default None</span>
+<span class="sd">		A Folium map object.  If provided, the marker will be added to an existing map.  Otherwise, a new map will be created.</span>
+<span class="sd">	mapFilename: string, Optional, default None </span>
+<span class="sd">		If provided, the map will be saved to this file, which should have a `.html` extension.  `mapFilename` can contain a filepath.  If `mapFilename` is not provided, no file will be generated.  The returned mapObject can be viewed within a Jupyter notebook. </span>
+<span class="sd">	mapBackground: string, Optional, default &#39;CartoDB positron&#39;</span>
+<span class="sd">		The tiles of the map, default to be &#39;CartoDB positron&#39;, for options, see :ref:`Leaflet Style`, also see folium documentation (https://python-visualization.github.io/folium/modules.html) for more options</span>
+<span class="sd">	mapBoundary: list [LIST OF LISTS?], Optional, default None</span>
+<span class="sd">		If provided, the mapBoundary coordinates are used to determine a zoom level such that these coordinates are contained within view when the map is opened.  This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  `mapBoundary` must be in the form [[south lat, west lon], [north lat, east lon]].	</span>
+<span class="sd">	zoomStart: int, Optional, default as None</span>
+<span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
+<span class="sd">	center: list, Required, default None</span>
+<span class="sd">		Specifies the center point of the circle marker.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).</span>
+<span class="sd">	radius: float, Required, default None</span>
+<span class="sd">		The radius of the circle marker, in units of [pixels]. </span>
+<span class="sd">	lineWeight: int, Optional, default 3</span>
+<span class="sd">		The width of the circle marker&#39;s outline, in units of [pixels].  This value is ignored if `line = False`. </span>
+<span class="sd">	lineColor: string, Optional, default &#39;red&#39;</span>
+<span class="sd">		The color of the circle marker&#39;s outline.  `lineColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). The line color is ignored if `line = False`. </span>
+<span class="sd">	lineOpacity: float in [0, 1], Optional, default 0.8</span>
+<span class="sd">		The opacity of the circle marker&#39;s outline, where 0 is invisible and 1 represents no transparency.  See :ref:`Leaflet Style`</span>
+<span class="sd">	lineStyle: string, Optional, default &#39;solid&#39;</span>
+<span class="sd">		The style of the circle marker&#39;s outline.  See :ref:`Leaflet Style` for a list of valid options.  </span>
+<span class="sd">	fillColor: string, Optional, default None</span>
+<span class="sd">		The color of the interior of the circle marker. `fillColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). The fill color is ignored if `fill = False`.  </span>
+<span class="sd">	fillOpacity: float in [0, 1], Optional, default 0.3</span>
+<span class="sd">		The opacity of the circle marker&#39;s interior, where 0 is invisible and 1 represents no transparency.  See :ref:`Leaflet Style`</span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A Folium map object containing a circle marker (and pre-existing items previously specified in mapObject).</span>
+<span class="sd">		</span>
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">		&gt;&gt;&gt; # Draw a circle of radius 10 pixels, centered on the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # Save this as &quot;a_marker.html&quot;.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(</span>
+<span class="sd">		...     center=[43.00154, -78.7871],</span>
+<span class="sd">		...     radius=10,</span>
+<span class="sd">		...     mapFilename=&quot;a_marker.html&quot;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">		&gt;&gt;&gt; # Draw a circle of radius 30 pixels, centered on the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available function arguments.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(</span>
+<span class="sd">		...     mapObject = None, </span>
+<span class="sd">		...     mapFilename = None, </span>
+<span class="sd">		...     mapBackground = &#39;CartoDB positron&#39;, </span>
+<span class="sd">		...     mapBoundary = None, </span>
+<span class="sd">		...     zoomStart = 11, </span>
+<span class="sd">		...     center = [43.00154, -78.7871],</span>
+<span class="sd">		...     radius = 30, </span>
+<span class="sd">		...     lineWeight = 3, </span>
+<span class="sd">		...     lineColor = &#39;orange&#39;, </span>
+<span class="sd">		...     lineOpacity = 0.6, </span>
+<span class="sd">		...     lineStyle = &#39;dashed&#39;,</span>
+<span class="sd">		...     fillColor = &#39;blue&#39;, </span>
+<span class="sd">		...     fillOpacity = 0.3)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">mapFilename</span><span class="p">,</span> <span class="n">mapBackground</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="p">,</span> <span class="n">zoomStart</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">lineWeight</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="p">,</span> <span class="n">lineStyle</span><span class="p">,</span> <span class="n">fillColor</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+	<span class="c1"># If no mapObject exists, set a new mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapObject</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">mapBackground</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
+				<span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span>
+
+	<span class="c1"># set the map boundary for mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">)</span>
+		
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineStyle</span> <span class="o">=</span> <span class="n">lineStyle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="c1"># Interpret line style</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dashed&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;30 10&#39;</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dotted&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;1 6&#39;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineColor</span> <span class="o">=</span> <span class="n">lineColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">fillColor</span> <span class="o">=</span> <span class="n">fillColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="n">folium</span><span class="o">.</span><span class="n">CircleMarker</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> 
+		<span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span><span class="p">,</span>  
+		<span class="n">stroke</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+		<span class="n">weight</span> <span class="o">=</span> <span class="n">lineWeight</span><span class="p">,</span> 
+		<span class="n">color</span> <span class="o">=</span> <span class="n">lineColor</span><span class="p">,</span> 
+		<span class="n">opacity</span> <span class="o">=</span> <span class="n">lineOpacity</span><span class="p">,</span> 
+		<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span><span class="p">,</span>
+		<span class="n">fill_color</span> <span class="o">=</span> <span class="n">fillColor</span><span class="p">,</span>
+		<span class="n">fill_opacity</span> <span class="o">=</span> <span class="n">fillOpacity</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span>	</div>
+
+<div class="viewcode-block" id="addLeafletPolygon"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletPolygon">[docs]</a><span class="k">def</span> <span class="nf">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Add a polygon, as defined by an ordered collection of lat/lon coordinates, to a Leaflet map.</span>
+<span class="sd">		</span>
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	There is also a &quot;polyline&quot; function, which does not assume a closed shape.</span>
+<span class="sd">			</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Optional, default None</span>
+<span class="sd">		A Folium map object.  If provided, the polygon will be added to an existing map.  Otherwise, a new map will be created.</span>
+<span class="sd">	mapFilename: string, Optional, default as None</span>
+<span class="sd">		This is the name of the map file that will be created (e.g., &quot;../output/map.html&quot; or &quot;map.html&quot;).  The filename should have a `.html` extension.  If `mapFilename` is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.</span>
+<span class="sd">	mapBackground: string, Optional, default as &#39;CartoDB positron&#39;</span>
+<span class="sd">		Sets the background tiles of the map.  See :ref:`Leaflet Style` for the list of options.</span>
+<span class="sd">	mapBoundary: list of lists, Optional, default as None</span>
+<span class="sd">		Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</span>
+<span class="sd">	zoomStart: int, Optional, default as None</span>
+<span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
+<span class="sd">	points: list of lists, Required, default None</span>
+<span class="sd">		Specifies the ordered collection of lat/lon coordinates comprising the polygon.  This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  It is not necessary for `[lat1, lon1]` and `[latn, lonn]` to be the same point.  In other words, the polygon will automatically connect the first and last locations specified in the `points` list.		</span>
+<span class="sd">	lineWeight: int, Optional, default 3</span>
+<span class="sd">		The width of the polygon&#39;s outline, in units of [pixels].  This value is ignored if `lineColor = None`. </span>
+<span class="sd">	lineColor: string, Optional, default &#39;red&#39;</span>
+<span class="sd">		The color of the polygon&#39;s outline.  `lineColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). No line will be drawn if `lineColor = None`. </span>
+<span class="sd">	lineOpacity: float in [0, 1], Optional, default 0.8</span>
+<span class="sd">		Specifies the opacity of the polygon&#39;s outline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</span>
+<span class="sd">	lineStyle: string, Optional, default &#39;solid&#39;</span>
+<span class="sd">		The style of the polygon&#39;s outline.  See :ref:`Leaflet Style` for a list of valid options.  </span>
+<span class="sd">	fillColor: string, Optional, default None</span>
+<span class="sd">		The color of the interior of the polygon. `fillColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). The polygon will not be filled if `fillColor = None`.  </span>
+<span class="sd">	fillOpacity: float in [0, 1], Optional, default 0.3</span>
+<span class="sd">		Specifies the opacity of the polygon&#39;s interior.  Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A Folium map object containing a polygon (and pre-existing items previously specified in mapObject).</span>
+<span class="sd">		</span>
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">		&gt;&gt;&gt; # Draw a filled polygon around the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # Save this as &quot;a_polygon.html&quot;.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; campusPoints = [[43.0121, -78.7858],</span>
+<span class="sd">		...                 [43.0024, -78.7977],</span>
+<span class="sd">		...                 [42.9967, -78.7921],</span>
+<span class="sd">		...                 [42.9988, -78.7790]]</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletPolygon(</span>
+<span class="sd">		...     points=campusPoints,</span>
+<span class="sd">		...     mapFilename=&quot;a_polygon.html&quot;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">		&gt;&gt;&gt; # Draw a filled polygon around the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available function arguments.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; campusPoints = [[43.0121, -78.7858],</span>
+<span class="sd">		...                 [43.0024, -78.7977],</span>
+<span class="sd">		...                 [42.9967, -78.7921],</span>
+<span class="sd">		...                 [42.9988, -78.7790]]</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletPolygon(</span>
+<span class="sd">		...     mapObject = None, </span>
+<span class="sd">		...     mapFilename = None, </span>
+<span class="sd">		...     mapBackground = &#39;OpenStreetMap&#39;, </span>
+<span class="sd">		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints), </span>
+<span class="sd">		...     zoomStart = 15, </span>
+<span class="sd">		...     points = campusPoints, </span>
+<span class="sd">		...     lineWeight = 7, </span>
+<span class="sd">		...     lineColor = &#39;#ff00ff&#39;, </span>
+<span class="sd">		...     lineOpacity = 0.9, </span>
+<span class="sd">		...     lineStyle = &#39;solid&#39;, </span>
+<span class="sd">		...     fillColor = &#39;#ff66ff&#39;, </span>
+<span class="sd">		...     fillOpacity = 0.3)    </span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+ 
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">mapFilename</span><span class="p">,</span> <span class="n">mapBackground</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="p">,</span> <span class="n">zoomStart</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">lineWeight</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="p">,</span> <span class="n">lineStyle</span><span class="p">,</span> <span class="n">fillColor</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="c1"># Adjust the scope of the map to proper</span>
+	<span class="p">[[</span><span class="n">minLat</span><span class="p">,</span> <span class="n">maxLon</span><span class="p">],</span> <span class="p">[</span><span class="n">maxLat</span><span class="p">,</span> <span class="n">minLon</span><span class="p">]]</span> <span class="o">=</span> <span class="n">getMapBoundary</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+
+	<span class="c1"># Do we have a rectangle?</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)):</span>
+			<span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]]]</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span><span class="p">):</span>
+				<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NOTE: Only two pairs of coordinates were provided in &#39;points&#39;.  This is being interpreted as a rectangle.&quot;</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="c1"># If no mapObject exists, set a new mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapObject</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">midLat</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxLat</span> <span class="o">+</span> <span class="n">minLat</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+		<span class="n">midLon</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxLon</span> <span class="o">+</span> <span class="n">minLon</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">midLat</span><span class="p">,</span> <span class="n">midLon</span><span class="p">],</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">mapBackground</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">midLat</span><span class="p">,</span> <span class="n">midLon</span><span class="p">],</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span>  
+				<span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
+				<span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span>
+
+	<span class="c1"># set the map boundary for mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">getMapBoundary</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="p">))</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineStyle</span> <span class="o">=</span> <span class="n">lineStyle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="c1"># Interpret line style</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dashed&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;30 10&#39;</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dotted&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;1 6&#39;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineColor</span> <span class="o">=</span> <span class="n">lineColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">fillColor</span> <span class="o">=</span> <span class="n">fillColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="n">points2D</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)):</span>
+		<span class="n">points2D</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+
+	<span class="n">folium</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">locations</span> <span class="o">=</span> <span class="n">points2D</span><span class="p">,</span> 
+		<span class="n">stroke</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+		<span class="n">weight</span> <span class="o">=</span> <span class="n">lineWeight</span><span class="p">,</span> 
+		<span class="n">color</span> <span class="o">=</span> <span class="n">lineColor</span><span class="p">,</span> 
+		<span class="n">opacity</span> <span class="o">=</span> <span class="n">lineOpacity</span><span class="p">,</span> 
+		<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span><span class="p">,</span>
+		<span class="n">fill_color</span> <span class="o">=</span> <span class="n">fillColor</span><span class="p">,</span>
+		<span class="n">fill_opacity</span> <span class="o">=</span> <span class="n">fillOpacity</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span></div>
+
+<div class="viewcode-block" id="addLeafletPolyline"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletPolyline">[docs]</a><span class="k">def</span> <span class="nf">addLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Add a polyline, as described by an ordered collection of lat/lon coordinates, to a Leaflet map.  </span>
+<span class="sd">		</span>
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	The polyline is an &quot;open&quot; shape, in the sense that there&#39;s nothing connecting the first and last locations.  By contrast, the &quot;polygon&quot; shape will automatically connect the first and last locations.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Optional, default None</span>
+<span class="sd">		A Folium map object.  If provided, the polyline will be added to an existing map.  Otherwise, a new map will be created.</span>
+<span class="sd">	mapFilename: string, Optional, default as None</span>
+<span class="sd">		This is the name of the map file that will be created (e.g., &quot;../output/map.html&quot; or &quot;map.html&quot;).  The filename should have a `.html` extension.  If `mapFilename` is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.</span>
+<span class="sd">	mapBackground: string, Optional, default as &#39;CartoDB positron&#39;</span>
+<span class="sd">		Sets the background tiles of the map.  See :ref:`Leaflet Style` for the list of options.</span>
+<span class="sd">	mapBoundary: list of lists, Optional, default as None</span>
+<span class="sd">		Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</span>
+<span class="sd">	zoomStart: int, Optional, default as None</span>
+<span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
+<span class="sd">	points: list of lists, Required, default None</span>
+<span class="sd">		Specifies the ordered collection of lat/lon coordinates comprising the polyline.   This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  Note that the polyline will not automatically connect the first and last locations specified in the `points` list.  (By contrast the &quot;polygon&quot; function does connect those locatons.)</span>
+<span class="sd">	lineWeight: int, Optional, default 3</span>
+<span class="sd">		The width of the polyline&#39;s outline, in units of [pixels].  This value is ignored if `lineColor = None`. </span>
+<span class="sd">	lineColor: string, Optional, default &#39;red&#39;</span>
+<span class="sd">		The color of the polyline&#39;s outline.  `lineColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). No line will be drawn if `lineColor = None`. </span>
+<span class="sd">	lineOpacity: float in [0, 1], Optional, default 0.8</span>
+<span class="sd">		Specifies the opacity of the polyline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</span>
+<span class="sd">	lineStyle: string, Optional, default &#39;solid&#39;</span>
+<span class="sd">		The style of the polyine.  See :ref:`Leaflet Style` for a list of valid options.  </span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A Folium map object containing a polyline (and pre-existing items previously specified in mapObject).</span>
+<span class="sd">		</span>
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">		&gt;&gt;&gt; # Draw a polyline around the northern portion of the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # Save this as &quot;a_polyline.html&quot;.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; campusPoints = [[43.0024, -78.7977],</span>
+<span class="sd">		...                 [43.0121, -78.7858],</span>
+<span class="sd">		...                 [42.9988, -78.7790]]</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletPolyline(</span>
+<span class="sd">		...     points=campusPoints,</span>
+<span class="sd">		...     mapFilename=&quot;a_polyline.html&quot;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">		&gt;&gt;&gt; # Draw a polyline around the northern portion of the Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available function arguments.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; campusPoints = [[43.0024, -78.7977],</span>
+<span class="sd">		...                 [43.0121, -78.7858],</span>
+<span class="sd">		...                 [42.9988, -78.7790]]</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletPolyline(</span>
+<span class="sd">		...     mapObject = None, </span>
+<span class="sd">		...     mapFilename = None, </span>
+<span class="sd">		...     mapBackground = &#39;CartoDB positron&#39;, </span>
+<span class="sd">		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints),</span>
+<span class="sd">		...     zoomStart = 14, </span>
+<span class="sd">		...     points = campusPoints,</span>
+<span class="sd">		...     lineWeight = 13, </span>
+<span class="sd">		...     lineColor = &#39;#0055ff&#39;, </span>
+<span class="sd">		...     lineOpacity = 0.8, </span>
+<span class="sd">		...     lineStyle = &#39;solid&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">mapFilename</span><span class="p">,</span> <span class="n">mapBackground</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="p">,</span> <span class="n">zoomStart</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">lineWeight</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="p">,</span> <span class="n">lineStyle</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="c1"># Adjust the scope of the map to proper bounds</span>
+	<span class="p">[[</span><span class="n">minLat</span><span class="p">,</span> <span class="n">maxLon</span><span class="p">],</span> <span class="p">[</span><span class="n">maxLat</span><span class="p">,</span> <span class="n">minLon</span><span class="p">]]</span> <span class="o">=</span> <span class="n">getMapBoundary</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="c1"># If no mapObject exists, set a new mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapObject</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">midLat</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxLat</span> <span class="o">+</span> <span class="n">minLat</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+		<span class="n">midLon</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxLon</span> <span class="o">+</span> <span class="n">minLon</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">midLat</span><span class="p">,</span> <span class="n">midLon</span><span class="p">],</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span>  
+				<span class="n">tiles</span><span class="o">=</span><span class="n">mapBackground</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">midLat</span><span class="p">,</span> <span class="n">midLon</span><span class="p">],</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
+				<span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span>
+
+	<span class="c1"># set the map boundary for mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">getMapBoundary</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="p">))</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineStyle</span> <span class="o">=</span> <span class="n">lineStyle</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="c1"># Interpret line style</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dashed&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;30 10&#39;</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">lineStyle</span> <span class="o">==</span> <span class="s1">&#39;dotted&#39;</span><span class="p">):</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="s1">&#39;1 6&#39;</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">dashArray</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">lineColor</span> <span class="o">=</span> <span class="n">lineColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="n">points2D</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)):</span>
+		<span class="n">points2D</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+		
+	<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">locations</span> <span class="o">=</span> <span class="n">points2D</span><span class="p">,</span> 
+		<span class="n">stroke</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+		<span class="n">weight</span> <span class="o">=</span> <span class="n">lineWeight</span><span class="p">,</span> 
+		<span class="n">color</span> <span class="o">=</span> <span class="n">lineColor</span><span class="p">,</span>
+		<span class="n">opacity</span> <span class="o">=</span> <span class="n">lineOpacity</span><span class="p">,</span> 
+		<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span><span class="p">,</span>
+		<span class="n">fill</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span></div>
+
+<div class="viewcode-block" id="addLeafletText"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletText">[docs]</a><span class="k">def</span> <span class="nf">addLeafletText</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anchorPoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_FONTSIZE</span><span class="p">,</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLET_FONTCOLOR</span><span class="p">,</span> <span class="n">horizAlign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Add a text label to a Leaflet map. </span>
+<span class="sd">		</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	mapObject: Folium object, Optional, default None</span>
+<span class="sd">		A Folium map object.  If provided, the text label will be added to an existing map.  Otherwise, a new map will be created.</span>
+<span class="sd">	mapFilename: string, Optional, default as None</span>
+<span class="sd">		This is the name of the map file that will be created (e.g., &quot;../output/map.html&quot; or &quot;map.html&quot;).  The filename should have a `.html` extension.  If `mapFilename` is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.</span>
+<span class="sd">	mapBackground: string, Optional, default as &#39;CartoDB positron&#39;</span>
+<span class="sd">		Sets the background tiles of the map.  See :ref:`Leaflet Style` for the list of options.</span>
+<span class="sd">	mapBoundary: list of lists, Optional, default as None</span>
+<span class="sd">		Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</span>
+<span class="sd">	zoomStart: int, Optional, default as None</span>
+<span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
+<span class="sd">	anchorPoint: list, Required, default None</span>
+<span class="sd">		Specifies an anchor point (location) for the text label.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).  See also the `horizAlign` field below.</span>
+<span class="sd">	text: string, Required, default None</span>
+<span class="sd">		Specifies the text to be displayed on the map at the location of `anchorPoint`.</span>
+<span class="sd">	fontSize: float, Optional, default 24</span>
+<span class="sd">		The size of the font, in units of [points].  The default is 24-point font.</span>
+<span class="sd">	fontColor: string, Optional, default &#39;orange&#39;</span>
+<span class="sd">		The color of the text string.  `fontColor` may be one of Leaflet&#39;s pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). </span>
+<span class="sd">	horizAlign: string, Optional, default &#39;center&#39;</span>
+<span class="sd">		The horizontal alignment of the text string, relative to the location specified by the `anchorPoint` input argument.  Valid options are &#39;left&#39; (the text begins at the `anchorPoint` location), &#39;right&#39; (the text ends at the `anchorPoint` location), or &#39;center&#39; (the text is centered at the &#39;anchorPoint&#39; location).  		</span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	Folium object</span>
+<span class="sd">		A Folium map object containing a text string (and pre-existing items previously specified in mapObject).</span>
+<span class="sd">		</span>
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">		&gt;&gt;&gt; # Draw a text label at the location of Bell Hall on the </span>
+<span class="sd">		&gt;&gt;&gt; # Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # Save this as &quot;a_text_label.html&quot;.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletText(</span>
+<span class="sd">		...     anchorPoint=[43.00154, -78.7871],</span>
+<span class="sd">		...     text=&quot;Bell Hall&quot;,</span>
+<span class="sd">		...     mapFilename=&quot;a_text_label.html&quot;)</span>
+
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">		&gt;&gt;&gt; # Draw a text label at the location of Bell Hall on the</span>
+<span class="sd">		&gt;&gt;&gt; # Univ. at Buffalo campus.</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available function arguments.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletText(</span>
+<span class="sd">		...     mapObject=None, </span>
+<span class="sd">		...     mapFilename=None, </span>
+<span class="sd">		...     mapBackground=&#39;CartoDB positron&#39;, </span>
+<span class="sd">		...     mapBoundary=None, </span>
+<span class="sd">		...     zoomStart=10, </span>
+<span class="sd">		...     anchorPoint=[43.00154, -78.7871],</span>
+<span class="sd">		...     text=&quot;Bell Hall&quot;,</span>
+<span class="sd">		...     fontSize=34, </span>
+<span class="sd">		...     fontColor=&#39;black&#39;, </span>
+<span class="sd">		...     horizAlign=&#39;left&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
+	
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddLeafletText</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">mapFilename</span><span class="p">,</span> <span class="n">mapBackground</span><span class="p">,</span> <span class="n">mapBoundary</span><span class="p">,</span> <span class="n">zoomStart</span><span class="p">,</span> <span class="n">anchorPoint</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">,</span> <span class="n">fontColor</span><span class="p">,</span> <span class="n">horizAlign</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+
+	<span class="n">anchorPoint</span> <span class="o">=</span> <span class="p">[</span><span class="n">anchorPoint</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">anchorPoint</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+		
+	<span class="c1"># If there is no mapObject exists, set a new mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapObject</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="n">anchorPoint</span><span class="p">,</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">mapBackground</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
+			<span class="n">mapObject</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+				<span class="n">location</span><span class="o">=</span><span class="n">anchorPoint</span><span class="p">,</span> 
+				<span class="n">zoom_start</span><span class="o">=</span><span class="n">zoomStart</span> <span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span><span class="p">,</span> 
+				<span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
+				<span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span>
+
+	<span class="c1"># set the map boundary for mapObject</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">zoomStart</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mapBoundary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">mapObject</span><span class="o">.</span><span class="n">fit_bounds</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">)</span>
+
+	<span class="n">iconSizeX</span> <span class="o">=</span> <span class="mi">900</span>		<span class="c1"># FIXME -- Not sure if this is good.</span>
+	
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">horizAlign</span> <span class="o">=</span> <span class="n">horizAlign</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="k">if</span> <span class="p">(</span><span class="n">horizAlign</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span><span class="p">):</span>
+		<span class="n">iconAnchorX</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">horizAlign</span> <span class="o">==</span> <span class="s1">&#39;right&#39;</span><span class="p">):</span>
+		<span class="n">iconAnchorX</span> <span class="o">=</span> <span class="n">iconSizeX</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">iconAnchorX</span> <span class="o">=</span> <span class="n">iconSizeX</span> <span class="o">/</span> <span class="mi">2</span>
+				
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">fontColor</span> <span class="o">=</span> <span class="n">fontColor</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+							
+	<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">anchorPoint</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
+		<span class="n">icon_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconSizeX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
+		<span class="n">icon_anchor</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconAnchorX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
+		<span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&lt;div style=</span><span class="se">\&quot;</span><span class="s2">font-size: </span><span class="si">%d</span><span class="s2">pt; color: </span><span class="si">%s</span><span class="s2">; text-align: </span><span class="si">%s</span><span class="s2">;</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">%s</span><span class="s2">&lt;/div&gt;&quot;</span> <span class="o">%</span>  <span class="p">(</span><span class="n">fontSize</span><span class="p">,</span> <span class="n">fontColor</span><span class="p">,</span> <span class="n">horizAlign</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+		<span class="p">))</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
+
+	<span class="k">return</span> <span class="n">mapObject</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

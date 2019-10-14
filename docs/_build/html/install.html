@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Install Dependencies &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Providers" href="dataproviders.html" />
+    <link rel="prev" title="Welcome to veroviz’s documentation" href="index.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dataproviders.html" title="Data Providers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to veroviz’s documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Install Dependencies</a><ul>
+<li><a class="reference internal" href="#install-pgrouting">Install pgRouting</a></li>
+<li><a class="reference internal" href="#install-cesium">Install Cesium</a></li>
+<li><a class="reference internal" href="#apply-for-ors-api-key">Apply for ORS API key</a></li>
+<li><a class="reference internal" href="#apply-for-mapquest-api-key">Apply for MapQuest API key</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to veroviz’s documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dataproviders.html"
+                        title="next chapter">Data Providers</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/install.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="install-dependencies">
+<h1>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline">¶</a></h1>
+<p>Some <em>VeRoViz</em> functionality requires additional software or API keys.</p>
+<div class="section" id="install-pgrouting">
+<span id="id1"></span><h2>Install pgRouting<a class="headerlink" href="#install-pgrouting" title="Permalink to this headline">¶</a></h2>
+<p>pgRouting is an extension to the PostGIS/PostgreSQL geospatial database, which provides geospatial routing functionality. In VeRoViz, installing pgRouting will enable the <cite>pgRouting</cite> option for generating nodes, building traveling matrices, querying shapepoints along routes, etc.</p>
+<p>pgRouting is not required for VeRoViz.  If it is not installed, other data providers may be used.</p>
+<p>See <a class="reference external" href="https://veroviz.org/documentation.html">https://veroviz.org/documentation.html</a> for pgRouting installation instructions.</p>
+</div>
+<div class="section" id="install-cesium">
+<span id="apply-for-cesium-ion-key"></span><h2>Install Cesium<a class="headerlink" href="#install-cesium" title="Permalink to this headline">¶</a></h2>
+<p>Cesium is an open-source JavaScript library for rendering 3D maps.  The VeRoViz <a class="reference internal" href="veroviz.createCesium.html#veroviz.createCesium.createCesium" title="veroviz.createCesium.createCesium"><code class="xref py py-meth docutils literal notranslate"><span class="pre">createCesium()</span></code></a> function generates files to display solutions in Cesium.</p>
+<p>See <a class="reference external" href="https://veroviz.org/documentation.html">https://veroviz.org/documentation.html</a> for Cesium installation instructions.</p>
+</div>
+<div class="section" id="apply-for-ors-api-key">
+<span id="apply-for-ors-apikey"></span><h2>Apply for ORS API key<a class="headerlink" href="#apply-for-ors-api-key" title="Permalink to this headline">¶</a></h2>
+<p>OpenRouteService (ORS) is currently the suggested data provider for VeRoViz. It uses data from OpenStreetMaps. ORS offers a free API key with a generous daily query limit. Although ORS also provides an open-source engine that can be installed locally, this option is not currently enabled in VeRoViz.</p>
+<p>Register for a free ORS API key here: <a class="reference external" href="https://openrouteservice.org/dev/#/signup">https://openrouteservice.org/dev/#/signup</a>.</p>
+</div>
+<div class="section" id="apply-for-mapquest-api-key">
+<span id="apply-for-mapquest-apikey"></span><h2>Apply for MapQuest API key<a class="headerlink" href="#apply-for-mapquest-api-key" title="Permalink to this headline">¶</a></h2>
+<p>MapQuest is a commercial data source, but users may issue a limited number of requests for free. You may apply for a MapQuest API key here: <a class="reference external" href="https://developer.mapquest.com/documentation">https://developer.mapquest.com/documentation</a>.</p>
+<p>MapQuest provides perhaps the most detailed results of the data providers. However, keep in mind that the free API key has a monthly limit on the number of queries.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dataproviders.html" title="Data Providers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to veroviz’s documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

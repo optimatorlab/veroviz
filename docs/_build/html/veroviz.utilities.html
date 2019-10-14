@@ -1,0 +1,1362 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.utilities module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="veroviz.snapNodesToRoad module" href="veroviz.snapNodesToRoad.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="veroviz.snapNodesToRoad.html" title="veroviz.snapNodesToRoad module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="veroviz.snapNodesToRoad.html"
+                        title="previous chapter">veroviz.snapNodesToRoad module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.utilities.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.utilities">
+<span id="veroviz-utilities-module"></span><h1>veroviz.utilities module<a class="headerlink" href="#module-veroviz.utilities" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.utilities.convertArea">
+<code class="sig-name descname">convertArea</code><span class="sig-paren">(</span><em class="sig-param">area</em>, <em class="sig-param">fromUnits</em>, <em class="sig-param">toUnits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an area from <cite>fromUnits</cite> to <cite>toUnits</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>area</strong> (<em>float</em>) – The numeric value describing an area to be converted.</p></li>
+<li><p><strong>fromUnits</strong> (<em>string</em>) – Area units, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnits</strong> (<em>string</em>) – Desired units of area after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New value of area, after conversion.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">areaSQKM</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">areaSqMiles</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertArea</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;sqkm&#39;</span><span class="p">,</span> <span class="s1">&#39;sqmi&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">areaSqMiles</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">19.305</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.convertDistance">
+<code class="sig-name descname">convertDistance</code><span class="sig-paren">(</span><em class="sig-param">distance</em>, <em class="sig-param">fromUnits</em>, <em class="sig-param">toUnits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a distance to different units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distance</strong> (<em>float</em>) – The numeric value describing a distance to be converted.</p></li>
+<li><p><strong>fromUnits</strong> (<em>string</em>) – Distance units before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnits</strong> (<em>string</em>) – Distance units after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Distance after conversion</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distanceMiles</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distanceKilometers</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertDistance</span><span class="p">(</span><span class="n">distanceMiles</span><span class="p">,</span> <span class="s1">&#39;miles&#39;</span><span class="p">,</span> <span class="s1">&#39;km&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distanceKilometers</span>
+<span class="go">1.60934</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.convertMatricesDataframeToDictionary">
+<code class="sig-name descname">convertMatricesDataframeToDictionary</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertMatricesDataframeToDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertMatricesDataframeToDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dataframe into  a dictionary, such that the indices of columns and rows become a tuple key for the dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataframe</strong> (<em>pandas.dataframe</em>) – The rows and columns are both integers. There should not be duplicated origin/destination pairs.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The keys are tuples of (originIndex, destinationIndex)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pandas dataframes can be confusing when used with time and distance matrices.  In particular, suppose you have a distance dataframe named <cite>distDF</cite>.  The value of <cite>distDF[1][2]</cite> will actually return the distance from 2 to 1.  Conversely, if you have a distance dictionary named <cite>distDict</cite>, the value of <cite>distDict[1,2]</cite> will be the distance from 1 to 2.</p>
+</div>
+<p class="rubric">Example</p>
+<dl>
+<dt>Prepare some data.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeDict</span><span class="p">,</span> <span class="n">distDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>        <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>    <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeDict</span><span class="p">]</span>
+<span class="go">[{(1, 1): 0.0,</span>
+<span class="go">  (1, 2): 2869.9,</span>
+<span class="go">  (1, 3): 4033.9,</span>
+<span class="go">  (2, 1): 2853.3,</span>
+<span class="go">  (2, 2): 0.0,</span>
+<span class="go">  (2, 3): 4138.2,</span>
+<span class="go">  (3, 1): 4037.8,</span>
+<span class="go">  (3, 2): 4055.4,</span>
+<span class="go">  (3, 3): 0.0}]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The travel time from node 1 to node 2 is </span><span class="si">%.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timeDict</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+<span class="go">The travel time from node 1 to node 2 is 2869.90 seconds</span>
+</pre></div>
+</div>
+</dd>
+<dt>timeDict is a dictionary.  Convert to a dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">timeDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertMatricesDictionaryToDataframe</span><span class="p">(</span><span class="n">timeDict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDF</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># NOTE:  The travel time from 1 to 2 is NOT found by timeDF[1][2].</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># INSTEAD, you must use timeDF[2][1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Pandas uses the form timeDF[COLUMN_INDEX][ROW_INDEX]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDF</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">timeDF</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">timeDict</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">timeDict</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="go">(2853.3, 2869.9, 2869.9, 2853.3)</span>
+</pre></div>
+</div>
+</dd>
+<dt>We can transform a dataframe into a dictionary</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertMatricesDataframeToDictionary</span><span class="p">(</span><span class="n">timeDF</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This should be the same as `timeDict`</span>
+<span class="go">{(1, 1): 0.0,</span>
+<span class="go"> (1, 2): 2869.9,</span>
+<span class="go"> (1, 3): 4033.9,</span>
+<span class="go"> (2, 1): 2853.3,</span>
+<span class="go"> (2, 2): 0.0,</span>
+<span class="go"> (2, 3): 4138.2,</span>
+<span class="go"> (3, 1): 4037.8,</span>
+<span class="go"> (3, 2): 4055.4,</span>
+<span class="go"> (3, 3): 0.0}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the travel time *from* 1 *to* 3:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">4033.9</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.convertMatricesDictionaryToDataframe">
+<code class="sig-name descname">convertMatricesDictionaryToDataframe</code><span class="sig-paren">(</span><em class="sig-param">dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertMatricesDictionaryToDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertMatricesDictionaryToDataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dictionary into a pandas dataframe.  The dictionary is assumed to have 2-tuple indices (the first index represents the ID of the “from” location, the second index is the ID of the “to” location).  In the resulting pandas dataframe, the row indices will represent the “from” location, the column indices the “to” location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dictionary</strong> – The keys are tuples of (originIndex, destinationIndex) format.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The keys in the dictionary should be 2-tuples, the first value will be a row index, the second value will be a column index.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.dataframe</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pandas dataframes can be confusing when used with time and distance matrices.  In particular, suppose you have a distance dataframe named <cite>distDF</cite>.  The value of <cite>distDF[1][2]</cite> will actually return the distance from 2 to 1.  Conversely, if you have a distance dictionary named <cite>distDict</cite>, the value of <cite>distDict[1,2]</cite> will be the distance from 1 to 2.</p>
+</div>
+<p class="rubric">Example</p>
+<dl>
+<dt>Prepare some data.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeDict</span><span class="p">,</span> <span class="n">distDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>        <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>    <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeDict</span><span class="p">]</span>
+<span class="go">[{(1, 1): 0.0,</span>
+<span class="go">  (1, 2): 2869.9,</span>
+<span class="go">  (1, 3): 4033.9,</span>
+<span class="go">  (2, 1): 2853.3,</span>
+<span class="go">  (2, 2): 0.0,</span>
+<span class="go">  (2, 3): 4138.2,</span>
+<span class="go">  (3, 1): 4037.8,</span>
+<span class="go">  (3, 2): 4055.4,</span>
+<span class="go">  (3, 3): 0.0}]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The travel time from node 1 to node 2 is </span><span class="si">%.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timeDict</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+<span class="go">The travel time from node 1 to node 2 is 2869.90 seconds</span>
+</pre></div>
+</div>
+</dd>
+<dt>timeDict is a dictionary.  Convert to a dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">timeDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertMatricesDictionaryToDataframe</span><span class="p">(</span><span class="n">timeDict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDF</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># NOTE:  The travel time from 1 to 2 is NOT found by timeDF[1][2].</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># INSTEAD, you must use timeDF[2][1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Pandas uses the form timeDF[COLUMN_INDEX][ROW_INDEX]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDF</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">timeDF</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">timeDict</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">timeDict</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="go">(2853.3, 2869.9, 2869.9, 2853.3)</span>
+</pre></div>
+</div>
+</dd>
+<dt>We can transform a dataframe into a dictionary</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertMatricesDataframeToDictionary</span><span class="p">(</span><span class="n">timeDF</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This should be the same as `timeDict`</span>
+<span class="go">{(1, 1): 0.0,</span>
+<span class="go"> (1, 2): 2869.9,</span>
+<span class="go"> (1, 3): 4033.9,</span>
+<span class="go"> (2, 1): 2853.3,</span>
+<span class="go"> (2, 2): 0.0,</span>
+<span class="go"> (2, 3): 4138.2,</span>
+<span class="go"> (3, 1): 4037.8,</span>
+<span class="go"> (3, 2): 4055.4,</span>
+<span class="go"> (3, 3): 0.0}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the travel time *from* 1 *to* 3:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">4033.9</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.convertSpeed">
+<code class="sig-name descname">convertSpeed</code><span class="sig-paren">(</span><em class="sig-param">speed</em>, <em class="sig-param">fromUnitsDist</em>, <em class="sig-param">fromUnitsTime</em>, <em class="sig-param">toUnitsDist</em>, <em class="sig-param">toUnitsTime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertSpeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a speed to different units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speed</strong> (<em>float</em>) – The numeric value describing a speed to be converted.</p></li>
+<li><p><strong>fromUnitsDist</strong> (<em>string</em>) – Distance units for the given speed, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>fromUnitsTime</strong> (<em>string</em>) – Time units for the given speed, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnitsDist</strong> (<em>string</em>) – Distance units for the speed after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnitTime</strong> (<em>string</em>) – Time units for the speed after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Speed after conversion</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">speedFPS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">speedMPH</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertSpeed</span><span class="p">(</span><span class="n">speedFPS</span><span class="p">,</span> <span class="s1">&#39;ft&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;mi&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">speedMPH</span>
+<span class="go">6.818198764711</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.convertTime">
+<code class="sig-name descname">convertTime</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">fromUnits</em>, <em class="sig-param">toUnits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a time to different units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – The numeric value describing a time to be converted.</p></li>
+<li><p><strong>fromUnits</strong> (<em>string</em>) – Time units before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnits</strong> (<em>string</em>) – Time units after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Time after conversion</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeHours</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeMinutes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertTime</span><span class="p">(</span><span class="n">timeHours</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeMinutes</span>
+<span class="go">90.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.distance2D">
+<code class="sig-name descname">distance2D</code><span class="sig-paren">(</span><em class="sig-param">loc1</em>, <em class="sig-param">loc2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distance2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distance2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the geodesic distance between two locations, using the geopy library.  Altitude is ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc1</strong> (<em>list</em>) – First location, in [lat, lon] format.</p></li>
+<li><p><strong>loc2</strong> (<em>list</em>) – Second location, in [lat, lon] format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Geodesic distance between the two locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.82</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.92</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist2D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">distance2D</span><span class="p">(</span><span class="n">loc1</span><span class="p">,</span> <span class="n">loc2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist2D</span>
+<span class="go">2759.0335974131926</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.distance3D">
+<code class="sig-name descname">distance3D</code><span class="sig-paren">(</span><em class="sig-param">loc1</em>, <em class="sig-param">loc2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distance3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distance3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the distance between two point, including changes in altitude.  The calculation combines geopy’s geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc1</strong> (<em>list</em>) – First location, in [lat, lon, alt] format.</p></li>
+<li><p><strong>loc2</strong> (<em>list</em>) – Second location, in [lat, lon, alt] format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Distance between the two locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.82</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.92</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist3D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">distance3D</span><span class="p">(</span><span class="n">loc1</span><span class="p">,</span> <span class="n">loc2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist3D</span>
+<span class="go">2775.2957304861734</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.distancePath2D">
+<code class="sig-name descname">distancePath2D</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distancePath2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distancePath2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], …].</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Total length of the path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.82</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.92</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.84</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.94</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">distancePath2D</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span>
+<span class="go">5517.760959357638</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.exportDataToCSV">
+<code class="sig-name descname">exportDataToCSV</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#exportDataToCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.exportDataToCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a dataframe or python time/distance matrix dictionary to a <cite>.csv</cite> file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.dataframe</em><em> or </em><em>dictionary</em>) – The data to be exported.  This can be a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe, or it can be a time/distance python dictionary.</p></li>
+<li><p><strong>filename</strong> (<em>string</em>) – The path and name of file to be exported.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>The following examples will be the same as examples in <a class="reference internal" href="#veroviz.utilities.importDataFromCSV" title="veroviz.utilities.importDataFromCSV"><code class="xref py py-meth docutils literal notranslate"><span class="pre">importDataFromCSV()</span></code></a>.</p>
+<dl>
+<dt>Import veroviz and check if it is the latest version:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a nodes dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>             <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>                     <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>                     <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span>
+</pre></div>
+</div>
+</dd>
+<dt>Save the nodesDF dataframe as a .csv file in a subdirectory named “test”:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">exportDataToCSV</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">nodesDF</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Import the dataframe we just saved:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataFromCSV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataType</span> <span class="o">=</span> <span class="s1">&#39;nodes&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodes</span>
+</pre></div>
+</div>
+</dd>
+<dt>If the data type is inconsistent with the data, an error message will be thrown and nothing will be imported.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataFromCSV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataType</span> <span class="o">=</span> <span class="s1">&#39;arcs&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+<span class="go">Error: test/nodes.csv was not successfully imported.  Check the data type.</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Similarly we can import and export the ‘arcs’ and ‘assignments’ dataframe</p>
+<p>For time/distance matrices, they are saved as dictionaries in VeRoViz, here is an example of how to import/export them.</p>
+<dl>
+<dt>Get travel time/distance matrices using the nodes we just created:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeDict</span><span class="p">,</span> <span class="n">distDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist2D</span><span class="p">(</span>
+<span class="gp">... </span>          <span class="n">nodes</span>        <span class="o">=</span> <span class="n">nodesDF</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="n">routeType</span>    <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict</span>
+<span class="go">{(1, 1): 0.0,</span>
+<span class="go"> (1, 2): 2869.9,</span>
+<span class="go"> (1, 3): 4033.9,</span>
+<span class="go"> (2, 1): 2853.3,</span>
+<span class="go"> (2, 2): 0.0,</span>
+<span class="go"> (2, 3): 4138.2,</span>
+<span class="go"> (3, 1): 4037.8,</span>
+<span class="go"> (3, 2): 4055.4,</span>
+<span class="go"> (3, 3): 0.0}</span>
+</pre></div>
+</div>
+</dd>
+<dt>Export the time dictionary to a .csv file in a subdirectory named “test”:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">exportDataToCSV</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">timeDict</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/timeMatrix.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Import the saved dictionary</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedTime</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataFromCSV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataType</span> <span class="o">=</span> <span class="s1">&#39;matrix&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/timeMatrix.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importedTime</span>
+<span class="go">{(1, 1): 0.0,</span>
+<span class="go"> (1, 2): 2869.9,</span>
+<span class="go"> (1, 3): 4033.9,</span>
+<span class="go"> (2, 1): 2853.3,</span>
+<span class="go"> (2, 2): 0.0,</span>
+<span class="go"> (2, 3): 4138.2,</span>
+<span class="go"> (3, 1): 4037.8,</span>
+<span class="go"> (3, 2): 4055.4,</span>
+<span class="go"> (3, 3): 0.0}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.exportDataframe">
+<code class="sig-name descname">exportDataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#exportDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.exportDataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports a nodes, arcs, or assignments dataframe to a <cite>.csv</cite> file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.dataframe</em><em>, </em><em>Required</em>) – The dataframe to be exported.  This can be a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.</p></li>
+<li><p><strong>filename</strong> (<em>string</em><em>, </em><em>Required</em>) – The path and the name of file to be exported.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if it is the latest version:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a nodes dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span>
+</pre></div>
+</div>
+</dd>
+<dt>Save the nodesDF dataframe as a .csv file in a subdirectory named “test”:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">exportDataframe</span><span class="p">(</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">nodesDF</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Import the saved dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodesDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataframe</span><span class="p">(</span><span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodesDF</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.getConvexHull">
+<code class="sig-name descname">getConvexHull</code><span class="sig-paren">(</span><em class="sig-param">locs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getConvexHull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getConvexHull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the convex hull of a set of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>locs</strong> (<em>list of lists</em>) – A list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of lat/lon coordinates of the convex hull.  This is in the same form as the input points.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the convex hull of 5 locs that straddle the Prime Meridian:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">51.4865</span><span class="p">,</span>  <span class="mf">0.0008</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">51.4777</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">51.4801</span><span class="p">,</span>  <span class="mf">0.0029</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">51.4726</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0161</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">51.4752</span><span class="p">,</span>  <span class="mf">0.0158</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convexHull</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getConvexHull</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convexHull</span>
+<span class="go">[[51.4726, -0.0161], [51.4865, 0.0008], [51.4752, 0.0158]]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Display the 5 locations and the convex hull on a map:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">locs</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">convexHull</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.getHeading">
+<code class="sig-name descname">getHeading</code><span class="sig-paren">(</span><em class="sig-param">currentLoc</em>, <em class="sig-param">goalLoc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getHeading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getHeading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the heading required to travel from a current location to a goal location.  North is 0-degrees, east is 90-degrees, south is 180-degrees, west is 270-degrees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currentLoc</strong> (<em>list</em>) – The [lat, lon] of current location</p></li>
+<li><p><strong>goalLoc</strong> (<em>list</em>) – The [lat, lon] of goal location</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Heading at current location towards goal location in degrees.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locCurrent</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locGoal</span>    <span class="o">=</span> <span class="p">[</span><span class="mf">42.85</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.85</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">heading</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getHeading</span><span class="p">(</span><span class="n">locCurrent</span><span class="p">,</span> <span class="n">locGoal</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">heading</span>
+<span class="go">36.24057197338239</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># View the arc from the current location to the goal:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arc</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span><span class="n">locSeq</span> <span class="o">=</span> <span class="p">[</span><span class="n">locCurrent</span><span class="p">,</span> <span class="n">locGoal</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="n">arc</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.getMapBoundary">
+<code class="sig-name descname">getMapBoundary</code><span class="sig-paren">(</span><em class="sig-param">nodes=None</em>, <em class="sig-param">arcs=None</em>, <em class="sig-param">locs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getMapBoundary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getMapBoundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the smallest rectangle that encloses a collection of nodes, arcs, assignments, and/or locations.  This function returns a list of lists, of the form [minLat, maxLon], [maxLat, minLon]].  This is equivalent to finding the southeast and northwest corners of the rectangle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Conditional, <cite>nodes</cite>, <cite>arcs</cite>, and <cite>locs</cite> cannot be None at the same time) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.</p></li>
+<li><p><strong>arcs</strong> (<a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a>, Conditional, <cite>nodes</cite>, <cite>arcs</cite>, and <cite>locs</cite> cannot be None at the same time) – An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.</p></li>
+<li><p><strong>locs</strong> (list of lists, Conditional, <cite>nodes</cite>, <cite>arcs</cite>, and <cite>locs</cite> cannot be None at the same time) – A list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>In form of [[minLat, maxLon], [maxLat, minLon]].  These two points denote the southeast and northwest corners of the boundary rectangle.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lists</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create 3 nodes, with blue pin markers (default):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1234</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="p">[</span><span class="mf">42.5323</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.2534</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="p">[</span><span class="mf">42.9812</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1353</span><span class="p">]])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create 1 arc, with orange arrows (default):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myArc</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span><span class="n">locSeq</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.62</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.20</span><span class="p">],</span>
+<span class="gp">... </span>                                           <span class="p">[</span><span class="mf">42.92</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.30</span><span class="p">]])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Define 2 locations, with altitude.  (We&#39;ll color these purple later):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myLocs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.03</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.26</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.78</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.25</span><span class="p">,</span> <span class="mi">200</span><span class="p">]]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the boundary of these objects:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myBoundary</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getMapBoundary</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">arcs</span>  <span class="o">=</span> <span class="n">myArc</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">locs</span>  <span class="o">=</span> <span class="n">myLocs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myBoundary</span>
+<span class="go">[[42.03, -78.1234], [42.9812, -78.3]]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize a map with nodes (blue) and an arc (orange):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">arcs</span>  <span class="o">=</span> <span class="n">myArc</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add red (default) circle markers for the locations:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">myLocs</span><span class="p">)):</span>
+<span class="gp">... </span>   <span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">center</span>    <span class="o">=</span> <span class="n">myLocs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert myBoundary to a 4-point polygon:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myBoundingRegion</span> <span class="o">=</span> <span class="p">[</span><span class="n">myBoundary</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                    <span class="p">[</span><span class="n">myBoundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">myBoundary</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span>
+<span class="gp">... </span>                    <span class="n">myBoundary</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                    <span class="p">[</span><span class="n">myBoundary</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">myBoundary</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]]]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add the bounding region to the map:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">mapObject</span>      <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">boundingRegion</span> <span class="o">=</span> <span class="n">myBoundingRegion</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Display the map:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.importDataFromCSV">
+<code class="sig-name descname">importDataFromCSV</code><span class="sig-paren">(</span><em class="sig-param">dataType</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#importDataFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.importDataFromCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import from a <cite>.csv</cite> file into a dataframe or python time/distance matrix dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataType</strong> (<em>string</em><em>, </em><em>Required</em>) – The type of data to be imported.  Valid options are ‘nodes’, ‘arcs’, ‘assignments’, or ‘matrix’.</p></li>
+<li><p><strong>filename</strong> (<em>string</em><em>, </em><em>Required</em>) – The path and the name of the file to be imported.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The resulting object depends on the data that are imported.  If the data are ‘nodes’, ‘arcs’ or ‘assignments’, return pandas.dataframe; otherwise, if the data are ‘matrix’, return dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.dataframe or dictionary</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>The following examples will be the same as examples in <a class="reference internal" href="#veroviz.utilities.exportDataToCSV" title="veroviz.utilities.exportDataToCSV"><code class="xref py py-meth docutils literal notranslate"><span class="pre">exportDataToCSV()</span></code></a></p>
+<dl>
+<dt>Import veroviz and check if it is the latest version:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a nodes dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<span class="gp">... </span>             <span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>                     <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>                     <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span>
+</pre></div>
+</div>
+</dd>
+<dt>Save the nodesDF dataframe as a .csv file in a subdirectory named “test”:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">exportDataToCSV</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">nodesDF</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Import the dataframe we just saved:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataFromCSV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataType</span> <span class="o">=</span> <span class="s1">&#39;nodes&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodes</span>
+</pre></div>
+</div>
+</dd>
+<dt>If the data type is inconsistent with the data, an error message will be thrown and nothing will be imported.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataFromCSV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataType</span> <span class="o">=</span> <span class="s1">&#39;arcs&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+<span class="go">Error: test/nodes.csv was not successfully imported.  Check the data type.</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>Similarly we can import and export the ‘arcs’ and ‘assignments’ dataframe</p>
+<p>For time/distance matrices, they are saved as dictionaries in VeRoViz, here is an example of how to import/export them.</p>
+<dl>
+<dt>Get travel time/distance matrices using the nodes we just created:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeDict</span><span class="p">,</span> <span class="n">distDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist2D</span><span class="p">(</span>
+<span class="gp">... </span>          <span class="n">nodes</span>        <span class="o">=</span> <span class="n">nodesDF</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="n">routeType</span>    <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>          <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeDict</span>
+<span class="go">{(1, 1): 0.0,</span>
+<span class="go"> (1, 2): 2869.9,</span>
+<span class="go"> (1, 3): 4033.9,</span>
+<span class="go"> (2, 1): 2853.3,</span>
+<span class="go"> (2, 2): 0.0,</span>
+<span class="go"> (2, 3): 4138.2,</span>
+<span class="go"> (3, 1): 4037.8,</span>
+<span class="go"> (3, 2): 4055.4,</span>
+<span class="go"> (3, 3): 0.0}</span>
+</pre></div>
+</div>
+</dd>
+<dt>Export the time dictionary to a .csv file in a subdirectory named “test”:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">exportDataToCSV</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">timeDict</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/timeMatrix.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Import the saved dictionary</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedTime</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataFromCSV</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataType</span> <span class="o">=</span> <span class="s1">&#39;matrix&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/timeMatrix.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importedTime</span>
+<span class="go">{(1, 1): 0.0,</span>
+<span class="go"> (1, 2): 2869.9,</span>
+<span class="go"> (1, 3): 4033.9,</span>
+<span class="go"> (2, 1): 2853.3,</span>
+<span class="go"> (2, 2): 0.0,</span>
+<span class="go"> (2, 3): 4138.2,</span>
+<span class="go"> (3, 1): 4037.8,</span>
+<span class="go"> (3, 2): 4055.4,</span>
+<span class="go"> (3, 3): 0.0}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.importDataframe">
+<code class="sig-name descname">importDataframe</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">intCols=False</em>, <em class="sig-param">useIndex=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#importDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.importDataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports a VeRoViz nodes, arcs, or assignments dataframe from a .csv file.  This function returns a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>string</em><em>, </em><em>Required</em>) – The path and the name of the file to be imported.</p></li>
+<li><p><strong>intCols</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – If the dataframe column names are integers (rather than text), set <cite>intCols</cite> to be True.  See notes below for more information.</p></li>
+<li><p><strong>useIndex</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Setting this value to True means that the first column in the .csv will be used as the row indices.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the dataframe is one of the following, the column names are not integers; leave <cite>intCols=False</cite> (default).  Also, leave <cite>useIndex=True</cite> (default):</p>
+<ul class="simple">
+<li><p>nodes</p></li>
+<li><p>arcs</p></li>
+<li><p>assignments</p></li>
+</ul>
+<p>If you are importing the following matrices, it is recommended to use <cite>importDataFromCSV()</cite> function, the return value of that function will be a dictionary for matrix.</p>
+<ul class="simple">
+<li><p>time matrix</p></li>
+<li><p>distance matrix</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dataframe constructed from the contents of the imported .csv file.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.dataframe</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if it is the latest version:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a nodes dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodesDF</span>
+</pre></div>
+</div>
+</dd>
+<dt>Save the nodesDF dataframe as a .csv file in a subdirectory named “test”:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">exportDataframe</span><span class="p">(</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">nodesDF</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Import the saved dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodesDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">importDataframe</span><span class="p">(</span><span class="s1">&#39;test/nodes.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">importedNodesDF</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.initDataframe">
+<code class="sig-name descname">initDataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframeType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#initDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.initDataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an empty dataframe of a given type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataframeType</strong> (<em>string</em>) – The options are ‘Nodes’, ‘Arcs’, and ‘Assignments’.  These options are case insensitive.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe of the given type.  See <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, and <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> for details on each dataframe type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.dataframe</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">newNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;Nodes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">newNodes</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.isPassPath">
+<code class="sig-name descname">isPassPath</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">path</em>, <em class="sig-param">tolerance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPassPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPassPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if any point along a path is within tolerance meters of a stationary point.
+(did our path pass by the target?)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em>) – The stationary point to be tested if it has been passed, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – How close must the path be to the stationary location to be considered as “passed”.  The units are in meters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether or not the path passes the point.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Prepare some data</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - The distance from the location to the path exceeds the tolerance.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">awayLoc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPassPath</span><span class="p">(</span><span class="n">awayLoc</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the minimum distance, in meters, from the location to the path:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">minDistLoc2Path</span><span class="p">(</span><span class="n">awayLoc</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">1105.9845259826711</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">awayLoc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - The distance from the location to the path is within the tolerance.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">closeLoc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.505</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPassPath</span><span class="p">(</span><span class="n">closeLoc</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Find the minimum distance, in meters, from the location to the path:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">minDistLoc2Path</span><span class="p">(</span><span class="n">closeLoc</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">550.5689415111023</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">closeLoc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - Location and path include altitudes (which are ignored):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">42.505</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.40</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.60</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.70</span><span class="p">,</span> <span class="mi">100</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPassPath</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.isPathCrossPoly">
+<code class="sig-name descname">isPathCrossPoly</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPathCrossPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPathCrossPoly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a given path crosses the boundary of a polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
+<li><p><strong>poly</strong> (<em>list of lists</em>) – A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the path have intersection with the polygon, false if no intersection</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>First import veroviz</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Entire path is inside poly</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - One of the vertices is on the edge of poly</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - Part of the path is outside of poly:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 4 - Endpoints are in poly, but poly isn’t convex:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 5 - Path and poly include altitudes (which are ignored):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">,</span> <span class="mi">300</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">,</span> <span class="mi">100</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.isPathInPoly">
+<code class="sig-name descname">isPathInPoly</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPathInPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPathInPoly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a given path is completely within the boundary of a polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
+<li><p><strong>poly</strong> (<em>list of lists</em>) – A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the path lies entirely inside the polygon; False if at least one point of the path is not inside polygon.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Entire path is inside polygon:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - One of the vertices is on the edge of the polygon:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - Part of the path is outside of the polygon:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 4 - Endpoints are in the polygon, but the poly isn’t convex:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 5 - Path and poly coordinates include altitude (which is ignored):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">,</span> <span class="mi">200</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">,</span> <span class="mi">200</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.isPointInPoly">
+<code class="sig-name descname">isPointInPoly</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPointInPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPointInPoly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be “inside”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em>) – The coordinate of the point, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
+<li><p><strong>poly</strong> (<em>list of lists</em>) – A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The point is inside the polygon or not</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Location is inside polygon:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.03</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.05</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - Location is outside polygon:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.07</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.05</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - Location is on the polygon boundary:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 4 - Location is on a polygon vertex:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 5 - Non-convex poly region:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">43.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">79.00</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 6 - Altitudes are included (but ignored):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">,</span> <span class="mi">200</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="n">poly</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.minDistLoc2Path">
+<code class="sig-name descname">minDistLoc2Path</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#minDistLoc2Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.minDistLoc2Path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the minimum distance, in [meters], from a single stationary location (target) to any point along a path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em>) – The coordinate of the stationary location, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The minimum distance, in meters, between the stationary location and the given polyline (path).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Prepare some data</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.10</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc3</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - The location is on the path:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">minDistLoc2Path</span><span class="p">(</span><span class="n">loc1</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - The minimum distance is between points on the path:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">minDistLoc2Path</span><span class="p">(</span><span class="n">loc2</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">1105.9845259826711</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - The minimum distance is to an endpoint of the path:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">minDistLoc2Path</span><span class="p">(</span><span class="n">loc3</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">8293.970453010765</span>
+</pre></div>
+</div>
+</dd>
+<dt>Show the objects on a map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">loc1</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">loc2</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">loc3</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 4 - The location and path include altitudes (which are ignored):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path2</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.40</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.60</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="p">[</span><span class="mf">42.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.70</span><span class="p">,</span> <span class="mi">100</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc4</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">42.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.3</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">minDistLoc2Path</span><span class="p">(</span><span class="n">loc4</span><span class="p">,</span> <span class="n">path2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.pointInDistance2D">
+<code class="sig-name descname">pointInDistance2D</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">direction</em>, <em class="sig-param">distMeters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#pointInDistance2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.pointInDistance2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the [lat, lon, alt] coordinate of a point that is a given distance away from a current location at a given heading. This can be useful for determining where a vehicle may be in the future (assuming constant velocity and straight-line travel).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em>) – The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</p></li>
+<li><p><strong>direction</strong> (<em>float</em>) – The direction of travel from the current location, in units of degrees.  The range is [0, 360], where north is 0 degrees, east is 90 degrees, south is 180 degrees, and west is 270 degrees.</p></li>
+<li><p><strong>distMeters</strong> (<em>float</em>) – The straight-line distance to be traveled, in meters, from the current location in the given direction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A location a given distance away from the given location, in [lat, lon, alt] form.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">startPt</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.30</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">heading</span>  <span class="o">=</span> <span class="mi">45</span> <span class="c1"># degrees. travel northeast.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="mi">300</span> <span class="c1"># meters.</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">endPt</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">pointInDistance2D</span><span class="p">(</span><span class="n">startPt</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">endPt</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myArc</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span><span class="n">locSeq</span> <span class="o">=</span> <span class="p">[</span><span class="n">startPt</span><span class="p">,</span> <span class="n">endPt</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="n">myArc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">startPt</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">endPt</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="veroviz.snapNodesToRoad.html" title="veroviz.snapNodesToRoad module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

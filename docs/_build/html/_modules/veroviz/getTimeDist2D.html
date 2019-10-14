@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.getTimeDist2D &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="../../_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for veroviz.getTimeDist2D</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valGetTimeDist2D</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._getTimeDistFromLocs2D</span> <span class="k">import</span> <span class="n">getTimeDistFromLocs2D</span>
+
+<div class="viewcode-block" id="getTimeDist2D"><a class="viewcode-back" href="../../veroviz.getTimeDist2D.html#veroviz.getTimeDist2D.getTimeDist2D">[docs]</a><span class="k">def</span> <span class="nf">getTimeDist2D</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;all2all&#39;</span><span class="p">,</span> <span class="n">fromNodeID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toNodeID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Generates two dictionaries; one for distance, one for time.  This is for vehicles that travel only on the ground (2-dimensional movement).</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	nodes: :ref:`Nodes`, Required, default as None</span>
+<span class="sd">		This :ref:`Nodes` dataframe contains the locations between which the travel time and distance will be calculated.</span>
+<span class="sd">	matrixType: string, Optional, default as &#39;all2all&#39;</span>
+<span class="sd">		Specifies the structure of the travel matrices.  Valid options include &#39;all2all&#39;, &#39;many2one&#39;, and &#39;one2many&#39;.  The default &#39;all2all&#39; option will return square matrices (one for time, one for distance) describing the directed travel time and travel distance between all pairs of nodes.  The &#39;one2many&#39; option will return vectors describing the directed travel from one node to all other nodes.  Similarly, the &#39;many2one&#39; option will return vectors describing the directed travel from all nodes to a given node.  See the table in the note below for details.</span>
+<span class="sd">	fromNodeID: int, Optional, default as None</span>
+<span class="sd">		Specifies the node ID (from the `id` column of the input `nodes` dataframe) of the origin node.  This parameter is required for the &#39;one2many&#39; matrix type; it is ignored by all other matrix types.  See the table in the note below for details.</span>
+<span class="sd">	toNodeID: int, Optional, default as None</span>
+<span class="sd">		Specifies the node ID (from the `id` column of the input `nodes` dataframe) of the destination node.  This parameter is required for the &#39;many2one&#39; matrix type; it is ignored for all other matrix types.  See the table in the note below for details.</span>
+<span class="sd">	outputDistUnits: string, Optional, default as &#39;meters&#39;</span>
+<span class="sd">		Specifies the desired distance units for the function&#39;s output.  Valid values are &#39;meters&#39;, &#39;m&#39;, &#39;kilometers&#39;, &#39;km&#39;, &#39;miles&#39;, &#39;mi&#39;, &#39;feet&#39;, &#39;ft&#39;, &#39;nm&#39;, and &#39;nmi&#39; (nautical miles). See :ref:`Units` for options and abbreviations.</span>
+<span class="sd">	outputTimeUnits: string, Optional, default as &#39;seconds&#39;</span>
+<span class="sd">		Specifies the desired time units for the function&#39;s output.  Valid values are &#39;seconds&#39;, &#39;hours&#39;, and &#39;minutes&#39;. See :ref:`Units` for options and abbreviations.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;euclidean2D&#39;</span>
+<span class="sd">		This describes a characteristic of the travel mode.  Possible values are: &#39;euclidean2D&#39;, &#39;manhattan&#39;, &#39;fastest&#39;, &#39;shortest&#39;, &#39;pedestrian&#39;, &#39;cycling&#39;, and &#39;truck&#39;.  The &#39;euclidean2D&#39; and &#39;manhattan&#39; options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.</span>
+<span class="sd">	speedMPS: float, Conditional, default as None</span>
+<span class="sd">		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., &#39;euclidean2D&#39; and &#39;manhattan&#39;), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., &#39;fastest&#39;, &#39;shortest&#39;, and &#39;pedestrain&#39;), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.</span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for obtaining the travel data. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Optional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	time: dictionary</span>
+<span class="sd">		A Python dictionary containing travel times.  Time units are defined by `outputTimeUnits`.  The format of key values is: `(fromID, toID)`.  The travel time from ID 1 to ID 2 is provided by `time[1, 2]`. </span>
+<span class="sd">	dist: dictionary</span>
+<span class="sd">		A Python dictionary containing travel distances.  Distance units are defined by `outputDistUnits`.  The format of key values is: `(fromID, toID)`.  The travel distance from ID 1 to ID 2 is provided by `dist[1, 2]`.  </span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	For `matrixType`, the options are &#39;all2all&#39;, &#39;one2many&#39;, and &#39;many2one&#39;.</span>
+
+<span class="sd">	+----------------------+--------------+------------+------------------+</span>
+<span class="sd">	| `matrixType` options | `fromNodeID` | `toNodeID` | Return type      |</span>
+<span class="sd">	+======================+==============+============+==================+</span>
+<span class="sd">	| &#39;all2all&#39;            | ignored      | ignored    | Square matrices  |</span>
+<span class="sd">	+----------------------+--------------+------------+------------------+</span>
+<span class="sd">	| &#39;one2many&#39;           | required     | ignored    | Row vectors      |</span>
+<span class="sd">	+----------------------+--------------+------------+------------------+</span>
+<span class="sd">	| &#39;many2one&#39;           | ignored      | required   | Column vectors   |</span>
+<span class="sd">	+----------------------+--------------+------------+------------------+</span>
+
+<span class="sd">	In &#39;all2all&#39;, square matrices will be generated for all node pairs in the  </span>
+<span class="sd">	provided `nodes` dataframe.</span>
+
+<span class="sd">	In &#39;one2many&#39;, a node `id` will be assigned in the `fromNodeID` field, which </span>
+<span class="sd">	comes from the `id` column in the provided `nodes` dataframe.</span>
+<span class="sd">	Row vectors will be returned for the time and distance from that node </span>
+<span class="sd">	to all the nodes in the provided `nodes` dataframe.</span>
+
+<span class="sd">	In &#39;many2one&#39;, column vectors will be returned for the time and distance </span>
+<span class="sd">	from all nodes in the provided `nodes` dataframe to the node indicated </span>
+<span class="sd">	by `toNodeID`.</span>
+<span class="sd">	</span>
+
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if the version is up-to-date</span>
+<span class="sd">	    &gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">	    &gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate &quot;nodes&quot; dataframes.</span>
+<span class="sd">	    &gt;&gt;&gt; locs = [</span>
+<span class="sd">	    ...     [42.1538, -78.4253], </span>
+<span class="sd">	    ...     [42.3465, -78.6234], </span>
+<span class="sd">	    ...     [42.6343, -78.1146]]</span>
+<span class="sd">	    &gt;&gt;&gt; exampleNodes = vrv.createNodesFromLocs(locs=locs)</span>
+<span class="sd">	</span>
+<span class="sd">	Example 1 - Generate time and distance matrices that only consider Euclidean travel (default), and assume the speed is a constant at 15 m/s.  No data provider is required/used in this case.</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes        = exampleNodes,</span>
+<span class="sd">		...     routeType    = &#39;euclidean2D&#39;,</span>
+<span class="sd">		...     speedMPS     = 15)</span>
+<span class="sd">		&gt;&gt;&gt; print(&quot;Travel time from node 1 to 2 is %.2f seconds&quot; % (timeSec[1, 2]))</span>
+<span class="sd">		&gt;&gt;&gt; print(&quot;Travel distance from node 1 to 2 is %.2f meters&quot; % (distMeters[1, 2]))</span>
+
+<span class="sd">	Example 2 - Use a data provider to find the time and distance matrices according to the &#39;fastest&#39; travel time metric.  </span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]   </span>
+<span class="sd">		&gt;&gt;&gt; # If you don&#39;t have environment variables configured, </span>
+<span class="sd">		&gt;&gt;&gt; # uncomment and try the following line:   </span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes        = exampleNodes,</span>
+<span class="sd">		...     routeType    = &#39;fastest&#39;,</span>
+<span class="sd">		...     dataProvider = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = { &#39;APIkey&#39; : ORS_API_KEY })</span>
+<span class="sd">		&gt;&gt;&gt; print(&quot;Travel time from node 1 to 2 is %.2f seconds&quot; % (timeSec[1, 2]))</span>
+<span class="sd">		&gt;&gt;&gt; print(&quot;Travel distance from node 1 to 2 is %.2f meters&quot; % (distMeters[1, 2]))		</span>
+<span class="sd">	</span>
+<span class="sd">	Example 3 - Sometimes you don&#39;t need the full square matrix of travel data.  Here, we find the time/distance information associated with traveling from node 3 to all other nodes:</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes            = exampleNodes,</span>
+<span class="sd">		...     matrixType       = &#39;one2many&#39;,</span>
+<span class="sd">		...     fromNodeID       = 3,</span>
+<span class="sd">		...     toNodeID         = None,</span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = { &#39;APIkey&#39; : ORS_API_KEY })</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters]</span>
+
+<span class="sd">	Example 4 - Similarly, we can find the time/distance information for travel from all nodes to node 3:</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes            = exampleNodes,</span>
+<span class="sd">		...     matrixType       = &#39;many2one&#39;,</span>
+<span class="sd">		...     fromNodeID       = None,</span>
+<span class="sd">		...     toNodeID         = 3,</span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = { &#39;APIkey&#39; : ORS_API_KEY })</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters]</span>
+
+<span class="sd">	Example 5 - As with the `getShapepoints2D()` function, you can provide the speed of the vehicle to override the speed data from a data provider.  Here, we set a constant vehicle speed of 35 MPH (and convert to meters per second).  We also specify that we want time and distance outputs to be in Hours and Miles, respectively.</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all functional arguments:</span>
+<span class="sd">		&gt;&gt;&gt; [timeHours, distMiles] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes            = exampleNodes, </span>
+<span class="sd">		...     matrixType       = &#39;all2all&#39;,</span>
+<span class="sd">		...     fromNodeID       = None, </span>
+<span class="sd">		...     toNodeID         = None, </span>
+<span class="sd">		...     outputTimeUnits  = &#39;hours&#39;,</span>
+<span class="sd">		...     outputDistUnits  = &#39;miles&#39;,</span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     speedMPS         = vrv.convertSpeed(35, &#39;miles&#39;, &#39;hour&#39;, &#39;meters&#39;, &#39;second&#39;),   # (MPH to m/s)</span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {</span>
+<span class="sd">		...         &#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; [timeHours, distMiles]</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGetTimeDist2D</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">matrixType</span><span class="p">,</span> <span class="n">fromNodeID</span><span class="p">,</span> <span class="n">toNodeID</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">matrixType</span> <span class="o">=</span> <span class="n">matrixType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+	<span class="k">except</span><span class="p">:</span>
+		<span class="k">pass</span>
+		
+	<span class="c1"># Specify the list of rows and columns of output dataframes</span>
+	<span class="n">fromRows</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">toCols</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;all2all&quot;</span><span class="p">):</span>
+		<span class="n">fromRows</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="n">toCols</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;one2many&quot;</span><span class="p">):</span>
+		<span class="n">fromRows</span> <span class="o">=</span> <span class="p">[</span><span class="n">fromNodeID</span><span class="p">]</span>
+		<span class="n">toCols</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;many2one&quot;</span><span class="p">):</span>
+		<span class="n">fromRows</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+		<span class="n">toCols</span> <span class="o">=</span> <span class="p">[</span><span class="n">toNodeID</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> 
+
+	<span class="c1"># Specify the list of coordinations, for each coordinate, it is in [lat, lon] format</span>
+	<span class="n">fromLocs</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">toLocs</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fromRows</span><span class="p">)):</span>
+		<span class="n">fromLocs</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fromRows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">fromRows</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">toCols</span><span class="p">)):</span>
+		<span class="n">toLocs</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">toCols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">toCols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+	<span class="c1"># get time/dist</span>
+	<span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">getTimeDistFromLocs2D</span><span class="p">(</span><span class="n">fromLocs</span><span class="p">,</span> <span class="n">fromRows</span><span class="p">,</span> <span class="n">toLocs</span><span class="p">,</span> <span class="n">toCols</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

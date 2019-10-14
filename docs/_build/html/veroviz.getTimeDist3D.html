@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.getTimeDist3D module &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/veroviz.getTimeDist3D.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-veroviz.getTimeDist3D">
+<span id="veroviz-gettimedist3d-module"></span><h1>veroviz.getTimeDist3D module<a class="headerlink" href="#module-veroviz.getTimeDist3D" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="veroviz.getTimeDist3D.getTimeDist3D">
+<code class="sig-name descname">getTimeDist3D</code><span class="sig-paren">(</span><em class="sig-param">nodes=None</em>, <em class="sig-param">matrixType='all2all'</em>, <em class="sig-param">fromNodeID=None</em>, <em class="sig-param">toNodeID=None</em>, <em class="sig-param">takeoffSpeedMPS=None</em>, <em class="sig-param">cruiseSpeedMPS=None</em>, <em class="sig-param">landSpeedMPS=None</em>, <em class="sig-param">cruiseAltMetersAGL=None</em>, <em class="sig-param">routeType='square'</em>, <em class="sig-param">climbRateMPS=None</em>, <em class="sig-param">descentRateMPS=None</em>, <em class="sig-param">outputDistUnits='meters'</em>, <em class="sig-param">outputTimeUnits='seconds'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/getTimeDist3D.html#getTimeDist3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.getTimeDist3D.getTimeDist3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates travel time and distance for vehicles that travel in 3-dimensional space (e.g., drones).  The function returns three dictionaries; one for time, one for ground distance, and one for overall (3D) travel distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Required, default as None) – This <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe contains the locations between which the travel time and distance will be calculated.</p></li>
+<li><p><strong>matrixType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'all2all'</em>) – Specifies the structure of the travel matrices.  Valid options include ‘all2all’, ‘many2one’, and ‘one2many’.  The default ‘all2all’ option will return square matrices (one for time, one for distance) describing the directed travel time and travel distance between all pairs of nodes.  The ‘one2many’ option will return vectors describing the directed travel from one node to all other nodes.  Similarly, the ‘many2one’ option will return vectors describing the directed travel from all nodes to a given node.  See the table in the note below for details.</p></li>
+<li><p><strong>fromNodeID</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the node ID (from the <cite>id</cite> column of the input <cite>nodes</cite> dataframe) of the origin node.  This parameter is required for the ‘one2many’ matrix type; it is ignored by all other matrix types.  See the table in the note below for details.</p></li>
+<li><p><strong>toNodeID</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the node ID (from the <cite>id</cite> column of the input <cite>nodes</cite> dataframe) of the destination node.  This parameter is required for the ‘many2one’ matrix type; it is ignored for all other matrix types.  See the table in the note below for details.</p></li>
+<li><p><strong>takeoffSpeedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The speed of the aircraft, in meters per second, during the “takeoff” phase.  This will apply only to ‘square’ and ‘trapezoidal’ route types.  The takeoff phase is the first component of these route types, and is associated with an increase in altitude.  The takeoff speed is assumed to be constant, and ignores acceleration.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional information.</p></li>
+<li><p><strong>cruiseSpeedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The speed of the aircraft, in meters per second, during the “cruising” phase.  This will apply to all of the route options.  Typically, the cruising phase occurs at a constant altitude, as specified by <cite>cruiseAltMetersAGL</cite>.  However, for the ‘triangular’ route type, cruiseSpeedMPS specifies the constant travel speed during both the ascent to, and immediate descent from, the cruise altitude.  In the ‘triangle’ route type, the aircraft has no horizontal travel at the cruise altitude.  In all cases, the cruise speed is assumed to be constant, and ignores acceleration.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional information.</p></li>
+<li><p><strong>landSpeedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The speed of the aircraft, in meters per second, during the “landing” phase. This will apply to only the ‘square’ and ‘trapezoidal’ route types.  The landing phase is the last component of these route types, and is associated with a decrease in altitude.  The landing speed is assumed to be constant, and ignore deceleration.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional information.</p></li>
+<li><p><strong>cruiseAltMetersAGL</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – The altitude, in meters above ground level, at which the aircraft is in the “cruise” phase.  This phase is typically associated with horizontal movement at a fixed altitude.  The exception is for the ‘triangular’ route type, in which case the aircraft instantaneously transitions from ascent to descent at the cruise altitude (i.e., there is no horizontal travel at this altitude).  All but the ‘straight’ route type require/use the cruise altitude.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional details.</p></li>
+<li><p><strong>routeType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'square'</em>) – Specifies the basic shape of the flight profile.  Valid options include ‘square’, ‘triangular’, ‘trapezoidal’, and ‘straight’.  The square profile involves a vertical takeoff to a cruising altitude, horizontal travel at the cruising altitude, and a vertical landing.  The trapezoidal profile describes a takeoff phase in which the aircraft increases altitude and travels horizontally towards the destination until reaching the cruising altitude, horizontal travel at the cruising altitude, and a landing phase in which the aircraft decreases altitude and travels horizontally until reaching the destination.  For the trapezoidal profile, the horizontal movement during the takeoff and landing phases is a function of the <cite>climbRateMPS</cite> and <cite>descentRateMPS</cite>, respectively.  The triangular profile describes an ascent to the cruising altitude followed immediately by a descent to the destination.  Finally, the straight profile describes straight-line flight directly from the starting location to the ending location; the altitudes of these two locations may differ.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for a description of these flight profiles.</p></li>
+<li><p><strong>climbRateMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – This parameter is used only for the ‘trapezoidal’ route type, and is in units of meters per second.  It describes the rate at which the aircraft increases its altitude, relative to the value of <cite>takeoffSpeedMPS</cite>.  If <cite>climbRateMPS == takeoffSpeedMPS</cite>, then the takeoff phase will be purely vertical.  If <cite>climbRateMPS</cite> is close to zero, then the takeoff phase will be characterized by a slow increase in altitude (and longer horizontal flight).  The aircraft’s actual travel speed during the climb will be <cite>takeoffSpeedMPS</cite>.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional details.</p></li>
+<li><p><strong>descentRateMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – This parameter is used only for the ‘trapezoidal’ route type, and is in units of meters per second.  It describes the rate at which the aircraft decreases its altitude, relative to the value of <cite>landSpeedMPS</cite>.  If <cite>descentRateMPS == landSpeedMPS</cite>, then the landing phase will be purely vertical.  If <cite>descentRateMPS</cite> is close to zero, then the landing phase will be characterized by a slow decrease in altitude (and longer horizontal flight).  The aircraft’s actual travel speed during the descent will be <cite>landSpeedMPS</cite>.  See <a class="reference internal" href="flight_profile_and_flight_path.html#flight-profile-and-flight-path"><span class="std std-ref">Flight Profile and Flight Path</span></a> for additional details.</p></li>
+<li><p><strong>outputDistUnits</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'meters'</em>) – Specifies the desired distance units for the function’s output.  Valid values are ‘meters’, ‘m’, ‘kilometers’, ‘km’, ‘miles’, ‘mi’, ‘feet’, ‘ft’, ‘nm’, and ‘nmi’ (nautical miles). See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options and abbreviations.</p></li>
+<li><p><strong>outputTimeUnits</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'seconds'</em>) – Specifies the desired time units for the function’s output.  Valid values are ‘seconds’, ‘hours’, and ‘minutes’. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options and abbreviations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>totalTime</strong> (<em>dictionary</em>) – A Python dictionary containing travel times.  Time units are defined by <cite>outputTimeUnits</cite>.  The format of key values is: <cite>(fromID, toID)</cite>.  The travel time from ID 1 to ID 2 is provided by <cite>time[1, 2]</cite>.</p></li>
+<li><p><strong>totalGroundDistance</strong> (<em>dictionary</em>) – A Python dictionary containing ground travel distances (i.e., ignoring any vertical distances).  Distance units are defined by <cite>outputDistUnits</cite>.  The format of key values is: <cite>(fromID, toID)</cite>.  The horizontal-only travel distance from ID 1 to ID 2 is provided by <cite>totalGroundDistance[1, 2]</cite>.</p></li>
+<li><p><strong>totalFlightDistance</strong> (<em>dictionary</em>) – A Python dictionary containing total travel distances (i.e., including both the horizontal and vertical components of flight).  Distance units are defined by <cite>outputDistUnits</cite>.  The format of key values is: <cite>(fromID, toID)</cite>.  The total travel distance from ID 1 to ID 2 is provided by <cite>totalFlightDistance[1, 2]</cite>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <cite>matrixType</cite>, the options are ‘all2all’, ‘one2many’, and ‘many2one’.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 21%" />
+<col style="width: 18%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><cite>matrixType</cite> options</p></th>
+<th class="head"><p><cite>fromNodeID</cite></p></th>
+<th class="head"><p><cite>toNodeID</cite></p></th>
+<th class="head"><p>Return type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘all2all’</p></td>
+<td><p>ignored</p></td>
+<td><p>ignored</p></td>
+<td><p>Square matrices</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘one2many’</p></td>
+<td><p>required</p></td>
+<td><p>ignored</p></td>
+<td><p>Row vectors</p></td>
+</tr>
+<tr class="row-even"><td><p>‘many2one’</p></td>
+<td><p>ignored</p></td>
+<td><p>required</p></td>
+<td><p>Column vectors</p></td>
+</tr>
+</tbody>
+</table>
+<p>In ‘all2all’, square matrices will be generated for all node pairs in the
+provided <cite>nodes</cite> dataframe.</p>
+<p>In ‘one2many’, a node <cite>id</cite> will be assigned in the <cite>fromNodeID</cite> field, which
+comes from the <cite>id</cite> column in the provided <cite>nodes</cite> dataframe.
+Row vectors will be returned for the time and distance from that node
+to all the nodes in the provided <cite>nodes</cite> dataframe.</p>
+<p>In ‘many2one’, column vectors will be returned for the time and distance
+from all nodes in the provided <cite>nodes</cite> dataframe to the node indicated
+by <cite>toNodeID</cite>.</p>
+</div>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Generate a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe from a list of coordinates.  See <a class="reference internal" href="veroviz.generateNodes.html#veroviz.generateNodes.generateNodes" title="veroviz.generateNodes.generateNodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generateNodes()</span></code></a> for other methods to generate “nodes” dataframes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">locs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Calculate ‘all2all’ travel matrices for a drone with a ‘square’ flight profile.  There are 3 nodes, so the matrices will be 3x3.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">totalTime</span><span class="p">,</span> <span class="n">totalGroundDistance</span><span class="p">,</span> <span class="n">totalFlightDistance</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>              <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;square&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">outputDistUnits</span>    <span class="o">=</span> <span class="s1">&#39;meters&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">outputTimeUnits</span>    <span class="o">=</span> <span class="s1">&#39;seconds&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Travel time from node 2 to node 3 is </span><span class="si">%.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalTime</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ground distance from node 2 to node 3 is </span><span class="si">%.2f</span><span class="s2"> meters&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalGroundDistance</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total flight distance from node 2 to node 3 is </span><span class="si">%.2f</span><span class="s2"> meters&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalFlightDistance</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - Calculate ‘one2many’ travel matrices for a drone with a ‘trapezoidal’ flight profile, starting from node 2.  All functional arguments are included in this example.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeSec</span><span class="p">,</span> <span class="n">groundDist</span><span class="p">,</span> <span class="n">totalDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist3D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodes</span>              <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">matrixType</span>         <span class="o">=</span> <span class="s1">&#39;one2many&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fromNodeID</span>         <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">toNodeID</span>           <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>          <span class="o">=</span> <span class="s1">&#39;trapezoidal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">outputDistUnits</span>    <span class="o">=</span> <span class="s1">&#39;meters&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">outputTimeUnits</span>    <span class="o">=</span> <span class="s1">&#39;seconds&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Travel time from node 2 to node 3 is </span><span class="si">%.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">timeSec</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ground distance from node 2 to node 3 is </span><span class="si">%.2f</span><span class="s2"> meters&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">groundDist</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total flight distance from node 2 to node 3 is </span><span class="si">%.2f</span><span class="s2"> meters&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">totalDist</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.1.31 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

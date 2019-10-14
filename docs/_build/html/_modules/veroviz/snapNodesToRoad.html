@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.snapNodesToRoad &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="../../_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for veroviz.snapNodesToRoad</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valSnapNodesToRoad</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valGetSnapLoc</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valGetSnapLocBatch</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._getSnapLoc</span> <span class="k">import</span> <span class="n">privGetSnapLocBatch</span>
+<span class="kn">from</span> <span class="nn">veroviz._getSnapLoc</span> <span class="k">import</span> <span class="n">privGetSnapLoc</span>
+
+<div class="viewcode-block" id="snapNodesToRoad"><a class="viewcode-back" href="../../veroviz.snapNodesToRoad.html#veroviz.snapNodesToRoad.snapNodesToRoad">[docs]</a><span class="k">def</span> <span class="nf">snapNodesToRoad</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Updates the locations of nodes within a dataframe, such that each node becomes located on a road network.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	nodes: :ref:`Nodes`, Required, default as None</span>
+<span class="sd">		A :ref:`Nodes` dataframe containing an existing set of nodes.  </span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Optional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Nodes` dataframe</span>
+<span class="sd">		A copy of the input `nodes` dataframe, with updated lat/lon values.	</span>
+
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">	Import veroviz and check if the version is up-to-date:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Also, import os so we can use environment variables for data provider API keys:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		</span>
+<span class="sd">	Create a :ref:`Nodes` dataframe by :meth:`~veroviz.generateNodes.createNodesFromLocs` with two nodes that are off the road network:</span>
+<span class="sd">		&gt;&gt;&gt; exampleNodes = vrv.createNodesFromLocs(</span>
+<span class="sd">		...     locs = [[42.80, -78.00],</span>
+<span class="sd">		...             [42.81, -78.004]],</span>
+<span class="sd">		...     leafletColor = &#39;red&#39;)</span>
+
+
+<span class="sd">	These nodes are not aligned with the road network.  The following examples demonstrate how to move the nodes to lat/lon locations that correspond to roads.</span>
+<span class="sd">		&gt;&gt;&gt; # Use OSRM as data provider</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodes = vrv.snapNodesToRoad(</span>
+<span class="sd">		...     nodes        = exampleNodes, </span>
+<span class="sd">		...     dataProvider = &#39;OSRM-online&#39;)</span>
+
+<span class="sd">	Display the original (red) and OSRM-snapped (green) nodes to see the effects of snapping.</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(nodes=exampleNodes, mapBackground=&#39;Stamen Toner&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(nodes=snappedNodesOSRM, mapObject=myMap)</span>
+<span class="sd">		&gt;&gt;&gt; myMap	</span>
+
+<span class="sd">	We can also use ORS, MapQuest, or pgRouting as the data source.  In these cases, an API key or database name should be provided.</span>
+<span class="sd">		&gt;&gt;&gt; # Use MapQuest as data provider, and change node colors to purple:</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodesMQ = vrv.snapNodesToRoad(</span>
+<span class="sd">		...     nodes            = exampleNodes,</span>
+<span class="sd">		...     dataProvider     = &#39;MapQuest&#39;,</span>
+<span class="sd">		...     dataProviderArgs = { &#39;APIkey&#39; : os.environ[&#39;MAPQUESTKEY&#39;]})</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodesMQ[&#39;leafletColor&#39;] = &#39;purple&#39;	</span>
+<span class="sd">	</span>
+<span class="sd">		&gt;&gt;&gt; # Add the MapQuest-snapped (purple) nodes to our map:</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(nodes=snappedNodesMQ, mapObject=myMap)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">	</span>
+<span class="sd">		&gt;&gt;&gt; # Use ORS as data provider, and change node colors to blue:</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodesORS = vrv.snapNodesToRoad(</span>
+<span class="sd">		...     nodes            = exampleNodes,</span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: os.environ[&#39;ORSKEY&#39;]})</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodesORS[&#39;leafletColor&#39;] = &#39;blue&#39;	</span>
+
+<span class="sd">		&gt;&gt;&gt; # Add the ORS-snapped (blue) nodes to our map:</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(nodes=snappedNodesORS, mapObject=myMap)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">		&gt;&gt;&gt; # Use pgRouting as data provider, and change node colors to black:</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodesPGR = vrv.snapNodesToRoad(</span>
+<span class="sd">		...     nodes        = exampleNodes,</span>
+<span class="sd">		...     dataProvider = &#39;pgRouting&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;databaseName&#39;: &#39;YOUR_DATABASENAME&#39;})</span>
+<span class="sd">		&gt;&gt;&gt; snappedNodesPGR[&#39;leafletColor&#39;] = &#39;black&#39;	</span>
+
+<span class="sd">		&gt;&gt;&gt; # Add the pgRouting-snapped (black) nodes to our map:</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(nodes=snappedNodesPGR, mapObject=myMap)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valSnapNodesToRoad</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="c1"># List of lat/lon before snapping</span>
+	<span class="n">locs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+	<span class="n">snapNodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+	<span class="c1"># Find list of snapped coordins</span>
+	<span class="n">snapLocs</span> <span class="o">=</span> <span class="n">privGetSnapLocBatch</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+
+	<span class="c1"># Make a copy of nodes and replace lat/lon columns withn snapped lat/lon	</span>
+	<span class="n">snapNodes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">snapLocs</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">snapNodes</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">snapLocs</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+
+	<span class="k">return</span> <span class="n">snapNodes</span></div>
+
+<div class="viewcode-block" id="getSnapLocBatch"><a class="viewcode-back" href="../../veroviz.snapNodesToRoad.html#veroviz.snapNodesToRoad.getSnapLocBatch">[docs]</a><span class="k">def</span> <span class="nf">getSnapLocBatch</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Snap multiple locations, each given by [lat, lon] coordinates, to their nearest locations on a road network.</span>
+<span class="sd">	</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	locs: list of lists, Required</span>
+<span class="sd">		A list of GPS coordinates of node locations, in the form of [[lat, lon], [lat, lon], ...]</span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for finding routes or generate nodes on a road network. See :ref:`Data Providers` for options and requirements of options.</span>
+<span class="sd">	dataProviderArgs: dictionary, Optional, default as None</span>
+<span class="sd">		For some data provider, veroviz need some extra parameters such as API keys or database name. See :ref:`Data Providers` for the keys required for different data provider.</span>
+<span class="sd">	</span>
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	list of lists</span>
+<span class="sd">		A list of snapped locations in the format of [[lat, lon], [lat, lon], ...].  Note: Any altitude values provided as inputs in the `loc` parameter will be lost in the return.</span>
+
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">	Import veroviz and check if the version is up-to-date:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Also, import os so we can use environment variables for data provider API keys:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+
+<span class="sd">	Snap a given list of location to their nearest streets:</span>
+<span class="sd">		&gt;&gt;&gt; locs = [</span>
+<span class="sd">		...     [42.00, -78.00],</span>
+<span class="sd">		...     [42.10, -78.00],</span>
+<span class="sd">		...     [42.20, -78.00]]</span>
+<span class="sd">		&gt;&gt;&gt; snapLocs = vrv.getSnapLocBatch(</span>
+<span class="sd">		...     locs             = locs,</span>
+<span class="sd">		...     dataProvider     = &#39;MapQuest&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: os.environ[&#39;MAPQUESTKEY&#39;]})</span>
+<span class="sd">		&gt;&gt;&gt; snapLocs</span>
+<span class="sd">		[[41.999401, -78.003876], [42.100021, -77.995549], [42.1993, -78.001011]]</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGetSnapLocBatch</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="n">snapLocs</span> <span class="o">=</span> <span class="n">privGetSnapLocBatch</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">return</span> <span class="n">snapLocs</span></div>
+
+<div class="viewcode-block" id="getSnapLoc"><a class="viewcode-back" href="../../veroviz.snapNodesToRoad.html#veroviz.snapNodesToRoad.getSnapLoc">[docs]</a><span class="k">def</span> <span class="nf">getSnapLoc</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Snap a given single location, given by [lat, lon] coordinates, to the nearest location on a road network.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	loc: list, Required</span>
+<span class="sd">		Coordinates of a location, expressed as either [lat, lon, alt] or [lat, lon].  Note: This function returns only latitude and longitude; any altitude values provided as inputs will be lost in the return.</span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for finding routes or generate nodes on a road network. See :ref:`Data Providers` for options and requirements of options.</span>
+<span class="sd">	dataProviderArgs: dictionary, Optional, default as None</span>
+<span class="sd">		For some data provider, veroviz need some extra parameters such as API keys or database name. See :ref:`Data Providers` for the keys required for different data provider.</span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	list</span>
+<span class="sd">		A snapped location in the format of [lat, lon].  Any altitude values provided as inputs in the `loc` parameter will be lost in the return.</span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	This function returns only latitude and longitude.  Any altitude values provided as inputs in the `loc` parameter will be lost in the return.</span>
+<span class="sd">	</span>
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">	Import veroviz and check if the version is up-to-date:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Snap a given location to the nearest street:</span>
+<span class="sd">		&gt;&gt;&gt; loc = [42.00, -78.00]</span>
+<span class="sd">		&gt;&gt;&gt; snapLoc = vrv.getSnapLoc(</span>
+<span class="sd">		...     loc          = loc,</span>
+<span class="sd">		...     dataProvider = &#39;OSRM-online&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; snapLoc</span>
+<span class="sd">		[41.999401, -78.003876]</span>
+
+<span class="sd">	View the original (red) and snapped (green) locations on a map</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(center=loc, fillColor=&#39;red&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(center=snapLoc, fillColor=&#39;green&#39;, mapObject=myMap)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
+<span class="sd">		</span>
+<span class="sd">	NOTE: This function returns only latitude and longitude. Any altitude values provided as inputs in the loc parameter will be lost in the return.		</span>
+<span class="sd">		&gt;&gt;&gt; loc3D = [42.00, -78.00, 100]</span>
+<span class="sd">		&gt;&gt;&gt; snapLoc = vrv.getSnapLoc(</span>
+<span class="sd">		...     loc          = loc3D,</span>
+<span class="sd">		...     dataProvider = &#39;OSRM-online&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; snapLoc</span>
+<span class="sd">		[41.999401, -78.003876]</span>
+<span class="sd">		</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGetSnapLoc</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="n">snapLoc</span> <span class="o">=</span> <span class="n">privGetSnapLoc</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">return</span> <span class="n">snapLoc</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

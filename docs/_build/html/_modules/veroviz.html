@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz &#8212; veroviz 0.1.31 documentation</title>
+    <link rel="stylesheet" href="../_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="../_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for veroviz</h1><div class="highlight"><pre>
+<span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.31&#39;</span>
+
+<span class="c1"># Generate Objects</span>
+<span class="kn">from</span> <span class="nn">veroviz.generateNodes</span> <span class="k">import</span> <span class="n">generateNodes</span>
+<span class="kn">from</span> <span class="nn">veroviz.generateNodes</span> <span class="k">import</span> <span class="n">createNodesFromLocs</span>
+<span class="kn">from</span> <span class="nn">veroviz.generateArcs</span> <span class="k">import</span> <span class="n">createArcsFromLocSeq</span>
+<span class="kn">from</span> <span class="nn">veroviz.generateArcs</span> <span class="k">import</span> <span class="n">createArcsFromNodeSeq</span>
+<span class="kn">from</span> <span class="nn">veroviz.snapNodesToRoad</span> <span class="k">import</span> <span class="n">snapNodesToRoad</span>
+<span class="kn">from</span> <span class="nn">veroviz.snapNodesToRoad</span> <span class="k">import</span> <span class="n">getSnapLoc</span>
+<span class="kn">from</span> <span class="nn">veroviz.snapNodesToRoad</span> <span class="k">import</span> <span class="n">getSnapLocBatch</span>
+<span class="kn">from</span> <span class="nn">veroviz.getTimeDist2D</span> <span class="k">import</span> <span class="n">getTimeDist2D</span>
+<span class="kn">from</span> <span class="nn">veroviz.getTimeDistScalar2D</span> <span class="k">import</span> <span class="n">getTimeDistScalar2D</span>
+<span class="kn">from</span> <span class="nn">veroviz.getTimeDist3D</span> <span class="k">import</span> <span class="n">getTimeDist3D</span>
+<span class="kn">from</span> <span class="nn">veroviz.getTimeDistScalar3D</span> <span class="k">import</span> <span class="n">getTimeDistScalar3D</span>
+<span class="kn">from</span> <span class="nn">veroviz.getShapepoints2D</span> <span class="k">import</span> <span class="n">getShapepoints2D</span>
+<span class="kn">from</span> <span class="nn">veroviz.getShapepoints3D</span> <span class="k">import</span> <span class="n">getShapepoints3D</span>
+<span class="kn">from</span> <span class="nn">veroviz.buildAssignments</span> <span class="k">import</span> <span class="n">addStaticAssignment</span>
+
+<span class="c1"># Utilities</span>
+<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Visualize objects</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">createLeaflet</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletCircle</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletMarker</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletPolygon</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletPolyline</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletText</span>
+<span class="kn">from</span> <span class="nn">veroviz.createCesium</span> <span class="k">import</span> <span class="n">createCesium</span>
+
+<span class="c1"># Internal shared small functions/constants/validation</span>
+<span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._params</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># pgRouting related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetSnapToRoadLatLon</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetNearestStreet</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetTimeDist</span>
+
+<span class="c1"># ORS related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetSnapToRoadLatLon</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistAll2All</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistOne2Many</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistMany2One</span>
+
+<span class="c1"># OSRM related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetSnapToRoadLatLon</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetTimeDistOnePair</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetTimeDist</span>
+
+<span class="c1"># MapQuest related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetSnapToRoadLatLon</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetSnapToRoadLatLonBatch</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistAll2All</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistOne2Many</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistMany2One</span>
+
+<span class="c1"># 3D function related</span>
+<span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">buildNoLoiteringFlight</span>
+<span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">getTimeDistFromFlight</span>
+<span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">addLoiterTimeToFlight</span>
+
+<span class="c1"># Function related to travel matrices generating</span>
+<span class="kn">from</span> <span class="nn">veroviz._getTimeDistFromLocs2D</span> <span class="k">import</span> <span class="n">getTimeDistFromLocs2D</span>
+
+<span class="c1"># Functions related to snapping nodes to road</span>
+<span class="kn">from</span> <span class="nn">veroviz._getSnapLoc</span> <span class="k">import</span> <span class="n">privGetSnapLocBatch</span>
+<span class="kn">from</span> <span class="nn">veroviz._getSnapLoc</span> <span class="k">import</span> <span class="n">privGetSnapLoc</span>
+
+<span class="c1"># Functions that deconstruct an Assignments dataframe for `createLeaflet` and `createCesium`</span>
+<span class="kn">from</span> <span class="nn">veroviz._deconstructAssignments</span> <span class="k">import</span> <span class="n">deconstructAssignments</span>
+<span class="kn">from</span> <span class="nn">veroviz._createEntitiesFromList</span> <span class="k">import</span> <span class="n">privCreateNodesFromLocs</span>
+<span class="kn">from</span> <span class="nn">veroviz._createEntitiesFromList</span> <span class="k">import</span> <span class="n">privCreateArcsFromLocSeq</span>
+
+<span class="c1"># Check the current version and latest version of veroviz</span>
+<div class="viewcode-block" id="checkVersion"><a class="viewcode-back" href="../veroviz.html#veroviz.checkVersion">[docs]</a><span class="k">def</span> <span class="nf">checkVersion</span><span class="p">():</span>
+	<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+
+	<span class="n">versionStatus</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="n">currentVersion</span> <span class="o">=</span> <span class="n">__version__</span>
+	<span class="n">latestVersion</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="n">http</span> <span class="o">=</span> <span class="n">urllib3</span><span class="o">.</span><span class="n">PoolManager</span><span class="p">()</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s2">&quot;https://pypi.python.org/pypi/veroviz/json&quot;</span><span class="p">)</span>
+		<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+		<span class="n">latestVersion</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">currentVersion</span> <span class="o">==</span> <span class="n">latestVersion</span><span class="p">):</span>
+			<span class="n">versionStatus</span> <span class="o">=</span> <span class="s2">&quot;Your current installed version of veroviz is </span><span class="si">%s</span><span class="s2">. You are up-to-date with the latest available version.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">currentVersion</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">versionStatus</span> <span class="o">=</span> <span class="s2">&quot;Your current installed version of veroviz is </span><span class="si">%s</span><span class="s2">, the latest version available is </span><span class="si">%s</span><span class="s2">. To update to the latest version, type `pip install --upgrade veroviz` at a command-line prompt.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">currentVersion</span><span class="p">,</span> <span class="n">latestVersion</span><span class="p">)</span>
+
+	<span class="k">except</span><span class="p">:</span>
+		<span class="n">versionStatus</span> <span class="o">=</span> <span class="s2">&quot;Error: Cannot determine the latest version of veroviz. The most common cause is that your computer isn&#39;t connected to the network.&quot;</span>
+
+	<span class="k">return</span> <span class="n">versionStatus</span></div>
+
+<span class="c1"># def disableWarningMessages():</span>
+<span class="c1"># 	os.environ[&#39;VEROVIZ_SHOWWARNINGMESSAGE&#39;] = &#39;False&#39;</span>
+<span class="c1"># 	return</span>
+
+<span class="c1"># def enableWarningMessages():</span>
+<span class="c1"># 	os.environ[&#39;VEROVIZ_SHOWWARNINGMESSAGE&#39;] = &#39;True&#39;</span>
+<span class="c1"># 	return</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.1.31 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>
