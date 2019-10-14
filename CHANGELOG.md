@@ -1,5 +1,5 @@
 ### Change Log
 
-#### 0.1a (2019-06-11)
+#### Version 0.2.0 (2019-10-14)
 
-- Pre-release, for testing.
+- First official release of veroviz. 
