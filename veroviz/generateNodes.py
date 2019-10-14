@@ -163,7 +163,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		...                               fillColor = 'green')
 		>>> myMap2 = vrv.addLeafletCircle(mapObject = myMap2, 
 		...                               center    = [42.90, -78.80], 
-		...                               radius    = 4*2000)
+		...                               radius    = 3*4000)
 		>>> myMap2 = vrv.createLeaflet(mapObject      = myMap2, 
 		...                            nodes          = myNodes2,
 		...                            boundingRegion = bounding)
