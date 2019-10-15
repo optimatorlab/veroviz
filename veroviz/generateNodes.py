@@ -43,7 +43,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	snapToRoad: boolean, Optional, default as False, 
 		If True, nodes will be positioned at locations on the road network. This requires the use of a data provider. See :ref:`Data Providers` for a list of data providers that support this option.
 	leafletIconPrefix: string, Optional, default as "glyphicon"
-		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: “glyphicon” or “fa”.  See :ref:`Leaflet Style` for more information.
+		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
 	leafletIconType: string, Optional, default as "info-sign"
 		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconType`. See :ref:`Leaflet Style` for available options.
 	leafletColor: string, Optional, default as "blue"
@@ -468,7 +468,7 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 	dataProviderArgs: dictionary, Optional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 	leafletIconPrefix: string, Optional, default as "glyphicon"
-		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: “glyphicon” or “fa”.  See :ref:`Leaflet Style` for more information.
+		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
 	leafletIconType: string, Optional, default as "info-sign"
 		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconType`. See :ref:`Leaflet Style` for available options.
 	leafletColor: string, Optional, default as "blue"
