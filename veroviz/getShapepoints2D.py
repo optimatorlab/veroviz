@@ -73,7 +73,7 @@ def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLo
 		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 
 	Returns

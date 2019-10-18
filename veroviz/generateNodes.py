@@ -58,7 +58,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the `id` value. 
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 
 	Return
@@ -465,7 +465,7 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 		If True, nodes will be positioned at locations on the road network. This requires the use of a data provider. See :ref:`Data Providers` for a list of data providers that support this option.
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 	leafletIconPrefix: string, Optional, default as "glyphicon"
 		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
