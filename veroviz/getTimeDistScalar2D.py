@@ -23,7 +23,7 @@ def getTimeDistScalar2D(startLoc=None, endLoc=None, outputDistUnits='meters', ou
 		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., 'euclidean2D' and 'manhattan'), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., 'fastest', 'shortest', and 'pedestrain'), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for obtaining the travel data. See :ref:`Data Providers` for options and requirements.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 
 	Returns

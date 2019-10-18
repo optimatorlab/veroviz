@@ -16,7 +16,7 @@ def snapNodesToRoad(nodes=None, dataProvider=None, dataProviderArgs=None):
 		A :ref:`Nodes` dataframe containing an existing set of nodes.  
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 
 	Returns
@@ -120,7 +120,7 @@ def getSnapLocBatch(locs=None, dataProvider=None, dataProviderArgs=None):
 		A list of GPS coordinates of node locations, in the form of [[lat, lon], [lat, lon], ...]
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for finding routes or generate nodes on a road network. See :ref:`Data Providers` for options and requirements of options.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data provider, veroviz need some extra parameters such as API keys or database name. See :ref:`Data Providers` for the keys required for different data provider.
 	
 	Returns
@@ -173,7 +173,7 @@ def getSnapLoc(loc=None, dataProvider=None, dataProviderArgs=None):
 		Coordinates of a location, expressed as either [lat, lon, alt] or [lat, lon].  Note: This function returns only latitude and longitude; any altitude values provided as inputs will be lost in the return.
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for finding routes or generate nodes on a road network. See :ref:`Data Providers` for options and requirements of options.
-	dataProviderArgs: dictionary, Optional, default as None
+	dataProviderArgs: dictionary, Conditional, default as None
 		For some data provider, veroviz need some extra parameters such as API keys or database name. See :ref:`Data Providers` for the keys required for different data provider.
 	
 	Return
