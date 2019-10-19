@@ -37,26 +37,27 @@ def deconstructAssignments(assignments=None, includeStationaryFlag=False, includ
 			lstSubAssignments.append(verticalRows.loc[i: i, :].copy())
 
 	collection = assignments.loc[(assignments['startLat'] != assignments['endLat']) | (assignments['startLon'] != assignments['endLon'])]
-	collection = collection.sort_values(by=['objectID', 'startTimeSec', 'modelFile', 'odID'], ascending=True)
-	collection = collection.reset_index(drop=True)
+	if (len(collection) > 0):
+		collection = collection.sort_values(by=['objectID', 'startTimeSec', 'modelFile', 'odID'], ascending=True)
+		collection = collection.reset_index(drop=True)
 
-	# Find consecutive routes
-	tmpSubAssignment = initDataframe('Assignments')
-	for i in range(len(collection)):
-		if (len(tmpSubAssignment) == 0):
-			tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
-		else:
-			if (tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endLat'] == collection.iloc[i]['startLat'] 
-				and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endLon'] == collection.iloc[i]['startLon'] 
-				and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endAltMeters'] == collection.iloc[i]['startAltMeters']
-				and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endTimeSec'] == collection.iloc[i]['startTimeSec']
-				and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['odID'] == collection.iloc[i]['odID']):
+		# Find consecutive routes
+		tmpSubAssignment = initDataframe('Assignments')
+		for i in range(len(collection)):
+			if (len(tmpSubAssignment) == 0):
 				tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
 			else:
-				lstSubAssignments.append(tmpSubAssignment.copy())
-				tmpSubAssignment = initDataframe('Assignments')
-				tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
-	lstSubAssignments.append(tmpSubAssignment.copy())
+				if (tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endLat'] == collection.iloc[i]['startLat'] 
+					and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endLon'] == collection.iloc[i]['startLon'] 
+					and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endAltMeters'] == collection.iloc[i]['startAltMeters']
+					and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endTimeSec'] == collection.iloc[i]['startTimeSec']
+					and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['odID'] == collection.iloc[i]['odID']):
+					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
+				else:
+					lstSubAssignments.append(tmpSubAssignment.copy())
+					tmpSubAssignment = initDataframe('Assignments')
+					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
+		lstSubAssignments.append(tmpSubAssignment.copy())
 
 	# Re-index odID for lstRoutes
 	for i in range(0, len(lstSubAssignments)):
