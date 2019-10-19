@@ -515,6 +515,18 @@
 	<span class="n">maxLon</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">allLons</span><span class="p">)</span>
 	<span class="n">minLon</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">allLons</span><span class="p">)</span>
 
+	<span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">maxLat</span> <span class="o">-</span> <span class="n">minLat</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0001</span><span class="p">):</span>
+		<span class="n">maxLat</span> <span class="o">=</span> <span class="n">maxLat</span> <span class="o">+</span> <span class="mf">0.05</span>
+		<span class="n">minLat</span> <span class="o">=</span> <span class="n">minLat</span> <span class="o">-</span> <span class="mf">0.05</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">maxLon</span> <span class="o">-</span> <span class="n">minLon</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0001</span><span class="p">):</span>
+		<span class="n">maxLon</span> <span class="o">=</span> <span class="n">maxLon</span> <span class="o">+</span> <span class="mf">0.05</span>
+		<span class="n">minLon</span> <span class="o">=</span> <span class="n">minLon</span> <span class="o">-</span> <span class="mf">0.05</span>
+
+	<span class="n">maxLat</span> <span class="o">=</span> <span class="n">maxLat</span> <span class="o">+</span> <span class="mf">0.01</span>
+	<span class="n">minLat</span> <span class="o">=</span> <span class="n">minLat</span> <span class="o">-</span> <span class="mf">0.01</span>
+	<span class="n">maxLon</span> <span class="o">=</span> <span class="n">maxLon</span> <span class="o">+</span> <span class="mf">0.01</span>
+	<span class="n">minLon</span> <span class="o">=</span> <span class="n">minLon</span> <span class="o">-</span> <span class="mf">0.01</span>
+
 	<span class="k">return</span> <span class="p">[[</span><span class="n">minLat</span><span class="p">,</span> <span class="n">maxLon</span><span class="p">],</span> <span class="p">[</span><span class="n">maxLat</span><span class="p">,</span> <span class="n">minLon</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="convertMatricesDataframeToDictionary"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertMatricesDataframeToDictionary">[docs]</a><span class="k">def</span> <span class="nf">convertMatricesDataframeToDictionary</span><span class="p">(</span><span class="n">dataframe</span><span class="p">):</span>

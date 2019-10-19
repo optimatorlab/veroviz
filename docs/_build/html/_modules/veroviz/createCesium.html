@@ -290,17 +290,19 @@
 
 	<span class="c1"># allIDs and orientationIDs</span>
 	<span class="n">jsStr</span> <span class="o">+=</span>         <span class="s2">&quot;    allIDs = [</span><span class="se">\n</span><span class="s2">&quot;</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">allIDs</span><span class="p">)):</span>
-		<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;        &#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">allIDs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-	<span class="n">jsStr</span> <span class="o">=</span> <span class="n">jsStr</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-	<span class="n">jsStr</span> <span class="o">+=</span>         <span class="s2">&quot;    </span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">allIDs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">allIDs</span><span class="p">)):</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        &#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">allIDs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+		<span class="n">jsStr</span> <span class="o">=</span> <span class="n">jsStr</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+		<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;    </span><span class="se">\n</span><span class="s2">&quot;</span>
 	<span class="n">jsStr</span> <span class="o">+=</span>         <span class="s2">&quot;    ];</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 	<span class="n">jsStr</span> <span class="o">+=</span>         <span class="s2">&quot;    orientationIDs = [</span><span class="se">\n</span><span class="s2">&quot;</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">orientationIDs</span><span class="p">)):</span>
-		<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;        &#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">orientationIDs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-	<span class="n">jsStr</span> <span class="o">=</span> <span class="n">jsStr</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-	<span class="n">jsStr</span> <span class="o">+=</span>         <span class="s2">&quot;    </span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">orientationIDs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">orientationIDs</span><span class="p">)):</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        &#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">orientationIDs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+		<span class="n">jsStr</span> <span class="o">=</span> <span class="n">jsStr</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+		<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;    </span><span class="se">\n</span><span class="s2">&quot;</span>
 	<span class="n">jsStr</span> <span class="o">+=</span>         <span class="s2">&quot;    ];</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 	<span class="c1"># load .czml, `runRoutes()` are writen in index.html </span>
