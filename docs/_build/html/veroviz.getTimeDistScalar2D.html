@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.getTimeDistScalar2D module &#8212; veroviz 0.2.1 documentation</title>
+    <title>veroviz.getTimeDistScalar2D module &#8212; veroviz 0.2.2 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="veroviz.getTimeDist3D.html" title="veroviz.getTimeDist3D module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
       </ul>
     </div>
@@ -91,7 +91,7 @@
 <li><p><strong>routeType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'euclidean2D'</em>) – This describes a characteristic of the travel mode.  Possible values are: ‘euclidean2D’, ‘manhattan’, ‘fastest’, ‘shortest’, ‘pedestrian’, ‘cycling’, and ‘truck’.  The ‘euclidean2D’ and ‘manhattan’ options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for details.</p></li>
 <li><p><strong>speedMPS</strong> (<em>float</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., ‘euclidean2D’ and ‘manhattan’), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., ‘fastest’, ‘shortest’, and ‘pedestrain’), this input argument may be ignored.  If provided, <cite>speedMPS</cite> will override travel speed data used by the route type option.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining the travel data. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
-<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -168,7 +168,7 @@
         <li class="right" >
           <a href="veroviz.getTimeDist3D.html" title="veroviz.getTimeDist3D module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
       </ul>
     </div>

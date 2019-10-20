@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.snapNodesToRoad module &#8212; veroviz 0.2.1 documentation</title>
+    <title>veroviz.snapNodesToRoad module &#8212; veroviz 0.2.2 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="veroviz.getTimeDistScalar3D.html" title="veroviz.getTimeDistScalar3D module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
       </ul>
     </div>
@@ -86,7 +86,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – Coordinates of a location, expressed as either [lat, lon, alt] or [lat, lon].  Note: This function returns only latitude and longitude; any altitude values provided as inputs will be lost in the return.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for finding routes or generate nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements of options.</p></li>
-<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data provider, veroviz need some extra parameters such as API keys or database name. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the keys required for different data provider.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data provider, veroviz need some extra parameters such as API keys or database name. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the keys required for different data provider.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -143,7 +143,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>locs</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of GPS coordinates of node locations, in the form of [[lat, lon], [lat, lon], …]</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for finding routes or generate nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements of options.</p></li>
-<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data provider, veroviz need some extra parameters such as API keys or database name. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the keys required for different data provider.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data provider, veroviz need some extra parameters such as API keys or database name. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the keys required for different data provider.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -189,7 +189,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Required, default as None) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe containing an existing set of nodes.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for generating nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
-<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -296,7 +296,7 @@
         <li class="right" >
           <a href="veroviz.getTimeDistScalar3D.html" title="veroviz.getTimeDistScalar3D module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
       </ul>
     </div>

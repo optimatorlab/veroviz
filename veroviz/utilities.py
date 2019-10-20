@@ -457,6 +457,18 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 	maxLon = max(allLons)
 	minLon = min(allLons)
 
+	if (abs(maxLat - minLat) < 0.0001):
+		maxLat = maxLat + 0.05
+		minLat = minLat - 0.05
+	if (abs(maxLon - minLon) < 0.0001):
+		maxLon = maxLon + 0.05
+		minLon = minLon - 0.05
+
+	maxLat = maxLat + 0.01
+	minLat = minLat - 0.01
+	maxLon = maxLon + 0.01
+	minLon = minLon - 0.01
+
 	return [[minLat, maxLon], [maxLat, minLon]]
 
 def convertMatricesDataframeToDictionary(dataframe):

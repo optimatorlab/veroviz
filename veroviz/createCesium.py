@@ -232,17 +232,19 @@ def _writeConfigs(mapBoundary, availStart, path, fullDir, problemDir):
 
 	# allIDs and orientationIDs
 	jsStr +=         "    allIDs = [\n"
-	for i in range(0, len(allIDs)):
-		jsStr +=     "        '%s', \n" % (allIDs[i])
-	jsStr = jsStr[:-3]
-	jsStr +=         "    \n"
+	if (len(allIDs) > 0):
+		for i in range(0, len(allIDs)):
+			jsStr += "        '%s', \n" % (allIDs[i])
+		jsStr = jsStr[:-3]
+		jsStr +=     "    \n"
 	jsStr +=         "    ];\n"
 
 	jsStr +=         "    orientationIDs = [\n"
-	for i in range(0, len(orientationIDs)):
-		jsStr +=     "        '%s', \n" % (orientationIDs[i])
-	jsStr = jsStr[:-3]
-	jsStr +=         "    \n"
+	if (len(orientationIDs) > 0):
+		for i in range(0, len(orientationIDs)):
+			jsStr += "        '%s', \n" % (orientationIDs[i])
+		jsStr = jsStr[:-3]
+		jsStr +=     "    \n"
 	jsStr +=         "    ];\n"
 
 	# load .czml, `runRoutes()` are writen in index.html 
