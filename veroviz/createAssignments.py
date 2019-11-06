@@ -137,7 +137,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	----
 	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromNodeSeq3D()`.
 	
-	This function creates an assignments dataframe from a sequence of nodes.  Similar functions are available to create an assignments dataframe from an arcs dataframe (createShapepointsFromArcs()) or from a sequence of locations (createShapepointsFromLocSeq()).
+	This function creates an assignments dataframe from a sequence of nodes.  Similar functions are available to create an assignments dataframe from an arcs dataframe (`createShapepointsFromArcs2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).
 	
 	Parameters
 	----------
@@ -209,49 +209,49 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 	
 	Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes.
-	    >>> locs = [
-	    ...     [42.1538, -78.4253], 
-	    ...     [42.3465, -78.6234], 
-	    ...     [42.6343, -78.1146]]
-	    >>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> locs = [
+		...     [42.1538, -78.4253], 
+		...     [42.3465, -78.6234], 
+		...     [42.6343, -78.1146]]
+		>>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
 
 	Example 1 - A simple example using Euclidean travel, and no service times.  The assignments dataframe will have 3 rows.
 		>>> assignmentsDF = vrv.createAssignmentsFromNodeSeq2D(
-	    ...     nodeSeq        = [1, 3, 2, 1], 
-	    ...     nodes          = exampleNodes, 
-	    ...     serviceTimeSec = 0.0, 
+		...     nodeSeq        = [1, 3, 2, 1], 
+		...     nodes          = exampleNodes, 
+		...     serviceTimeSec = 0.0, 
 		...     objectID       = 'Blue Car', 
 		...     modelFile      = 'veroviz/models/car_blue.gltf', 
-	    ...     routeType      = 'euclidean2D',
-	    ...     speedMPS       = 10)
+		...     routeType      = 'euclidean2D',
+		...     speedMPS       = 10)
 		>>> assignmentsDF
 		
 	Example 2 - The vehicle will follow the road network, resulting in an assignments dataframe with significantly more than 3 rows.  The vehicle will remain stationary at nodes 3, 2, and 1 (the destination nodes).  The travel time for each origin/destination pair will be calculated separately.
 		>>> assignmentsDF = vrv.createAssignmentsFromNodeSeq2D(
-	    ...     initAssignments  = None, 
-	    ...     nodeSeq          = [1, 3, 2, 1], 
-	    ...     nodes            = exampleNodes, 
-	    ...     serviceTimeSec   = 20.0, 
+		...     initAssignments  = None, 
+		...     nodeSeq          = [1, 3, 2, 1], 
+		...     nodes            = exampleNodes, 
+		...     serviceTimeSec   = 20.0, 
 		...     odID             = 1, 
 		...     objectID         = 'Blue Car', 
 		...     modelFile        = 'veroviz/models/car_blue.gltf', 
-	    ...     expDurationArgs  = {'getTravelTimes': True}, 
-	    ...     routeType        = 'fastest',
-	    ...     dataProvider     = 'ORS-online',
-	    ...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
+		...     expDurationArgs  = {'getTravelTimes': True}, 
+		...     routeType        = 'fastest',
+		...     dataProvider     = 'ORS-online',
+		...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
 		>>> assignmentsDF
 			
-	Example 3 - 
+	Example 3 - The vehicle will first wait at the starting location (node 1) for 65 seconds.  It will then visit nodes 3 and 2 before returning to node 1.  At each of those nodes, the vehicle will remain stationary for a 20-second service time.  The travel time between each pair of nodes will be determined by the times in the `timeSec` matrix.
 		>>> # Generate a matrix of travel times:
 		>>> [timeSec, distMeters] = vrv.getTimeDist2D(
-	    ...     nodes            = exampleNodes,
-	    ...     matrixType       = 'all2all',
-	    ...     outputDistUnits  = 'meters',
-	    ...     outputTimeUnits  = 'seconds',
-	    ...     routeType        = 'fastest',
-	    ...     speedMPS         = None,   
-	    ...     dataProvider     = 'ORS-online',
-	    ...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
+		...     nodes            = exampleNodes,
+		...     matrixType       = 'all2all',
+		...     outputDistUnits  = 'meters',
+		...     outputTimeUnits  = 'seconds',
+		...     routeType        = 'fastest',
+		...     speedMPS         = None,   
+		...     dataProvider     = 'ORS-online',
+		...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
 
 		>>> # Make our car wait for 65 seconds before starting:
 		>>> assignmentsDF = vrv.addStaticAssignment(
@@ -261,23 +261,23 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		...     loc          = [exampleNodes.loc[exampleNodes['id'] == 1]['lat'].values[0],
 		...                     exampleNodes.loc[exampleNodes['id'] == 1]['lon'].values[0]], 
 		...     startTimeSec = 0.0, 
-		...     endTimeSec   = 65.0)		
+		...     endTimeSec   = 65.0)
 		
 		>>> # This example includes all of the available input arguments:
 		>>> newAssignmentsDF = vrv.createAssignmentsFromNodeSeq2D(
-	    ...     initAssignments  = assignmentsDF, 
-	    ...     nodeSeq          = [1, 3, 2, 1], 
-	    ...     nodes            = exampleNodes, 
-	    ...     serviceTimeSec   = 20.0, 
+		...     initAssignments  = assignmentsDF, 
+		...     nodeSeq          = [1, 3, 2, 1], 
+		...     nodes            = exampleNodes, 
+		...     serviceTimeSec   = 20.0, 
 		...     odID             = 1, 
 		...     objectID         = 'Blue Car', 
 		...     modelFile        = 'veroviz/models/car_blue.gltf', 
 		...     modelScale       = 100,
 		...     modelMinPxSize   = 75,
-	    ...     startTimeSec     = 65.0, 
-	    ...     expDurationArgs  = {'timeSecDict': timeSec}, 
-	    ...     routeType        = 'fastest',
-	    ...     speedMPS         = None,   
+		...     startTimeSec     = 65.0, 
+		...     expDurationArgs  = {'timeSecDict': timeSec}, 
+		...     routeType        = 'fastest',
+		...     speedMPS         = None,   
 		...     leafletColor     = 'blue', 
 		...     leafletWeight    = 3, 
 		...     leafletStyle     = 'dashed', 
@@ -287,12 +287,12 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		...     cesiumWeight     = 3, 
 		...     cesiumStyle      = 'solid', 
 		...     cesiumOpacity    = 0.8, 
-	    ...     dataProvider     = 'ORS-online',
-	    ...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
-		>>> newAssignmentsDF	
+		...     dataProvider     = 'ORS-online',
+		...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
+		>>> newAssignmentsDF
 
 	View the assignments in Leaflet:  
-		>>> myMap = vrv.createLeaflet(arcs=newAssignmentsDF, nodes=exampleNodes)
+		>>> vrv.createLeaflet(arcs=newAssignmentsDF, nodes=exampleNodes)
 	
 	View the assignments in Cesium:
 		>>> vrv.createCesium(
@@ -403,7 +403,7 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	----
 	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromLocSeq3D()`.
 	
-	This function creates an assignments dataframe from a sequence of [lat, lon] locations.  Similar functions are available to create an assignments dataframe from an arcs dataframe (createShapepointsFromArcs()) or from a sequence of nodes (createShapepointsFromNodeSeq()).
+	This function creates an assignments dataframe from a sequence of [lat, lon] locations.  Similar functions are available to create an assignments dataframe from an arcs dataframe (`createShapepointsFromArcs2D()`) or from a sequence of nodes (`createShapepointsFromNodeSeq2D()`).
 	
 	Parameters
 	----------
@@ -473,20 +473,20 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 	
 	Specify a sequence of [lat, lon] or [lat, lon, alt] locations. 
-	    >>> locs = [
-	    ...     [42.1538, -78.4253, 30], 
-	    ...     [42.3465, -78.6234, 30], 
-	    ...     [42.6343, -78.1146, 40],
-	    ...     [42.1538, -78.4253, 30]] 
+		>>> locs = [
+		...     [42.1538, -78.4253, 30], 
+		...     [42.3465, -78.6234, 30], 
+		...     [42.6343, -78.1146, 40],
+		...     [42.1538, -78.4253, 30]] 
 
 	Example 1 - A simple example using Euclidean travel, and no service times.  The assignments dataframe will have 3 rows.
 		>>> assignmentsDF = vrv.createAssignmentsFromLocSeq2D(
-	    ...     locSeq         = locs, 
-	    ...     serviceTimeSec = 0.0, 
+		...     locSeq         = locs, 
+		...     serviceTimeSec = 0.0, 
 		...     objectID       = 'Blue Car', 
 		...     modelFile      = 'veroviz/models/car_blue.gltf', 
-	    ...     routeType      = 'euclidean2D',
-	    ...     speedMPS       = 10)
+		...     routeType      = 'euclidean2D',
+		...     speedMPS       = 10)
 		>>> assignmentsDF
 		
 	Example 2 - The vehicle will follow the road network, resulting in an assignments dataframe with significantly more than 3 rows.  The vehicle will remain stationary at the destination locations.  The travel time for each origin/destination pair will be calculated separately.
@@ -501,18 +501,18 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 
 		>>> # This example includes all of the available input arguments:
 		>>> newAssignmentsDF = vrv.createAssignmentsFromLocSeq2D(
-	    ...     initAssignments  = assignmentsDF, 
-	    ...     locSeq           = locs, 
-	    ...     serviceTimeSec   = 20.0, 
+		...     initAssignments  = assignmentsDF, 
+		...     locSeq           = locs, 
+		...     serviceTimeSec   = 20.0, 
 		...     odID             = 1, 
 		...     objectID         = 'Blue Car', 
 		...     modelFile        = 'veroviz/models/car_blue.gltf', 
 		...     modelScale       = 100,
 		...     modelMinPxSize   = 75,
-	    ...     startTimeSec     = 65.0, 
-	    ...     expDurationArgs  = {'getTravelTimes': True}, 
-	    ...     routeType        = 'fastest',
-	    ...     speedMPS         = None,   
+		...     startTimeSec     = 65.0, 
+		...     expDurationArgs  = {'getTravelTimes': True}, 
+		...     routeType        = 'fastest',
+		...     speedMPS         = None,   
 		...     leafletColor     = 'blue', 
 		...     leafletWeight    = 3, 
 		...     leafletStyle     = 'dashed', 
@@ -522,15 +522,15 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 		...     cesiumWeight     = 3, 
 		...     cesiumStyle      = 'solid', 
 		...     cesiumOpacity    = 0.8, 
-	    ...     dataProvider     = 'ORS-online',
-	    ...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
+		...     dataProvider     = 'ORS-online',
+		...     dataProviderArgs = {'APIkey' : ORS_API_KEY})
 		>>> newAssignmentsDF			
 
 	Generate a :ref:`Nodes` dataframe from our first three locations (the fourth location is a duplicate of the first).  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes.
 	    >>> exampleNodes = vrv.createNodesFromLocs(locs=locs[0:3])
 
 	View the assignments in Leaflet:  
-		>>> myMap = vrv.createLeaflet(arcs=newAssignmentsDF, nodes=exampleNodes)
+		>>> vrv.createLeaflet(arcs=newAssignmentsDF, nodes=exampleNodes)
 	
 	View the assignments in Cesium:
 		>>> vrv.createCesium(

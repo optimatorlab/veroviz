@@ -41,4 +41,5 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		assignments = pd.concat([initAssignments, assignments], ignore_index=True)
 				
-	return assignments			
+	return assignments
+	
