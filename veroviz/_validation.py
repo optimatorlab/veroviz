@@ -1134,7 +1134,7 @@ def valInitDataframe(dataframe):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1189,7 +1189,7 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWei
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""

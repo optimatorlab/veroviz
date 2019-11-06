@@ -86,7 +86,8 @@ nodesColumnList = [
 ]
 
 arcsColumnList = [
-	'odID', 
+	'odID',
+	'objectID', 
 	'startLat', 
 	'startLon',
 	'endLat', 

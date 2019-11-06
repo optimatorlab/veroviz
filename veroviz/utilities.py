@@ -876,7 +876,7 @@ def importDataFromCSV(dataType, filename):
 					# print("Message: %s was successfully imported as Nodes dataframe" % filename)
 					pass
 				else:
-					print("Error: %s was not successfully imported.  Check the data type." % filename)
+					print("%s  %s was not successfully imported." % (errorMsg, filename))
 					return
 			elif (dataType.lower() == 'arcs'):
 				[valFlag, errorMsg, warningMsg] = valArcs(data)
@@ -884,7 +884,7 @@ def importDataFromCSV(dataType, filename):
 					# print("Message: %s was successfully imported as Arcs dataframe" % filename)
 					pass
 				else:
-					print("Error: %s was not successfully imported.  Check the data type." % filename)
+					print("%s  %s was not successfully imported." % (errorMsg, filename))
 					return
 			elif (dataType.lower() == 'assignments'):
 				[valFlag, errorMsg, warningMsg] = valAssignments(data)
@@ -892,7 +892,7 @@ def importDataFromCSV(dataType, filename):
 					# print("Message: %s was successfully imported as Assignments dataframe" % filename)
 					pass
 				else:
-					print("Error: %s was not successfully imported.  Check the data type." % filename)
+					print("%s  %s was not successfully imported." % (errorMsg, filename))
 					return
 			else:
 				return
@@ -902,7 +902,7 @@ def importDataFromCSV(dataType, filename):
 			dataframe.columns = dataframe.columns.astype(int)
 			data = convertMatricesDataframeToDictionary(dataframe)
 		else:
-			print("Error: data type not supported, expecting 'nodes', 'arcs', 'assignments' or 'matrix' (for time matrix or distance matrix)")
+			print("Error: data type not supported.  Expected 'nodes', 'arcs', 'assignments' or 'matrix' (for time matrix or distance matrix)")
 
 	except (TypeError, ValueError):
 		print("Error: Cannot import file: %s, check if `dataType` is correct for inputs." % (filename))

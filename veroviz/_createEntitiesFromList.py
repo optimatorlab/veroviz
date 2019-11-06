@@ -97,52 +97,10 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 
 	return nodes
 
-def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
 
 	"""
-	Create an Arc dataframe from a list of arcs with coordinates
-
-	Parameters
-	----------
-	locSeq: list, Required, default as None
-		A list of locs that is going to be created, the format is [[lat1, lon1], [lat2, lon2], ...]
-	initArcs: :ref:`Arcs`, Optional, default as None
-		An Arcs dataframe, if provided, the arcs to be created will append to this dataframe.
-	startArc: int, Optional, default as 1
-		The start index for the arcs
-	leafletColor: string, Optional, default as "orange"
-		The color of generated route when displayed in Leaflet.  One of a collection of pre-specified colors. See :ref:`Leaflet style`
-	leafletWeight: int, Optional, default as 3
-		The weight of generated route when displayed in Leaflet. See :ref:`Leaflet style`
-	leafletStyle: string, Optional, default as 'solid'
-		The line style of generated route, options are 'solid', 'dotted', 'dashed'. See :ref:`Leaflet style`
-	leafletOpacity: float in [0, 1], Optional, default as 0.8
-		The opacity of generated route when displayed in Leaflet, range from 0 (invisible) to 1. See :ref:`Leaflet style`
-	useArrows: bool, Optional, default as True
-		To add arrows to arcs that generated, set `useArrows` to be True.
-	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
-		The color of the generated route when displayed in Cesium.  One of a collection of pre-specified colors. See :ref:`Cesium Style`
-	cesiumWeight: int, Optional, default as 3
-		The weight of the generated route when displayed in Cesium. See :ref:`Cesium Style`
-	cesiumStyle: string, Optional, default as 'solid'
-		The line style of the generated route when displayed in Cesium., options are 'solid', 'dotted', 'dashed'. See :ref:`Cesium Style`
-	cesiumOpacity: float in [0, 1], Optional, default as 0.8
-		The opacity of generated route when displayed in Cesium, range from 0 (invisible) to 1. See :ref:`Cesium Style`
-
-	Return
-	------
-	:ref:`Arcs`
-		An Arcs dataframe
-
-	Examples
-	--------
-	>>> import veroviz as vrv
-	>>> arcs = vrv.createArcsFromList(
-	...     locSeq=[
-	...         [42.1325, -78.2134], 
-	...         [42.5341, -78.3252],
-	...         [42.3424, -78.6424]
-	...     ])
+	See createArcsFromLocSeq for docstring
 	"""
 
 
@@ -163,6 +121,7 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, leafletColo
 	for i in range(len(locSeq) - 1):
 		arcs = arcs.append({
 			'odID': odIDs[i],
+			'objectID': objectID,
 			'startLat': locSeq[i][0],
 			'startLon': locSeq[i][1],
 			'endLat': locSeq[i + 1][0],
