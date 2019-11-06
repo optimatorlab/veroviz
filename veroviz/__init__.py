@@ -1,4 +1,4 @@
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
@@ -14,7 +14,9 @@ from veroviz.getTimeDist3D import getTimeDist3D
 from veroviz.getTimeDistScalar3D import getTimeDistScalar3D
 from veroviz.getShapepoints2D import getShapepoints2D
 from veroviz.getShapepoints3D import getShapepoints3D
-from veroviz.buildAssignments import addStaticAssignment
+from veroviz.createAssignments import addStaticAssignment
+from veroviz.createAssignments import createAssignmentsFromNodeSeq2D
+from veroviz.createAssignments import createAssignmentsFromLocSeq2D
 
 # Utilities
 from veroviz.utilities import *
@@ -78,6 +80,10 @@ from veroviz._getSnapLoc import privGetSnapLoc
 from veroviz._deconstructAssignments import deconstructAssignments
 from veroviz._createEntitiesFromList import privCreateNodesFromLocs
 from veroviz._createEntitiesFromList import privCreateArcsFromLocSeq
+
+# Functions related to assignments/shapepoints:
+from veroviz._createAssignments import privAddStaticAssignment
+from veroviz._getShapepoints import privGetShapepoints2D
 
 # Check the current version and latest version of veroviz
 def checkVersion():

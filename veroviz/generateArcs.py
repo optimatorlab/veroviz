@@ -11,7 +11,7 @@ def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, leafletColor=VR
 
 	Parameters
 	----------
-	locSeq: list, Required, default as None
+	locSeq: list of lists, Required, default as None
 		An ordered list of locations that will be converted into an :ref:`Arcs` dataframe. The list should be formated as [[lat1, lon1], [lat2, lon2], ..., [latn, lonn]].
 	initArcs: :ref:`Arcs`, Optional, default as None
 		An :ref:`Arcs` dataframe.  If provided, the arcs to be created will be appended to this dataframe.
