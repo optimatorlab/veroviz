@@ -49,6 +49,8 @@ from veroviz._queryORS import orsGetShapepointsTimeDist
 from veroviz._queryORS import orsGetTimeDistAll2All
 from veroviz._queryORS import orsGetTimeDistOne2Many
 from veroviz._queryORS import orsGetTimeDistMany2One
+from veroviz._queryORS import orsGeocode
+from veroviz._queryORS import orsReverseGeocode
 
 # OSRM related
 from veroviz._queryOSRM import osrmGetSnapToRoadLatLon
@@ -63,6 +65,8 @@ from veroviz._queryMapQuest import mqGetShapepointsTimeDist
 from veroviz._queryMapQuest import mqGetTimeDistAll2All
 from veroviz._queryMapQuest import mqGetTimeDistOne2Many
 from veroviz._queryMapQuest import mqGetTimeDistMany2One
+from veroviz._queryMapQuest import mqGeocode
+from veroviz._queryMapQuest import mqReverseGeocode
 
 # 3D function related
 from veroviz._buildFlightProfile import buildNoLoiteringFlight

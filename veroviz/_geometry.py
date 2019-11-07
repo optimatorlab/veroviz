@@ -225,7 +225,7 @@ def geoIsOnSegment(loc, line):
 	Return
 	------
 	boolean
-		True if loc is on line segment, including two edge vertice
+		True if loc is on line segment, including two edge vertices
 
 	"""
 
@@ -258,7 +258,7 @@ def geoIsPassLine(loc, line, tolerance):
 	Returns
 	-------
 	boolean
-		Whether or not the line passes th point
+		Whether or not the line passes the point
 	'''
 
 	d = geoMinDistLoc2Line(loc, line)

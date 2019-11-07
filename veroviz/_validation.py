@@ -1939,6 +1939,37 @@ def valGetMapBoundary(nodes, arcs, locs):
 		
 	return [valFlag, errorMsg, warningMsg]
 
+
+def valGeocode(location, dataProvider, dataProviderArgs):    
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (location == None):
+		valFlag = False
+		errorMsg = "Error: A location (as a text string) is required for `geocode()`."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGeoDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]    
+	
+def valReverseGeocode(location, dataProvider, dataProviderArgs):    
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+	warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGeoDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]    
+
+	
 def _valMapBoundary(mapBoundary, zoomStart):
 	valFlag = True
 	errorMsg = ""
@@ -2183,6 +2214,36 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 
+
+def _valGeoDataProvider(dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		dataProvider = dataProvider.lower()
+	except:
+		pass
+
+	if (dataProvider == None):
+		pass
+	elif (dataProvider not in geoDataProviderDictionary.keys()):
+		errorMsg = "Error: Invalid `dataProvider` value. Valid options include 'MapQuest', and 'ORS-online'."
+		valFlag = False
+	else:
+		if (geoDataProviderDictionary[dataProvider] == "mapquest"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'MapQuest'`."
+
+		if (geoDataProviderDictionary[dataProvider] == "ors-online"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+	return [valFlag, errorMsg, warningMsg]
+	
+	
 def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 	valFlag = True
 	errorMsg = ""

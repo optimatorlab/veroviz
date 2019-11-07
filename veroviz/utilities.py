@@ -2,6 +2,7 @@ from veroviz._common import *
 from veroviz._validation import *
 from veroviz._geometry import *
 from veroviz._internal import *
+from veroviz._geocode import privGeocode, privReverseGeocode
 
 def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 	"""
@@ -1732,3 +1733,244 @@ def getHeading(currentLoc, goalLoc):
 
 	return bearingInDegree
 
+
+def geocode(location=None, dataProvider=None, dataProviderArgs=None):
+	"""
+	Convert a street address, city, state, or zip code to GPS coordinates ([lat, lon] format).
+
+	Parameters
+	----------
+	location: string, Required
+		A text string indicating a street address, state, or zip code.
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	list
+		A GPS coordinate, of the form [lat, lon].
+
+	Note
+	----
+	Neither pgRouting nor OSRM are supported.  
+	pgRouting would require a database of the entire planet.  
+	OSRM doesn't have a geocode function.
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The following examples assume the use of ORS as the data provider.  If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
+
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
+
+	Example 1 - Find [lat, lon] of Buckingham Palace, without specifying a data provider:
+		>>> myLoc = vrv.geocode(location='Westminster, London SW1A 1AA, United Kingdom')
+		>>> myLoc
+		[51.5008719, -0.1252387]
+	
+	Example 2 - Find [lat, lon] of Buckingham Palace, using ORS-online as the data provider:
+		>>> myLoc = vrv.geocode(location         ='Westminster, London SW1A 1AA, United Kingdom', 
+		...                     dataProvider     ='ors-online', 
+		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc
+		[51.497991, -0.12875]
+        
+	Example 3 - Find [lat, lon] of Seattle, Washington, USA:
+		>>> myLoc = vrv.geocode(location         ='seattle, wa', 
+		...                     dataProvider     ='mapquest', 
+		...                     dataProviderArgs = {'APIkey': MQ_API_KEY})
+		>>> myLoc
+		[47.603229, -122.33028]
+
+	Example 4 - Find [lat, lon] of the state of Florida, USA:
+		>>> myLoc = vrv.geocode(location         ='florida', 
+		...                     dataProvider     ='ors-ONLINE', 
+		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc
+		[27.97762, -81.769611]
+
+	Example 5 - Find [lat, lon] of the Space Needle (in Seattle, WA):
+		>>> myLoc = vrv.geocode(location         ='space needle', 
+		...                     dataProvider     ='ors-ONLINE', 
+		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc
+		[47.620336, -122.349314]  
+
+	Draw the geocoded location as a red dot on a Leaflet map:
+		>>> vrv.addLeafletMarker(center=myLoc)
+		 
+	"""
+	
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGeocode(location, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	loc = privGeocode(location, dataProvider, dataProviderArgs)
+	
+	return loc
+	
+	
+def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):    
+	"""
+	Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
+
+	Parameters
+	----------
+	location: list, Required
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	list
+		A GPS coordinate, of the form [lat, lon], indicating the location of the returned address.  Note that this location might not match the input coordinates.
+	dictionary
+		A dataProvider-specific dictionary containing address details.  The keys in this dictionary may differ according to data provider.
+
+	Note
+	----
+	Neither pgRouting nor OSRM are supported.  
+	pgRouting would require a database of the entire planet.  
+	OSRM doesn't have a geocode function.
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The following examples assume the use of ORS as the data provider.  If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
+
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
+	
+	Example 1 -- Without specifying a dataProvider:
+		>>> [loc, addr] = vrv.reverseGeocode(location=[47.603229, -122.33028])
+		>>> loc
+		[47.6030474, -122.3302567]
+        
+		>>> addr
+		{'place_id': 18472401,
+		 'licence': 'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
+		 'osm_type': 'node',
+		 'osm_id': 1769027877,
+		 'lat': '47.6030474',
+		 'lon': '-122.3302567',
+		 'display_name': 'SDOT, 4th Avenue, West Edge, International District/Chinatown, Seattle, King County, Washington, 98104, USA',
+		 'address': {'bicycle_parking': 'SDOT',
+		 'road': '4th Avenue',
+		 'neighbourhood': 'West Edge',
+		 'suburb': 'International District/Chinatown',
+		 'city': 'Seattle',
+		 'county': 'King County',
+		 'state': 'Washington',
+		 'postcode': '98104',
+		 'country': 'USA',
+		 'country_code': 'us'},
+		 'boundingbox': ['47.6029474', '47.6031474', '-122.3303567', '-122.3301567']}
+	
+	Example 2 -- Using MapQuest:
+		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
+		...                                  dataProvider     = 'MapQuest', 
+		...                                  dataProviderArgs = {'APIkey': MQ_API_KEY})
+		>>> loc
+		[47.603229, -122.33028]
+		
+		>>> addr
+		{'street': '431 James St',
+		 'adminArea6': '',
+		 'adminArea6Type': 'Neighborhood',
+		 'adminArea5': 'Seattle',
+		 'adminArea5Type': 'City',
+		 'adminArea4': 'King',
+		 'adminArea4Type': 'County',
+		 'adminArea3': 'WA',
+		 'adminArea3Type': 'State',
+		 'adminArea1': 'US',
+		 'adminArea1Type': 'Country',
+		 'postalCode': '98104',
+		 'geocodeQualityCode': 'L1AAA',
+		 'geocodeQuality': 'ADDRESS',
+		 'dragPoint': False,
+		 'sideOfStreet': 'R',
+		 'linkId': '0',
+		 'unknownInput': '',
+		 'type': 's',
+		 'latLng': {'lat': 47.603229, 'lng': -122.33028},
+		 'displayLatLng': {'lat': 47.603229, 'lng': -122.33028},
+		 'nearestIntersection': {'streetDisplayName': '4th Ave',
+		 'distanceMeters': '0.0',
+		 'latLng': {'longitude': -122.33028, 'latitude': 47.603229},
+		 'label': 'James St & 4th Ave'},
+		 'roadMetadata': {'speedLimitUnits': 'mph',
+		 'tollRoad': None,
+		 'speedLimit': 25}}
+		 
+	Example 3 -- Using OpenRouteService:
+		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
+		...                                  dataProvider     = 'ORS-online', 
+		...                                  dataProviderArgs = {'APIkey': ORS_API_KEY})
+		[47.603077, -122.330139]
+		
+		>>> addr
+		{'id': 'node/4491511984',
+		 'gid': 'openstreetmap:venue:node/4491511984',
+		 'layer': 'venue',
+		 'source': 'openstreetmap',
+		 'source_id': 'node/4491511984',
+		 'name': '4th Ave & James St',
+		 'confidence': 0.8,
+		 'distance': 0.02,
+		 'accuracy': 'point',
+		 'country': 'United States',
+		 'country_gid': 'whosonfirst:country:85633793',
+		 'country_a': 'USA',
+		 'region': 'Washington',
+		 'region_gid': 'whosonfirst:region:85688623',
+		 'region_a': 'WA',
+		 'county': 'King County',
+		 'county_gid': 'whosonfirst:county:102086191',
+		 'county_a': 'KN',
+		 'locality': 'Seattle',
+		 'locality_gid': 'whosonfirst:locality:101730401',
+		 'neighbourhood': 'Pioneer Square',
+		 'neighbourhood_gid': 'whosonfirst:neighbourhood:85866047',
+		 'continent': 'North America',
+		 'continent_gid': 'whosonfirst:continent:102191575',
+		 'label': '4th Ave & James St, Seattle, WA, USA'}
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valReverseGeocode(location, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
+
+	return (loc, address)	

@@ -519,3 +519,87 @@ def orsGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', APIkey=None):
 	except:
 		print("Error: ", sys.exc_info()[1])
 		raise
+
+
+def orsGeocode(text, APIkey):
+	"""
+	Geocode from a text string using ORS
+	
+	Parameters
+	----------
+	text: string
+		A text string describing an address, city, or landmark.
+	    
+	Returns
+	-------
+	loc: list
+		A geocoded location in the format of [lat, lon].
+	"""
+    
+	# ORS uses [lon, lat] order:
+	geocodeUrl = ('https://api.openrouteservice.org/geocode/search?api_key=%s&text=%s&size=1' % (APIkey, text))
+    
+	try:
+		http = urllib3.PoolManager()
+		response = http.request('GET', geocodeUrl)
+		data = json.loads(response.data.decode('utf-8'))
+
+		http_status = response.status
+
+		if (http_status == 200):
+			# OK
+			# ORS uses [lon, lat] order:
+			loc = [data['features'][0]['geometry']['coordinates'][1], 
+				   data['features'][0]['geometry']['coordinates'][0]] 
+			return loc
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+	except:
+		print("Error: ", sys.exc_info()[1])
+		raise 
+		
+def orsReverseGeocode(loc, APIkey):
+	"""
+	Reverse Geocode from a [lat, lon] or [lat, lon, alt] location using ORS
+	
+	Parameters
+	----------
+	loc: list
+		Of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.
+	    
+	Returns
+	-------
+	snapLoc: list
+		Of the form [lat, lon].  This is the nearest point to the given (input) location.
+	address: dictionary
+		A dataProvider-specific dictionary containing address details.
+	"""    
+    
+	# ORS uses [lon, lat] order:
+	geocodeUrl = ('https://api.openrouteservice.org/geocode/reverse?api_key=%s&point.lon=%s&point.lat=%s&size=1' % (APIkey, loc[1], loc[0]))
+	try:
+		http = urllib3.PoolManager()
+		response = http.request('GET', geocodeUrl)
+		data = json.loads(response.data.decode('utf-8'))
+
+		http_status = response.status
+
+		if (http_status == 200):
+			# OK
+			# ORS uses [lon, lat] order:
+			snapLoc = [data['features'][0]['geometry']['coordinates'][1], 
+				       data['features'][0]['geometry']['coordinates'][0]] 
+			address = data['features'][0]['properties']
+			return (snapLoc, address)
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+	except:
+		print("Error: ", sys.exc_info()[1])
+		raise 
+		

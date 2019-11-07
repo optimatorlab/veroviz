@@ -12,6 +12,8 @@ import numpy as np
 import pandas as pd
 import geopy
 import geopy.distance
+import geopy.geocoders
+from geopy.geocoders import Nominatim
 import psycopg2
 import folium
 from folium.features import DivIcon
