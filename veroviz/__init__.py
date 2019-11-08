@@ -14,6 +14,8 @@ from veroviz.getTimeDist3D import getTimeDist3D
 from veroviz.getTimeDistScalar3D import getTimeDistScalar3D
 from veroviz.getShapepoints2D import getShapepoints2D
 from veroviz.getShapepoints3D import getShapepoints3D
+from veroviz.createAssignments import addAssignment2D
+from veroviz.createAssignments import addAssignment3D
 from veroviz.createAssignments import addStaticAssignment
 from veroviz.createAssignments import createAssignmentsFromNodeSeq2D
 from veroviz.createAssignments import createAssignmentsFromLocSeq2D

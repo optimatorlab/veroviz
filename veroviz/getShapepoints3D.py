@@ -1,19 +1,8 @@
 from veroviz._common import *
 from veroviz._validation import valGetShapepoints3D
+from veroviz._getShapepoints import privGetShapepoints3D
 
-from veroviz._internal import replaceBackslashToSlash
-
-from veroviz._buildFlightProfile import buildNoLoiteringFlight
-from veroviz._buildFlightProfile import getTimeDistFromFlight
-from veroviz._buildFlightProfile import addLoiterTimeToFlight
-
-from veroviz.utilities import initDataframe
-
-def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None,
-	takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, 
-	routeType='square',	climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', 
-	leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, 
-	modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
 
 	"""
 	This function generates 3-dimensional "shapepoints" between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates (and altitudes) that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define movement in three dimensions.
@@ -348,80 +337,6 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	# Replace backslash
-	modelFile = replaceBackslashToSlash(modelFile)
-
-	# Generate flight profile without loitering
-	flight = buildNoLoiteringFlight(routeType, startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
-
-	# Calculate loiter time
-	[totalTime, groundDistance, flightDistance] = getTimeDistFromFlight(flight)
-	remainLoiterTime = 0
-	if (earliestLandTime - startTimeSec > totalTime):
-		remainLoiterTime = earliestLandTime - startTimeSec - totalTime
-	else:
-		remainLoiterTime = 0
-
-	# Add loiter given loiter position
-	flight = addLoiterTimeToFlight(
-		flight=flight,
-		loiterPosition=loiterPosition, 
-		loiterTime=remainLoiterTime)
-
-	# Build assignments dataframe
-	assignments = initDataframe('assignments')
-	for i in range(1, len(flight)):
-		# For all segments in flight profile, loitering happens AFTER arrival at that position
-		assignments = assignments.append({
-			'odID': odID,
-			'objectID': objectID,
-			'modelFile': modelFile,
-			'startTimeSec': startTimeSec + flight.iloc[i - 1]['pathEndTimeSec'],
-			'startLat': flight.iloc[i - 1]['lat'],
-			'startLon': flight.iloc[i - 1]['lon'],
-			'startAltMeters': flight.iloc[i - 1]['altAGL'],
-			'endTimeSec': startTimeSec + flight.iloc[i]['pathStartTimeSec'],
-			'endLat': flight.iloc[i]['lat'],
-			'endLon': flight.iloc[i]['lon'],
-			'endAltMeters': flight.iloc[i]['altAGL'],
-			'leafletColor': leafletColor,
-			'leafletWeight': leafletWeight,
-			'leafletStyle': leafletStyle,
-			'leafletOpacity': leafletOpacity,
-			'useArrows': useArrows,
-			'modelScale' : modelScale,
-			'modelMinPxSize' : modelMinPxSize,
-			'cesiumColor': cesiumColor,
-			'cesiumWeight': cesiumWeight,
-			'cesiumStyle': cesiumStyle,
-			'cesiumOpacity': cesiumOpacity			
-			}, ignore_index=True)
-
-		# If they need loitering, add the line of loitering
-		if (flight.iloc[i]['loiterTime'] != 0):
-			assignments = assignments.append({
-				'odID': odID,
-				'objectID': objectID,
-				'modelFile': modelFile,
-				'startTimeSec': startTimeSec + flight.iloc[i]['pathStartTimeSec'],
-				'startLat': flight.iloc[i]['lat'],
-				'startLon': flight.iloc[i]['lon'],
-				'startAltMeters': flight.iloc[i]['altAGL'],
-				'endTimeSec': startTimeSec + flight.iloc[i]['pathEndTimeSec'],
-				'endLat': flight.iloc[i]['lat'],
-				'endLon': flight.iloc[i]['lon'],
-				'endAltMeters': flight.iloc[i]['altAGL'],
-				'leafletColor': leafletColor,
-				'leafletWeight': leafletWeight,
-				'leafletStyle': leafletStyle,
-				'leafletOpacity': leafletOpacity,
-				'useArrows': useArrows,
-				'modelScale' : modelScale,
-				'modelMinPxSize' : modelMinPxSize,
-				'cesiumColor': cesiumColor,
-				'cesiumWeight': cesiumWeight,
-				'cesiumStyle': cesiumStyle,
-				'cesiumOpacity': cesiumOpacity
-				}, ignore_index=True)
+	assignments = privGetShapepoints3D(odID=odID, objectID=objectID, modelFile=modelFile, startTimeSec=startTimeSec, startLoc=startLoc, endLoc=endLoc, takeoffSpeedMPS=takeoffSpeedMPS, cruiseSpeedMPS=cruiseSpeedMPS, landSpeedMPS=landSpeedMPS, cruiseAltMetersAGL=cruiseAltMetersAGL, routeType=routeType, climbRateMPS=climbRateMPS, descentRateMPS=descentRateMPS, earliestLandTime=earliestLandTime, loiterPosition=loiterPosition, leafletColor=leafletColor, leafletWeight=leafletWeight, leafletStyle=leafletStyle, leafletOpacity=leafletOpacity, useArrows=useArrows, modelScale=modelScale, modelMinPxSize=modelMinPxSize, cesiumColor=cesiumColor, cesiumWeight=cesiumWeight, cesiumStyle=cesiumStyle, cesiumOpacity=cesiumOpacity)
 
 	return assignments

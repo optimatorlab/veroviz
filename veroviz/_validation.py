@@ -1160,7 +1160,9 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 			if (len(initArcs) > 0):
 				maxID = max(initArcs['odID'])
 				if (maxID >= startArc):
-					warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					# 2019-11-07 -- removed warning message
+					# warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					pass
 
 	if (valFlag):
 		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
@@ -1226,7 +1228,9 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 			if (len(initArcs) > 0):
 				maxID = max(initArcs['odID'])
 				if (maxID >= startArc):
-					warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					# 2019-11-07 -- removed warning message
+					# warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					pass
 
 	if (valFlag):
 		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
@@ -1589,6 +1593,188 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]	
+
+
+def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (valFlag):
+		if (odID is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(odID, 'odID')
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `odID` is required for `addAssignment2D()`."
+
+	if (valFlag):
+		if (objectID == None):
+			warningMsg += "Warning: `objectID` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (startLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(startLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `startLoc` is required for `addAssignment2D()`."
+
+	if (valFlag):
+		if (endLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(endLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `endLoc` is required for `addAssignment2D()`."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (startLoc != endLoc):
+			[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvider)
+			warningMsg += newWarningMsg
+
+	if (valFlag and routeType not in ['euclidean2d', 'manhattan']):
+		if (startLoc != endLoc):
+			locs = [startLoc, endLoc]
+			[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			try:
+				cesiumStyle = cesiumStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+	
+
+def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (valFlag):
+		if (odID is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(odID, 'odID')
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `odID` is required for `addAssignment3D()`."
+
+	if (valFlag):
+		if (startLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(startLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `startLoc` is required for `addAssignment3D()`."
+
+	if (valFlag):
+		if (endLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(endLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `endLoc` is required for `addAssignment3D()`."
+
+	if (valFlag):
+		if (objectID == None):
+			warningMsg += "Warning: `objectID` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag and startTimeSec is not None):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valRouteType3D(routeType, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
+		warningMsg += newWarningMsg
+
+	if (valFlag and routeType != 'straight'):
+		if (len(startLoc)==3):
+			startAlt = startLoc[2]
+		else:
+			startAlt = 0
+		if (len(endLoc)==3):
+			endAlt = endLoc[2]
+		else:
+			endAlt = 0
+		[valFlag, errorMsg, newWarningMsg] = _valAltitude(startAlt, cruiseAltMetersAGL, endAlt)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLoiterPosition(loiterPosition)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+		
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
 
 def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScale, modelMinPxSize, loc, startTimeSec, endTimeSec):
 	valFlag = True

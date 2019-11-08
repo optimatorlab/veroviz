@@ -1764,12 +1764,12 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
 	
-	The following examples assume the use of ORS as the data provider.  If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
 		>>> import os
-
+		>>> 
 		>>> ORS_API_KEY = os.environ['ORSKEY']
 		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
-
+		>>> 
 		>>> # Otherwise, you may specify your keys here:
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
@@ -1857,12 +1857,12 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
 	
-	The following examples assume the use of ORS as the data provider.  If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
 		>>> import os
-
+		>>> 
 		>>> ORS_API_KEY = os.environ['ORSKEY']
 		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
-
+		>>> 
 		>>> # Otherwise, you may specify your keys here:
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
@@ -1933,6 +1933,7 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
 		...                                  dataProvider     = 'ORS-online', 
 		...                                  dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> loc
 		[47.603077, -122.330139]
 		
 		>>> addr

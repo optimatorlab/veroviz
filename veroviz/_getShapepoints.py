@@ -10,6 +10,10 @@ from veroviz._internal import locs2Dict
 from veroviz._internal import loc2Dict
 from veroviz._internal import replaceBackslashToSlash
 
+from veroviz._buildFlightProfile import buildNoLoiteringFlight
+from veroviz._buildFlightProfile import getTimeDistFromFlight
+from veroviz._buildFlightProfile import addLoiterTimeToFlight
+
 from veroviz._geometry import geoDistance2D
 
 from veroviz.utilities import convertDistance
@@ -147,6 +151,87 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 	return assignments
 
 
+def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+
+	# Replace backslash
+	modelFile = replaceBackslashToSlash(modelFile)
+
+	# Generate flight profile without loitering
+	flight = buildNoLoiteringFlight(routeType, startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
+
+	# Calculate loiter time
+	[totalTime, groundDistance, flightDistance] = getTimeDistFromFlight(flight)
+	remainLoiterTime = 0
+	if (earliestLandTime - startTimeSec > totalTime):
+		remainLoiterTime = earliestLandTime - startTimeSec - totalTime
+	else:
+		remainLoiterTime = 0
+
+	# Add loiter given loiter position
+	flight = addLoiterTimeToFlight(
+		flight=flight,
+		loiterPosition=loiterPosition, 
+		loiterTime=remainLoiterTime)
+
+	# Build assignments dataframe
+	assignments = initDataframe('assignments')
+	for i in range(1, len(flight)):
+		# For all segments in flight profile, loitering happens AFTER arrival at that position
+		assignments = assignments.append({
+			'odID': odID,
+			'objectID': objectID,
+			'modelFile': modelFile,
+			'startTimeSec': startTimeSec + flight.iloc[i - 1]['pathEndTimeSec'],
+			'startLat': flight.iloc[i - 1]['lat'],
+			'startLon': flight.iloc[i - 1]['lon'],
+			'startAltMeters': flight.iloc[i - 1]['altAGL'],
+			'endTimeSec': startTimeSec + flight.iloc[i]['pathStartTimeSec'],
+			'endLat': flight.iloc[i]['lat'],
+			'endLon': flight.iloc[i]['lon'],
+			'endAltMeters': flight.iloc[i]['altAGL'],
+			'leafletColor': leafletColor,
+			'leafletWeight': leafletWeight,
+			'leafletStyle': leafletStyle,
+			'leafletOpacity': leafletOpacity,
+			'useArrows': useArrows,
+			'modelScale' : modelScale,
+			'modelMinPxSize' : modelMinPxSize,
+			'cesiumColor': cesiumColor,
+			'cesiumWeight': cesiumWeight,
+			'cesiumStyle': cesiumStyle,
+			'cesiumOpacity': cesiumOpacity			
+			}, ignore_index=True)
+
+		# If they need loitering, add the line of loitering
+		if (flight.iloc[i]['loiterTime'] != 0):
+			assignments = assignments.append({
+				'odID': odID,
+				'objectID': objectID,
+				'modelFile': modelFile,
+				'startTimeSec': startTimeSec + flight.iloc[i]['pathStartTimeSec'],
+				'startLat': flight.iloc[i]['lat'],
+				'startLon': flight.iloc[i]['lon'],
+				'startAltMeters': flight.iloc[i]['altAGL'],
+				'endTimeSec': startTimeSec + flight.iloc[i]['pathEndTimeSec'],
+				'endLat': flight.iloc[i]['lat'],
+				'endLon': flight.iloc[i]['lon'],
+				'endAltMeters': flight.iloc[i]['altAGL'],
+				'leafletColor': leafletColor,
+				'leafletWeight': leafletWeight,
+				'leafletStyle': leafletStyle,
+				'leafletOpacity': leafletOpacity,
+				'useArrows': useArrows,
+				'modelScale' : modelScale,
+				'modelMinPxSize' : modelMinPxSize,
+				'cesiumColor': cesiumColor,
+				'cesiumWeight': cesiumWeight,
+				'cesiumStyle': cesiumStyle,
+				'cesiumOpacity': cesiumOpacity
+				}, ignore_index=True)
+
+	return assignments
+
+
 def _eucGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec):
 	path = [startLoc, endLoc]
 	dist = [0, geoDistance2D(startLoc, endLoc)]
@@ -155,6 +240,7 @@ def _eucGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec):
 	else:
 		time = [0, dist[1] / speedMPS]	
 	return [path, time, dist]
+
 
 def _manGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec, verticalFirst=True):
 	# if verticalFirst is true, it means go north/south firt then go east/west

@@ -1,14 +1,732 @@
 from veroviz._common import *
 
+from veroviz._validation import valAddAssignment2D
+from veroviz._validation import valAddAssignment3D
 from veroviz._validation import valAddStaticAssignment
 from veroviz._validation import valCreateAssignmentsFromNodeSeq2D
 from veroviz._validation import valCreateAssignmentsFromLocSeq2D
 
 from veroviz._createAssignments import privAddStaticAssignment
 from veroviz._getShapepoints import privGetShapepoints2D
+from veroviz._getShapepoints import privGetShapepoints3D
 
 from veroviz.utilities import initDataframe
 from veroviz._getTimeDistFromLocs2D import getTimeDistFromLocs2D
+
+
+def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, dataProvider=None, dataProviderArgs=None):
+
+	"""
+	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the "shapepoints" between between given starting and ending locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   
+
+	Note
+	----
+	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `addAssignment3D()`.
+	
+	Parameters
+	----------
+	initAssignments: :ref:`Assignments` dataframe, Optional, default as None
+		If provided, the function will append this dataframe.
+	odID: int, Optional, default as 1
+		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.
+	objectID: int/string, Optional, default as None
+		A descriptive name or index for a particular vehicle or object (e.g., 'truck 1', or 'red car'). 
+	modelFile: string, Optional, default as None
+		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).
+	startLoc: list, Required, default as None
+		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.
+	endLoc: list, Required, default as None
+		The ending location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.
+	startTimeSec: float, Optional, default as 0.0 
+		The time, in seconds, at which the vehicle may leave the starting location.
+	expDurationSec: float, Optional, default as None
+		This is the number of seconds we expect to travel from the start to the end location. This value typically comes from the traval time matrix (see the getTimeDist functions).  Including an expected duration will help keep these two values in alignment.  If necessary, travel times for the individual shapepoints will be redistributed.
+	routeType: string, Optional, default as 'euclidean2D'
+		This describes a characteristic of the travel mode.  Possible values are: 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'.  The 'euclidean2D' and 'manhattan' options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.
+	speedMPS: float, Conditional, default as None
+		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., 'euclidean2D' and 'manhattan'), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., 'fastest', 'shortest', and 'pedestrain'), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.
+	leafletColor: string, Optional, default as "orange"
+		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.
+	leafletWeight: int, Optional, default as 3
+		The pixel width of the route when displayed in Leaflet. 
+	leafletStyle: string, Optional, default as 'solid'
+		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
+	leafletOpacity: float in [0, 1], Optional, default as 0.8
+		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	useArrows: bool, Optional, default as True
+		Indicates whether arrows should be shown on the route when displayed in Leaflet.
+	modelScale: int, Optional, default as 100
+		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.
+	modelMinPxSize: int, Optional, default as 75
+		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. 
+	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
+		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.
+	cesiumWeight: int, Optional, default as 3
+		The pixel width of the route when displayed in Cesium. 
+	cesiumStyle: string, Optional, default as 'solid'
+		The line style of the route when displayed in Cesium.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Cesium Style` for more information.
+	cesiumOpacity: float in [0, 1], Optional, default as 0.8
+		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+
+	Returns
+	-------
+	:ref:`Assignments` dataframe
+		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel from a start location to an end location.
+		
+	endTimeSec: float
+		The time, in seconds, at which the end location is reached.  
+		
+		
+	Examples
+	--------
+	Import veroviz and check if it's the latest version:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Define 5 node locations, as [lat, lon] pairs:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Generate a nodes dataframe from these locations:
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> myNodes
+
+	View these nodes on a map:
+		>>> vrv.createLeaflet(nodes=myNodes)
+
+	We're going to hard-code a solution.
+		>>> # A car will start at node 1, visit nodes 2 and 3, and then return to node 1.
+		>>> # A truck will follow a route from 1->5->4->1.
+		>>> mySolution = {
+		...     'car': [[1,2], [2,3], [3,1]],
+		...     'truck': [[1,5], [5,4], [4,1]]
+		>>> }
+
+	Define some information about our 2 vehicles, for later use:
+		>>> vehicleProperties = {
+		...     'car':   {'model': 'veroviz/models/car_red.gltf',
+		...               'leafletColor': 'red',
+		...               'cesiumColor': 'Cesium.Color.RED'},
+		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...               'leafletColor': 'blue',
+		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		>>> }
+
+	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> # Otherwise, you may specify your key here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+	
+	
+	Example 1 -- The vehicles will visit the nodes in their routes, without any service times. Assume Euclidean travel (ignoring the road network).	
+		>>> # Build the assignments dataframe for the 2 vehicle routes.
+		>>> # No service times, Euclidean travel:
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments = myAssignments,
+		...             objectID        = v,
+		...             modelFile       = vehicleProperties[v]['model'],
+		...             startLoc        = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc          = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec    = endTimeSec,
+		...             routeType       = 'euclidean2D',
+		...             speedMPS        = vrv.convertSpeed(25, 'miles', 'hour', 'meters', 'second'),
+		...             leafletColor    = vehicleProperties[v]['leafletColor'],
+		...             cesiumColor     = vehicleProperties[v]['cesiumColor'])
+		>>> myAssignments	
+	
+		>>> # Show the routes (and nodes) on a map:
+		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)	
+	
+	
+	Example 2 -- The vehicles will now travel on the road network, but we'll still ignore service times.
+		>>> # No service times, Travel on road network:
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = v,
+		...             modelFile        = vehicleProperties[v]['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             leafletColor     = vehicleProperties[v]['leafletColor'],
+		...             cesiumColor      = vehicleProperties[v]['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myAssignments 
+
+		>>> # Show the routes (and nodes) on a map:
+		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)	
+	
+	Example 3 -- The vehicles are still following the road network, but now we'll force them to match the travel times specified in a travel matrix.	
+		>>> # We'll first create the travel time and distance matrices:
+		>>> [timeSec, distMeters] = vrv.getTimeDist2D(nodes            = myNodes,
+		...                                           routeType        = 'fastest',
+		...                                           dataProvider     = 'ORS-online',
+		...                                           dataProviderArgs = {'APIkey': ORS_API_KEY})	
+
+		>>> # No service times, Travel on road network, use travel times from the distance matrix:
+		>>> # added "expDurationSec"
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = v,
+		...             modelFile        = vehicleProperties[v]['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             expDurationSec   = timeSec[arc[0], arc[1]],
+		...             leafletColor     = vehicleProperties[v]['leafletColor'],
+		...             cesiumColor      = vehicleProperties[v]['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myAssignments   
+
+
+	Example 4 -- Add service times at each destination node
+		>>> # 60-second service times at destinations, Travel on road network, use travel times from the distance matrix.
+		>>> # Added use of `addStaticAssignment()` function for the service component.
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = v,
+		...             modelFile        = vehicleProperties[v]['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             expDurationSec   = timeSec[arc[0], arc[1]],
+		...             leafletColor     = vehicleProperties[v]['leafletColor'],
+		...             cesiumColor      = vehicleProperties[v]['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		...         
+		...         myAssignments = vrv.addStaticAssignment(
+		...             initAssignments  = myAssignments,
+		...             objectID         = v,
+		...             modelFile        = vehicleProperties[v]['model'],
+		...             loc              = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             endTimeSec       = endTimeSec + 60.0)
+        
+		...         endTimeSec += 60
+		>>> myAssignments  	
+	
+	
+	Example 5 -- Extend the previous example to show packages being left at destination nodes	
+		>>> # 30-second service times at destinations, Travel on road network:
+		>>> # added another use of `addStaticAssignment()` function to drop packages.
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = v,
+		...             modelFile        = vehicleProperties[v]['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             leafletColor     = vehicleProperties[v]['leafletColor'],
+		...             cesiumColor      = vehicleProperties[v]['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		...         
+		...         myAssignments = vrv.addStaticAssignment(
+		...             initAssignments  = myAssignments,
+		...             objectID         = v,
+		...             modelFile        = vehicleProperties[v]['model'],
+		...             loc              = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             endTimeSec       = endTimeSec + 30.0)
+		...         
+		...         endTimeSec += 30
+		... 
+		...         myAssignments = vrv.addStaticAssignment(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'package %s %d' % (v, arc[1]),
+		...             modelFile        = '/veroviz/models/box_yellow.gltf',
+		...             loc              = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             endTimeSec       = -1)        
+		>>> myAssignments 
+	
+
+	If you have saved your Cesium path as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> CESIUM_DIR = os.environ['CESIUMDIR']
+		>>> # Otherwise, you may specify the patch to Cesium here:
+		>>> # CESIUM_DIR = '/provide/path/to/Cesium/' 
+
+	Generate a 3D movie of the routes:
+		>>> vrv.createCesium(assignments = myAssignments, 
+		...                  nodes       = myNodes, 
+		...                  cesiumDir   = CESIUM_DIR, 
+		...                  problemDir  = 'addAssignment2D_example')
+
+	"""
+	
+	# validatation
+	[valFlag, errorMsg, warningMsg] = valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs)
+	
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+		
+	# Initialize an assignments dataframe:
+	assignmentsDF = initDataframe('assignments')
+
+	# if the user provided an initAssignments dataframe, add the new points after it
+	if (type(initAssignments) is pd.core.frame.DataFrame):
+		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+		
+		# Increase odID as necessary:
+		if (len(assignmentsDF) > 0):
+			odID = max(max(assignmentsDF['odID'])+1, odID)
+	
+	tmpShapepoints = privGetShapepoints2D(
+		odID             = odID, 
+		objectID         = objectID, 
+		modelFile        = modelFile, 
+		startLoc         = startLoc, 
+		endLoc           = endLoc, 
+		startTimeSec     = startTimeSec, 
+		expDurationSec   = expDurationSec,
+		routeType        = routeType, 
+		speedMPS         = speedMPS,   
+		leafletColor     = leafletColor, 
+		leafletWeight    = leafletWeight, 
+		leafletStyle     = leafletStyle, 
+		leafletOpacity   = leafletOpacity, 
+		useArrows        = useArrows, 
+		modelScale       = modelScale, 
+		modelMinPxSize   = modelMinPxSize, 
+		cesiumColor      = cesiumColor, 
+		cesiumWeight     = cesiumWeight, 
+		cesiumStyle      = cesiumStyle, 
+		cesiumOpacity    = cesiumOpacity, 
+		dataProvider     = dataProvider, 
+		dataProviderArgs = dataProviderArgs)
+
+	# Capture the end time
+	endTimeSec = max(tmpShapepoints['endTimeSec'])
+
+	# Update the assignments dataframe:
+	assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+	
+	return (assignmentsDF, endTimeSec)
+	
+
+def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+
+	"""
+	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the vehicle movements between given starting and ending locations, including timestamps indicating the departure and arrival times for each intermediate point. 
+
+	Note
+	----
+	This function is for vehicles whose travel path includes changes in altitude (e.g., drones).  For ground vehicles traveling on a ground plane, a 2-dimensional version of this function is provided by `addAssignment2D()`.
+
+	Parameters
+	----------
+	odID: int, Optional, default as 1
+		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.
+	objectID: int/string, Optional, default as None
+		A descriptive name or index for a particular vehicle or object (e.g., 'plane 1', or 'blue drone'). 
+	modelFile: string, Optional, default as None
+		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).
+	startTimeSec: float, Optional, default as 0.0 
+		The time, in seconds, at which the vehicle may leave the starting location.
+	startLoc: list, Required, default as 'None'
+		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.
+	endLoc: list, Required, default as 'None'
+		The ending location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.
+	takeoffSpeedMPS: float, Conditional, default as None
+		The speed of the aircraft, in meters per second, during the "takeoff" phase.  This will apply only to 'square' and 'trapezoidal' route types.  The takeoff phase is the first component of these route types, and is associated with an increase in altitude.  The takeoff speed is assumed to be constant, and ignores acceleration.  See :ref:`Flight Profile and Flight Path` for additional information.
+	cruiseSpeedMPS: float, Conditional, default as None
+		The speed of the aircraft, in meters per second, during the "cruising" phase.  This will apply to all of the route options.  Typically, the cruising phase occurs at a constant altitude, as specified by `cruiseAltMetersAGL`.  However, for the 'triangular' route type, cruiseSpeedMPS specifies the constant travel speed during both the ascent to, and immediate descent from, the cruise altitude.  In the 'triangle' route type, the aircraft has no horizontal travel at the cruise altitude.  In all cases, the cruise speed is assumed to be constant, and ignores acceleration.  See :ref:`Flight Profile and Flight Path` for additional information.
+	landSpeedMPS: float, Conditional, default as None
+		The speed of the aircraft, in meters per second, during the "landing" phase. This will apply to only the 'square' and 'trapezoidal' route types.  The landing phase is the last component of these route types, and is associated with a decrease in altitude.  The landing speed is assumed to be constant, and ignore deceleration.  See :ref:`Flight Profile and Flight Path` for additional information.
+	cruiseAltMetersAGL: float, Conditional, default as None
+		The altitude, in meters above ground level, at which the aircraft is in the "cruise" phase.  This phase is typically associated with horizontal movement at a fixed altitude.  The exception is for the 'triangular' route type, in which case the aircraft instantaneously transitions from ascent to descent at the cruise altitude (i.e., there is no horizontal travel at this altitude).  All but the 'straight' route type require/use the cruise altitude.  See :ref:`Flight Profile and Flight Path` for additional details.
+	routeType: string, Optional, default as 'square'
+		Specifies the basic shape of the flight profile.  Valid options include 'square', 'triangular', 'trapezoidal', and 'straight'.  The square profile involves a vertical takeoff to a cruising altitude, horizontal travel at the cruising altitude, and a vertical landing.  The trapezoidal profile describes a takeoff phase in which the aircraft increases altitude and travels horizontally towards the destination until reaching the cruising altitude, horizontal travel at the cruising altitude, and a landing phase in which the aircraft decreases altitude and travels horizontally until reaching the destination.  For the trapezoidal profile, the horizontal movement during the takeoff and landing phases is a function of the `climbRateMPS` and `descentRateMPS`, respectively.  The triangular profile describes an ascent to the cruising altitude followed immediately by a descent to the destination.  Finally, the straight profile describes straight-line flight directly from the starting location to the ending location; the altitudes of these two locations may differ.  See :ref:`Flight Profile and Flight Path` for a description of these flight profiles.
+	climbRateMPS: float, Conditional, default as None
+		This parameter is used only for the 'trapezoidal' route type, and is in units of meters per second.  It describes the rate at which the aircraft increases its altitude, relative to the value of `takeoffSpeedMPS`.  If `climbRateMPS == takeoffSpeedMPS`, then the takeoff phase will be purely vertical.  If `climbRateMPS` is close to zero, then the takeoff phase will be characterized by a slow increase in altitude (and longer horizontal flight).  The aircraft's actual travel speed during the climb will be `takeoffSpeedMPS`.  See :ref:`Flight Profile and Flight Path` for additional details.
+	descentRateMPS: float, Conditional, default as None
+		This parameter is used only for the 'trapezoidal' route type, and is in units of meters per second.  It describes the rate at which the aircraft decreases its altitude, relative to the value of `landSpeedMPS`.  If `descentRateMPS == landSpeedMPS`, then the landing phase will be purely vertical.  If `descentRateMPS` is close to zero, then the landing phase will be characterized by a slow decrease in altitude (and longer horizontal flight).  The aircraft's actual travel speed during the descent will be `landSpeedMPS`.  See :ref:`Flight Profile and Flight Path` for additional details.
+	earliestLandTime: float, Optional, default as -1
+		Specifies the earliest time, in seconds, that the vehicle is allowed to complete travel to the ending location.  This parameter is useful in cases where time windows exist, or if a flying vehicle must wait for another vehicle (e.g., a drone that cannot land until a truck has arrived to recover it).  The default value of `-1` indicates that there is no restriction on the earliest landing time.
+	loiterPosition: string, Optional, default as 'arrivalAtAlt'
+		The position where the vehicle loiters if its un-delayed travel time from start to end would result in an arrival before `earliestLandTime`.  Valid options are 'beforeTakeoff', 'takeoffAtAlt', 'arrivalAtAlt', 'afterLand'. See :ref:`Flight Profile and Flight Path` for details.
+	leafletColor: string, Optional, default as "orange"
+		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.
+	leafletWeight: int, Optional, default as 3
+		The pixel width of the route when displayed in Leaflet. 
+	leafletStyle: string, Optional, default as 'solid'
+		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
+	leafletOpacity: float in [0, 1], Optional, default as 0.8
+		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	useArrows: bool, Optional, default as True
+		Indicates whether arrows should be shown on the route when displayed in Leaflet.
+	modelScale: int, Optional, default as 100
+		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.
+	modelMinPxSize: int, Optional, default as 75
+		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. 
+	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
+		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.
+	cesiumWeight: int, Optional, default as 3
+		The pixel width of the route when displayed in Cesium. 
+	cesiumStyle: string, Optional, default as 'solid'
+		The line style of the route when displayed in Cesium.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Cesium Style` for more information.
+	cesiumOpacity: float in [0, 1], Optional, default as 0.8
+		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+
+	Return
+	-------
+	:ref:`Assignments` dataframe
+		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates and altitudes describing the collection of straight-line segments required to travel from a start location to an end location.
+
+	Examples
+	--------
+	Import veroviz and check if it's the latest version:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Define 5 node locations, as [lat, lon] pairs:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Generate a nodes dataframe from these locations:
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> myNodes
+
+	View these nodes on a map:
+		>>> vrv.createLeaflet(nodes=myNodes)
+
+
+	Example 1 -- Assume a single drone delivers packages from node 1 to all other nodes.
+		>>> # Hard-code a solution:
+		>>> mySolution = {
+		...     'drone': [[1,2,1], [1,3,1], [1,4,1], [1,5,1]]
+		>>> }
+
+
+	Define some information about our drone, for later use:
+		>>> vehicleProperties = {
+		...     'drone': {'modelPackage': 'veroviz/models/drone_package.gltf',
+		...               'modelEmpty': 'veroviz/models/drone.gltf',
+		...               'leafletColor': 'red',
+		...               'cesiumColor': 'Cesium.Color.RED'},
+		>>> }
+
+
+
+	Build the assignments for the drone deliveries:
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> 
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['drone']:
+		...     # Fly from i to j with a package:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...         initAssignments    = myAssignments,
+		...         objectID           = 'drone',
+		...         modelFile          = vehicleProperties['drone']['modelPackage'],
+		...         startLoc           = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...         endLoc             = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...         startTimeSec       = endTimeSec,
+		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...         routeType          = 'square',
+		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
+		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		... 
+		...     # Drop off a package
+		...     myAssignments = vrv.addStaticAssignment(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'package %d' % (arc[1]),
+		...             modelFile        = '/veroviz/models/box_yellow.gltf',
+		...             loc              = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             endTimeSec       = -1)  
+		...         
+		...     # Fly from j to k empty:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...         initAssignments    = myAssignments,
+		...         objectID           = 'drone',
+		...         modelFile          = vehicleProperties['drone']['modelEmpty'],
+		...         startLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...         endLoc             = list(myNodes[myNodes['id'] == arc[2]][['lat', 'lon']].values[0]),
+		...         startTimeSec       = endTimeSec,
+		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...         routeType          = 'square',
+		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
+		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		... 
+		>>> myAssignments
+
+
+	Show the nodes and assignments on a map:
+		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
+
+	If you have saved your Cesium path as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> CESIUM_DIR = os.environ['CESIUMDIR']
+		>>> # Otherwise, you may specify the patch to Cesium here:
+		>>> # CESIUM_DIR = '/provide/path/to/Cesium/' 
+
+	Create a 3D movie of the drone deliveries:
+		>>> vrv.createCesium(assignments = myAssignments, 
+		...                  nodes       = myNodes, 
+		...                  cesiumDir   = CESIUM_DIR, 
+		...                  problemDir  = 'addAssignment3D_example1')
+
+
+	Example 2 -- Coordinate deliveries with a drone launched from a truck
+		>>> # Hard-code a solution.
+		>>> # The truck will visit nodes 1->3->5->1
+		>>> # The drone will launch from the truck at node 1, deliver to node 2, and return to the truck at node 3.
+		>>> # The drone will then launch from the truck at 1, deliver to 4 and return to 5.
+		>>> # The drone cannot land at nodes 3 and 5 until the truck has arrived.
+		>>> mySolution = {
+		...     'drone': [[1,2,3], [3,4,5]],
+		...     'truck': [[1,3], [3,5], [5,1]]
+		>>> }
+
+
+	Define some information about our 2 vehicles, for use below:
+		>>> vehicleProperties = {
+		...     'drone': {'modelPackage': 'veroviz/models/drone_package.gltf',
+		...               'modelEmpty': 'veroviz/models/drone.gltf',
+		...               'leafletColor': 'red',
+		...               'cesiumColor': 'Cesium.Color.RED'},
+		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...               'leafletColor': 'blue',
+		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		>>> }
+
+
+		>>> # This example assumes the use of ORS as the data provider. 
+		>>> # If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> # Otherwise, you may specify your key here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+
+		>>> # Obtain the travel times for the truck:
+		>>> [timeSecTruck, distMetersTruck] = vrv.getTimeDist2D(
+		...     nodes            = myNodes,
+		...     routeType        = 'fastest',
+		...     dataProvider     = 'ORS-online',
+		...     dataProviderArgs = {'APIkey': ORS_API_KEY})
+
+		>>> # Obtain the travel times for the drone:
+		>>> [timeSecDrone, groundDist, TotalDist] = vrv.getTimeDist3D(
+		...     nodes            = myNodes,
+		...     takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...     cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...     landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...     cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...     routeType          = 'square')
+
+		>>> # Find the coordination times for the truck and drone.
+		>>> # These will be the earliest times that both the truck and drone can arrive at a node.
+		>>> maxArrivalTime = {}
+		>>> 
+		>>> # 1) The truck travels from 1 to 3; the drone travels from 1 to 2 to 3:
+		>>> truckArrivalTime = timeSecTruck[1,3]
+		>>> droneArrivalTime = timeSecDrone[1,2] + timeSecDrone[2,3]
+		>>> maxArrivalTime[3] = max(truckArrivalTime, droneArrivalTime)
+		>>> 
+		>>> # 2) The truck travels from 3 to 5; the drone travels from 3 to 4 to 5:
+		>>> truckArrivalTime = maxArrivalTime[3] + timeSecTruck[3,5]
+		>>> droneArrivalTime = maxArrivalTime[3] + timeSecDrone[3,4] + timeSecDrone[4,5]
+		>>> maxArrivalTime[5] = max(truckArrivalTime, droneArrivalTime)
+		>>> 
+		>>> # 3) Let's also capture the time at which the truck will return to node 1:
+		>>> maxArrivalTime[1] = maxArrivalTime[5] + timeSecTruck[5,1]
+		>>> 
+		>>> # maxArrival Time[1] is now the total time required to complete all of the deliveries
+		>>> maxArrivalTime
+
+	Build assignments for the drone deliveries:
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>>  
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['drone']:
+		...     # Fly from i to j with a package:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...         initAssignments    = myAssignments,
+		...         objectID           = 'drone',
+		...         modelFile          = vehicleProperties['drone']['modelPackage'],
+		...         startLoc           = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...         endLoc             = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...         startTimeSec       = endTimeSec,
+		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...         routeType          = 'square',
+		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
+		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		... 
+		...     # Drop off a package
+		...     myAssignments = vrv.addStaticAssignment(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'package %d' % (arc[1]),
+		...             modelFile        = '/veroviz/models/box_yellow.gltf',
+		...             loc              = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             endTimeSec       = -1)  
+		...     
+		...     # Fly from j to k empty:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...         initAssignments    = myAssignments,
+		...         objectID           = 'drone',
+		...         modelFile          = vehicleProperties['drone']['modelEmpty'],
+		...         startLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...         endLoc             = list(myNodes[myNodes['id'] == arc[2]][['lat', 'lon']].values[0]),
+		...         startTimeSec       = endTimeSec,
+		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...         routeType          = 'square',
+		...         earliestLandTime   = maxArrivalTime[arc[2]],
+		...         loiterPosition     = 'arrivalAtAlt',
+		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
+		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		... 
+		>>> myAssignments
+
+
+	Build assignments for the truck route:
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['truck']:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'truck',
+		...             modelFile        = vehicleProperties['truck']['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             leafletColor     = vehicleProperties['truck']['leafletColor'],
+		...             cesiumColor      = vehicleProperties['truck']['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		...     
+		...     # If necessary, wait for the drone to arrive:
+		...     if (endTimeSec < maxArrivalTime[arc[1]]):
+		...         myAssignments = vrv.addStaticAssignment(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'truck',
+		...             modelFile        = vehicleProperties['truck']['model'],
+		...             loc              = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             endTimeSec       = maxArrivalTime[arc[1]])
+		... 
+		...         endTimeSec = maxArrivalTime[arc[1]]  
+		>>> myAssignments
+
+	Show the nodes and assignments on a map:
+		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
+
+	Create a 3D movie of the drone deliveries:
+		>>> vrv.createCesium(assignments = myAssignments, 
+		...                  nodes       = myNodes, 
+		...                  cesiumDir   = CESIUM_DIR, 
+		...                  problemDir  = 'addAssignment3D_example1')
+
+	"""	
+	
+	# validatation
+	[valFlag, errorMsg, warningMsg] = valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	# Initialize an assignments dataframe:
+	assignmentsDF = initDataframe('assignments')
+
+	# if the user provided an initAssignments dataframe, add the new points after it
+	if (type(initAssignments) is pd.core.frame.DataFrame):
+		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+
+		# Increase odID as necessary:
+		if (len(assignmentsDF) > 0):
+			odID = max(max(assignmentsDF['odID'])+1, odID)
+
+	tmpShapepoints = privGetShapepoints3D(
+		odID               = odID, 
+		objectID           = objectID, 
+		modelFile          = modelFile, 
+		startTimeSec       = startTimeSec, 
+		startLoc           = startLoc, 
+		endLoc             = endLoc, 
+		takeoffSpeedMPS    = takeoffSpeedMPS, 
+		cruiseSpeedMPS     = cruiseSpeedMPS, 
+		landSpeedMPS       = landSpeedMPS, 
+		cruiseAltMetersAGL = cruiseAltMetersAGL, 
+		routeType          = routeType, 
+		climbRateMPS       = climbRateMPS, 
+		descentRateMPS     = descentRateMPS, 
+		earliestLandTime   = earliestLandTime, 
+		loiterPosition     = loiterPosition, 
+		leafletColor       = leafletColor, 
+		leafletWeight      = leafletWeight, 
+		leafletStyle       = leafletStyle, 
+		leafletOpacity     = leafletOpacity, 
+		useArrows          = useArrows, 
+		modelScale         = modelScale, 
+		modelMinPxSize     = modelMinPxSize, 
+		cesiumColor        = cesiumColor, 
+		cesiumWeight       = cesiumWeight, 
+		cesiumStyle        = cesiumStyle, 
+		cesiumOpacity      = cesiumOpacity)
+
+	# Capture the end time
+	endTimeSec = max(tmpShapepoints['endTimeSec'])
+
+	# Update the assignments dataframe:
+	assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+	
+	return (assignmentsDF, endTimeSec)
 
 
 def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None):
@@ -315,7 +1033,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	# Initialize an assignments dataframe:
 	assignmentsDF = initDataframe('assignments')
 
-	# if the user provided an initNode dataframe, add the new points after it
+	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
 
@@ -553,7 +1271,7 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	# Initialize an assignments dataframe:
 	assignmentsDF = initDataframe('assignments')
 
-	# if the user provided an initNode dataframe, add the new points after it
+	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
 
