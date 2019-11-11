@@ -3,6 +3,7 @@ from veroviz._common import *
 from veroviz._validation import valAddAssignment2D
 from veroviz._validation import valAddAssignment3D
 from veroviz._validation import valAddStaticAssignment
+from veroviz._validation import valCreateAssignmentsFromArcs2D
 from veroviz._validation import valCreateAssignmentsFromNodeSeq2D
 from veroviz._validation import valCreateAssignmentsFromLocSeq2D
 
@@ -844,6 +845,214 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 		endTimeSec      = endTimeSec)
 
 	return assignments
+	
+
+def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, 
+leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, dataProvider=None, dataProviderArgs=None):
+	"""
+	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive arcs, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
+
+	Notes
+	----
+	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromArcs3D()`.
+	
+	This function creates an assignments dataframe from an arcs dataframe.  Similar functions are available to create an assignments dataframe from a sequence of nodes (`createShapepointsFromNodeSeq2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).
+	
+	Parameters
+	----------
+	initAssignments: :ref:`Assignments` dataframe, Optional, default as None
+		If provided, the function will append rows to this dataframe.
+	arcs: :ref:`Arcs`, Required
+		A :ref:`Arcs` dataframe, from which the assignments dataframe will be generated.
+	serviceTimeSec: float, Optional, default as 0.0
+		Specifies a duration, in seconds, that the vehicle will be stationary at each destination location in the arcs dataframe.
+	modelFile: string, Optional, default as None
+		The relative path and filename of the 3D model associated with the object described in the arcs dataframe.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).	
+	modelScale: int, Optional, default as 100
+		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.
+	modelMinPxSize: int, Optional, default as 75
+		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. 					
+	startTimeSec: float, Optional, default as 0.0 
+		The time, in seconds, at which the vehicle may leave the starting location.
+	expDurationArgs: dictionary, Optional, default as None
+		Sometimes there are inconsistencies between the travel times specified in the turn-by-turn navigation (i.e., shapepoints) and the travel matrices (i.e., from the getTimeDist functions).  The `expDurationArgs` field may take two different values.
+		First, if `expDurationArgs` is `None` (default), the travel times will be based solely on the turn-by-turn times.  Second, if `expDurationArgs` is a dictionary with a key of `'getTravelTimes'` and a corresponding value of `True`, then this function will call the `getTimeDist2D()` function for each origin/destination pair (i.e., for each row of the arcs dataframe).  In this case, all shapepoint travel times will be adjusted/redistributed to match the resulting values.
+	routeType: string, Optional, default as 'euclidean2D'
+		This describes a characteristic of the travel mode.  Possible values are: 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'.  The 'euclidean2D' and 'manhattan' options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.
+	speedMPS: float, Conditional, default as None
+		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., 'euclidean2D' and 'manhattan'), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., 'fastest', 'shortest', and 'pedestrain'), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.
+	leafletColor: string, Optional, default as None
+		Overrides the `leafletColor` column of the input :ref:`Arcs` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.
+	leafletWeight: int, Optional, default as None
+		Overrides the `leafletWeight` column of the input :ref:`Arcs` dataframe.  If provided, all arcs will be displayed with this line thickness (in pixels).  
+	leafletStyle: string, Optional, default as None
+		Overrides the `leafletStyle` column of the input :ref:`Arcs` dataframe. If provided, all arcs will be displayed with this type.  Valid options are 'solid', 'dotted', or 'dashed'.  See :ref:`Leaflet Style` for more information.
+	leafletOpacity: float in [0, 1], Optional, default as None
+		Overrides the `leafletOpacity` column of the input :ref:`Arcs` dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency).
+	useArrows: boolean, Optional, default as None
+		Overrides the `useArrows` column of the input :ref:`Arcs` dataframe. Indicates whether arrows should be shown on the route when displayed in Leaflet.
+	cesiumColor: string, Optional, default as None
+		Overrides the `cesiumColor` column of the input :ref:`Arcs` dataframe.  This will define the color of all arcs displayed in Cesium.  See :ref:`Cesium Style` for the collection of available colors.
+	cesiumWeight: int, Optional, default as None
+		Overrides the `cesiumWeight` column of the input :ref:`Arcs` dataframe. This will define the weight (in pixels) of all arcs displayed in Cesium. See :ref:`Cesium Style` for more information. 
+	cesiumStyle: string, Optional, default as None
+		Overrides the `cesiumStyle` column of the input :ref:`Arcs` dataframe. This will define the style of all arcs displayed in Cesium. See :ref:`Cesium Style` for available options.
+	cesiumOpacity: float in [0, 1], Optional, default as None
+		Overrides the `cesiumOpacity` column of the input :ref:`Arcs` dataframe.  This will define the opacity of all arcs displayed in Cesium.  See :ref:`Cesium Style` for more information.	
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+
+	Returns
+	-------
+	:ref:`Assignments` dataframe
+		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel through all arcs in the provided :ref:`Arcs` dataframe.
+
+	Examples
+	--------
+	Import veroviz and check if it's the latest version:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Generate arcs from a given ordered list of coordinates:
+		>>> arcs = vrv.createArcsFromLocSeq(
+		...     locSeq=[[42.3538, -78.4253, 30], 
+		...             [42.3465, -78.4234, 30], 
+		...             [42.3343, -78.4146, 40]])
+		>>> arcs
+
+	Display the arcs on a Leaflet map:
+		>>> vrv.createLeaflet(arcs=arcs)
+		
+	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> # Otherwise, you may specify your key here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+	
+	Generate an assignments dataframe from the arcs dataframe:	
+		>>> myAssignments = vrv.createAssignmentsFromArcs2D(
+		...      arcs             = arcs, 
+		...     modelFile        = 'veroviz/models/car_blue.gltf', 
+		...     routeType        = 'fastest', 
+		...     dataProvider     = 'ors-online',
+		...     dataProviderArgs = {'APIkey': ORS_API_KEY},
+		...     leafletColor     = 'blue')
+		>>> myAssignments    
+    
+    Display the assignments on a map:	
+		>>> vrv.createLeaflet(arcs=myAssignments)	
+	"""	
+	
+	# validatation
+	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs)
+	
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+		
+	# Initialize an assignments dataframe:
+	assignmentsDF = initDataframe('assignments')
+
+	# if the user provided an initAssignments dataframe, add the new points after it
+	if (type(initAssignments) is pd.core.frame.DataFrame):
+		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+
+	startTime = startTimeSec
+
+	for i in arcs.index:		
+		startLoc = [arcs['startLat'].at[i], arcs['startLon'].at[i]]
+		endLoc   = [arcs['endLat'].at[i], arcs['endLon'].at[i]]
+
+		if (expDurationArgs == None):
+			expDurationSec = None
+		elif ('getTravelTimes' in expDurationArgs):
+			if (expDurationArgs['getTravelTimes']):
+				# Call the data provider to get travel time
+				[dicTime, dicDist] = getTimeDistFromLocs2D(fromLocs=[startLoc], fromRows=[0], toLocs=[endLoc], toCols=[0], outputDistUnits='meters', outputTimeUnits='seconds', routeType=routeType, speedMPS=speedMPS, dataProvider=dataProvider, dataProviderArgs=dataProviderArgs)
+
+				[expDurationSec, distMeters] = [dicTime[0, 0], dicDist[0, 0]]
+
+		odID     = arcs['odID'].at[i]
+		objectID = arcs['objectID'].at[i]
+
+		leafletColor = leafletColor if (leafletColor is not None) else arcs['leafletColor'].at[i]
+		 
+		leafletWeight = leafletWeight if (leafletWeight is not None) else arcs['leafletWeight'].at[i]
+				
+		leafletStyle = leafletStyle if (leafletStyle is not None) else arcs['leafletStyle'].at[i]
+		 
+		leafletOpacity = leafletOpacity if (leafletOpacity is not None) else arcs['leafletOpacity'].at[i]
+		useArrows = useArrows if (useArrows is not None) else arcs['useArrows'].at[i]
+		
+		cesiumColor = cesiumColor if (cesiumColor is not None) else arcs['cesiumColor'].at[i]
+		
+		cesiumWeight = cesiumWeight if (cesiumWeight is not None) else arcs['cesiumWeight'].at[i]
+		
+		cesiumStyle = cesiumStyle if (cesiumStyle is not None) else arcs['cesiumStyle'].at[i]
+		
+		cesiumOpacity = cesiumOpacity if (cesiumOpacity is not None) else arcs['cesiumOpacity'].at[i]
+		
+		tmpShapepoints = privGetShapepoints2D(
+			odID=odID, 
+			objectID=objectID, 
+			modelFile=modelFile, 
+			startLoc=startLoc, 
+			endLoc=endLoc, 
+			startTimeSec=startTime, 
+			expDurationSec=expDurationSec,
+			routeType=routeType, 
+			speedMPS=speedMPS,   
+			leafletColor=leafletColor, 
+			leafletWeight=leafletWeight, 
+			leafletStyle=leafletStyle, 
+			leafletOpacity=leafletOpacity, 
+			useArrows=useArrows, 
+			modelScale=modelScale, 
+			modelMinPxSize=modelMinPxSize, 
+			cesiumColor=cesiumColor, 
+			cesiumWeight=cesiumWeight, 
+			cesiumStyle=cesiumStyle, 
+			cesiumOpacity=cesiumOpacity, 
+			dataProvider=dataProvider, 
+			dataProviderArgs=dataProviderArgs)
+
+
+		# Update the assignments dataframe:
+		assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+
+		odID += 1
+
+		# Update the time
+		startTime = max(tmpShapepoints['endTimeSec'])	
+	
+		if (serviceTimeSec > 0):
+			# Add loitering for service
+			assignmentsDF = privAddStaticAssignment(
+				initAssignments = assignmentsDF, 
+				odID            = odID, 
+				objectID        = objectID, 
+				modelFile       = modelFile, 
+				modelScale      = modelScale, 
+				modelMinPxSize  = modelMinPxSize, 
+				loc             = endLoc,
+				startTimeSec    = startTime,
+				endTimeSec      = startTime + serviceTimeSec)
+
+			odID += 1
+
+			# Update the time again
+			startTime = startTime + serviceTimeSec
+
+    			
+	return assignmentsDF	
+	
+	
+	
+		
 	
 	
 

@@ -1734,6 +1734,206 @@ def getHeading(currentLoc, goalLoc):
 	return bearingInDegree
 
 
+
+def findLocsAtTime(assignments=None, timeSec=0.0):
+	"""
+	Finds the estimated location of each unique `objectID` in an input `assignments` dataframe at the given time.  The output is a dictionary, where the keys are unique objectIDs.  The corresponding value for each `objectID` key will be `None` if the object is not defined at the given value of `timeSec`, the value will be a list of the form [lat, lon, alt] if a single match is found, or the value will be a list of lists of the form [[lat1, lon1, alt1], ..., [latn, lonn, altn]] if n matches are found.  In the latter case, this is typically indicative of duplicate entries in the assignments dataframe (as each object should not appear in multiple locations simultaneously).
+
+	Parameters
+	----------
+	assignments: :ref:`Assignments` dataframe, Required, default as None
+		Each row of an :ref:`Assignments` dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).
+	timeSec: float, Optional, default as 0.0
+		The time, in seconds, at which it is desired to find an estimate of each object's location.
+	
+	Return
+	------
+	dictionary
+		A dictionary describing the estimated location of each unique `objectID` in the input assignments dataframe.  See above for a description of the key/value pairs.
+
+	Example
+	-------
+	Import veroviz and check if it's the latest version:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Define 5 node locations, as [lat, lon] pairs:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Generate a nodes dataframe from these locations:
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+
+	Construct an assignments dataframe for two vehicles, a drone and a truck.  The truck will visit nodes 1 -> 2 -> 3 -> 1.  The drone will visit nodes 1 -> 4 -> 5 -> 1.
+		>>> mySolution = {
+		...     'truck': [[1,2], [2,3], [3,1]],
+		...     'drone': [[1,4], [4,5], [5,1]]
+		... }
+
+	Define some information about our 2 vehicles, for use below:
+		>>> vehicleProperties = {
+		...     'drone': {'model': 'veroviz/models/drone.gltf',
+		...               'leafletColor': 'red',
+		...               'cesiumColor': 'Cesium.Color.RED'},
+		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...               'leafletColor': 'blue',
+		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		... }
+
+	This example assumes the use of ORS as the data provider. 
+		>>> # If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> # Otherwise, you may specify your key here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+
+	Initialize an empty assignments dataframe:
+		>>> myAssignments = vrv.initDataframe('assignments')
+
+
+	Build assignments for the truck route:
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['truck']:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'truck',
+		...             modelFile        = vehicleProperties['truck']['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             leafletColor     = vehicleProperties['truck']['leafletColor'],
+		...             cesiumColor      = vehicleProperties['truck']['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myAssignments
+		
+	Build assignments for the drone deliveries:
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['drone']:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...         initAssignments    = myAssignments,
+		...         objectID           = 'drone',
+		...         modelFile          = vehicleProperties['drone']['model'],
+		...         startLoc           = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...         endLoc             = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...         startTimeSec       = endTimeSec,
+		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...         routeType          = 'square',
+		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
+		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		>>> myAssignments
+		
+	Show the nodes and assignments on a map:
+		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
+
+	Find the location of each vehicle at time 30.0:
+		>>> currentLocs = vrv.findLocsAtTime(assignments=myAssignments, timeSec=30.0)
+		>>> 
+		>>> # Or, we can just find the location of the drone at time 30.0:
+		>>> # currentLocs = vrv.findLocsAtTime(
+		>>> #    assignments=myAssignments[myAssignments['objectID'] == 'drone'], 
+		>>> #    timeSec=30.0)
+		>>> currentLocs
+		
+	Display the estimated locations on a map:		
+		>>> myMap = vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
+		>>> for objectID in currentLocs:
+		...     if (type(currentLocs[objectID]) is list):
+		...         # This objectID has at least 1 location at this time:
+		...         if (type(currentLocs[objectID][0]) is list):
+		...             # There were multiple matches for this objectID:
+		...             for i in currentLocs[objectID]:
+		...                 myMap = vrv.addLeafletMarker(mapObject=myMap, center=i)
+		...         else:
+		...             # We only have one location for this objectID:
+		...             myMap = vrv.addLeafletMarker(mapObject=myMap, 
+		...                                          center=currentLocs[objectID], 
+		...                                          radius=9, 
+		...                                          fillOpacity=0.7, 
+		...                                          fillColor='black')
+		>>> myMap		
+	"""
+
+	[valFlag, errorMsg, warningMsg] = valFindLocsAtTime(assignments, timeSec)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+
+	output = {}
+
+	asgnCopy = assignments.copy()
+
+	# Get list of unique objectIDs:
+	uniqueIDs = list(asgnCopy['objectID'].unique())
+
+	# Replace "-1" end time with +infinity
+	asgnCopy.loc[asgnCopy['endTimeSec'] < 0, 'endTimeSec'] = float('Inf')
+
+	for objectID in uniqueIDs:
+		tmpAsgn = asgnCopy[(asgnCopy['objectID'] == objectID) & 
+			(asgnCopy['startTimeSec'] <= timeSec) & 
+			(asgnCopy['endTimeSec'] >= timeSec)] 
+	
+		if (len(tmpAsgn) == 0):
+			output[objectID] = None
+			print("Warning: objectID `%s` is not tracked at time %.2f seconds" % (objectID, t))
+		else:
+			outList = []
+			for id in tmpAsgn.index:
+				startLat     = tmpAsgn['startLat'].at[id]
+				startLon     = tmpAsgn['startLon'].at[id]
+				startAlt     = tmpAsgn['startAltMeters'].at[id]
+				startTimeSec = tmpAsgn['startTimeSec'].at[id]
+			
+				endLat     = tmpAsgn['endLat'].at[id]
+				endLon     = tmpAsgn['endLon'].at[id]
+				endAlt     = tmpAsgn['endAltMeters'].at[id]
+				endTimeSec = tmpAsgn['endTimeSec'].at[id]
+
+				# Find percentage of time:
+				if (endTimeSec < float('Inf')):
+					pct = (timeSec - startTimeSec) / (endTimeSec - startTimeSec)
+				else:
+					pct = 0.0
+			
+				# Find distance from start to end:
+				distMeters = geoDistance2D([startLat, startLon], [endLat, endLon])
+			
+				if (distMeters == 0.0):
+					newLoc = [startLat, startLon]
+				else: 
+					# Get initial heading from start to end:
+					hdgDeg = geoGetHeading([startLat, startLon], [endLat, endLon])
+
+					# Get expected lat/lon coords:
+					newLoc = geoPointInDistance2D([startLat, startLon], hdgDeg, distMeters*pct)
+
+				# Interpolate altitude:
+				newAlt = startAlt + (endAlt - startAlt)*pct
+			
+				# Add to our list of expected locations for this id:
+				outList.append([newLoc[0], newLoc[1], newAlt])
+
+			if (len(outList) == 1):
+				output[objectID] = outList[0]
+					
+			else:
+				# 
+				print("Warning: objectID `%s` appears in %d matching rows.  Perhaps the assignments dataframe has duplicate entries?" % (objectID, len(tmpAsgn)))
+				output[objectID] = outList
+	
+	return output			
+				
 def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	Convert a street address, city, state, or zip code to GPS coordinates ([lat, lon] format).

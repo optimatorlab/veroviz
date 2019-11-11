@@ -1,4 +1,4 @@
-__version__ = '0.2.3'
+__version__ = '0.3.0'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
@@ -17,6 +17,7 @@ from veroviz.getShapepoints3D import getShapepoints3D
 from veroviz.createAssignments import addAssignment2D
 from veroviz.createAssignments import addAssignment3D
 from veroviz.createAssignments import addStaticAssignment
+from veroviz.createAssignments import createAssignmentsFromArcs2D
 from veroviz.createAssignments import createAssignmentsFromNodeSeq2D
 from veroviz.createAssignments import createAssignmentsFromLocSeq2D
 
