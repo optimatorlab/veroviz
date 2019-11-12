@@ -17,6 +17,10 @@ The table below describes each of the fields/columns of an `Arcs` dataframe:
 | odID            | int       | Each origin/destination pair should    |
 |                 |           | have a unique odID.                    |
 +-----------------+-----------+----------------------------------------+
+| objectID        | string    | Identifier for each object (e.g.,      |
+|                 |           | truck, package, drone, etc.) shown in  |
+|                 |           | Cesium.                                |
++-----------------+-----------+----------------------------------------+
 | startLat        | float     | Latitude of the start of the arc,      |
 |                 |           | in [degrees].  0-degrees latitude is   |
 |                 |           | the equator.  Negative latitudes are   |
@@ -92,6 +96,8 @@ An `Arcs` dataframe can be used in :meth:`~veroviz.createLeaflet.createLeaflet`.
 | Field Name       | Required     |Optional      | Ignored          |
 +==================+==============+==============+==================+
 | odID             | ✓            |              |                  |
++------------------+--------------+--------------+------------------+
+| objectID         |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | startLat         | ✓            |              |                  |
 +------------------+--------------+--------------+------------------+

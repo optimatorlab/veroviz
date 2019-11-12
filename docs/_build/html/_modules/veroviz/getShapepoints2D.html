@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.getShapepoints2D &#8212; veroviz 0.2.2 documentation</title>
+    <title>veroviz.getShapepoints2D &#8212; veroviz 0.3.0 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -59,20 +59,7 @@
 <span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valGetShapepoints2D</span>
 
-<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetShapepointsTimeDist</span>
-
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">distributeTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">locs2Dict</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">loc2Dict</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">replaceBackslashToSlash</span>
-
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoDistance2D</span>
-
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">convertDistance</span>
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">initDataframe</span>
+<span class="kn">from</span> <span class="nn">veroviz._getShapepoints</span> <span class="k">import</span> <span class="n">privGetShapepoints2D</span>
 
 <div class="viewcode-block" id="getShapepoints2D"><a class="viewcode-back" href="../../veroviz.getShapepoints2D.html#veroviz.getShapepoints2D.getShapepoints2D">[docs]</a><span class="k">def</span> <span class="nf">getShapepoints2D</span><span class="p">(</span><span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
 	<span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   
@@ -312,159 +299,9 @@
 	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
-	<span class="c1"># Replace backslash</span>
-	<span class="n">modelFile</span> <span class="o">=</span> <span class="n">replaceBackslashToSlash</span><span class="p">(</span><span class="n">modelFile</span><span class="p">)</span>
-
-	<span class="k">try</span><span class="p">:</span>
-		<span class="n">dataProvider</span> <span class="o">=</span> <span class="n">dataProvider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-	<span class="k">except</span><span class="p">:</span>
-		<span class="k">pass</span>
-
-	<span class="k">try</span><span class="p">:</span>
-		<span class="n">routeType</span> <span class="o">=</span> <span class="n">routeType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-	<span class="k">except</span><span class="p">:</span>
-		<span class="k">pass</span>
-			
-	<span class="k">if</span> <span class="p">(</span><span class="n">startLoc</span> <span class="o">!=</span> <span class="n">endLoc</span><span class="p">):</span>
-		<span class="k">if</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;euclidean2d&#39;</span><span class="p">):</span>
-			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">_eucGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;manhattan&#39;</span><span class="p">):</span>
-			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">_manGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;fastest&#39;</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;pgrouting&#39;</span><span class="p">):</span>
-			<span class="n">databaseName</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">[</span><span class="s1">&#39;databaseName&#39;</span><span class="p">]</span>
-			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">pgrGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="o">==</span> <span class="s1">&#39;fastest&#39;</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;osrm-online&#39;</span><span class="p">):</span>
-			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">osrmGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fastest&#39;</span><span class="p">,</span> <span class="s1">&#39;shortest&#39;</span><span class="p">,</span> <span class="s1">&#39;pedestrian&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mapquest&#39;</span><span class="p">):</span>
-			<span class="n">APIkey</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">[</span><span class="s1">&#39;APIkey&#39;</span><span class="p">]</span>
-			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">mqGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">APIkey</span><span class="p">)</span>
-		<span class="k">elif</span> <span class="p">(</span><span class="n">routeType</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fastest&#39;</span><span class="p">,</span> <span class="s1">&#39;pedestrian&#39;</span><span class="p">,</span> <span class="s1">&#39;cycling&#39;</span><span class="p">,</span> <span class="s1">&#39;truck&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">dataProviderDictionary</span><span class="p">[</span><span class="n">dataProvider</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">):</span>
-			<span class="n">APIkey</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">[</span><span class="s1">&#39;APIkey&#39;</span><span class="p">]</span>
-			<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span> <span class="o">=</span> <span class="n">orsGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">APIkey</span><span class="p">)</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span>
-
-		<span class="c1"># Check if the original point is too far away from the actual start point of the shapepoints from query</span>
-		<span class="n">distOri</span> <span class="o">=</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-		<span class="k">if</span> <span class="p">(</span><span class="n">distOri</span> <span class="o">&gt;=</span> <span class="n">VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE</span><span class="p">):</span> <span class="c1"># Go back to 10m after testing</span>
-			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: The origin point (lat: </span><span class="si">%s</span><span class="s2">, lon: </span><span class="si">%s</span><span class="s2">) is </span><span class="si">%.1f</span><span class="s2"> meters away from the road. You might find a gap between the origin point and the route.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">distOri</span><span class="p">))</span>
-
-		<span class="c1"># Check if the actual end point is too far away from destination point</span>
-		<span class="n">distDes</span> <span class="o">=</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">)</span>
-		<span class="k">if</span> <span class="p">(</span><span class="n">distDes</span> <span class="o">&gt;=</span> <span class="n">VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE</span><span class="p">):</span> <span class="c1"># Go back to 10m after testing</span>
-			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: The destination point (lat: </span><span class="si">%s</span><span class="s2">, lon: </span><span class="si">%s</span><span class="s2">) is </span><span class="si">%.1f</span><span class="s2"> meters away from the road. You might find a gap between destination point and the route.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">distDes</span><span class="p">))</span>
-
-		<span class="c1"># convert distance to accumulated distance</span>
-		<span class="n">accDist</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="n">accDist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)):</span>
-			<span class="n">accDist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accDist</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-		<span class="c1"># If `expDurationSec` is provided, override `speedMPS` and datasource, otherwise, if `speedMPS` is provided, override datasource</span>
-		<span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-			<span class="p">[</span><span class="n">newTime</span><span class="p">,</span> <span class="n">newDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">distributeTimeDist</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">)</span>
-			<span class="n">time</span> <span class="o">=</span> <span class="n">newTime</span>
-			<span class="n">dist</span> <span class="o">=</span> <span class="n">newDist</span>
-		<span class="k">elif</span> <span class="p">(</span><span class="n">speedMPS</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">expDurationSec</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
-			<span class="n">newExpDurationSec</span> <span class="o">=</span> <span class="n">accDist</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">accDist</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span>
-			<span class="p">[</span><span class="n">newTime</span><span class="p">,</span> <span class="n">newDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">distributeTimeDist</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">newExpDurationSec</span><span class="p">)</span>
-			<span class="n">time</span> <span class="o">=</span> <span class="n">newTime</span>
-			<span class="n">dist</span> <span class="o">=</span> <span class="n">newDist</span>
-
-		<span class="c1"># convert time to accumulated time</span>
-		<span class="n">accTime</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="n">accTime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">startTimeSec</span><span class="p">)</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)):</span>
-			<span class="n">accTime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">accTime</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-		<span class="c1"># For maintainability, convert locs into dictionary</span>
-		<span class="n">dicPath</span> <span class="o">=</span> <span class="n">locs2Dict</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-
-		<span class="c1"># shapepoint dataframe</span>
-		<span class="n">assignments</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;Assignments&#39;</span><span class="p">)</span>
-
-		<span class="c1"># generate assignments</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
-			<span class="n">assignments</span> <span class="o">=</span> <span class="n">assignments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-				<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">odID</span><span class="p">,</span>
-				<span class="s1">&#39;objectID&#39;</span> <span class="p">:</span> <span class="n">objectID</span><span class="p">,</span> 
-				<span class="s1">&#39;modelFile&#39;</span> <span class="p">:</span> <span class="n">modelFile</span><span class="p">,</span>
-				<span class="s1">&#39;startTimeSec&#39;</span> <span class="p">:</span> <span class="n">accTime</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
-				<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
-				<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
-				<span class="s1">&#39;startAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
-				<span class="s1">&#39;endTimeSec&#39;</span> <span class="p">:</span> <span class="n">accTime</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-				<span class="s1">&#39;endLat&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
-				<span class="s1">&#39;endLon&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
-				<span class="s1">&#39;endAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
-				<span class="s1">&#39;leafletColor&#39;</span> <span class="p">:</span> <span class="n">leafletColor</span><span class="p">,</span>
-				<span class="s1">&#39;leafletWeight&#39;</span> <span class="p">:</span> <span class="n">leafletWeight</span><span class="p">,</span>
-				<span class="s1">&#39;leafletStyle&#39;</span> <span class="p">:</span> <span class="n">leafletStyle</span><span class="p">,</span>
-				<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">useArrows</span><span class="p">,</span>
-				<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">leafletOpacity</span><span class="p">,</span>
-				<span class="s1">&#39;modelScale&#39;</span> <span class="p">:</span> <span class="n">modelScale</span><span class="p">,</span>
-				<span class="s1">&#39;modelMinPxSize&#39;</span> <span class="p">:</span> <span class="n">modelMinPxSize</span><span class="p">,</span>
-				<span class="s1">&#39;cesiumColor&#39;</span> <span class="p">:</span> <span class="n">cesiumColor</span><span class="p">,</span>
-				<span class="s1">&#39;cesiumWeight&#39;</span> <span class="p">:</span> <span class="n">cesiumWeight</span><span class="p">,</span>
-				<span class="s1">&#39;cesiumStyle&#39;</span> <span class="p">:</span> <span class="n">cesiumStyle</span><span class="p">,</span>
-				<span class="s1">&#39;cesiumOpacity&#39;</span> <span class="p">:</span> <span class="n">cesiumOpacity</span>
-				<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="c1"># For maintainability, convert locs into dictionary</span>
-		<span class="n">dicStartLoc</span> <span class="o">=</span> <span class="n">loc2Dict</span><span class="p">(</span><span class="n">startLoc</span><span class="p">)</span>
-
-		<span class="n">assignments</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;Assignments&#39;</span><span class="p">)</span>
-		<span class="n">assignments</span> <span class="o">=</span> <span class="n">assignments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-			<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">odID</span><span class="p">,</span>
-			<span class="s1">&#39;objectID&#39;</span> <span class="p">:</span> <span class="n">objectID</span><span class="p">,</span> 
-			<span class="s1">&#39;modelFile&#39;</span> <span class="p">:</span> <span class="n">modelFile</span><span class="p">,</span>
-			<span class="s1">&#39;startTimeSec&#39;</span> <span class="p">:</span> <span class="n">startTimeSec</span><span class="p">,</span>
-			<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
-			<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
-			<span class="s1">&#39;startAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
-			<span class="s1">&#39;endTimeSec&#39;</span> <span class="p">:</span> <span class="n">expDurationSec</span> <span class="o">+</span> <span class="n">startTimeSec</span> <span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">startTimeSec</span><span class="p">,</span>
-			<span class="s1">&#39;endLat&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
-			<span class="s1">&#39;endLon&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
-			<span class="s1">&#39;endAltMeters&#39;</span> <span class="p">:</span> <span class="n">dicStartLoc</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">],</span>
-			<span class="s1">&#39;leafletColor&#39;</span> <span class="p">:</span> <span class="n">leafletColor</span><span class="p">,</span>
-			<span class="s1">&#39;leafletWeight&#39;</span> <span class="p">:</span> <span class="n">leafletWeight</span><span class="p">,</span>
-			<span class="s1">&#39;leafletStyle&#39;</span> <span class="p">:</span> <span class="n">leafletStyle</span><span class="p">,</span>
-			<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">useArrows</span><span class="p">,</span>
-			<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">leafletOpacity</span><span class="p">,</span>
-			<span class="s1">&#39;modelScale&#39;</span> <span class="p">:</span> <span class="n">modelScale</span><span class="p">,</span>
-			<span class="s1">&#39;modelMinPxSize&#39;</span> <span class="p">:</span> <span class="n">modelMinPxSize</span><span class="p">,</span>
-			<span class="s1">&#39;cesiumColor&#39;</span> <span class="p">:</span> <span class="n">cesiumColor</span><span class="p">,</span>
-			<span class="s1">&#39;cesiumWeight&#39;</span> <span class="p">:</span> <span class="n">cesiumWeight</span><span class="p">,</span>
-			<span class="s1">&#39;cesiumStyle&#39;</span> <span class="p">:</span> <span class="n">cesiumStyle</span><span class="p">,</span>
-			<span class="s1">&#39;cesiumOpacity&#39;</span> <span class="p">:</span> <span class="n">cesiumOpacity</span>
-			<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
+	<span class="n">assignments</span> <span class="o">=</span> <span class="n">privGetShapepoints2D</span><span class="p">(</span><span class="n">odID</span><span class="o">=</span><span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="n">modelFile</span><span class="p">,</span> <span class="n">startLoc</span><span class="o">=</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="o">=</span><span class="n">endLoc</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="n">startTimeSec</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="o">=</span><span class="n">expDurationSec</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="n">useArrows</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">modelScale</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">modelMinPxSize</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">cesiumOpacity</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+		
 	<span class="k">return</span> <span class="n">assignments</span></div>
-
-<span class="k">def</span> <span class="nf">_eucGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">):</span>
-	<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">]</span>
-	<span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">)]</span>
-	<span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">]</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span><span class="p">]</span>	
-	<span class="k">return</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span>
-
-<span class="k">def</span> <span class="nf">_manGetShapepointsTimeDist</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">,</span> <span class="n">verticalFirst</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-	<span class="c1"># if verticalFirst is true, it means go north/south firt then go east/west</span>
-	<span class="k">if</span> <span class="n">verticalFirst</span><span class="p">:</span>
-		<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">]</span>
-		<span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">geoDistance2D</span><span class="p">([</span><span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">)]</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">]</span>
-		<span class="n">dist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">geoDistance2D</span><span class="p">([</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">endLoc</span><span class="p">)]</span>
-
-	<span class="k">if</span> <span class="p">(</span><span class="n">expDurationSec</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">expDurationSec</span> <span class="o">*</span> <span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">expDurationSec</span> <span class="o">*</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">dist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">speedMPS</span><span class="p">]</span>
-
-	<span class="k">return</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">dist</span><span class="p">]</span>
 </pre></div>
 
           </div>
@@ -481,7 +318,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>

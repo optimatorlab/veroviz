@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Arcs &#8212; veroviz 0.2.2 documentation</title>
+    <title>Arcs &#8212; veroviz 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="nodes.html" title="Nodes"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -99,7 +99,13 @@ and <a class="reference internal" href="veroviz.generateArcs.html#veroviz.genera
 <td><p>Each origin/destination pair should
 have a unique odID.</p></td>
 </tr>
-<tr class="row-odd"><td><p>startLat</p></td>
+<tr class="row-odd"><td><p>objectID</p></td>
+<td><p>string</p></td>
+<td><p>Identifier for each object (e.g.,
+truck, package, drone, etc.) shown in
+Cesium.</p></td>
+</tr>
+<tr class="row-even"><td><p>startLat</p></td>
 <td><p>float</p></td>
 <td><p>Latitude of the start of the arc,
 in [degrees].  0-degrees latitude is
@@ -108,7 +114,7 @@ south of the equator; positive
 latitudes are north.  The range is from
 -90 to +90.</p></td>
 </tr>
-<tr class="row-even"><td><p>startLon</p></td>
+<tr class="row-odd"><td><p>startLon</p></td>
 <td><p>float</p></td>
 <td><p>Longitude of the start of the arc,
 in [degrees].  0-degrees longitude is
@@ -117,68 +123,68 @@ are west of Greenich; positive
 longitudes are east.  The range is from
 -180 to +180.</p></td>
 </tr>
-<tr class="row-odd"><td><p>endLat</p></td>
+<tr class="row-even"><td><p>endLat</p></td>
 <td><p>float</p></td>
 <td><p>Latitude of the end of the arc, in
 [degrees].  The range is from -90 to
 +90.</p></td>
 </tr>
-<tr class="row-even"><td><p>endLon</p></td>
+<tr class="row-odd"><td><p>endLon</p></td>
 <td><p>float</p></td>
 <td><p>Longitude of the end of the arc, in
 [degrees].  The range is from -180 to
 +180.</p></td>
 </tr>
-<tr class="row-odd"><td><p>leafletColor</p></td>
+<tr class="row-even"><td><p>leafletColor</p></td>
 <td><p>string</p></td>
 <td><p>Color of the arc when displayed in
 Leaflet. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for
 options of colors.</p></td>
 </tr>
-<tr class="row-even"><td><p>leafletOpacity</p></td>
+<tr class="row-odd"><td><p>leafletOpacity</p></td>
 <td><p>float in
 [0, 1]</p></td>
 <td><p>Amount of transparency for the arc.
 A value of 1 indicates no transparency;
 0 indicates completely transparent.</p></td>
 </tr>
-<tr class="row-odd"><td><p>leafletStyle</p></td>
+<tr class="row-even"><td><p>leafletStyle</p></td>
 <td><p>string</p></td>
 <td><p>Styling of the line, valid options are
 “solid”, “dotted” or “dashed”. See
 <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more details</p></td>
 </tr>
-<tr class="row-even"><td><p>leafletWeight</p></td>
+<tr class="row-odd"><td><p>leafletWeight</p></td>
 <td><p>int</p></td>
 <td><p>Pixel width of the line/arc.</p></td>
 </tr>
-<tr class="row-odd"><td><p>useArrows</p></td>
+<tr class="row-even"><td><p>useArrows</p></td>
 <td><p>bool</p></td>
 <td><p>True if the arrows will be used when
 creating Leaflet map, false otherwise.
 When generating Arcs, this defaults to
 <cite>True</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p>cesiumColor</p></td>
+<tr class="row-odd"><td><p>cesiumColor</p></td>
 <td><p>string</p></td>
 <td><p>Color of the arc when displayed in
 Cesium. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for
 color options.</p></td>
 </tr>
-<tr class="row-odd"><td><p>cesiumOpacity</p></td>
+<tr class="row-even"><td><p>cesiumOpacity</p></td>
 <td><p>float in
 [0, 1]</p></td>
 <td><p>The amount of transparency for the arc.
 A value of 1 indicates no transparency;
 0 indicates completely transparent.</p></td>
 </tr>
-<tr class="row-even"><td><p>cesiumStyle</p></td>
+<tr class="row-odd"><td><p>cesiumStyle</p></td>
 <td><p>string</p></td>
 <td><p>Styling of the line, valid options are
 “solid”, “dotted” or “dashed”. See
 <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for options.</p></td>
 </tr>
-<tr class="row-odd"><td><p>cesiumWeight</p></td>
+<tr class="row-even"><td><p>cesiumWeight</p></td>
 <td><p>int</p></td>
 <td><p>Pixel width of the line/arc.</p></td>
 </tr>
@@ -217,67 +223,72 @@ see <a class="reference internal" href="dataframes.html#dataframes-comparison"><
 <td></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>startLat</p></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>startLon</p></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>endLat</p></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>endLon</p></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>leafletColor</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>leafletOpacity</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>leafletStyle</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>leafletWeight</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>useArrows</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>cesiumColor</p></td>
+<tr class="row-odd"><td><p>objectID</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-odd"><td><p>cesiumOpacity</p></td>
+<tr class="row-even"><td><p>startLat</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>startLon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>endLat</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>endLon</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>leafletColor</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>leafletOpacity</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>leafletStyle</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>leafletWeight</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>useArrows</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>cesiumColor</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-even"><td><p>cesiumStyle</p></td>
+<tr class="row-even"><td><p>cesiumOpacity</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-odd"><td><p>cesiumWeight</p></td>
+<tr class="row-odd"><td><p>cesiumStyle</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>cesiumWeight</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
@@ -307,7 +318,7 @@ see <a class="reference internal" href="dataframes.html#dataframes-comparison"><
         <li class="right" >
           <a href="nodes.html" title="Nodes"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

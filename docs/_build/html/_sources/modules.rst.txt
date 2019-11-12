@@ -4,7 +4,7 @@ modules
 .. toctree::
    :maxdepth: 4
 
-   veroviz.buildAssignments
+   veroviz.createAssignments
    veroviz.createCesium
    veroviz.createLeaflet
    veroviz.generateArcs

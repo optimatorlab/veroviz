@@ -1,0 +1,1639 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>veroviz.createAssignments &#8212; veroviz 0.3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+<div class="header">
+ <p class="logo"><a href="https://veroviz.org">
+  <img class="logo" src="../../_static/optimator_lab_transparency_small.png" alt="Logo"/>
+ </a></p>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for veroviz.createAssignments</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddAssignment2D</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddAssignment3D</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddStaticAssignment</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valCreateAssignmentsFromArcs2D</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valCreateAssignmentsFromNodeSeq2D</span>
+<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valCreateAssignmentsFromLocSeq2D</span>
+
+<span class="kn">from</span> <span class="nn">veroviz._createAssignments</span> <span class="k">import</span> <span class="n">privAddStaticAssignment</span>
+<span class="kn">from</span> <span class="nn">veroviz._getShapepoints</span> <span class="k">import</span> <span class="n">privGetShapepoints2D</span>
+<span class="kn">from</span> <span class="nn">veroviz._getShapepoints</span> <span class="k">import</span> <span class="n">privGetShapepoints3D</span>
+
+<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">initDataframe</span>
+<span class="kn">from</span> <span class="nn">veroviz._getTimeDistFromLocs2D</span> <span class="k">import</span> <span class="n">getTimeDistFromLocs2D</span>
+
+
+<div class="viewcode-block" id="addAssignment2D"><a class="viewcode-back" href="../../veroviz.createAssignments.html#veroviz.createAssignments.addAssignment2D">[docs]</a><span class="k">def</span> <span class="nf">addAssignment2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the &quot;shapepoints&quot; between between given starting and ending locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   </span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `addAssignment3D()`.</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	initAssignments: :ref:`Assignments` dataframe, Optional, default as None</span>
+<span class="sd">		If provided, the function will append this dataframe.</span>
+<span class="sd">	odID: int, Optional, default as 1</span>
+<span class="sd">		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</span>
+<span class="sd">	objectID: int/string, Optional, default as None</span>
+<span class="sd">		A descriptive name or index for a particular vehicle or object (e.g., &#39;truck 1&#39;, or &#39;red car&#39;). </span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).</span>
+<span class="sd">	startLoc: list, Required, default as None</span>
+<span class="sd">		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	endLoc: list, Required, default as None</span>
+<span class="sd">		The ending location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	startTimeSec: float, Optional, default as 0.0 </span>
+<span class="sd">		The time, in seconds, at which the vehicle may leave the starting location.</span>
+<span class="sd">	expDurationSec: float, Optional, default as None</span>
+<span class="sd">		This is the number of seconds we expect to travel from the start to the end location. This value typically comes from the traval time matrix (see the getTimeDist functions).  Including an expected duration will help keep these two values in alignment.  If necessary, travel times for the individual shapepoints will be redistributed.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;euclidean2D&#39;</span>
+<span class="sd">		This describes a characteristic of the travel mode.  Possible values are: &#39;euclidean2D&#39;, &#39;manhattan&#39;, &#39;fastest&#39;, &#39;shortest&#39;, &#39;pedestrian&#39;, &#39;cycling&#39;, and &#39;truck&#39;.  The &#39;euclidean2D&#39; and &#39;manhattan&#39; options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.</span>
+<span class="sd">	speedMPS: float, Conditional, default as None</span>
+<span class="sd">		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., &#39;euclidean2D&#39; and &#39;manhattan&#39;), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., &#39;fastest&#39;, &#39;shortest&#39;, and &#39;pedestrain&#39;), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.</span>
+<span class="sd">	leafletColor: string, Optional, default as &quot;orange&quot;</span>
+<span class="sd">		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.</span>
+<span class="sd">	leafletWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Leaflet. </span>
+<span class="sd">	leafletStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Leaflet.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Leaflet style` for more information.</span>
+<span class="sd">	leafletOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	useArrows: bool, Optional, default as True</span>
+<span class="sd">		Indicates whether arrows should be shown on the route when displayed in Leaflet.</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. </span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.ORANGE&quot;</span>
+<span class="sd">		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.</span>
+<span class="sd">	cesiumWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Cesium. </span>
+<span class="sd">	cesiumStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Cesium.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Cesium Style` for more information.</span>
+<span class="sd">	cesiumOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Assignments` dataframe</span>
+<span class="sd">		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel from a start location to an end location.</span>
+<span class="sd">		</span>
+<span class="sd">	endTimeSec: float</span>
+<span class="sd">		The time, in seconds, at which the end location is reached.  </span>
+<span class="sd">		</span>
+<span class="sd">		</span>
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Define 5 node locations, as [lat, lon] pairs:</span>
+<span class="sd">		&gt;&gt;&gt; locs = [[42.8871085, -78.8731949],</span>
+<span class="sd">		...         [42.8888311, -78.8649649],</span>
+<span class="sd">		...         [42.8802158, -78.8660787],</span>
+<span class="sd">		...         [42.8845705, -78.8762794],</span>
+<span class="sd">		...         [42.8908031, -78.8770140]]</span>
+
+<span class="sd">	Generate a nodes dataframe from these locations:</span>
+<span class="sd">		&gt;&gt;&gt; myNodes = vrv.createNodesFromLocs(locs=locs)</span>
+<span class="sd">		&gt;&gt;&gt; myNodes</span>
+
+<span class="sd">	View these nodes on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes)</span>
+
+<span class="sd">	We&#39;re going to hard-code a solution.</span>
+<span class="sd">		&gt;&gt;&gt; # A car will start at node 1, visit nodes 2 and 3, and then return to node 1.</span>
+<span class="sd">		&gt;&gt;&gt; # A truck will follow a route from 1-&gt;5-&gt;4-&gt;1.</span>
+<span class="sd">		&gt;&gt;&gt; mySolution = {</span>
+<span class="sd">		...     &#39;car&#39;: [[1,2], [2,3], [3,1]],</span>
+<span class="sd">		...     &#39;truck&#39;: [[1,5], [5,4], [4,1]]</span>
+<span class="sd">		&gt;&gt;&gt; }</span>
+
+<span class="sd">	Define some information about our 2 vehicles, for later use:</span>
+<span class="sd">		&gt;&gt;&gt; vehicleProperties = {</span>
+<span class="sd">		...     &#39;car&#39;:   {&#39;model&#39;: &#39;veroviz/models/car_red.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;red&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.RED&#39;},</span>
+<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;blue&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.BLUE&#39;}</span>
+<span class="sd">		&gt;&gt;&gt; }</span>
+
+<span class="sd">	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	Example 1 -- The vehicles will visit the nodes in their routes, without any service times. Assume Euclidean travel (ignoring the road network).	</span>
+<span class="sd">		&gt;&gt;&gt; # Build the assignments dataframe for the 2 vehicle routes.</span>
+<span class="sd">		&gt;&gt;&gt; # No service times, Euclidean travel:</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; for v in mySolution:</span>
+<span class="sd">		...     endTimeSec = 0.0</span>
+<span class="sd">		...     for arc in mySolution[v]:</span>
+<span class="sd">		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments = myAssignments,</span>
+<span class="sd">		...             objectID        = v,</span>
+<span class="sd">		...             modelFile       = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc        = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc          = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec    = endTimeSec,</span>
+<span class="sd">		...             routeType       = &#39;euclidean2D&#39;,</span>
+<span class="sd">		...             speedMPS        = vrv.convertSpeed(25, &#39;miles&#39;, &#39;hour&#39;, &#39;meters&#39;, &#39;second&#39;),</span>
+<span class="sd">		...             leafletColor    = vehicleProperties[v][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor     = vehicleProperties[v][&#39;cesiumColor&#39;])</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments	</span>
+<span class="sd">	</span>
+<span class="sd">		&gt;&gt;&gt; # Show the routes (and nodes) on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)	</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	Example 2 -- The vehicles will now travel on the road network, but we&#39;ll still ignore service times.</span>
+<span class="sd">		&gt;&gt;&gt; # No service times, Travel on road network:</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; for v in mySolution:</span>
+<span class="sd">		...     endTimeSec = 0.0</span>
+<span class="sd">		...     for arc in mySolution[v]:</span>
+<span class="sd">		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = v,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc         = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             leafletColor     = vehicleProperties[v][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor      = vehicleProperties[v][&#39;cesiumColor&#39;], </span>
+<span class="sd">		...             routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...             dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...             dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments </span>
+
+<span class="sd">		&gt;&gt;&gt; # Show the routes (and nodes) on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)	</span>
+<span class="sd">	</span>
+<span class="sd">	Example 3 -- The vehicles are still following the road network, but now we&#39;ll force them to match the travel times specified in a travel matrix.	</span>
+<span class="sd">		&gt;&gt;&gt; # We&#39;ll first create the travel time and distance matrices:</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters] = vrv.getTimeDist2D(nodes            = myNodes,</span>
+<span class="sd">		...                                           routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...                                           dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...                                           dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})	</span>
+
+<span class="sd">		&gt;&gt;&gt; # No service times, Travel on road network, use travel times from the distance matrix:</span>
+<span class="sd">		&gt;&gt;&gt; # added &quot;expDurationSec&quot;</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; for v in mySolution:</span>
+<span class="sd">		...     endTimeSec = 0.0</span>
+<span class="sd">		...     for arc in mySolution[v]:</span>
+<span class="sd">		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = v,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc         = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             expDurationSec   = timeSec[arc[0], arc[1]],</span>
+<span class="sd">		...             leafletColor     = vehicleProperties[v][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor      = vehicleProperties[v][&#39;cesiumColor&#39;], </span>
+<span class="sd">		...             routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...             dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...             dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments   </span>
+
+
+<span class="sd">	Example 4 -- Add service times at each destination node</span>
+<span class="sd">		&gt;&gt;&gt; # 60-second service times at destinations, Travel on road network, use travel times from the distance matrix.</span>
+<span class="sd">		&gt;&gt;&gt; # Added use of `addStaticAssignment()` function for the service component.</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; for v in mySolution:</span>
+<span class="sd">		...     endTimeSec = 0.0</span>
+<span class="sd">		...     for arc in mySolution[v]:</span>
+<span class="sd">		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = v,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc         = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             expDurationSec   = timeSec[arc[0], arc[1]],</span>
+<span class="sd">		...             leafletColor     = vehicleProperties[v][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor      = vehicleProperties[v][&#39;cesiumColor&#39;], </span>
+<span class="sd">		...             routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...             dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...             dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		...         </span>
+<span class="sd">		...         myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = v,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             loc              = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             endTimeSec       = endTimeSec + 60.0)</span>
+<span class="sd">        </span>
+<span class="sd">		...         endTimeSec += 60</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments  	</span>
+<span class="sd">	</span>
+<span class="sd">	</span>
+<span class="sd">	Example 5 -- Extend the previous example to show packages being left at destination nodes	</span>
+<span class="sd">		&gt;&gt;&gt; # 30-second service times at destinations, Travel on road network:</span>
+<span class="sd">		&gt;&gt;&gt; # added another use of `addStaticAssignment()` function to drop packages.</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; for v in mySolution:</span>
+<span class="sd">		...     endTimeSec = 0.0</span>
+<span class="sd">		...     for arc in mySolution[v]:</span>
+<span class="sd">		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = v,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc         = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             leafletColor     = vehicleProperties[v][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor      = vehicleProperties[v][&#39;cesiumColor&#39;], </span>
+<span class="sd">		...             routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...             dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...             dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		...         </span>
+<span class="sd">		...         myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = v,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[v][&#39;model&#39;],</span>
+<span class="sd">		...             loc              = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             endTimeSec       = endTimeSec + 30.0)</span>
+<span class="sd">		...         </span>
+<span class="sd">		...         endTimeSec += 30</span>
+<span class="sd">		... </span>
+<span class="sd">		...         myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = &#39;package %s %d&#39; % (v, arc[1]),</span>
+<span class="sd">		...             modelFile        = &#39;/veroviz/models/box_yellow.gltf&#39;,</span>
+<span class="sd">		...             loc              = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             endTimeSec       = -1)        </span>
+<span class="sd">		&gt;&gt;&gt; myAssignments </span>
+<span class="sd">	</span>
+
+<span class="sd">	If you have saved your Cesium path as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; CESIUM_DIR = os.environ[&#39;CESIUMDIR&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify the patch to Cesium here:</span>
+<span class="sd">		&gt;&gt;&gt; # CESIUM_DIR = &#39;/provide/path/to/Cesium/&#39; </span>
+
+<span class="sd">	Generate a 3D movie of the routes:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(assignments = myAssignments, </span>
+<span class="sd">		...                  nodes       = myNodes, </span>
+<span class="sd">		...                  cesiumDir   = CESIUM_DIR, </span>
+<span class="sd">		...                  problemDir  = &#39;addAssignment2D_example&#39;)</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="c1"># validatation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddAssignment2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">,</span> <span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">expDurationSec</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+		
+	<span class="c1"># Initialize an assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+
+	<span class="c1"># if the user provided an initAssignments dataframe, add the new points after it</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">initAssignments</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+		
+		<span class="c1"># Increase odID as necessary:</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">assignmentsDF</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="n">odID</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">assignmentsDF</span><span class="p">[</span><span class="s1">&#39;odID&#39;</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">odID</span><span class="p">)</span>
+	
+	<span class="n">tmpShapepoints</span> <span class="o">=</span> <span class="n">privGetShapepoints2D</span><span class="p">(</span>
+		<span class="n">odID</span>             <span class="o">=</span> <span class="n">odID</span><span class="p">,</span> 
+		<span class="n">objectID</span>         <span class="o">=</span> <span class="n">objectID</span><span class="p">,</span> 
+		<span class="n">modelFile</span>        <span class="o">=</span> <span class="n">modelFile</span><span class="p">,</span> 
+		<span class="n">startLoc</span>         <span class="o">=</span> <span class="n">startLoc</span><span class="p">,</span> 
+		<span class="n">endLoc</span>           <span class="o">=</span> <span class="n">endLoc</span><span class="p">,</span> 
+		<span class="n">startTimeSec</span>     <span class="o">=</span> <span class="n">startTimeSec</span><span class="p">,</span> 
+		<span class="n">expDurationSec</span>   <span class="o">=</span> <span class="n">expDurationSec</span><span class="p">,</span>
+		<span class="n">routeType</span>        <span class="o">=</span> <span class="n">routeType</span><span class="p">,</span> 
+		<span class="n">speedMPS</span>         <span class="o">=</span> <span class="n">speedMPS</span><span class="p">,</span>   
+		<span class="n">leafletColor</span>     <span class="o">=</span> <span class="n">leafletColor</span><span class="p">,</span> 
+		<span class="n">leafletWeight</span>    <span class="o">=</span> <span class="n">leafletWeight</span><span class="p">,</span> 
+		<span class="n">leafletStyle</span>     <span class="o">=</span> <span class="n">leafletStyle</span><span class="p">,</span> 
+		<span class="n">leafletOpacity</span>   <span class="o">=</span> <span class="n">leafletOpacity</span><span class="p">,</span> 
+		<span class="n">useArrows</span>        <span class="o">=</span> <span class="n">useArrows</span><span class="p">,</span> 
+		<span class="n">modelScale</span>       <span class="o">=</span> <span class="n">modelScale</span><span class="p">,</span> 
+		<span class="n">modelMinPxSize</span>   <span class="o">=</span> <span class="n">modelMinPxSize</span><span class="p">,</span> 
+		<span class="n">cesiumColor</span>      <span class="o">=</span> <span class="n">cesiumColor</span><span class="p">,</span> 
+		<span class="n">cesiumWeight</span>     <span class="o">=</span> <span class="n">cesiumWeight</span><span class="p">,</span> 
+		<span class="n">cesiumStyle</span>      <span class="o">=</span> <span class="n">cesiumStyle</span><span class="p">,</span> 
+		<span class="n">cesiumOpacity</span>    <span class="o">=</span> <span class="n">cesiumOpacity</span><span class="p">,</span> 
+		<span class="n">dataProvider</span>     <span class="o">=</span> <span class="n">dataProvider</span><span class="p">,</span> 
+		<span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+
+	<span class="c1"># Capture the end time</span>
+	<span class="n">endTimeSec</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">tmpShapepoints</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>
+
+	<span class="c1"># Update the assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">tmpShapepoints</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+	
+	<span class="k">return</span> <span class="p">(</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">endTimeSec</span><span class="p">)</span></div>
+	
+
+<div class="viewcode-block" id="addAssignment3D"><a class="viewcode-back" href="../../veroviz.createAssignments.html#veroviz.createAssignments.addAssignment3D">[docs]</a><span class="k">def</span> <span class="nf">addAssignment3D</span><span class="p">(</span><span class="n">initAssignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">startLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">takeoffSpeedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cruiseSpeedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">landSpeedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cruiseAltMetersAGL</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">climbRateMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">descentRateMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">earliestLandTime</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loiterPosition</span><span class="o">=</span><span class="s1">&#39;arrivalAtAlt&#39;</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the vehicle movements between given starting and ending locations, including timestamps indicating the departure and arrival times for each intermediate point. </span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	This function is for vehicles whose travel path includes changes in altitude (e.g., drones).  For ground vehicles traveling on a ground plane, a 2-dimensional version of this function is provided by `addAssignment2D()`.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	odID: int, Optional, default as 1</span>
+<span class="sd">		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</span>
+<span class="sd">	objectID: int/string, Optional, default as None</span>
+<span class="sd">		A descriptive name or index for a particular vehicle or object (e.g., &#39;plane 1&#39;, or &#39;blue drone&#39;). </span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).</span>
+<span class="sd">	startTimeSec: float, Optional, default as 0.0 </span>
+<span class="sd">		The time, in seconds, at which the vehicle may leave the starting location.</span>
+<span class="sd">	startLoc: list, Required, default as &#39;None&#39;</span>
+<span class="sd">		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	endLoc: list, Required, default as &#39;None&#39;</span>
+<span class="sd">		The ending location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	takeoffSpeedMPS: float, Conditional, default as None</span>
+<span class="sd">		The speed of the aircraft, in meters per second, during the &quot;takeoff&quot; phase.  This will apply only to &#39;square&#39; and &#39;trapezoidal&#39; route types.  The takeoff phase is the first component of these route types, and is associated with an increase in altitude.  The takeoff speed is assumed to be constant, and ignores acceleration.  See :ref:`Flight Profile and Flight Path` for additional information.</span>
+<span class="sd">	cruiseSpeedMPS: float, Conditional, default as None</span>
+<span class="sd">		The speed of the aircraft, in meters per second, during the &quot;cruising&quot; phase.  This will apply to all of the route options.  Typically, the cruising phase occurs at a constant altitude, as specified by `cruiseAltMetersAGL`.  However, for the &#39;triangular&#39; route type, cruiseSpeedMPS specifies the constant travel speed during both the ascent to, and immediate descent from, the cruise altitude.  In the &#39;triangle&#39; route type, the aircraft has no horizontal travel at the cruise altitude.  In all cases, the cruise speed is assumed to be constant, and ignores acceleration.  See :ref:`Flight Profile and Flight Path` for additional information.</span>
+<span class="sd">	landSpeedMPS: float, Conditional, default as None</span>
+<span class="sd">		The speed of the aircraft, in meters per second, during the &quot;landing&quot; phase. This will apply to only the &#39;square&#39; and &#39;trapezoidal&#39; route types.  The landing phase is the last component of these route types, and is associated with a decrease in altitude.  The landing speed is assumed to be constant, and ignore deceleration.  See :ref:`Flight Profile and Flight Path` for additional information.</span>
+<span class="sd">	cruiseAltMetersAGL: float, Conditional, default as None</span>
+<span class="sd">		The altitude, in meters above ground level, at which the aircraft is in the &quot;cruise&quot; phase.  This phase is typically associated with horizontal movement at a fixed altitude.  The exception is for the &#39;triangular&#39; route type, in which case the aircraft instantaneously transitions from ascent to descent at the cruise altitude (i.e., there is no horizontal travel at this altitude).  All but the &#39;straight&#39; route type require/use the cruise altitude.  See :ref:`Flight Profile and Flight Path` for additional details.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;square&#39;</span>
+<span class="sd">		Specifies the basic shape of the flight profile.  Valid options include &#39;square&#39;, &#39;triangular&#39;, &#39;trapezoidal&#39;, and &#39;straight&#39;.  The square profile involves a vertical takeoff to a cruising altitude, horizontal travel at the cruising altitude, and a vertical landing.  The trapezoidal profile describes a takeoff phase in which the aircraft increases altitude and travels horizontally towards the destination until reaching the cruising altitude, horizontal travel at the cruising altitude, and a landing phase in which the aircraft decreases altitude and travels horizontally until reaching the destination.  For the trapezoidal profile, the horizontal movement during the takeoff and landing phases is a function of the `climbRateMPS` and `descentRateMPS`, respectively.  The triangular profile describes an ascent to the cruising altitude followed immediately by a descent to the destination.  Finally, the straight profile describes straight-line flight directly from the starting location to the ending location; the altitudes of these two locations may differ.  See :ref:`Flight Profile and Flight Path` for a description of these flight profiles.</span>
+<span class="sd">	climbRateMPS: float, Conditional, default as None</span>
+<span class="sd">		This parameter is used only for the &#39;trapezoidal&#39; route type, and is in units of meters per second.  It describes the rate at which the aircraft increases its altitude, relative to the value of `takeoffSpeedMPS`.  If `climbRateMPS == takeoffSpeedMPS`, then the takeoff phase will be purely vertical.  If `climbRateMPS` is close to zero, then the takeoff phase will be characterized by a slow increase in altitude (and longer horizontal flight).  The aircraft&#39;s actual travel speed during the climb will be `takeoffSpeedMPS`.  See :ref:`Flight Profile and Flight Path` for additional details.</span>
+<span class="sd">	descentRateMPS: float, Conditional, default as None</span>
+<span class="sd">		This parameter is used only for the &#39;trapezoidal&#39; route type, and is in units of meters per second.  It describes the rate at which the aircraft decreases its altitude, relative to the value of `landSpeedMPS`.  If `descentRateMPS == landSpeedMPS`, then the landing phase will be purely vertical.  If `descentRateMPS` is close to zero, then the landing phase will be characterized by a slow decrease in altitude (and longer horizontal flight).  The aircraft&#39;s actual travel speed during the descent will be `landSpeedMPS`.  See :ref:`Flight Profile and Flight Path` for additional details.</span>
+<span class="sd">	earliestLandTime: float, Optional, default as -1</span>
+<span class="sd">		Specifies the earliest time, in seconds, that the vehicle is allowed to complete travel to the ending location.  This parameter is useful in cases where time windows exist, or if a flying vehicle must wait for another vehicle (e.g., a drone that cannot land until a truck has arrived to recover it).  The default value of `-1` indicates that there is no restriction on the earliest landing time.</span>
+<span class="sd">	loiterPosition: string, Optional, default as &#39;arrivalAtAlt&#39;</span>
+<span class="sd">		The position where the vehicle loiters if its un-delayed travel time from start to end would result in an arrival before `earliestLandTime`.  Valid options are &#39;beforeTakeoff&#39;, &#39;takeoffAtAlt&#39;, &#39;arrivalAtAlt&#39;, &#39;afterLand&#39;. See :ref:`Flight Profile and Flight Path` for details.</span>
+<span class="sd">	leafletColor: string, Optional, default as &quot;orange&quot;</span>
+<span class="sd">		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.</span>
+<span class="sd">	leafletWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Leaflet. </span>
+<span class="sd">	leafletStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Leaflet.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Leaflet style` for more information.</span>
+<span class="sd">	leafletOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	useArrows: bool, Optional, default as True</span>
+<span class="sd">		Indicates whether arrows should be shown on the route when displayed in Leaflet.</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. </span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.ORANGE&quot;</span>
+<span class="sd">		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.</span>
+<span class="sd">	cesiumWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Cesium. </span>
+<span class="sd">	cesiumStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Cesium.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Cesium Style` for more information.</span>
+<span class="sd">	cesiumOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+
+<span class="sd">	Return</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Assignments` dataframe</span>
+<span class="sd">		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates and altitudes describing the collection of straight-line segments required to travel from a start location to an end location.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Define 5 node locations, as [lat, lon] pairs:</span>
+<span class="sd">		&gt;&gt;&gt; locs = [[42.8871085, -78.8731949],</span>
+<span class="sd">		...         [42.8888311, -78.8649649],</span>
+<span class="sd">		...         [42.8802158, -78.8660787],</span>
+<span class="sd">		...         [42.8845705, -78.8762794],</span>
+<span class="sd">		...         [42.8908031, -78.8770140]]</span>
+
+<span class="sd">	Generate a nodes dataframe from these locations:</span>
+<span class="sd">		&gt;&gt;&gt; myNodes = vrv.createNodesFromLocs(locs=locs)</span>
+<span class="sd">		&gt;&gt;&gt; myNodes</span>
+
+<span class="sd">	View these nodes on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes)</span>
+
+
+<span class="sd">	Example 1 -- Assume a single drone delivers packages from node 1 to all other nodes.</span>
+<span class="sd">		&gt;&gt;&gt; # Hard-code a solution:</span>
+<span class="sd">		&gt;&gt;&gt; mySolution = {</span>
+<span class="sd">		...     &#39;drone&#39;: [[1,2,1], [1,3,1], [1,4,1], [1,5,1]]</span>
+<span class="sd">		&gt;&gt;&gt; }</span>
+
+
+<span class="sd">	Define some information about our drone, for later use:</span>
+<span class="sd">		&gt;&gt;&gt; vehicleProperties = {</span>
+<span class="sd">		...     &#39;drone&#39;: {&#39;modelPackage&#39;: &#39;veroviz/models/drone_package.gltf&#39;,</span>
+<span class="sd">		...               &#39;modelEmpty&#39;: &#39;veroviz/models/drone.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;red&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.RED&#39;},</span>
+<span class="sd">		&gt;&gt;&gt; }</span>
+
+
+
+<span class="sd">	Build the assignments for the drone deliveries:</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; endTimeSec = 0.0</span>
+<span class="sd">		&gt;&gt;&gt; for arc in mySolution[&#39;drone&#39;]:</span>
+<span class="sd">		...     # Fly from i to j with a package:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(</span>
+<span class="sd">		...         initAssignments    = myAssignments,</span>
+<span class="sd">		...         objectID           = &#39;drone&#39;,</span>
+<span class="sd">		...         modelFile          = vehicleProperties[&#39;drone&#39;][&#39;modelPackage&#39;],</span>
+<span class="sd">		...         startLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         endLoc             = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         startTimeSec       = endTimeSec,</span>
+<span class="sd">		...         takeoffSpeedMPS    = vrv.convertSpeed(30, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseSpeedMPS     = vrv.convertSpeed(80, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         landSpeedMPS       = vrv.convertSpeed( 5, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseAltMetersAGL = vrv.convertDistance(350, &#39;feet&#39;, &#39;meters&#39;),</span>
+<span class="sd">		...         routeType          = &#39;square&#39;,</span>
+<span class="sd">		...         leafletColor       = vehicleProperties[&#39;drone&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...         cesiumColor        = vehicleProperties[&#39;drone&#39;][&#39;cesiumColor&#39;])</span>
+<span class="sd">		... </span>
+<span class="sd">		...     # Drop off a package</span>
+<span class="sd">		...     myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = &#39;package %d&#39; % (arc[1]),</span>
+<span class="sd">		...             modelFile        = &#39;/veroviz/models/box_yellow.gltf&#39;,</span>
+<span class="sd">		...             loc              = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             endTimeSec       = -1)  </span>
+<span class="sd">		...         </span>
+<span class="sd">		...     # Fly from j to k empty:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(</span>
+<span class="sd">		...         initAssignments    = myAssignments,</span>
+<span class="sd">		...         objectID           = &#39;drone&#39;,</span>
+<span class="sd">		...         modelFile          = vehicleProperties[&#39;drone&#39;][&#39;modelEmpty&#39;],</span>
+<span class="sd">		...         startLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         endLoc             = list(myNodes[myNodes[&#39;id&#39;] == arc[2]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         startTimeSec       = endTimeSec,</span>
+<span class="sd">		...         takeoffSpeedMPS    = vrv.convertSpeed(30, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseSpeedMPS     = vrv.convertSpeed(80, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         landSpeedMPS       = vrv.convertSpeed( 5, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseAltMetersAGL = vrv.convertDistance(350, &#39;feet&#39;, &#39;meters&#39;),</span>
+<span class="sd">		...         routeType          = &#39;square&#39;,</span>
+<span class="sd">		...         leafletColor       = vehicleProperties[&#39;drone&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...         cesiumColor        = vehicleProperties[&#39;drone&#39;][&#39;cesiumColor&#39;])</span>
+<span class="sd">		... </span>
+<span class="sd">		&gt;&gt;&gt; myAssignments</span>
+
+
+<span class="sd">	Show the nodes and assignments on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)</span>
+
+<span class="sd">	If you have saved your Cesium path as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; CESIUM_DIR = os.environ[&#39;CESIUMDIR&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify the patch to Cesium here:</span>
+<span class="sd">		&gt;&gt;&gt; # CESIUM_DIR = &#39;/provide/path/to/Cesium/&#39; </span>
+
+<span class="sd">	Create a 3D movie of the drone deliveries:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(assignments = myAssignments, </span>
+<span class="sd">		...                  nodes       = myNodes, </span>
+<span class="sd">		...                  cesiumDir   = CESIUM_DIR, </span>
+<span class="sd">		...                  problemDir  = &#39;addAssignment3D_example1&#39;)</span>
+
+
+<span class="sd">	Example 2 -- Coordinate deliveries with a drone launched from a truck</span>
+<span class="sd">		&gt;&gt;&gt; # Hard-code a solution.</span>
+<span class="sd">		&gt;&gt;&gt; # The truck will visit nodes 1-&gt;3-&gt;5-&gt;1</span>
+<span class="sd">		&gt;&gt;&gt; # The drone will launch from the truck at node 1, deliver to node 2, and return to the truck at node 3.</span>
+<span class="sd">		&gt;&gt;&gt; # The drone will then launch from the truck at 1, deliver to 4 and return to 5.</span>
+<span class="sd">		&gt;&gt;&gt; # The drone cannot land at nodes 3 and 5 until the truck has arrived.</span>
+<span class="sd">		&gt;&gt;&gt; mySolution = {</span>
+<span class="sd">		...     &#39;drone&#39;: [[1,2,3], [3,4,5]],</span>
+<span class="sd">		...     &#39;truck&#39;: [[1,3], [3,5], [5,1]]</span>
+<span class="sd">		&gt;&gt;&gt; }</span>
+
+
+<span class="sd">	Define some information about our 2 vehicles, for use below:</span>
+<span class="sd">		&gt;&gt;&gt; vehicleProperties = {</span>
+<span class="sd">		...     &#39;drone&#39;: {&#39;modelPackage&#39;: &#39;veroviz/models/drone_package.gltf&#39;,</span>
+<span class="sd">		...               &#39;modelEmpty&#39;: &#39;veroviz/models/drone.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;red&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.RED&#39;},</span>
+<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;blue&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.BLUE&#39;}</span>
+<span class="sd">		&gt;&gt;&gt; }</span>
+
+
+<span class="sd">		&gt;&gt;&gt; # This example assumes the use of ORS as the data provider. </span>
+<span class="sd">		&gt;&gt;&gt; # If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+
+<span class="sd">		&gt;&gt;&gt; # Obtain the travel times for the truck:</span>
+<span class="sd">		&gt;&gt;&gt; [timeSecTruck, distMetersTruck] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes            = myNodes,</span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+
+<span class="sd">		&gt;&gt;&gt; # Obtain the travel times for the drone:</span>
+<span class="sd">		&gt;&gt;&gt; [timeSecDrone, groundDist, TotalDist] = vrv.getTimeDist3D(</span>
+<span class="sd">		...     nodes            = myNodes,</span>
+<span class="sd">		...     takeoffSpeedMPS    = vrv.convertSpeed(30, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...     cruiseSpeedMPS     = vrv.convertSpeed(80, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...     landSpeedMPS       = vrv.convertSpeed( 5, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...     cruiseAltMetersAGL = vrv.convertDistance(350, &#39;feet&#39;, &#39;meters&#39;),</span>
+<span class="sd">		...     routeType          = &#39;square&#39;)</span>
+
+<span class="sd">		&gt;&gt;&gt; # Find the coordination times for the truck and drone.</span>
+<span class="sd">		&gt;&gt;&gt; # These will be the earliest times that both the truck and drone can arrive at a node.</span>
+<span class="sd">		&gt;&gt;&gt; maxArrivalTime = {}</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # 1) The truck travels from 1 to 3; the drone travels from 1 to 2 to 3:</span>
+<span class="sd">		&gt;&gt;&gt; truckArrivalTime = timeSecTruck[1,3]</span>
+<span class="sd">		&gt;&gt;&gt; droneArrivalTime = timeSecDrone[1,2] + timeSecDrone[2,3]</span>
+<span class="sd">		&gt;&gt;&gt; maxArrivalTime[3] = max(truckArrivalTime, droneArrivalTime)</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # 2) The truck travels from 3 to 5; the drone travels from 3 to 4 to 5:</span>
+<span class="sd">		&gt;&gt;&gt; truckArrivalTime = maxArrivalTime[3] + timeSecTruck[3,5]</span>
+<span class="sd">		&gt;&gt;&gt; droneArrivalTime = maxArrivalTime[3] + timeSecDrone[3,4] + timeSecDrone[4,5]</span>
+<span class="sd">		&gt;&gt;&gt; maxArrivalTime[5] = max(truckArrivalTime, droneArrivalTime)</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # 3) Let&#39;s also capture the time at which the truck will return to node 1:</span>
+<span class="sd">		&gt;&gt;&gt; maxArrivalTime[1] = maxArrivalTime[5] + timeSecTruck[5,1]</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # maxArrival Time[1] is now the total time required to complete all of the deliveries</span>
+<span class="sd">		&gt;&gt;&gt; maxArrivalTime</span>
+
+<span class="sd">	Build assignments for the drone deliveries:</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+<span class="sd">		&gt;&gt;&gt;  </span>
+<span class="sd">		&gt;&gt;&gt; endTimeSec = 0.0</span>
+<span class="sd">		&gt;&gt;&gt; for arc in mySolution[&#39;drone&#39;]:</span>
+<span class="sd">		...     # Fly from i to j with a package:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(</span>
+<span class="sd">		...         initAssignments    = myAssignments,</span>
+<span class="sd">		...         objectID           = &#39;drone&#39;,</span>
+<span class="sd">		...         modelFile          = vehicleProperties[&#39;drone&#39;][&#39;modelPackage&#39;],</span>
+<span class="sd">		...         startLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         endLoc             = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         startTimeSec       = endTimeSec,</span>
+<span class="sd">		...         takeoffSpeedMPS    = vrv.convertSpeed(30, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseSpeedMPS     = vrv.convertSpeed(80, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         landSpeedMPS       = vrv.convertSpeed( 5, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseAltMetersAGL = vrv.convertDistance(350, &#39;feet&#39;, &#39;meters&#39;),</span>
+<span class="sd">		...         routeType          = &#39;square&#39;,</span>
+<span class="sd">		...         leafletColor       = vehicleProperties[&#39;drone&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...         cesiumColor        = vehicleProperties[&#39;drone&#39;][&#39;cesiumColor&#39;])</span>
+<span class="sd">		... </span>
+<span class="sd">		...     # Drop off a package</span>
+<span class="sd">		...     myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = &#39;package %d&#39; % (arc[1]),</span>
+<span class="sd">		...             modelFile        = &#39;/veroviz/models/box_yellow.gltf&#39;,</span>
+<span class="sd">		...             loc              = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             endTimeSec       = -1)  </span>
+<span class="sd">		...     </span>
+<span class="sd">		...     # Fly from j to k empty:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(</span>
+<span class="sd">		...         initAssignments    = myAssignments,</span>
+<span class="sd">		...         objectID           = &#39;drone&#39;,</span>
+<span class="sd">		...         modelFile          = vehicleProperties[&#39;drone&#39;][&#39;modelEmpty&#39;],</span>
+<span class="sd">		...         startLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         endLoc             = list(myNodes[myNodes[&#39;id&#39;] == arc[2]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         startTimeSec       = endTimeSec,</span>
+<span class="sd">		...         takeoffSpeedMPS    = vrv.convertSpeed(30, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseSpeedMPS     = vrv.convertSpeed(80, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         landSpeedMPS       = vrv.convertSpeed( 5, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseAltMetersAGL = vrv.convertDistance(350, &#39;feet&#39;, &#39;meters&#39;),</span>
+<span class="sd">		...         routeType          = &#39;square&#39;,</span>
+<span class="sd">		...         earliestLandTime   = maxArrivalTime[arc[2]],</span>
+<span class="sd">		...         loiterPosition     = &#39;arrivalAtAlt&#39;,</span>
+<span class="sd">		...         leafletColor       = vehicleProperties[&#39;drone&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...         cesiumColor        = vehicleProperties[&#39;drone&#39;][&#39;cesiumColor&#39;])</span>
+<span class="sd">		... </span>
+<span class="sd">		&gt;&gt;&gt; myAssignments</span>
+
+
+<span class="sd">	Build assignments for the truck route:</span>
+<span class="sd">		&gt;&gt;&gt; endTimeSec = 0.0</span>
+<span class="sd">		&gt;&gt;&gt; for arc in mySolution[&#39;truck&#39;]:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = &#39;truck&#39;,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[&#39;truck&#39;][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc         = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             leafletColor     = vehicleProperties[&#39;truck&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor      = vehicleProperties[&#39;truck&#39;][&#39;cesiumColor&#39;], </span>
+<span class="sd">		...             routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...             dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...             dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		...     </span>
+<span class="sd">		...     # If necessary, wait for the drone to arrive:</span>
+<span class="sd">		...     if (endTimeSec &lt; maxArrivalTime[arc[1]]):</span>
+<span class="sd">		...         myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = &#39;truck&#39;,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[&#39;truck&#39;][&#39;model&#39;],</span>
+<span class="sd">		...             loc              = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             endTimeSec       = maxArrivalTime[arc[1]])</span>
+<span class="sd">		... </span>
+<span class="sd">		...         endTimeSec = maxArrivalTime[arc[1]]  </span>
+<span class="sd">		&gt;&gt;&gt; myAssignments</span>
+
+<span class="sd">	Show the nodes and assignments on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)</span>
+
+<span class="sd">	Create a 3D movie of the drone deliveries:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(assignments = myAssignments, </span>
+<span class="sd">		...                  nodes       = myNodes, </span>
+<span class="sd">		...                  cesiumDir   = CESIUM_DIR, </span>
+<span class="sd">		...                  problemDir  = &#39;addAssignment3D_example1&#39;)</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>	
+	
+	<span class="c1"># validatation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddAssignment3D</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">,</span> <span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">takeoffSpeedMPS</span><span class="p">,</span> <span class="n">cruiseSpeedMPS</span><span class="p">,</span> <span class="n">landSpeedMPS</span><span class="p">,</span> <span class="n">cruiseAltMetersAGL</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">climbRateMPS</span><span class="p">,</span> <span class="n">descentRateMPS</span><span class="p">,</span> <span class="n">earliestLandTime</span><span class="p">,</span> <span class="n">loiterPosition</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="p">)</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="c1"># Initialize an assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+
+	<span class="c1"># if the user provided an initAssignments dataframe, add the new points after it</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">initAssignments</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+		<span class="c1"># Increase odID as necessary:</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">assignmentsDF</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="n">odID</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">assignmentsDF</span><span class="p">[</span><span class="s1">&#39;odID&#39;</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">odID</span><span class="p">)</span>
+
+	<span class="n">tmpShapepoints</span> <span class="o">=</span> <span class="n">privGetShapepoints3D</span><span class="p">(</span>
+		<span class="n">odID</span>               <span class="o">=</span> <span class="n">odID</span><span class="p">,</span> 
+		<span class="n">objectID</span>           <span class="o">=</span> <span class="n">objectID</span><span class="p">,</span> 
+		<span class="n">modelFile</span>          <span class="o">=</span> <span class="n">modelFile</span><span class="p">,</span> 
+		<span class="n">startTimeSec</span>       <span class="o">=</span> <span class="n">startTimeSec</span><span class="p">,</span> 
+		<span class="n">startLoc</span>           <span class="o">=</span> <span class="n">startLoc</span><span class="p">,</span> 
+		<span class="n">endLoc</span>             <span class="o">=</span> <span class="n">endLoc</span><span class="p">,</span> 
+		<span class="n">takeoffSpeedMPS</span>    <span class="o">=</span> <span class="n">takeoffSpeedMPS</span><span class="p">,</span> 
+		<span class="n">cruiseSpeedMPS</span>     <span class="o">=</span> <span class="n">cruiseSpeedMPS</span><span class="p">,</span> 
+		<span class="n">landSpeedMPS</span>       <span class="o">=</span> <span class="n">landSpeedMPS</span><span class="p">,</span> 
+		<span class="n">cruiseAltMetersAGL</span> <span class="o">=</span> <span class="n">cruiseAltMetersAGL</span><span class="p">,</span> 
+		<span class="n">routeType</span>          <span class="o">=</span> <span class="n">routeType</span><span class="p">,</span> 
+		<span class="n">climbRateMPS</span>       <span class="o">=</span> <span class="n">climbRateMPS</span><span class="p">,</span> 
+		<span class="n">descentRateMPS</span>     <span class="o">=</span> <span class="n">descentRateMPS</span><span class="p">,</span> 
+		<span class="n">earliestLandTime</span>   <span class="o">=</span> <span class="n">earliestLandTime</span><span class="p">,</span> 
+		<span class="n">loiterPosition</span>     <span class="o">=</span> <span class="n">loiterPosition</span><span class="p">,</span> 
+		<span class="n">leafletColor</span>       <span class="o">=</span> <span class="n">leafletColor</span><span class="p">,</span> 
+		<span class="n">leafletWeight</span>      <span class="o">=</span> <span class="n">leafletWeight</span><span class="p">,</span> 
+		<span class="n">leafletStyle</span>       <span class="o">=</span> <span class="n">leafletStyle</span><span class="p">,</span> 
+		<span class="n">leafletOpacity</span>     <span class="o">=</span> <span class="n">leafletOpacity</span><span class="p">,</span> 
+		<span class="n">useArrows</span>          <span class="o">=</span> <span class="n">useArrows</span><span class="p">,</span> 
+		<span class="n">modelScale</span>         <span class="o">=</span> <span class="n">modelScale</span><span class="p">,</span> 
+		<span class="n">modelMinPxSize</span>     <span class="o">=</span> <span class="n">modelMinPxSize</span><span class="p">,</span> 
+		<span class="n">cesiumColor</span>        <span class="o">=</span> <span class="n">cesiumColor</span><span class="p">,</span> 
+		<span class="n">cesiumWeight</span>       <span class="o">=</span> <span class="n">cesiumWeight</span><span class="p">,</span> 
+		<span class="n">cesiumStyle</span>        <span class="o">=</span> <span class="n">cesiumStyle</span><span class="p">,</span> 
+		<span class="n">cesiumOpacity</span>      <span class="o">=</span> <span class="n">cesiumOpacity</span><span class="p">)</span>
+
+	<span class="c1"># Capture the end time</span>
+	<span class="n">endTimeSec</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">tmpShapepoints</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>
+
+	<span class="c1"># Update the assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">tmpShapepoints</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+	
+	<span class="k">return</span> <span class="p">(</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">endTimeSec</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="addStaticAssignment"><a class="viewcode-back" href="../../veroviz.createAssignments.html#veroviz.createAssignments.addStaticAssignment">[docs]</a><span class="k">def</span> <span class="nf">addStaticAssignment</span><span class="p">(</span><span class="n">initAssignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endTimeSec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function adds an &quot;object&quot; to an assignments dataframe.  One use of this function is to add a package or other stationary 3D model to be displayed in Cesium.  This function is also useful for holding a vehicle stationary at a location (e.g., during service or loitering).  </span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	initAssignments: :ref:`Assignments` dataframe, Optional, default as None</span>
+<span class="sd">		If provided, the function will append a row to this dataframe.</span>
+<span class="sd">	odID: int, Optional, default as 1</span>
+<span class="sd">		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</span>
+<span class="sd">	objectID: int/string, Optional, default as None</span>
+<span class="sd">		A descriptive name or index for this object.  In the case of adding a stationary vehicle performing a service activity, the `objectID` should typically be the same as the `objectID` used by the vehicle when it was in motion.  </span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. </span>
+<span class="sd">	loc: list, Required, default as None</span>
+<span class="sd">		The coordinate of the static object, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</span>
+<span class="sd">	startTimeSec: int, Required, default as None,</span>
+<span class="sd">		Specifies the time at which this object appears.  </span>
+<span class="sd">	endTimeSec: int, Required, default as None</span>
+<span class="sd">		Specifies when the object is no longer displayed.  To keep the object displayed forever, set `endTimeSec = -1`.  </span>
+
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	:ref:`Assignments` pandas.dataframe</span>
+<span class="sd">		An assignments dataframe with a new row associated with this stationary object.</span>
+
+<span class="sd">	Example</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check the latest version.</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+<span class="sd">		</span>
+<span class="sd">	Create two nodes.</span>
+<span class="sd">		&gt;&gt;&gt; myNodes = vrv.createNodesFromLocs(</span>
+<span class="sd">		...     locs = [[42.1538, -78.4253],</span>
+<span class="sd">		...             [42.6343, -78.1146]])</span>
+<span class="sd">		&gt;&gt;&gt; myNodes</span>
+
+<span class="sd">	Move the truck from one node to the other.</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.getShapepoints2D(</span>
+<span class="sd">		...     odID           = 0,</span>
+<span class="sd">		...     objectID       = &#39;truck&#39;,</span>
+<span class="sd">		...     modelFile      = &#39;veroviz/models/ub_truck.gltf&#39;,</span>
+<span class="sd">		...     modelScale     = 80, </span>
+<span class="sd">		...     modelMinPxSize = 20, </span>
+<span class="sd">		...     startLoc       = list(myNodes.loc[0][[&#39;lat&#39;, &#39;lon&#39;]].values),</span>
+<span class="sd">		...     endLoc         = list(myNodes.loc[1][[&#39;lat&#39;, &#39;lon&#39;]].values),</span>
+<span class="sd">		...     routeType      = &#39;euclidean2D&#39;,</span>
+<span class="sd">		...     dataProvider   = None,</span>
+<span class="sd">		...     speedMPS       = vrv.convertSpeed(55, &#39;miles&#39;, &#39;hr&#39;, &#39;m&#39;, &#39;s&#39;))	</span>
+<span class="sd">		</span>
+<span class="sd">	Make the truck wait at the destination.</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...     initAssignments = myAssignments, </span>
+<span class="sd">		...     odID            = 0, </span>
+<span class="sd">		...     objectID        = &#39;truck&#39;, </span>
+<span class="sd">		...     modelFile       = &#39;veroviz/models/ub_truck.gltf&#39;, </span>
+<span class="sd">		...     modelScale      = 80, </span>
+<span class="sd">		...     modelMinPxSize  = 20, </span>
+<span class="sd">		...     loc             = list(myAssignments[myAssignments[&#39;objectID&#39;]==&#39;truck&#39;][[&#39;endLat&#39;, &#39;endLon&#39;]].values[0]), </span>
+<span class="sd">		...     startTimeSec    = myAssignments[myAssignments[&#39;objectID&#39;]==&#39;truck&#39;][&#39;endTimeSec&#39;].values[0], </span>
+<span class="sd">		...     endTimeSec      = myAssignments[myAssignments[&#39;objectID&#39;]==&#39;truck&#39;][&#39;endTimeSec&#39;].values[0] + 30)		</span>
+
+<span class="sd">	Drop off a package.</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.addStaticAssignment(</span>
+<span class="sd">		...     initAssignments = myAssignments, </span>
+<span class="sd">		...     odID            = 0, </span>
+<span class="sd">		...     objectID        = &#39;package&#39;, </span>
+<span class="sd">		...     modelFile       = &#39;veroviz/models/box_blue.gltf&#39;, </span>
+<span class="sd">		...     modelScale      = 50, </span>
+<span class="sd">		...     modelMinPxSize  = 10, </span>
+<span class="sd">		...     loc             = list(myAssignments[myAssignments[&#39;objectID&#39;]==&#39;truck&#39;][[&#39;endLat&#39;, &#39;endLon&#39;]].values[0]), </span>
+<span class="sd">		...     startTimeSec    = myAssignments[myAssignments[&#39;objectID&#39;]==&#39;truck&#39;][&#39;endTimeSec&#39;].values[0] + 30, </span>
+<span class="sd">		...     endTimeSec      = -1)</span>
+
+<span class="sd">	View in Leaflet.  Note that we can&#39;t see the truck waiting.  Also, the package doesn&#39;t show up in Leaflet.</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)</span>
+<span class="sd">		</span>
+
+<span class="sd">	Create Cesium output, so we can observe our truck and package.</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(</span>
+<span class="sd">		...     assignments = myAssignments, </span>
+<span class="sd">		...     nodes       = myNodes, </span>
+<span class="sd">		...     startTime   = &#39;08:00:00&#39;, </span>
+<span class="sd">		...     cesiumDir   = os.environ[&#39;CESIUMDIR&#39;],</span>
+<span class="sd">		...     problemDir  = &#39;static_object_demo&#39;)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validatation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAddStaticAssignment</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">,</span> <span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">modelScale</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">endTimeSec</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="n">assignments</span> <span class="o">=</span> <span class="n">privAddStaticAssignment</span><span class="p">(</span>
+		<span class="n">initAssignments</span> <span class="o">=</span> <span class="n">initAssignments</span><span class="p">,</span> 
+		<span class="n">odID</span>            <span class="o">=</span> <span class="n">odID</span><span class="p">,</span> 
+		<span class="n">objectID</span>        <span class="o">=</span> <span class="n">objectID</span><span class="p">,</span> 
+		<span class="n">modelFile</span>       <span class="o">=</span> <span class="n">modelFile</span><span class="p">,</span> 
+		<span class="n">modelScale</span>      <span class="o">=</span> <span class="n">modelScale</span><span class="p">,</span> 
+		<span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="n">modelMinPxSize</span><span class="p">,</span> 
+		<span class="n">loc</span>             <span class="o">=</span> <span class="n">loc</span><span class="p">,</span> 
+		<span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">startTimeSec</span><span class="p">,</span> 
+		<span class="n">endTimeSec</span>      <span class="o">=</span> <span class="n">endTimeSec</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">assignments</span></div>
+	
+
+<div class="viewcode-block" id="createAssignmentsFromArcs2D"><a class="viewcode-back" href="../../veroviz.createAssignments.html#veroviz.createAssignments.createAssignmentsFromArcs2D">[docs]</a><span class="k">def</span> <span class="nf">createAssignmentsFromArcs2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">serviceTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">expDurationArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<span class="n">leafletColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function generates an &quot;assignments&quot; dataframe containing all of the &quot;shapepoints&quot; between successive arcs, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  </span>
+
+<span class="sd">	Notes</span>
+<span class="sd">	----</span>
+<span class="sd">	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromArcs3D()`.</span>
+<span class="sd">	</span>
+<span class="sd">	This function creates an assignments dataframe from an arcs dataframe.  Similar functions are available to create an assignments dataframe from a sequence of nodes (`createShapepointsFromNodeSeq2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	initAssignments: :ref:`Assignments` dataframe, Optional, default as None</span>
+<span class="sd">		If provided, the function will append rows to this dataframe.</span>
+<span class="sd">	arcs: :ref:`Arcs`, Required</span>
+<span class="sd">		A :ref:`Arcs` dataframe, from which the assignments dataframe will be generated.</span>
+<span class="sd">	serviceTimeSec: float, Optional, default as 0.0</span>
+<span class="sd">		Specifies a duration, in seconds, that the vehicle will be stationary at each destination location in the arcs dataframe.</span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with the object described in the arcs dataframe.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).	</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. 					</span>
+<span class="sd">	startTimeSec: float, Optional, default as 0.0 </span>
+<span class="sd">		The time, in seconds, at which the vehicle may leave the starting location.</span>
+<span class="sd">	expDurationArgs: dictionary, Optional, default as None</span>
+<span class="sd">		Sometimes there are inconsistencies between the travel times specified in the turn-by-turn navigation (i.e., shapepoints) and the travel matrices (i.e., from the getTimeDist functions).  The `expDurationArgs` field may take two different values.</span>
+<span class="sd">		First, if `expDurationArgs` is `None` (default), the travel times will be based solely on the turn-by-turn times.  Second, if `expDurationArgs` is a dictionary with a key of `&#39;getTravelTimes&#39;` and a corresponding value of `True`, then this function will call the `getTimeDist2D()` function for each origin/destination pair (i.e., for each row of the arcs dataframe).  In this case, all shapepoint travel times will be adjusted/redistributed to match the resulting values.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;euclidean2D&#39;</span>
+<span class="sd">		This describes a characteristic of the travel mode.  Possible values are: &#39;euclidean2D&#39;, &#39;manhattan&#39;, &#39;fastest&#39;, &#39;shortest&#39;, &#39;pedestrian&#39;, &#39;cycling&#39;, and &#39;truck&#39;.  The &#39;euclidean2D&#39; and &#39;manhattan&#39; options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.</span>
+<span class="sd">	speedMPS: float, Conditional, default as None</span>
+<span class="sd">		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., &#39;euclidean2D&#39; and &#39;manhattan&#39;), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., &#39;fastest&#39;, &#39;shortest&#39;, and &#39;pedestrain&#39;), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.</span>
+<span class="sd">	leafletColor: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletColor` column of the input :ref:`Arcs` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.</span>
+<span class="sd">	leafletWeight: int, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletWeight` column of the input :ref:`Arcs` dataframe.  If provided, all arcs will be displayed with this line thickness (in pixels).  </span>
+<span class="sd">	leafletStyle: string, Optional, default as None</span>
+<span class="sd">		Overrides the `leafletStyle` column of the input :ref:`Arcs` dataframe. If provided, all arcs will be displayed with this type.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, or &#39;dashed&#39;.  See :ref:`Leaflet Style` for more information.</span>
+<span class="sd">	leafletOpacity: float in [0, 1], Optional, default as None</span>
+<span class="sd">		Overrides the `leafletOpacity` column of the input :ref:`Arcs` dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</span>
+<span class="sd">	useArrows: boolean, Optional, default as None</span>
+<span class="sd">		Overrides the `useArrows` column of the input :ref:`Arcs` dataframe. Indicates whether arrows should be shown on the route when displayed in Leaflet.</span>
+<span class="sd">	cesiumColor: string, Optional, default as None</span>
+<span class="sd">		Overrides the `cesiumColor` column of the input :ref:`Arcs` dataframe.  This will define the color of all arcs displayed in Cesium.  See :ref:`Cesium Style` for the collection of available colors.</span>
+<span class="sd">	cesiumWeight: int, Optional, default as None</span>
+<span class="sd">		Overrides the `cesiumWeight` column of the input :ref:`Arcs` dataframe. This will define the weight (in pixels) of all arcs displayed in Cesium. See :ref:`Cesium Style` for more information. </span>
+<span class="sd">	cesiumStyle: string, Optional, default as None</span>
+<span class="sd">		Overrides the `cesiumStyle` column of the input :ref:`Arcs` dataframe. This will define the style of all arcs displayed in Cesium. See :ref:`Cesium Style` for available options.</span>
+<span class="sd">	cesiumOpacity: float in [0, 1], Optional, default as None</span>
+<span class="sd">		Overrides the `cesiumOpacity` column of the input :ref:`Arcs` dataframe.  This will define the opacity of all arcs displayed in Cesium.  See :ref:`Cesium Style` for more information.	</span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Assignments` dataframe</span>
+<span class="sd">		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel through all arcs in the provided :ref:`Arcs` dataframe.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Generate arcs from a given ordered list of coordinates:</span>
+<span class="sd">		&gt;&gt;&gt; arcs = vrv.createArcsFromLocSeq(</span>
+<span class="sd">		...     locSeq=[[42.3538, -78.4253, 30], </span>
+<span class="sd">		...             [42.3465, -78.4234, 30], </span>
+<span class="sd">		...             [42.3343, -78.4146, 40]])</span>
+<span class="sd">		&gt;&gt;&gt; arcs</span>
+
+<span class="sd">	Display the arcs on a Leaflet map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(arcs=arcs)</span>
+<span class="sd">		</span>
+<span class="sd">	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">	</span>
+<span class="sd">	Generate an assignments dataframe from the arcs dataframe:	</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.createAssignmentsFromArcs2D(</span>
+<span class="sd">		...      arcs             = arcs, </span>
+<span class="sd">		...     modelFile        = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;, </span>
+<span class="sd">		...     dataProvider     = &#39;ors-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY},</span>
+<span class="sd">		...     leafletColor     = &#39;blue&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments    </span>
+<span class="sd">    </span>
+<span class="sd">    Display the assignments on a map:	</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(arcs=myAssignments)	</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
+	
+	<span class="c1"># validatation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valCreateAssignmentsFromArcs2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">,</span> <span class="n">arcs</span><span class="p">,</span> <span class="n">serviceTimeSec</span><span class="p">,</span> <span class="n">modelScale</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="p">,</span> <span class="n">expDurationArgs</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+		
+	<span class="c1"># Initialize an assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+
+	<span class="c1"># if the user provided an initAssignments dataframe, add the new points after it</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">initAssignments</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+	<span class="n">startTime</span> <span class="o">=</span> <span class="n">startTimeSec</span>
+
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">arcs</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>		
+		<span class="n">startLoc</span> <span class="o">=</span> <span class="p">[</span><span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;startLat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;startLon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+		<span class="n">endLoc</span>   <span class="o">=</span> <span class="p">[</span><span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;endLat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;endLon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">expDurationArgs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">expDurationSec</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;getTravelTimes&#39;</span> <span class="ow">in</span> <span class="n">expDurationArgs</span><span class="p">):</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">expDurationArgs</span><span class="p">[</span><span class="s1">&#39;getTravelTimes&#39;</span><span class="p">]):</span>
+				<span class="c1"># Call the data provider to get travel time</span>
+				<span class="p">[</span><span class="n">dicTime</span><span class="p">,</span> <span class="n">dicDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">getTimeDistFromLocs2D</span><span class="p">(</span><span class="n">fromLocs</span><span class="o">=</span><span class="p">[</span><span class="n">startLoc</span><span class="p">],</span> <span class="n">fromRows</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">toLocs</span><span class="o">=</span><span class="p">[</span><span class="n">endLoc</span><span class="p">],</span> <span class="n">toCols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">outputDistUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+
+				<span class="p">[</span><span class="n">expDurationSec</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dicTime</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dicDist</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+
+		<span class="n">odID</span>     <span class="o">=</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;odID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="n">objectID</span> <span class="o">=</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+		<span class="n">leafletColor</span> <span class="o">=</span> <span class="n">leafletColor</span> <span class="k">if</span> <span class="p">(</span><span class="n">leafletColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;leafletColor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		 
+		<span class="n">leafletWeight</span> <span class="o">=</span> <span class="n">leafletWeight</span> <span class="k">if</span> <span class="p">(</span><span class="n">leafletWeight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;leafletWeight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+				
+		<span class="n">leafletStyle</span> <span class="o">=</span> <span class="n">leafletStyle</span> <span class="k">if</span> <span class="p">(</span><span class="n">leafletStyle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;leafletStyle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		 
+		<span class="n">leafletOpacity</span> <span class="o">=</span> <span class="n">leafletOpacity</span> <span class="k">if</span> <span class="p">(</span><span class="n">leafletOpacity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="n">useArrows</span> <span class="o">=</span> <span class="n">useArrows</span> <span class="k">if</span> <span class="p">(</span><span class="n">useArrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;useArrows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		
+		<span class="n">cesiumColor</span> <span class="o">=</span> <span class="n">cesiumColor</span> <span class="k">if</span> <span class="p">(</span><span class="n">cesiumColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;cesiumColor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		
+		<span class="n">cesiumWeight</span> <span class="o">=</span> <span class="n">cesiumWeight</span> <span class="k">if</span> <span class="p">(</span><span class="n">cesiumWeight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;cesiumWeight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		
+		<span class="n">cesiumStyle</span> <span class="o">=</span> <span class="n">cesiumStyle</span> <span class="k">if</span> <span class="p">(</span><span class="n">cesiumStyle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;cesiumStyle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		
+		<span class="n">cesiumOpacity</span> <span class="o">=</span> <span class="n">cesiumOpacity</span> <span class="k">if</span> <span class="p">(</span><span class="n">cesiumOpacity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">arcs</span><span class="p">[</span><span class="s1">&#39;cesiumOpacity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		
+		<span class="n">tmpShapepoints</span> <span class="o">=</span> <span class="n">privGetShapepoints2D</span><span class="p">(</span>
+			<span class="n">odID</span><span class="o">=</span><span class="n">odID</span><span class="p">,</span> 
+			<span class="n">objectID</span><span class="o">=</span><span class="n">objectID</span><span class="p">,</span> 
+			<span class="n">modelFile</span><span class="o">=</span><span class="n">modelFile</span><span class="p">,</span> 
+			<span class="n">startLoc</span><span class="o">=</span><span class="n">startLoc</span><span class="p">,</span> 
+			<span class="n">endLoc</span><span class="o">=</span><span class="n">endLoc</span><span class="p">,</span> 
+			<span class="n">startTimeSec</span><span class="o">=</span><span class="n">startTime</span><span class="p">,</span> 
+			<span class="n">expDurationSec</span><span class="o">=</span><span class="n">expDurationSec</span><span class="p">,</span>
+			<span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> 
+			<span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span>   
+			<span class="n">leafletColor</span><span class="o">=</span><span class="n">leafletColor</span><span class="p">,</span> 
+			<span class="n">leafletWeight</span><span class="o">=</span><span class="n">leafletWeight</span><span class="p">,</span> 
+			<span class="n">leafletStyle</span><span class="o">=</span><span class="n">leafletStyle</span><span class="p">,</span> 
+			<span class="n">leafletOpacity</span><span class="o">=</span><span class="n">leafletOpacity</span><span class="p">,</span> 
+			<span class="n">useArrows</span><span class="o">=</span><span class="n">useArrows</span><span class="p">,</span> 
+			<span class="n">modelScale</span><span class="o">=</span><span class="n">modelScale</span><span class="p">,</span> 
+			<span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">modelMinPxSize</span><span class="p">,</span> 
+			<span class="n">cesiumColor</span><span class="o">=</span><span class="n">cesiumColor</span><span class="p">,</span> 
+			<span class="n">cesiumWeight</span><span class="o">=</span><span class="n">cesiumWeight</span><span class="p">,</span> 
+			<span class="n">cesiumStyle</span><span class="o">=</span><span class="n">cesiumStyle</span><span class="p">,</span> 
+			<span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">cesiumOpacity</span><span class="p">,</span> 
+			<span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> 
+			<span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+
+
+		<span class="c1"># Update the assignments dataframe:</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">tmpShapepoints</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+		<span class="n">odID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="c1"># Update the time</span>
+		<span class="n">startTime</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">tmpShapepoints</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>	
+	
+		<span class="k">if</span> <span class="p">(</span><span class="n">serviceTimeSec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="c1"># Add loitering for service</span>
+			<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">privAddStaticAssignment</span><span class="p">(</span>
+				<span class="n">initAssignments</span> <span class="o">=</span> <span class="n">assignmentsDF</span><span class="p">,</span> 
+				<span class="n">odID</span>            <span class="o">=</span> <span class="n">odID</span><span class="p">,</span> 
+				<span class="n">objectID</span>        <span class="o">=</span> <span class="n">objectID</span><span class="p">,</span> 
+				<span class="n">modelFile</span>       <span class="o">=</span> <span class="n">modelFile</span><span class="p">,</span> 
+				<span class="n">modelScale</span>      <span class="o">=</span> <span class="n">modelScale</span><span class="p">,</span> 
+				<span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="n">modelMinPxSize</span><span class="p">,</span> 
+				<span class="n">loc</span>             <span class="o">=</span> <span class="n">endLoc</span><span class="p">,</span>
+				<span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">startTime</span><span class="p">,</span>
+				<span class="n">endTimeSec</span>      <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">serviceTimeSec</span><span class="p">)</span>
+
+			<span class="n">odID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+			<span class="c1"># Update the time again</span>
+			<span class="n">startTime</span> <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">serviceTimeSec</span>
+
+    			
+	<span class="k">return</span> <span class="n">assignmentsDF</span>	</div>
+	
+	
+	
+		
+	
+	
+
+<div class="viewcode-block" id="createAssignmentsFromNodeSeq2D"><a class="viewcode-back" href="../../veroviz.createAssignments.html#veroviz.createAssignments.createAssignmentsFromNodeSeq2D">[docs]</a><span class="k">def</span> <span class="nf">createAssignmentsFromNodeSeq2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeSeq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">serviceTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">expDurationArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>   <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function generates an &quot;assignments&quot; dataframe containing all of the &quot;shapepoints&quot; between successive node locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  </span>
+
+<span class="sd">	Notes</span>
+<span class="sd">	----</span>
+<span class="sd">	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromNodeSeq3D()`.</span>
+<span class="sd">	</span>
+<span class="sd">	This function creates an assignments dataframe from a sequence of nodes.  Similar functions are available to create an assignments dataframe from an arcs dataframe (`createShapepointsFromArcs2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	initAssignments: :ref:`Assignments` dataframe, Optional, default as None</span>
+<span class="sd">		If provided, the function will append rows to this dataframe.</span>
+<span class="sd">	nodeSeq: list, Required</span>
+<span class="sd">		An ordered list of node IDs.  These IDs must be included in the `id` column of the :ref:`Nodes` dataframe specified in the `nodes` input argument to this function. The format for `nodeSeq` is [node_id_1, node_id_2, ...].</span>
+<span class="sd">	nodes: :ref:`Nodes`, Required</span>
+<span class="sd">		A :ref:`Nodes` dataframe, which must contain the individual node IDs specified in the `nodeSeq` input argument.</span>
+<span class="sd">	serviceTimeSec: float, Optional, default as 0.0</span>
+<span class="sd">		Specifies a duration, in seconds, that the vehicle will be stationary at each destination node.  This service (stationary) time will not be applied to the first node in `nodeSeq`.</span>
+<span class="sd">	odID: int, Optional, default as 1</span>
+<span class="sd">		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</span>
+<span class="sd">	objectID: int/string, Optional, default as None</span>
+<span class="sd">		A descriptive name or index for a particular vehicle or object (e.g., &#39;truck 1&#39;, or &#39;red car&#39;). </span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).				</span>
+<span class="sd">	startTimeSec: float, Optional, default as 0.0 </span>
+<span class="sd">		The time, in seconds, at which the vehicle may leave the starting location.</span>
+<span class="sd">	expDurationArgs: dictionary, Optional, default as None</span>
+<span class="sd">		Sometimes there are inconsistencies between the travel times specified in the turn-by-turn navigation (i.e., shapepoints) and the travel matrices (i.e., from the getTimeDist functions).  The `expDurationArgs` field may take three different values.</span>
+<span class="sd">		First, if `expDurationArgs` is `None` (default), the travel times will be based solely on the turn-by-turn times.  Second, if `expDurationArgs` is a dictionary with a key of `&#39;timeSecDict&#39;` and a corresponding value of a time dictionary (as output by `getTimeDist2D()`), then all shapepoint travel time will be adjusted/redistributed to match the values in the time dictionary.  Finally, if `expDurationArgs` is a dictionary with a key of `&#39;getTravelTimes&#39;` and a corresponding value of `True`, then this function will call the `getTimeDist2D()` function for each origin/destination pair.  In this case, all shapepoint travel times will be adjusted/redistributed to match the resulting values.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;euclidean2D&#39;</span>
+<span class="sd">		This describes a characteristic of the travel mode.  Possible values are: &#39;euclidean2D&#39;, &#39;manhattan&#39;, &#39;fastest&#39;, &#39;shortest&#39;, &#39;pedestrian&#39;, &#39;cycling&#39;, and &#39;truck&#39;.  The &#39;euclidean2D&#39; and &#39;manhattan&#39; options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.</span>
+<span class="sd">	speedMPS: float, Conditional, default as None</span>
+<span class="sd">		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., &#39;euclidean2D&#39; and &#39;manhattan&#39;), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., &#39;fastest&#39;, &#39;shortest&#39;, and &#39;pedestrain&#39;), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.</span>
+<span class="sd">	leafletColor: string, Optional, default as &quot;orange&quot;</span>
+<span class="sd">		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.</span>
+<span class="sd">	leafletWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Leaflet. </span>
+<span class="sd">	leafletStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Leaflet.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Leaflet style` for more information.</span>
+<span class="sd">	leafletOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	useArrows: bool, Optional, default as True</span>
+<span class="sd">		Indicates whether arrows should be shown on the route when displayed in Leaflet.</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. </span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.ORANGE&quot;</span>
+<span class="sd">		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.</span>
+<span class="sd">	cesiumWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Cesium. </span>
+<span class="sd">	cesiumStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Cesium.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Cesium Style` for more information.</span>
+<span class="sd">	cesiumOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Assignments` dataframe</span>
+<span class="sd">		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel through the provided sequence of nodes.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">	</span>
+<span class="sd">	Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate &quot;nodes&quot; dataframes.</span>
+<span class="sd">		&gt;&gt;&gt; locs = [</span>
+<span class="sd">		...     [42.1538, -78.4253], </span>
+<span class="sd">		...     [42.3465, -78.6234], </span>
+<span class="sd">		...     [42.6343, -78.1146]]</span>
+<span class="sd">		&gt;&gt;&gt; exampleNodes = vrv.createNodesFromLocs(locs=locs)</span>
+
+<span class="sd">	Example 1 - A simple example using Euclidean travel, and no service times.  The assignments dataframe will have 3 rows.</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF = vrv.createAssignmentsFromNodeSeq2D(</span>
+<span class="sd">		...     nodeSeq        = [1, 3, 2, 1], </span>
+<span class="sd">		...     nodes          = exampleNodes, </span>
+<span class="sd">		...     serviceTimeSec = 0.0, </span>
+<span class="sd">		...     objectID       = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile      = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     routeType      = &#39;euclidean2D&#39;,</span>
+<span class="sd">		...     speedMPS       = 10)</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF</span>
+<span class="sd">		</span>
+<span class="sd">	Example 2 - The vehicle will follow the road network, resulting in an assignments dataframe with significantly more than 3 rows.  The vehicle will remain stationary at nodes 3, 2, and 1 (the destination nodes).  The travel time for each origin/destination pair will be calculated separately.</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF = vrv.createAssignmentsFromNodeSeq2D(</span>
+<span class="sd">		...     initAssignments  = None, </span>
+<span class="sd">		...     nodeSeq          = [1, 3, 2, 1], </span>
+<span class="sd">		...     nodes            = exampleNodes, </span>
+<span class="sd">		...     serviceTimeSec   = 20.0, </span>
+<span class="sd">		...     odID             = 1, </span>
+<span class="sd">		...     objectID         = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile        = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     expDurationArgs  = {&#39;getTravelTimes&#39;: True}, </span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39; : ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF</span>
+<span class="sd">			</span>
+<span class="sd">	Example 3 - The vehicle will first wait at the starting location (node 1) for 65 seconds.  It will then visit nodes 3 and 2 before returning to node 1.  At each of those nodes, the vehicle will remain stationary for a 20-second service time.  The travel time between each pair of nodes will be determined by the times in the `timeSec` matrix.</span>
+<span class="sd">		&gt;&gt;&gt; # Generate a matrix of travel times:</span>
+<span class="sd">		&gt;&gt;&gt; [timeSec, distMeters] = vrv.getTimeDist2D(</span>
+<span class="sd">		...     nodes            = exampleNodes,</span>
+<span class="sd">		...     matrixType       = &#39;all2all&#39;,</span>
+<span class="sd">		...     outputDistUnits  = &#39;meters&#39;,</span>
+<span class="sd">		...     outputTimeUnits  = &#39;seconds&#39;,</span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     speedMPS         = None,   </span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39; : ORS_API_KEY})</span>
+
+<span class="sd">		&gt;&gt;&gt; # Make our car wait for 65 seconds before starting:</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF = vrv.addStaticAssignment(</span>
+<span class="sd">		...     odID         = 0, </span>
+<span class="sd">		...     objectID     = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile    = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     loc          = [exampleNodes.loc[exampleNodes[&#39;id&#39;] == 1][&#39;lat&#39;].values[0],</span>
+<span class="sd">		...                     exampleNodes.loc[exampleNodes[&#39;id&#39;] == 1][&#39;lon&#39;].values[0]], </span>
+<span class="sd">		...     startTimeSec = 0.0, </span>
+<span class="sd">		...     endTimeSec   = 65.0)</span>
+<span class="sd">		</span>
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available input arguments:</span>
+<span class="sd">		&gt;&gt;&gt; newAssignmentsDF = vrv.createAssignmentsFromNodeSeq2D(</span>
+<span class="sd">		...     initAssignments  = assignmentsDF, </span>
+<span class="sd">		...     nodeSeq          = [1, 3, 2, 1], </span>
+<span class="sd">		...     nodes            = exampleNodes, </span>
+<span class="sd">		...     serviceTimeSec   = 20.0, </span>
+<span class="sd">		...     odID             = 1, </span>
+<span class="sd">		...     objectID         = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile        = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     modelScale       = 100,</span>
+<span class="sd">		...     modelMinPxSize   = 75,</span>
+<span class="sd">		...     startTimeSec     = 65.0, </span>
+<span class="sd">		...     expDurationArgs  = {&#39;timeSecDict&#39;: timeSec}, </span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     speedMPS         = None,   </span>
+<span class="sd">		...     leafletColor     = &#39;blue&#39;, </span>
+<span class="sd">		...     leafletWeight    = 3, </span>
+<span class="sd">		...     leafletStyle     = &#39;dashed&#39;, </span>
+<span class="sd">		...     leafletOpacity   = 0.8, </span>
+<span class="sd">		...     useArrows        = True, </span>
+<span class="sd">		...     cesiumColor      = &#39;Cesium.Color.BLUE&#39;, </span>
+<span class="sd">		...     cesiumWeight     = 3, </span>
+<span class="sd">		...     cesiumStyle      = &#39;solid&#39;, </span>
+<span class="sd">		...     cesiumOpacity    = 0.8, </span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39; : ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; newAssignmentsDF</span>
+
+<span class="sd">	View the assignments in Leaflet:  </span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(arcs=newAssignmentsDF, nodes=exampleNodes)</span>
+<span class="sd">	</span>
+<span class="sd">	View the assignments in Cesium:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(</span>
+<span class="sd">		...     assignments = newAssignmentsDF, </span>
+<span class="sd">		...     nodes       = exampleNodes, </span>
+<span class="sd">		...     startTime   = &#39;08:00:00&#39;, </span>
+<span class="sd">		...     cesiumDir   = os.environ[&#39;CESIUMDIR&#39;],</span>
+<span class="sd">		...     problemDir  = &#39;createAssignments_example&#39;)</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
+	
+	<span class="c1"># validatation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valCreateAssignmentsFromNodeSeq2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">,</span> <span class="n">nodeSeq</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">serviceTimeSec</span><span class="p">,</span> <span class="n">modelScale</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="p">,</span> <span class="n">expDurationArgs</span><span class="p">,</span> <span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+		
+	<span class="c1"># Initialize an assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+
+	<span class="c1"># if the user provided an initAssignments dataframe, add the new points after it</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">initAssignments</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+	<span class="n">startTime</span> <span class="o">=</span> <span class="n">startTimeSec</span>
+
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodeSeq</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">startLoc</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+					<span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+		<span class="n">endLoc</span>   <span class="o">=</span> <span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]][</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+					<span class="n">nodes</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]][</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">expDurationArgs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">expDurationSec</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;timeSecDict&#39;</span> <span class="ow">in</span> <span class="n">expDurationArgs</span><span class="p">):</span>
+			<span class="c1"># The user has provided a time dictionary</span>
+			<span class="n">expDurationSec</span> <span class="o">=</span> <span class="n">expDurationArgs</span><span class="p">[</span><span class="s1">&#39;timeSecDict&#39;</span><span class="p">][</span><span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>	
+		<span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;getTravelTimes&#39;</span> <span class="ow">in</span> <span class="n">expDurationArgs</span><span class="p">):</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">expDurationArgs</span><span class="p">[</span><span class="s1">&#39;getTravelTimes&#39;</span><span class="p">]):</span>
+				<span class="c1"># Call the data provider to get travel time</span>
+				<span class="p">[</span><span class="n">dicTime</span><span class="p">,</span> <span class="n">dicDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">getTimeDistFromLocs2D</span><span class="p">(</span><span class="n">fromLocs</span><span class="o">=</span><span class="p">[</span><span class="n">startLoc</span><span class="p">],</span> <span class="n">fromRows</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">toLocs</span><span class="o">=</span><span class="p">[</span><span class="n">endLoc</span><span class="p">],</span> <span class="n">toCols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">outputDistUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+
+				<span class="p">[</span><span class="n">expDurationSec</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dicTime</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dicDist</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+
+		<span class="n">tmpShapepoints</span> <span class="o">=</span> <span class="n">privGetShapepoints2D</span><span class="p">(</span>
+			<span class="n">odID</span><span class="o">=</span><span class="n">odID</span><span class="p">,</span> 
+			<span class="n">objectID</span><span class="o">=</span><span class="n">objectID</span><span class="p">,</span> 
+			<span class="n">modelFile</span><span class="o">=</span><span class="n">modelFile</span><span class="p">,</span> 
+			<span class="n">startLoc</span><span class="o">=</span><span class="n">startLoc</span><span class="p">,</span> 
+			<span class="n">endLoc</span><span class="o">=</span><span class="n">endLoc</span><span class="p">,</span> 
+			<span class="n">startTimeSec</span><span class="o">=</span><span class="n">startTime</span><span class="p">,</span> 
+			<span class="n">expDurationSec</span><span class="o">=</span><span class="n">expDurationSec</span><span class="p">,</span>
+			<span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> 
+			<span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span>   
+			<span class="n">leafletColor</span><span class="o">=</span><span class="n">leafletColor</span><span class="p">,</span> 
+			<span class="n">leafletWeight</span><span class="o">=</span><span class="n">leafletWeight</span><span class="p">,</span> 
+			<span class="n">leafletStyle</span><span class="o">=</span><span class="n">leafletStyle</span><span class="p">,</span> 
+			<span class="n">leafletOpacity</span><span class="o">=</span><span class="n">leafletOpacity</span><span class="p">,</span> 
+			<span class="n">useArrows</span><span class="o">=</span><span class="n">useArrows</span><span class="p">,</span> 
+			<span class="n">modelScale</span><span class="o">=</span><span class="n">modelScale</span><span class="p">,</span> 
+			<span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">modelMinPxSize</span><span class="p">,</span> 
+			<span class="n">cesiumColor</span><span class="o">=</span><span class="n">cesiumColor</span><span class="p">,</span> 
+			<span class="n">cesiumWeight</span><span class="o">=</span><span class="n">cesiumWeight</span><span class="p">,</span> 
+			<span class="n">cesiumStyle</span><span class="o">=</span><span class="n">cesiumStyle</span><span class="p">,</span> 
+			<span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">cesiumOpacity</span><span class="p">,</span> 
+			<span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> 
+			<span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+
+
+		<span class="c1"># Update the assignments dataframe:</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">tmpShapepoints</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+		<span class="n">odID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="c1"># Update the time</span>
+		<span class="n">startTime</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">tmpShapepoints</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>	
+	
+		<span class="k">if</span> <span class="p">(</span><span class="n">serviceTimeSec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="c1"># Add loitering for service</span>
+			<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">privAddStaticAssignment</span><span class="p">(</span>
+				<span class="n">initAssignments</span> <span class="o">=</span> <span class="n">assignmentsDF</span><span class="p">,</span> 
+				<span class="n">odID</span>            <span class="o">=</span> <span class="n">odID</span><span class="p">,</span> 
+				<span class="n">objectID</span>        <span class="o">=</span> <span class="n">objectID</span><span class="p">,</span> 
+				<span class="n">modelFile</span>       <span class="o">=</span> <span class="n">modelFile</span><span class="p">,</span> 
+				<span class="n">modelScale</span>      <span class="o">=</span> <span class="n">modelScale</span><span class="p">,</span> 
+				<span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="n">modelMinPxSize</span><span class="p">,</span> 
+				<span class="n">loc</span>             <span class="o">=</span> <span class="n">endLoc</span><span class="p">,</span>
+				<span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">startTime</span><span class="p">,</span>
+				<span class="n">endTimeSec</span>      <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">serviceTimeSec</span><span class="p">)</span>
+
+			<span class="n">odID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+			<span class="c1"># Update the time again</span>
+			<span class="n">startTime</span> <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">serviceTimeSec</span>
+
+    			
+	<span class="k">return</span> <span class="n">assignmentsDF</span>		</div>
+	
+	
+
+<div class="viewcode-block" id="createAssignmentsFromLocSeq2D"><a class="viewcode-back" href="../../veroviz.createAssignments.html#veroviz.createAssignments.createAssignmentsFromLocSeq2D">[docs]</a><span class="k">def</span> <span class="nf">createAssignmentsFromLocSeq2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locSeq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">serviceTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">odID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modelScale</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELSCALE</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMMODELMINPXSIZE</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">expDurationArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function generates an &quot;assignments&quot; dataframe containing all of the &quot;shapepoints&quot; between successive locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  </span>
+
+<span class="sd">	Notes</span>
+<span class="sd">	----</span>
+<span class="sd">	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromLocSeq3D()`.</span>
+<span class="sd">	</span>
+<span class="sd">	This function creates an assignments dataframe from a sequence of [lat, lon] locations.  Similar functions are available to create an assignments dataframe from an arcs dataframe (`createShapepointsFromArcs2D()`) or from a sequence of nodes (`createShapepointsFromNodeSeq2D()`).</span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	initAssignments: :ref:`Assignments` dataframe, Optional, default as None</span>
+<span class="sd">		If provided, the function will append rows to this dataframe.</span>
+<span class="sd">	locSeq: list of lists, Required, default as None</span>
+<span class="sd">		An ordered list of locations that will be converted into an :ref:`Arcs` dataframe. The list should be formated as [[lat1, lon1], [lat2, lon2], ..., [latn, lonn]] or [[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]].  If provided, altitude values will be ignored.</span>
+<span class="sd">	serviceTimeSec: float, Optional, default as 0.0</span>
+<span class="sd">		Specifies a duration, in seconds, that the vehicle will be stationary at each destination node.  This service (stationary) time will not be applied to the first node in `nodeSeq`.</span>
+<span class="sd">	odID: int, Optional, default as 1</span>
+<span class="sd">		This field allows grouping of dataframe rows according to common origin/destination pairs.  Arc segments which are part of the same origin/destination share the same odID.</span>
+<span class="sd">	objectID: int/string, Optional, default as None</span>
+<span class="sd">		A descriptive name or index for a particular vehicle or object (e.g., &#39;truck 1&#39;, or &#39;red car&#39;). </span>
+<span class="sd">	modelFile: string, Optional, default as None</span>
+<span class="sd">		The relative path and filename of the 3D model associated with this object.  The 3D model, typically in the format of `.gltf` or `.glb`, will be visualized in Cesium.  The path should be relative to the directory where Cesium is installed (i.e., the `modelFile` should exist within the Cesium root directory).				</span>
+<span class="sd">	startTimeSec: float, Optional, default as 0.0 </span>
+<span class="sd">		The time, in seconds, at which the vehicle may leave the starting location.</span>
+<span class="sd">	expDurationArgs: dictionary, Optional, default as None</span>
+<span class="sd">		Sometimes there are inconsistencies between the travel times specified in the turn-by-turn navigation (i.e., shapepoints) and the travel matrices (i.e., from the getTimeDist functions).  The `expDurationArgs` field may take two different values.</span>
+<span class="sd">		First, if `expDurationArgs` is `None` (default), the travel times will be based solely on the turn-by-turn times.  Second, if `expDurationArgs` is a dictionary with a key of `&#39;getTravelTimes&#39;` and a corresponding value of `True`, then this function will call the `getTimeDist2D()` function for each origin/destination pair.  In this case, all shapepoint travel times will be adjusted/redistributed to match the resulting values.</span>
+<span class="sd">	routeType: string, Optional, default as &#39;euclidean2D&#39;</span>
+<span class="sd">		This describes a characteristic of the travel mode.  Possible values are: &#39;euclidean2D&#39;, &#39;manhattan&#39;, &#39;fastest&#39;, &#39;shortest&#39;, &#39;pedestrian&#39;, &#39;cycling&#39;, and &#39;truck&#39;.  The &#39;euclidean2D&#39; and &#39;manhattan&#39; options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.</span>
+<span class="sd">	speedMPS: float, Conditional, default as None</span>
+<span class="sd">		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., &#39;euclidean2D&#39; and &#39;manhattan&#39;), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., &#39;fastest&#39;, &#39;shortest&#39;, and &#39;pedestrain&#39;), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.</span>
+<span class="sd">	leafletColor: string, Optional, default as &quot;orange&quot;</span>
+<span class="sd">		The color of the route when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.</span>
+<span class="sd">	leafletWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Leaflet. </span>
+<span class="sd">	leafletStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Leaflet.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Leaflet style` for more information.</span>
+<span class="sd">	leafletOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	useArrows: bool, Optional, default as True</span>
+<span class="sd">		Indicates whether arrows should be shown on the route when displayed in Leaflet.</span>
+<span class="sd">	modelScale: int, Optional, default as 100</span>
+<span class="sd">		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.</span>
+<span class="sd">	modelMinPxSize: int, Optional, default as 75</span>
+<span class="sd">		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. </span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.ORANGE&quot;</span>
+<span class="sd">		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.</span>
+<span class="sd">	cesiumWeight: int, Optional, default as 3</span>
+<span class="sd">		The pixel width of the route when displayed in Cesium. </span>
+<span class="sd">	cesiumStyle: string, Optional, default as &#39;solid&#39;</span>
+<span class="sd">		The line style of the route when displayed in Cesium.  Valid options are &#39;solid&#39;, &#39;dotted&#39;, and &#39;dashed&#39;. See :ref:`Cesium Style` for more information.</span>
+<span class="sd">	cesiumOpacity: float in [0, 1], Optional, default as 0.8</span>
+<span class="sd">		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). </span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	:ref:`Assignments` dataframe</span>
+<span class="sd">		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel through the provided sequence of locations.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	The following examples assume the use of ORS as the data provider. If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">	</span>
+<span class="sd">	Specify a sequence of [lat, lon] or [lat, lon, alt] locations. </span>
+<span class="sd">		&gt;&gt;&gt; locs = [</span>
+<span class="sd">		...     [42.1538, -78.4253, 30], </span>
+<span class="sd">		...     [42.3465, -78.6234, 30], </span>
+<span class="sd">		...     [42.6343, -78.1146, 40],</span>
+<span class="sd">		...     [42.1538, -78.4253, 30]] </span>
+
+<span class="sd">	Example 1 - A simple example using Euclidean travel, and no service times.  The assignments dataframe will have 3 rows.</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF = vrv.createAssignmentsFromLocSeq2D(</span>
+<span class="sd">		...     locSeq         = locs, </span>
+<span class="sd">		...     serviceTimeSec = 0.0, </span>
+<span class="sd">		...     objectID       = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile      = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     routeType      = &#39;euclidean2D&#39;,</span>
+<span class="sd">		...     speedMPS       = 10)</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF</span>
+<span class="sd">		</span>
+<span class="sd">	Example 2 - The vehicle will follow the road network, resulting in an assignments dataframe with significantly more than 3 rows.  The vehicle will remain stationary at the destination locations.  The travel time for each origin/destination pair will be calculated separately.</span>
+<span class="sd">		&gt;&gt;&gt; # Make our car wait for 65 seconds before starting:</span>
+<span class="sd">		&gt;&gt;&gt; assignmentsDF = vrv.addStaticAssignment(</span>
+<span class="sd">		...     odID         = 0, </span>
+<span class="sd">		...     objectID     = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile    = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     loc          = locs[0], </span>
+<span class="sd">		...     startTimeSec = 0.0, </span>
+<span class="sd">		...     endTimeSec   = 65.0)		</span>
+
+<span class="sd">		&gt;&gt;&gt; # This example includes all of the available input arguments:</span>
+<span class="sd">		&gt;&gt;&gt; newAssignmentsDF = vrv.createAssignmentsFromLocSeq2D(</span>
+<span class="sd">		...     initAssignments  = assignmentsDF, </span>
+<span class="sd">		...     locSeq           = locs, </span>
+<span class="sd">		...     serviceTimeSec   = 20.0, </span>
+<span class="sd">		...     odID             = 1, </span>
+<span class="sd">		...     objectID         = &#39;Blue Car&#39;, </span>
+<span class="sd">		...     modelFile        = &#39;veroviz/models/car_blue.gltf&#39;, </span>
+<span class="sd">		...     modelScale       = 100,</span>
+<span class="sd">		...     modelMinPxSize   = 75,</span>
+<span class="sd">		...     startTimeSec     = 65.0, </span>
+<span class="sd">		...     expDurationArgs  = {&#39;getTravelTimes&#39;: True}, </span>
+<span class="sd">		...     routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...     speedMPS         = None,   </span>
+<span class="sd">		...     leafletColor     = &#39;blue&#39;, </span>
+<span class="sd">		...     leafletWeight    = 3, </span>
+<span class="sd">		...     leafletStyle     = &#39;dashed&#39;, </span>
+<span class="sd">		...     leafletOpacity   = 0.8, </span>
+<span class="sd">		...     useArrows        = True, </span>
+<span class="sd">		...     cesiumColor      = &#39;Cesium.Color.BLUE&#39;, </span>
+<span class="sd">		...     cesiumWeight     = 3, </span>
+<span class="sd">		...     cesiumStyle      = &#39;solid&#39;, </span>
+<span class="sd">		...     cesiumOpacity    = 0.8, </span>
+<span class="sd">		...     dataProvider     = &#39;ORS-online&#39;,</span>
+<span class="sd">		...     dataProviderArgs = {&#39;APIkey&#39; : ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; newAssignmentsDF			</span>
+
+<span class="sd">	Generate a :ref:`Nodes` dataframe from our first three locations (the fourth location is a duplicate of the first).  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate &quot;nodes&quot; dataframes.</span>
+<span class="sd">	    &gt;&gt;&gt; exampleNodes = vrv.createNodesFromLocs(locs=locs[0:3])</span>
+
+<span class="sd">	View the assignments in Leaflet:  </span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(arcs=newAssignmentsDF, nodes=exampleNodes)</span>
+<span class="sd">	</span>
+<span class="sd">	View the assignments in Cesium:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createCesium(</span>
+<span class="sd">		...     assignments = newAssignmentsDF, </span>
+<span class="sd">		...     nodes       = exampleNodes, </span>
+<span class="sd">		...     startTime   = &#39;08:00:00&#39;, </span>
+<span class="sd">		...     cesiumDir   = os.environ[&#39;CESIUMDIR&#39;],</span>
+<span class="sd">		...     problemDir  = &#39;createAssignments_example&#39;)</span>
+<span class="sd">	&quot;&quot;&quot;</span>	
+	
+	<span class="c1"># validatation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valCreateAssignmentsFromLocSeq2D</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">,</span> <span class="n">locSeq</span><span class="p">,</span> <span class="n">serviceTimeSec</span><span class="p">,</span> <span class="n">modelScale</span><span class="p">,</span> <span class="n">modelMinPxSize</span><span class="p">,</span> <span class="n">expDurationArgs</span><span class="p">,</span> <span class="n">odID</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">modelFile</span><span class="p">,</span> <span class="n">startTimeSec</span><span class="p">,</span> <span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletWeight</span><span class="p">,</span> <span class="n">leafletStyle</span><span class="p">,</span> <span class="n">leafletOpacity</span><span class="p">,</span> <span class="n">useArrows</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumWeight</span><span class="p">,</span> <span class="n">cesiumStyle</span><span class="p">,</span> <span class="n">cesiumOpacity</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+		
+	<span class="c1"># Initialize an assignments dataframe:</span>
+	<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+
+	<span class="c1"># if the user provided an initAssignments dataframe, add the new points after it</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">initAssignments</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">initAssignments</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+	<span class="n">startTime</span> <span class="o">=</span> <span class="n">startTimeSec</span>
+
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">locSeq</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">startLoc</span> <span class="o">=</span> <span class="n">locSeq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="n">endLoc</span>   <span class="o">=</span> <span class="n">locSeq</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">expDurationArgs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+			<span class="n">expDurationSec</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;getTravelTimes&#39;</span> <span class="ow">in</span> <span class="n">expDurationArgs</span><span class="p">):</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">expDurationArgs</span><span class="p">[</span><span class="s1">&#39;getTravelTimes&#39;</span><span class="p">]):</span>
+				<span class="c1"># Call the data provider to get travel time</span>
+				<span class="p">[</span><span class="n">dicTime</span><span class="p">,</span> <span class="n">dicDist</span><span class="p">]</span> <span class="o">=</span> <span class="n">getTimeDistFromLocs2D</span><span class="p">(</span><span class="n">fromLocs</span><span class="o">=</span><span class="p">[</span><span class="n">startLoc</span><span class="p">],</span> <span class="n">fromRows</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">toLocs</span><span class="o">=</span><span class="p">[</span><span class="n">endLoc</span><span class="p">],</span> <span class="n">toCols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">outputDistUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+
+				<span class="p">[</span><span class="n">expDurationSec</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dicTime</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dicDist</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+
+		<span class="n">tmpShapepoints</span> <span class="o">=</span> <span class="n">privGetShapepoints2D</span><span class="p">(</span>
+			<span class="n">odID</span><span class="o">=</span><span class="n">odID</span><span class="p">,</span> 
+			<span class="n">objectID</span><span class="o">=</span><span class="n">objectID</span><span class="p">,</span> 
+			<span class="n">modelFile</span><span class="o">=</span><span class="n">modelFile</span><span class="p">,</span> 
+			<span class="n">startLoc</span><span class="o">=</span><span class="n">startLoc</span><span class="p">,</span> 
+			<span class="n">endLoc</span><span class="o">=</span><span class="n">endLoc</span><span class="p">,</span> 
+			<span class="n">startTimeSec</span><span class="o">=</span><span class="n">startTime</span><span class="p">,</span> 
+			<span class="n">expDurationSec</span><span class="o">=</span><span class="n">expDurationSec</span><span class="p">,</span>
+			<span class="n">routeType</span><span class="o">=</span><span class="n">routeType</span><span class="p">,</span> 
+			<span class="n">speedMPS</span><span class="o">=</span><span class="n">speedMPS</span><span class="p">,</span>   
+			<span class="n">leafletColor</span><span class="o">=</span><span class="n">leafletColor</span><span class="p">,</span> 
+			<span class="n">leafletWeight</span><span class="o">=</span><span class="n">leafletWeight</span><span class="p">,</span> 
+			<span class="n">leafletStyle</span><span class="o">=</span><span class="n">leafletStyle</span><span class="p">,</span> 
+			<span class="n">leafletOpacity</span><span class="o">=</span><span class="n">leafletOpacity</span><span class="p">,</span> 
+			<span class="n">useArrows</span><span class="o">=</span><span class="n">useArrows</span><span class="p">,</span> 
+			<span class="n">modelScale</span><span class="o">=</span><span class="n">modelScale</span><span class="p">,</span> 
+			<span class="n">modelMinPxSize</span><span class="o">=</span><span class="n">modelMinPxSize</span><span class="p">,</span> 
+			<span class="n">cesiumColor</span><span class="o">=</span><span class="n">cesiumColor</span><span class="p">,</span> 
+			<span class="n">cesiumWeight</span><span class="o">=</span><span class="n">cesiumWeight</span><span class="p">,</span> 
+			<span class="n">cesiumStyle</span><span class="o">=</span><span class="n">cesiumStyle</span><span class="p">,</span> 
+			<span class="n">cesiumOpacity</span><span class="o">=</span><span class="n">cesiumOpacity</span><span class="p">,</span> 
+			<span class="n">dataProvider</span><span class="o">=</span><span class="n">dataProvider</span><span class="p">,</span> 
+			<span class="n">dataProviderArgs</span><span class="o">=</span><span class="n">dataProviderArgs</span><span class="p">)</span>
+
+
+		<span class="c1"># Update the assignments dataframe:</span>
+		<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">assignmentsDF</span><span class="p">,</span> <span class="n">tmpShapepoints</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+		<span class="n">odID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="c1"># Update the time</span>
+		<span class="n">startTime</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">tmpShapepoints</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>	
+	
+		<span class="k">if</span> <span class="p">(</span><span class="n">serviceTimeSec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="c1"># Add loitering for service</span>
+			<span class="n">assignmentsDF</span> <span class="o">=</span> <span class="n">privAddStaticAssignment</span><span class="p">(</span>
+				<span class="n">initAssignments</span> <span class="o">=</span> <span class="n">assignmentsDF</span><span class="p">,</span> 
+				<span class="n">odID</span>            <span class="o">=</span> <span class="n">odID</span><span class="p">,</span> 
+				<span class="n">objectID</span>        <span class="o">=</span> <span class="n">objectID</span><span class="p">,</span> 
+				<span class="n">modelFile</span>       <span class="o">=</span> <span class="n">modelFile</span><span class="p">,</span> 
+				<span class="n">modelScale</span>      <span class="o">=</span> <span class="n">modelScale</span><span class="p">,</span> 
+				<span class="n">modelMinPxSize</span>  <span class="o">=</span> <span class="n">modelMinPxSize</span><span class="p">,</span> 
+				<span class="n">loc</span>             <span class="o">=</span> <span class="n">endLoc</span><span class="p">,</span>
+				<span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">startTime</span><span class="p">,</span>
+				<span class="n">endTimeSec</span>      <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">serviceTimeSec</span><span class="p">)</span>
+
+			<span class="n">odID</span> <span class="o">+=</span> <span class="mi">1</span>
+
+			<span class="c1"># Update the time again</span>
+			<span class="n">startTime</span> <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">serviceTimeSec</span>
+
+    			
+	<span class="k">return</span> <span class="n">assignmentsDF</span>		</div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, optimatorlab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

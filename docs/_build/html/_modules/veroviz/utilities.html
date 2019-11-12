@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.utilities &#8212; veroviz 0.2.2 documentation</title>
+    <title>veroviz.utilities &#8212; veroviz 0.3.0 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -60,6 +60,7 @@
 <span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">veroviz._geocode</span> <span class="k">import</span> <span class="n">privGeocode</span><span class="p">,</span> <span class="n">privReverseGeocode</span>
 
 <div class="viewcode-block" id="convertSpeed"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertSpeed">[docs]</a><span class="k">def</span> <span class="nf">convertSpeed</span><span class="p">(</span><span class="n">speed</span><span class="p">,</span> <span class="n">fromUnitsDist</span><span class="p">,</span> <span class="n">fromUnitsTime</span><span class="p">,</span> <span class="n">toUnitsDist</span><span class="p">,</span> <span class="n">toUnitsTime</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -934,7 +935,7 @@
 					<span class="c1"># print(&quot;Message: %s was successfully imported as Nodes dataframe&quot; % filename)</span>
 					<span class="k">pass</span>
 				<span class="k">else</span><span class="p">:</span>
-					<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">%s</span><span class="s2"> was not successfully imported.  Check the data type.&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+					<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">  </span><span class="si">%s</span><span class="s2"> was not successfully imported.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
 					<span class="k">return</span>
 			<span class="k">elif</span> <span class="p">(</span><span class="n">dataType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;arcs&#39;</span><span class="p">):</span>
 				<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valArcs</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -942,7 +943,7 @@
 					<span class="c1"># print(&quot;Message: %s was successfully imported as Arcs dataframe&quot; % filename)</span>
 					<span class="k">pass</span>
 				<span class="k">else</span><span class="p">:</span>
-					<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">%s</span><span class="s2"> was not successfully imported.  Check the data type.&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+					<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">  </span><span class="si">%s</span><span class="s2"> was not successfully imported.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
 					<span class="k">return</span>
 			<span class="k">elif</span> <span class="p">(</span><span class="n">dataType</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;assignments&#39;</span><span class="p">):</span>
 				<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valAssignments</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -950,7 +951,7 @@
 					<span class="c1"># print(&quot;Message: %s was successfully imported as Assignments dataframe&quot; % filename)</span>
 					<span class="k">pass</span>
 				<span class="k">else</span><span class="p">:</span>
-					<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: </span><span class="si">%s</span><span class="s2"> was not successfully imported.  Check the data type.&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+					<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">  </span><span class="si">%s</span><span class="s2"> was not successfully imported.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
 					<span class="k">return</span>
 			<span class="k">else</span><span class="p">:</span>
 				<span class="k">return</span>
@@ -960,7 +961,7 @@
 			<span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 			<span class="n">data</span> <span class="o">=</span> <span class="n">convertMatricesDataframeToDictionary</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: data type not supported, expecting &#39;nodes&#39;, &#39;arcs&#39;, &#39;assignments&#39; or &#39;matrix&#39; (for time matrix or distance matrix)&quot;</span><span class="p">)</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: data type not supported.  Expected &#39;nodes&#39;, &#39;arcs&#39;, &#39;assignments&#39; or &#39;matrix&#39; (for time matrix or distance matrix)&quot;</span><span class="p">)</span>
 
 	<span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: Cannot import file: </span><span class="si">%s</span><span class="s2">, check if `dataType` is correct for inputs.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">))</span>
@@ -1790,6 +1791,448 @@
 
 	<span class="k">return</span> <span class="n">bearingInDegree</span></div>
 
+
+
+<div class="viewcode-block" id="findLocsAtTime"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.findLocsAtTime">[docs]</a><span class="k">def</span> <span class="nf">findLocsAtTime</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Finds the estimated location of each unique `objectID` in an input `assignments` dataframe at the given time.  The output is a dictionary, where the keys are unique objectIDs.  The corresponding value for each `objectID` key will be `None` if the object is not defined at the given value of `timeSec`, the value will be a list of the form [lat, lon, alt] if a single match is found, or the value will be a list of lists of the form [[lat1, lon1, alt1], ..., [latn, lonn, altn]] if n matches are found.  In the latter case, this is typically indicative of duplicate entries in the assignments dataframe (as each object should not appear in multiple locations simultaneously).</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	assignments: :ref:`Assignments` dataframe, Required, default as None</span>
+<span class="sd">		Each row of an :ref:`Assignments` dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).</span>
+<span class="sd">	timeSec: float, Optional, default as 0.0</span>
+<span class="sd">		The time, in seconds, at which it is desired to find an estimate of each object&#39;s location.</span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	dictionary</span>
+<span class="sd">		A dictionary describing the estimated location of each unique `objectID` in the input assignments dataframe.  See above for a description of the key/value pairs.</span>
+
+<span class="sd">	Example</span>
+<span class="sd">	-------</span>
+<span class="sd">	Import veroviz and check if it&#39;s the latest version:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+
+<span class="sd">	Define 5 node locations, as [lat, lon] pairs:</span>
+<span class="sd">		&gt;&gt;&gt; locs = [[42.8871085, -78.8731949],</span>
+<span class="sd">		...         [42.8888311, -78.8649649],</span>
+<span class="sd">		...         [42.8802158, -78.8660787],</span>
+<span class="sd">		...         [42.8845705, -78.8762794],</span>
+<span class="sd">		...         [42.8908031, -78.8770140]]</span>
+
+<span class="sd">	Generate a nodes dataframe from these locations:</span>
+<span class="sd">		&gt;&gt;&gt; myNodes = vrv.createNodesFromLocs(locs=locs)</span>
+
+<span class="sd">	Construct an assignments dataframe for two vehicles, a drone and a truck.  The truck will visit nodes 1 -&gt; 2 -&gt; 3 -&gt; 1.  The drone will visit nodes 1 -&gt; 4 -&gt; 5 -&gt; 1.</span>
+<span class="sd">		&gt;&gt;&gt; mySolution = {</span>
+<span class="sd">		...     &#39;truck&#39;: [[1,2], [2,3], [3,1]],</span>
+<span class="sd">		...     &#39;drone&#39;: [[1,4], [4,5], [5,1]]</span>
+<span class="sd">		... }</span>
+
+<span class="sd">	Define some information about our 2 vehicles, for use below:</span>
+<span class="sd">		&gt;&gt;&gt; vehicleProperties = {</span>
+<span class="sd">		...     &#39;drone&#39;: {&#39;model&#39;: &#39;veroviz/models/drone.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;red&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.RED&#39;},</span>
+<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.gltf&#39;,</span>
+<span class="sd">		...               &#39;leafletColor&#39;: &#39;blue&#39;,</span>
+<span class="sd">		...               &#39;cesiumColor&#39;: &#39;Cesium.Color.BLUE&#39;}</span>
+<span class="sd">		... }</span>
+
+<span class="sd">	This example assumes the use of ORS as the data provider. </span>
+<span class="sd">		&gt;&gt;&gt; # If you have saved your API key as an environment variable, you may use `os.environ` to access it:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your key here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+
+<span class="sd">	Initialize an empty assignments dataframe:</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments = vrv.initDataframe(&#39;assignments&#39;)</span>
+
+
+<span class="sd">	Build assignments for the truck route:</span>
+<span class="sd">		&gt;&gt;&gt; endTimeSec = 0.0</span>
+<span class="sd">		&gt;&gt;&gt; for arc in mySolution[&#39;truck&#39;]:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment2D(</span>
+<span class="sd">		...             initAssignments  = myAssignments,</span>
+<span class="sd">		...             objectID         = &#39;truck&#39;,</span>
+<span class="sd">		...             modelFile        = vehicleProperties[&#39;truck&#39;][&#39;model&#39;],</span>
+<span class="sd">		...             startLoc         = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             endLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...             startTimeSec     = endTimeSec,</span>
+<span class="sd">		...             leafletColor     = vehicleProperties[&#39;truck&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...             cesiumColor      = vehicleProperties[&#39;truck&#39;][&#39;cesiumColor&#39;], </span>
+<span class="sd">		...             routeType        = &#39;fastest&#39;,</span>
+<span class="sd">		...             dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...             dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments</span>
+<span class="sd">		</span>
+<span class="sd">	Build assignments for the drone deliveries:</span>
+<span class="sd">		&gt;&gt;&gt; endTimeSec = 0.0</span>
+<span class="sd">		&gt;&gt;&gt; for arc in mySolution[&#39;drone&#39;]:</span>
+<span class="sd">		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(</span>
+<span class="sd">		...         initAssignments    = myAssignments,</span>
+<span class="sd">		...         objectID           = &#39;drone&#39;,</span>
+<span class="sd">		...         modelFile          = vehicleProperties[&#39;drone&#39;][&#39;model&#39;],</span>
+<span class="sd">		...         startLoc           = list(myNodes[myNodes[&#39;id&#39;] == arc[0]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         endLoc             = list(myNodes[myNodes[&#39;id&#39;] == arc[1]][[&#39;lat&#39;, &#39;lon&#39;]].values[0]),</span>
+<span class="sd">		...         startTimeSec       = endTimeSec,</span>
+<span class="sd">		...         takeoffSpeedMPS    = vrv.convertSpeed(30, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseSpeedMPS     = vrv.convertSpeed(80, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         landSpeedMPS       = vrv.convertSpeed( 5, &#39;miles&#39;, &#39;hr&#39;, &#39;meters&#39;, &#39;sec&#39;),</span>
+<span class="sd">		...         cruiseAltMetersAGL = vrv.convertDistance(350, &#39;feet&#39;, &#39;meters&#39;),</span>
+<span class="sd">		...         routeType          = &#39;square&#39;,</span>
+<span class="sd">		...         leafletColor       = vehicleProperties[&#39;drone&#39;][&#39;leafletColor&#39;],</span>
+<span class="sd">		...         cesiumColor        = vehicleProperties[&#39;drone&#39;][&#39;cesiumColor&#39;])</span>
+<span class="sd">		&gt;&gt;&gt; myAssignments</span>
+<span class="sd">		</span>
+<span class="sd">	Show the nodes and assignments on a map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)</span>
+
+<span class="sd">	Find the location of each vehicle at time 30.0:</span>
+<span class="sd">		&gt;&gt;&gt; currentLocs = vrv.findLocsAtTime(assignments=myAssignments, timeSec=30.0)</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # Or, we can just find the location of the drone at time 30.0:</span>
+<span class="sd">		&gt;&gt;&gt; # currentLocs = vrv.findLocsAtTime(</span>
+<span class="sd">		&gt;&gt;&gt; #    assignments=myAssignments[myAssignments[&#39;objectID&#39;] == &#39;drone&#39;], </span>
+<span class="sd">		&gt;&gt;&gt; #    timeSec=30.0)</span>
+<span class="sd">		&gt;&gt;&gt; currentLocs</span>
+<span class="sd">		</span>
+<span class="sd">	Display the estimated locations on a map:		</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)</span>
+<span class="sd">		&gt;&gt;&gt; for objectID in currentLocs:</span>
+<span class="sd">		...     if (type(currentLocs[objectID]) is list):</span>
+<span class="sd">		...         # This objectID has at least 1 location at this time:</span>
+<span class="sd">		...         if (type(currentLocs[objectID][0]) is list):</span>
+<span class="sd">		...             # There were multiple matches for this objectID:</span>
+<span class="sd">		...             for i in currentLocs[objectID]:</span>
+<span class="sd">		...                 myMap = vrv.addLeafletMarker(mapObject=myMap, center=i)</span>
+<span class="sd">		...         else:</span>
+<span class="sd">		...             # We only have one location for this objectID:</span>
+<span class="sd">		...             myMap = vrv.addLeafletMarker(mapObject=myMap, </span>
+<span class="sd">		...                                          center=currentLocs[objectID], </span>
+<span class="sd">		...                                          radius=9, </span>
+<span class="sd">		...                                          fillOpacity=0.7, </span>
+<span class="sd">		...                                          fillColor=&#39;black&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap		</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valFindLocsAtTime</span><span class="p">(</span><span class="n">assignments</span><span class="p">,</span> <span class="n">timeSec</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+
+	<span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+
+	<span class="n">asgnCopy</span> <span class="o">=</span> <span class="n">assignments</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+	<span class="c1"># Get list of unique objectIDs:</span>
+	<span class="n">uniqueIDs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+
+	<span class="c1"># Replace &quot;-1&quot; end time with +infinity</span>
+	<span class="n">asgnCopy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="n">objectID</span> <span class="ow">in</span> <span class="n">uniqueIDs</span><span class="p">:</span>
+		<span class="n">tmpAsgn</span> <span class="o">=</span> <span class="n">asgnCopy</span><span class="p">[(</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">objectID</span><span class="p">)</span> <span class="o">&amp;</span> 
+			<span class="p">(</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">timeSec</span><span class="p">)</span> <span class="o">&amp;</span> 
+			<span class="p">(</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">timeSec</span><span class="p">)]</span> 
+	
+		<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmpAsgn</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="n">output</span><span class="p">[</span><span class="n">objectID</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: objectID `</span><span class="si">%s</span><span class="s2">` is not tracked at time </span><span class="si">%.2f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">objectID</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">outList</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">tmpAsgn</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+				<span class="n">startLat</span>     <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;startLat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+				<span class="n">startLon</span>     <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;startLon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+				<span class="n">startAlt</span>     <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;startAltMeters&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+				<span class="n">startTimeSec</span> <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+			
+				<span class="n">endLat</span>     <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;endLat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+				<span class="n">endLon</span>     <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;endLon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+				<span class="n">endAlt</span>     <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;endAltMeters&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+				<span class="n">endTimeSec</span> <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+
+				<span class="c1"># Find percentage of time:</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">endTimeSec</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)):</span>
+					<span class="n">pct</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeSec</span> <span class="o">-</span> <span class="n">startTimeSec</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">endTimeSec</span> <span class="o">-</span> <span class="n">startTimeSec</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">pct</span> <span class="o">=</span> <span class="mf">0.0</span>
+			
+				<span class="c1"># Find distance from start to end:</span>
+				<span class="n">distMeters</span> <span class="o">=</span> <span class="n">geoDistance2D</span><span class="p">([</span><span class="n">startLat</span><span class="p">,</span> <span class="n">startLon</span><span class="p">],</span> <span class="p">[</span><span class="n">endLat</span><span class="p">,</span> <span class="n">endLon</span><span class="p">])</span>
+			
+				<span class="k">if</span> <span class="p">(</span><span class="n">distMeters</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
+					<span class="n">newLoc</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLat</span><span class="p">,</span> <span class="n">startLon</span><span class="p">]</span>
+				<span class="k">else</span><span class="p">:</span> 
+					<span class="c1"># Get initial heading from start to end:</span>
+					<span class="n">hdgDeg</span> <span class="o">=</span> <span class="n">geoGetHeading</span><span class="p">([</span><span class="n">startLat</span><span class="p">,</span> <span class="n">startLon</span><span class="p">],</span> <span class="p">[</span><span class="n">endLat</span><span class="p">,</span> <span class="n">endLon</span><span class="p">])</span>
+
+					<span class="c1"># Get expected lat/lon coords:</span>
+					<span class="n">newLoc</span> <span class="o">=</span> <span class="n">geoPointInDistance2D</span><span class="p">([</span><span class="n">startLat</span><span class="p">,</span> <span class="n">startLon</span><span class="p">],</span> <span class="n">hdgDeg</span><span class="p">,</span> <span class="n">distMeters</span><span class="o">*</span><span class="n">pct</span><span class="p">)</span>
+
+				<span class="c1"># Interpolate altitude:</span>
+				<span class="n">newAlt</span> <span class="o">=</span> <span class="n">startAlt</span> <span class="o">+</span> <span class="p">(</span><span class="n">endAlt</span> <span class="o">-</span> <span class="n">startAlt</span><span class="p">)</span><span class="o">*</span><span class="n">pct</span>
+			
+				<span class="c1"># Add to our list of expected locations for this id:</span>
+				<span class="n">outList</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">newLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">newLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">newAlt</span><span class="p">])</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">outList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+				<span class="n">output</span><span class="p">[</span><span class="n">objectID</span><span class="p">]</span> <span class="o">=</span> <span class="n">outList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+					
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># </span>
+				<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: objectID `</span><span class="si">%s</span><span class="s2">` appears in </span><span class="si">%d</span><span class="s2"> matching rows.  Perhaps the assignments dataframe has duplicate entries?&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">objectID</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmpAsgn</span><span class="p">)))</span>
+				<span class="n">output</span><span class="p">[</span><span class="n">objectID</span><span class="p">]</span> <span class="o">=</span> <span class="n">outList</span>
+	
+	<span class="k">return</span> <span class="n">output</span>			</div>
+				
+<div class="viewcode-block" id="geocode"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.geocode">[docs]</a><span class="k">def</span> <span class="nf">geocode</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Convert a street address, city, state, or zip code to GPS coordinates ([lat, lon] format).</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	location: string, Required</span>
+<span class="sd">		A text string indicating a street address, state, or zip code.</span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	list</span>
+<span class="sd">		A GPS coordinate, of the form [lat, lon].</span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	Neither pgRouting nor OSRM are supported.  </span>
+<span class="sd">	pgRouting would require a database of the entire planet.  </span>
+<span class="sd">	OSRM doesn&#39;t have a geocode function.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if the version is up-to-date:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+<span class="sd">	</span>
+<span class="sd">	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; MQ_API_KEY = os.environ[&#39;MAPQUESTKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your keys here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">		&gt;&gt;&gt; # MQ_API_KEY = &#39;YOUR_MAPQUEST_KEY_GOES_HERE&#39;</span>
+
+<span class="sd">	Example 1 - Find [lat, lon] of Buckingham Palace, without specifying a data provider:</span>
+<span class="sd">		&gt;&gt;&gt; myLoc = vrv.geocode(location=&#39;Westminster, London SW1A 1AA, United Kingdom&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myLoc</span>
+<span class="sd">		[51.5008719, -0.1252387]</span>
+<span class="sd">	</span>
+<span class="sd">	Example 2 - Find [lat, lon] of Buckingham Palace, using ORS-online as the data provider:</span>
+<span class="sd">		&gt;&gt;&gt; myLoc = vrv.geocode(location         =&#39;Westminster, London SW1A 1AA, United Kingdom&#39;, </span>
+<span class="sd">		...                     dataProvider     =&#39;ors-online&#39;, </span>
+<span class="sd">		...                     dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myLoc</span>
+<span class="sd">		[51.497991, -0.12875]</span>
+<span class="sd">        </span>
+<span class="sd">	Example 3 - Find [lat, lon] of Seattle, Washington, USA:</span>
+<span class="sd">		&gt;&gt;&gt; myLoc = vrv.geocode(location         =&#39;seattle, wa&#39;, </span>
+<span class="sd">		...                     dataProvider     =&#39;mapquest&#39;, </span>
+<span class="sd">		...                     dataProviderArgs = {&#39;APIkey&#39;: MQ_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myLoc</span>
+<span class="sd">		[47.603229, -122.33028]</span>
+
+<span class="sd">	Example 4 - Find [lat, lon] of the state of Florida, USA:</span>
+<span class="sd">		&gt;&gt;&gt; myLoc = vrv.geocode(location         =&#39;florida&#39;, </span>
+<span class="sd">		...                     dataProvider     =&#39;ors-ONLINE&#39;, </span>
+<span class="sd">		...                     dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myLoc</span>
+<span class="sd">		[27.97762, -81.769611]</span>
+
+<span class="sd">	Example 5 - Find [lat, lon] of the Space Needle (in Seattle, WA):</span>
+<span class="sd">		&gt;&gt;&gt; myLoc = vrv.geocode(location         =&#39;space needle&#39;, </span>
+<span class="sd">		...                     dataProvider     =&#39;ors-ONLINE&#39;, </span>
+<span class="sd">		...                     dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; myLoc</span>
+<span class="sd">		[47.620336, -122.349314]  </span>
+
+<span class="sd">	Draw the geocoded location as a red dot on a Leaflet map:</span>
+<span class="sd">		&gt;&gt;&gt; vrv.addLeafletMarker(center=myLoc)</span>
+<span class="sd">		 </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGeocode</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="n">loc</span> <span class="o">=</span> <span class="n">privGeocode</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	
+	<span class="k">return</span> <span class="n">loc</span></div>
+	
+	
+<div class="viewcode-block" id="reverseGeocode"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.reverseGeocode">[docs]</a><span class="k">def</span> <span class="nf">reverseGeocode</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	location: list, Required</span>
+<span class="sd">		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].</span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+<span class="sd">	</span>
+<span class="sd">	Return</span>
+<span class="sd">	------</span>
+<span class="sd">	list</span>
+<span class="sd">		A GPS coordinate, of the form [lat, lon], indicating the location of the returned address.  Note that this location might not match the input coordinates.</span>
+<span class="sd">	dictionary</span>
+<span class="sd">		A dataProvider-specific dictionary containing address details.  The keys in this dictionary may differ according to data provider.</span>
+
+<span class="sd">	Note</span>
+<span class="sd">	----</span>
+<span class="sd">	Neither pgRouting nor OSRM are supported.  </span>
+<span class="sd">	pgRouting would require a database of the entire planet.  </span>
+<span class="sd">	OSRM doesn&#39;t have a geocode function.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	Import veroviz and check if the version is up-to-date:</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+<span class="sd">	</span>
+<span class="sd">	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:</span>
+<span class="sd">		&gt;&gt;&gt; import os</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; MQ_API_KEY = os.environ[&#39;MAPQUESTKEY&#39;]</span>
+<span class="sd">		&gt;&gt;&gt; </span>
+<span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your keys here:</span>
+<span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="sd">		&gt;&gt;&gt; # MQ_API_KEY = &#39;YOUR_MAPQUEST_KEY_GOES_HERE&#39;</span>
+<span class="sd">	</span>
+<span class="sd">	Example 1 -- Without specifying a dataProvider:</span>
+<span class="sd">		&gt;&gt;&gt; [loc, addr] = vrv.reverseGeocode(location=[47.603229, -122.33028])</span>
+<span class="sd">		&gt;&gt;&gt; loc</span>
+<span class="sd">		[47.6030474, -122.3302567]</span>
+<span class="sd">        </span>
+<span class="sd">		&gt;&gt;&gt; addr</span>
+<span class="sd">		{&#39;place_id&#39;: 18472401,</span>
+<span class="sd">		 &#39;licence&#39;: &#39;Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright&#39;,</span>
+<span class="sd">		 &#39;osm_type&#39;: &#39;node&#39;,</span>
+<span class="sd">		 &#39;osm_id&#39;: 1769027877,</span>
+<span class="sd">		 &#39;lat&#39;: &#39;47.6030474&#39;,</span>
+<span class="sd">		 &#39;lon&#39;: &#39;-122.3302567&#39;,</span>
+<span class="sd">		 &#39;display_name&#39;: &#39;SDOT, 4th Avenue, West Edge, International District/Chinatown, Seattle, King County, Washington, 98104, USA&#39;,</span>
+<span class="sd">		 &#39;address&#39;: {&#39;bicycle_parking&#39;: &#39;SDOT&#39;,</span>
+<span class="sd">		 &#39;road&#39;: &#39;4th Avenue&#39;,</span>
+<span class="sd">		 &#39;neighbourhood&#39;: &#39;West Edge&#39;,</span>
+<span class="sd">		 &#39;suburb&#39;: &#39;International District/Chinatown&#39;,</span>
+<span class="sd">		 &#39;city&#39;: &#39;Seattle&#39;,</span>
+<span class="sd">		 &#39;county&#39;: &#39;King County&#39;,</span>
+<span class="sd">		 &#39;state&#39;: &#39;Washington&#39;,</span>
+<span class="sd">		 &#39;postcode&#39;: &#39;98104&#39;,</span>
+<span class="sd">		 &#39;country&#39;: &#39;USA&#39;,</span>
+<span class="sd">		 &#39;country_code&#39;: &#39;us&#39;},</span>
+<span class="sd">		 &#39;boundingbox&#39;: [&#39;47.6029474&#39;, &#39;47.6031474&#39;, &#39;-122.3303567&#39;, &#39;-122.3301567&#39;]}</span>
+<span class="sd">	</span>
+<span class="sd">	Example 2 -- Using MapQuest:</span>
+<span class="sd">		&gt;&gt;&gt; [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], </span>
+<span class="sd">		...                                  dataProvider     = &#39;MapQuest&#39;, </span>
+<span class="sd">		...                                  dataProviderArgs = {&#39;APIkey&#39;: MQ_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; loc</span>
+<span class="sd">		[47.603229, -122.33028]</span>
+<span class="sd">		</span>
+<span class="sd">		&gt;&gt;&gt; addr</span>
+<span class="sd">		{&#39;street&#39;: &#39;431 James St&#39;,</span>
+<span class="sd">		 &#39;adminArea6&#39;: &#39;&#39;,</span>
+<span class="sd">		 &#39;adminArea6Type&#39;: &#39;Neighborhood&#39;,</span>
+<span class="sd">		 &#39;adminArea5&#39;: &#39;Seattle&#39;,</span>
+<span class="sd">		 &#39;adminArea5Type&#39;: &#39;City&#39;,</span>
+<span class="sd">		 &#39;adminArea4&#39;: &#39;King&#39;,</span>
+<span class="sd">		 &#39;adminArea4Type&#39;: &#39;County&#39;,</span>
+<span class="sd">		 &#39;adminArea3&#39;: &#39;WA&#39;,</span>
+<span class="sd">		 &#39;adminArea3Type&#39;: &#39;State&#39;,</span>
+<span class="sd">		 &#39;adminArea1&#39;: &#39;US&#39;,</span>
+<span class="sd">		 &#39;adminArea1Type&#39;: &#39;Country&#39;,</span>
+<span class="sd">		 &#39;postalCode&#39;: &#39;98104&#39;,</span>
+<span class="sd">		 &#39;geocodeQualityCode&#39;: &#39;L1AAA&#39;,</span>
+<span class="sd">		 &#39;geocodeQuality&#39;: &#39;ADDRESS&#39;,</span>
+<span class="sd">		 &#39;dragPoint&#39;: False,</span>
+<span class="sd">		 &#39;sideOfStreet&#39;: &#39;R&#39;,</span>
+<span class="sd">		 &#39;linkId&#39;: &#39;0&#39;,</span>
+<span class="sd">		 &#39;unknownInput&#39;: &#39;&#39;,</span>
+<span class="sd">		 &#39;type&#39;: &#39;s&#39;,</span>
+<span class="sd">		 &#39;latLng&#39;: {&#39;lat&#39;: 47.603229, &#39;lng&#39;: -122.33028},</span>
+<span class="sd">		 &#39;displayLatLng&#39;: {&#39;lat&#39;: 47.603229, &#39;lng&#39;: -122.33028},</span>
+<span class="sd">		 &#39;nearestIntersection&#39;: {&#39;streetDisplayName&#39;: &#39;4th Ave&#39;,</span>
+<span class="sd">		 &#39;distanceMeters&#39;: &#39;0.0&#39;,</span>
+<span class="sd">		 &#39;latLng&#39;: {&#39;longitude&#39;: -122.33028, &#39;latitude&#39;: 47.603229},</span>
+<span class="sd">		 &#39;label&#39;: &#39;James St &amp; 4th Ave&#39;},</span>
+<span class="sd">		 &#39;roadMetadata&#39;: {&#39;speedLimitUnits&#39;: &#39;mph&#39;,</span>
+<span class="sd">		 &#39;tollRoad&#39;: None,</span>
+<span class="sd">		 &#39;speedLimit&#39;: 25}}</span>
+<span class="sd">		 </span>
+<span class="sd">	Example 3 -- Using OpenRouteService:</span>
+<span class="sd">		&gt;&gt;&gt; [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], </span>
+<span class="sd">		...                                  dataProvider     = &#39;ORS-online&#39;, </span>
+<span class="sd">		...                                  dataProviderArgs = {&#39;APIkey&#39;: ORS_API_KEY})</span>
+<span class="sd">		&gt;&gt;&gt; loc</span>
+<span class="sd">		[47.603077, -122.330139]</span>
+<span class="sd">		</span>
+<span class="sd">		&gt;&gt;&gt; addr</span>
+<span class="sd">		{&#39;id&#39;: &#39;node/4491511984&#39;,</span>
+<span class="sd">		 &#39;gid&#39;: &#39;openstreetmap:venue:node/4491511984&#39;,</span>
+<span class="sd">		 &#39;layer&#39;: &#39;venue&#39;,</span>
+<span class="sd">		 &#39;source&#39;: &#39;openstreetmap&#39;,</span>
+<span class="sd">		 &#39;source_id&#39;: &#39;node/4491511984&#39;,</span>
+<span class="sd">		 &#39;name&#39;: &#39;4th Ave &amp; James St&#39;,</span>
+<span class="sd">		 &#39;confidence&#39;: 0.8,</span>
+<span class="sd">		 &#39;distance&#39;: 0.02,</span>
+<span class="sd">		 &#39;accuracy&#39;: &#39;point&#39;,</span>
+<span class="sd">		 &#39;country&#39;: &#39;United States&#39;,</span>
+<span class="sd">		 &#39;country_gid&#39;: &#39;whosonfirst:country:85633793&#39;,</span>
+<span class="sd">		 &#39;country_a&#39;: &#39;USA&#39;,</span>
+<span class="sd">		 &#39;region&#39;: &#39;Washington&#39;,</span>
+<span class="sd">		 &#39;region_gid&#39;: &#39;whosonfirst:region:85688623&#39;,</span>
+<span class="sd">		 &#39;region_a&#39;: &#39;WA&#39;,</span>
+<span class="sd">		 &#39;county&#39;: &#39;King County&#39;,</span>
+<span class="sd">		 &#39;county_gid&#39;: &#39;whosonfirst:county:102086191&#39;,</span>
+<span class="sd">		 &#39;county_a&#39;: &#39;KN&#39;,</span>
+<span class="sd">		 &#39;locality&#39;: &#39;Seattle&#39;,</span>
+<span class="sd">		 &#39;locality_gid&#39;: &#39;whosonfirst:locality:101730401&#39;,</span>
+<span class="sd">		 &#39;neighbourhood&#39;: &#39;Pioneer Square&#39;,</span>
+<span class="sd">		 &#39;neighbourhood_gid&#39;: &#39;whosonfirst:neighbourhood:85866047&#39;,</span>
+<span class="sd">		 &#39;continent&#39;: &#39;North America&#39;,</span>
+<span class="sd">		 &#39;continent_gid&#39;: &#39;whosonfirst:continent:102191575&#39;,</span>
+<span class="sd">		 &#39;label&#39;: &#39;4th Ave &amp; James St, Seattle, WA, USA&#39;}</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># validation</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valReverseGeocode</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
+
+	<span class="p">[</span><span class="n">loc</span><span class="p">,</span> <span class="n">address</span><span class="p">]</span> <span class="o">=</span> <span class="n">privReverseGeocode</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">address</span><span class="p">)</span>	</div>
 </pre></div>
 
           </div>
@@ -1806,7 +2249,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>

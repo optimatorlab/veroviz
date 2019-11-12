@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Data Providers &#8212; veroviz 0.2.2 documentation</title>
+    <title>Data Providers &#8212; veroviz 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="install.html" title="Install Dependencies"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -91,108 +91,6 @@
 <p><em>VeRoViz</em> supports the use of several data providers for querying travel directions, travel time/distance matrices, and snapping nodes to a road network.  Integration with additional data providers is planned for a future <em>VeRoViz</em> release.</p>
 <p>Functions that employ data from these providers require specification of the <cite>dataProvider</cite> itself, as well as additional arguments that are unique to the chosen <cite>dataProvider</cite> (e.g., an <cite>APIkey</cite> or a <cite>databaseName</cite>).  The <cite>routeType</cite> field can be used to differentiate between a ‘fastest’ route, a ‘shortest’ route, ‘pedestrian’ routes, etc.</p>
 <p>The following table summarizes the options and requirements for each data provider currently supported by <em>VeRoViz</em>:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 18%" />
-<col style="width: 6%" />
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 16%" />
-<col style="width: 15%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head" colspan="2"></th>
-<th class="head" colspan="5"><p><cite>dataProvider</cite> field options</p></th>
-</tr>
-<tr class="row-even"><th class="head" colspan="2"></th>
-<th class="head"><p>None</p></th>
-<th class="head"><p>‘pgRouting’</p></th>
-<th class="head"><p>‘MapQuest’</p></th>
-<th class="head"><p>‘OSRM-online’</p></th>
-<th class="head"><p>‘ORS-online’</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>required key
-in
-<cite>dataProviderArgs</cite></p></td>
-<td><p>“databaseName”</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>“APIkey”</p></td>
-<td></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-<td><p>✓</p></td>
-</tr>
-<tr class="row-odd"><td><p>allowed?</p></td>
-<td><p>snapNodesToRoad</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td><p>✓</p></td>
-<td><p>✓</p></td>
-<td><p>✓</p></td>
-</tr>
-<tr class="row-even"><td rowspan="7"><p><cite>routetype</cite>
-field
-options</p></td>
-<td><p>“fastest”</p></td>
-<td></td>
-<td><p>✓</p></td>
-<td><p>✓</p></td>
-<td><p>✓</p></td>
-<td><p>✓</p></td>
-</tr>
-<tr class="row-odd"><td><p>“shortest”</p></td>
-<td></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>“pedestrian”</p></td>
-<td></td>
-<td></td>
-<td><p>✓</p></td>
-<td></td>
-<td><p>✓</p></td>
-</tr>
-<tr class="row-odd"><td><p>“cycling”</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>✓</p></td>
-</tr>
-<tr class="row-even"><td><p>“truck”</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td><p>✓</p></td>
-</tr>
-<tr class="row-odd"><td><p>“euclidean2d”</p></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>“manhattan”</p></td>
-<td><p>✓</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 <div class="section" id="none">
 <h2>None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h2>
 <p>No data provider is chosen. Nodes and arcs are generated without consideration of any underlying road networks. Only simple types of node distributions or route types can be applied without a data provider.</p>
@@ -249,7 +147,7 @@ before using related functions.  MapQuest provides perhaps the most detailed res
         <li class="right" >
           <a href="install.html" title="Install Dependencies"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

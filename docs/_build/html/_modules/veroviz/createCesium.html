@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.createCesium &#8212; veroviz 0.2.2 documentation</title>
+    <title>veroviz.createCesium &#8212; veroviz 0.3.0 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -189,7 +189,7 @@
 	<span class="n">lstNonStationarySubAssignments</span> <span class="o">=</span> <span class="n">deconstructAssignments</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="n">assignments</span><span class="p">,</span> <span class="n">includeVerticalFlag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 	<span class="c1"># Update &#39;intervalStart&#39; and &#39;intervalEnd&#39; to cesiumTime</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
 		<span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;intervalStart&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;startTimeSec&#39;</span><span class="p">])</span>
 		<span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;intervalEnd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="n">availEnd</span>
 	<span class="n">path</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>
@@ -786,7 +786,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>
