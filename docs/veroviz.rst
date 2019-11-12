@@ -6,7 +6,7 @@ Submodules
 
 .. toctree::
 
-   veroviz.buildAssignments
+   veroviz.createAssignments
    veroviz.createCesium
    veroviz.createLeaflet
    veroviz.generateArcs

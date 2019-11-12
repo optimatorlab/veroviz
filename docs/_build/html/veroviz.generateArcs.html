@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.generateArcs module &#8212; veroviz 0.2.2 documentation</title>
+    <title>veroviz.generateArcs module &#8212; veroviz 0.3.1 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="veroviz.createLeaflet.html" title="veroviz.createLeaflet module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
       </ul>
     </div>
@@ -79,14 +79,15 @@
 <span id="veroviz-generatearcs-module"></span><h1>veroviz.generateArcs module<a class="headerlink" href="#module-veroviz.generateArcs" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="veroviz.generateArcs.createArcsFromLocSeq">
-<code class="sig-name descname">createArcsFromLocSeq</code><span class="sig-paren">(</span><em class="sig-param">locSeq=None</em>, <em class="sig-param">initArcs=None</em>, <em class="sig-param">startArc=1</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateArcs.html#createArcsFromLocSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateArcs.createArcsFromLocSeq" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">createArcsFromLocSeq</code><span class="sig-paren">(</span><em class="sig-param">locSeq=None</em>, <em class="sig-param">initArcs=None</em>, <em class="sig-param">startArc=1</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateArcs.html#createArcsFromLocSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateArcs.createArcsFromLocSeq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an “arcs” dataframe from an ordered list of coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>locSeq</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – An ordered list of locations that will be converted into an <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe. The list should be formated as [[lat1, lon1], [lat2, lon2], …, [latn, lonn]].</p></li>
+<li><p><strong>locSeq</strong> (<em>list of lists</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – An ordered list of locations that will be converted into an <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe. The list should be formated as [[lat1, lon1], [lat2, lon2], …, [latn, lonn]].</p></li>
 <li><p><strong>initArcs</strong> (<a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, Optional, default as None) – An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If provided, the arcs to be created will be appended to this dataframe.</p></li>
 <li><p><strong>startArc</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – Specifies the starting index number for the arcs.  This will be reflected in the <cite>odID</cite> column of the resulting <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If <cite>startArc</cite> is less than the minimum value of the <cite>odID</cite> found in the dataframe specified by <cite>initArcs</cite>, the value of <cite>startArc</cite> will be ignored in favor of the smallest integer greater than the maximum existing <cite>odID</cite> value.</p></li>
+<li><p><strong>objectID</strong> (<em>int/string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A descriptive name or index for a particular vehicle or object (e.g., ‘truck 1’, or ‘red car’).</p></li>
 <li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;orange&quot;</em>) – The color of the arcs when displayed in Leaflet.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
 <li><p><strong>leafletWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the arcs when displayed in Leaflet.</p></li>
 <li><p><strong>leafletStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the arcs when displayed in Leaflet.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
@@ -132,6 +133,7 @@
 <span class="gp">... </span>                      <span class="p">[</span><span class="mf">42.3424</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6424</span><span class="p">]],</span>
 <span class="gp">... </span>    <span class="n">initArcs</span>       <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">startArc</span>       <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>       <span class="o">=</span> <span class="s1">&#39;car&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletColor</span>   <span class="o">=</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletWeight</span>  <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletStyle</span>   <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
@@ -150,7 +152,7 @@
 
 <dl class="function">
 <dt id="veroviz.generateArcs.createArcsFromNodeSeq">
-<code class="sig-name descname">createArcsFromNodeSeq</code><span class="sig-paren">(</span><em class="sig-param">nodeSeq=None</em>, <em class="sig-param">nodes=None</em>, <em class="sig-param">initArcs=None</em>, <em class="sig-param">startArc=1</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateArcs.html#createArcsFromNodeSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateArcs.createArcsFromNodeSeq" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">createArcsFromNodeSeq</code><span class="sig-paren">(</span><em class="sig-param">nodeSeq=None</em>, <em class="sig-param">nodes=None</em>, <em class="sig-param">initArcs=None</em>, <em class="sig-param">startArc=1</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateArcs.html#createArcsFromNodeSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateArcs.createArcsFromNodeSeq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an “arcs” dataframe from an ordered list of node IDs.  The “nodes” dataframe from which these node IDs are drawn must also be specified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -159,6 +161,7 @@
 <li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Required) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe, which must contain the individual node IDs specified in the <cite>nodeSeq</cite> input argument.</p></li>
 <li><p><strong>initArcs</strong> (<a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, Optional, default as None) – An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If provided, the arcs to be created will be appended to this dataframe.</p></li>
 <li><p><strong>startArc</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – Specifies the starting index number for the arcs.  This will be reflected in the <cite>odID</cite> column of the resulting <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe.  If <cite>startArc</cite> is less than the minimum value of the <cite>odID</cite> found in the dataframe specified by <cite>initArcs</cite>, the value of <cite>startArc</cite> will be ignored in favor of the smallest integer greater than the maximum existing <cite>odID</cite> value.</p></li>
+<li><p><strong>objectID</strong> (<em>int/string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A descriptive name or index for a particular vehicle or object (e.g., ‘truck 1’, or ‘red car’).</p></li>
 <li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;orange&quot;</em>) – The color of the arcs when displayed in Leaflet.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
 <li><p><strong>leafletWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the arcs when displayed in Leaflet.</p></li>
 <li><p><strong>leafletStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the arcs when displayed in Leaflet.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
@@ -213,6 +216,7 @@
 <span class="gp">... </span>    <span class="n">nodes</span>          <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">initArcs</span>       <span class="o">=</span> <span class="n">myArcs</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">startArc</span>       <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>       <span class="o">=</span> <span class="s1">&#39;car&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletColor</span>   <span class="o">=</span> <span class="s1">&#39;cadetblue&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletWeight</span>  <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletStyle</span>   <span class="o">=</span> <span class="s1">&#39;dotted&#39;</span><span class="p">,</span>
@@ -256,7 +260,7 @@
         <li class="right" >
           <a href="veroviz.createLeaflet.html" title="veroviz.createLeaflet module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.2.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
       </ul>
     </div>

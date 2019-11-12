@@ -762,7 +762,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 		An assignments dataframe with a new row associated with this stationary object.
 
 	Example
-	--------
+	-------
 	Import veroviz and check the latest version.
 		>>> import veroviz as vrv
 		>>> import os
@@ -846,18 +846,14 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 
 	return assignments
 	
-
-def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, 
-leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive arcs, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
-	Notes
+	Note
 	----
-	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromArcs3D()`.
-	
-	This function creates an assignments dataframe from an arcs dataframe.  Similar functions are available to create an assignments dataframe from a sequence of nodes (`createShapepointsFromNodeSeq2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).
-	
+	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromArcs3D()`.  This function creates an assignments dataframe from an arcs dataframe.  Similar functions are available to create an assignments dataframe from a sequence of nodes (`createShapepointsFromNodeSeq2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).
+
 	Parameters
 	----------
 	initAssignments: :ref:`Assignments` dataframe, Optional, default as None
@@ -904,8 +900,8 @@ leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, u
 	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 
-	Returns
-	-------
+	Return
+	------
 	:ref:`Assignments` dataframe
 		An :ref:`Assignments` dataframe containing an ordered sequence of paired GPS coordinates describing the collection of straight-line segments required to travel through all arcs in the provided :ref:`Arcs` dataframe.
 
@@ -940,10 +936,10 @@ leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, u
 		...     dataProviderArgs = {'APIkey': ORS_API_KEY},
 		...     leafletColor     = 'blue')
 		>>> myAssignments    
-    
-    Display the assignments on a map:	
+
+	Display the assignments on a map:	
 		>>> vrv.createLeaflet(arcs=myAssignments)	
-	"""	
+	"""
 	
 	# validatation
 	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs)
@@ -979,21 +975,14 @@ leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, u
 		odID     = arcs['odID'].at[i]
 		objectID = arcs['objectID'].at[i]
 
-		leafletColor = leafletColor if (leafletColor is not None) else arcs['leafletColor'].at[i]
-		 
-		leafletWeight = leafletWeight if (leafletWeight is not None) else arcs['leafletWeight'].at[i]
-				
+		leafletColor = leafletColor if (leafletColor is not None) else arcs['leafletColor'].at[i]		 
+		leafletWeight = leafletWeight if (leafletWeight is not None) else arcs['leafletWeight'].at[i]				
 		leafletStyle = leafletStyle if (leafletStyle is not None) else arcs['leafletStyle'].at[i]
-		 
 		leafletOpacity = leafletOpacity if (leafletOpacity is not None) else arcs['leafletOpacity'].at[i]
 		useArrows = useArrows if (useArrows is not None) else arcs['useArrows'].at[i]
-		
 		cesiumColor = cesiumColor if (cesiumColor is not None) else arcs['cesiumColor'].at[i]
-		
 		cesiumWeight = cesiumWeight if (cesiumWeight is not None) else arcs['cesiumWeight'].at[i]
-		
 		cesiumStyle = cesiumStyle if (cesiumStyle is not None) else arcs['cesiumStyle'].at[i]
-		
 		cesiumOpacity = cesiumOpacity if (cesiumOpacity is not None) else arcs['cesiumOpacity'].at[i]
 		
 		tmpShapepoints = privGetShapepoints2D(
@@ -1048,22 +1037,15 @@ leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, u
 			startTime = startTime + serviceTimeSec
 
     			
-	return assignmentsDF	
-	
-	
-	
-		
-	
-	
+	return assignmentsDF
 
 def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None,   leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive node locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
-	Notes
+	Note
 	----
 	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromNodeSeq3D()`.
-	
 	This function creates an assignments dataframe from a sequence of nodes.  Similar functions are available to create an assignments dataframe from an arcs dataframe (`createShapepointsFromArcs2D()`) or from a sequence of locations (`createShapepointsFromLocSeq2D()`).
 	
 	Parameters
@@ -1326,10 +1308,9 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
-	Notes
+	Note
 	----
 	This function is for vehicles traveling on a ground plane (2-dimensional).  For vehicles requiring an altitude component (e.g., drones), a 3D version of this function is provided by `createAssignmentsFromLocSeq3D()`.
-	
 	This function creates an assignments dataframe from a sequence of [lat, lon] locations.  Similar functions are available to create an assignments dataframe from an arcs dataframe (`createShapepointsFromArcs2D()`) or from a sequence of nodes (`createShapepointsFromNodeSeq2D()`).
 	
 	Parameters
