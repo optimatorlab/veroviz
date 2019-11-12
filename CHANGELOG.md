@@ -1,5 +1,9 @@
 ### Change Log
 
+#### Version 0.3.1 (2019-11-12)
+
+- Corrected typo error in `findLocsAtTime()` function.
+
 #### Version 0.3.0 (2019-11-11)
 
 This version adds new functionality through several new functions:

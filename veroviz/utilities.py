@@ -1886,7 +1886,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 	
 		if (len(tmpAsgn) == 0):
 			output[objectID] = None
-			print("Warning: objectID `%s` is not tracked at time %.2f seconds" % (objectID, t))
+			print("Warning: objectID `%s` is not tracked at time %.2f seconds" % (objectID, timeSec))
 		else:
 			outList = []
 			for id in tmpAsgn.index:
