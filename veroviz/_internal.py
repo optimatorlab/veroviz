@@ -144,36 +144,44 @@ def areaOfTriangle(loc1, loc2, loc3):
 	return area
 
 def delHeadSlash(originStr):
-	firstChar = originStr[:1]
-	if (firstChar == "/"):
-		newStr = originStr[1:]
+	if (originStr is not None):
+		firstChar = originStr[:1]
+		if (firstChar == "/"):
+			newStr = originStr[1:]
+		else:
+			newStr = originStr
 	else:
 		newStr = originStr
 
 	return newStr
 
 def delTailSlash(originStr):
-	tailChar = originStr[-1]
-	if (tailChar == "/"):
-		newStr = originStr[:-1]
+	if (originStr is not None):
+		tailChar = originStr[-1]
+		if (tailChar == "/"):
+			newStr = originStr[:-1]
+		else:
+			newStr = originStr
 	else:
 		newStr = originStr
 
 	return newStr
 
 def addHeadSlash(originStr):
-	firstChar = originStr[:1]
-	if (firstChar != "/"):
-		newStr = '/' + originStr
-	else:
-		newStr = originStr
-
-	return newStr
+	if (originStr is not None):
+		firstChar = originStr[:1]
+		if (firstChar != "/"):
+			originStr = '/' + originStr
+		
+	return originStr
 
 def addTailSlash(originStr):
-	tailChar = originStr[-1]
-	if (tailChar != "/"):
-		newStr = originStr + "/"
+	if (originStr is not None):
+		tailChar = originStr[-1]
+		if (tailChar != "/"):
+			newStr = originStr + "/"
+		else:
+			newStr = originStr
 	else:
 		newStr = originStr
 

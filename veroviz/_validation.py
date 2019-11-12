@@ -1134,7 +1134,7 @@ def valInitDataframe(dataframe):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1160,7 +1160,9 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWei
 			if (len(initArcs) > 0):
 				maxID = max(initArcs['odID'])
 				if (maxID >= startArc):
-					warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					# 2019-11-07 -- removed warning message
+					# warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					pass
 
 	if (valFlag):
 		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
@@ -1189,7 +1191,7 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWei
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1226,7 +1228,9 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, leafletColor, l
 			if (len(initArcs) > 0):
 				maxID = max(initArcs['odID'])
 				if (maxID >= startArc):
-					warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					# 2019-11-07 -- removed warning message
+					# warningMsg += "Warning: 'odID' in `initArcs` is already larger than `startArc`.  Overriding `startArc` with maximum `odID` + 1.\n"
+					pass
 
 	if (valFlag):
 		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
@@ -1321,6 +1325,562 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	if (valFlag):
 		if ((cesiumIconType != None) or (cesiumIconText != None) or (cesiumColor != None)):
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumNodeInputs(cesiumIconType, cesiumColor)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+
+def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (arcs is None):
+			valFlag = False
+			errorMsg = "Error: The 'arcs' dataframe is required."
+			
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valArcs(arcs)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(modelScale, 'modelScale')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(modelMinPxSize, 'modelMinPxSize')
+		warningMsg += newWarningMsg
+
+	dummyExpDurationSec = None
+	
+	if (valFlag):
+		if (expDurationArgs is not None):
+			if ('getTravelTimes' in expDurationArgs):
+				if (type(expDurationArgs['getTravelTimes']) is not bool):
+					valFlag = False
+					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value." 
+				else:
+					if (expDurationArgs['getTravelTimes']):
+						dummyExpDurationSec = 1.23		# dummy positive value
+					else:
+						dummyExpDurationSec = None		# won't use exp duration			
+			else:
+				valFlag = False
+				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(serviceTimeSec, 'serviceTimeSec')
+		warningMsg += newWarningMsg
+
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		for i in arcs.index:
+			if (not valFlag):
+				break
+
+			startLoc = [arcs['startLat'].at[i], arcs['startLon'].at[i]]
+			endLoc   = [arcs['endLat'].at[i], arcs['endLon'].at[i]]
+	
+			if (startLoc != endLoc):
+				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
+				warningMsg += newWarningMsg
+
+			if (valFlag and routeType not in ['euclidean2d', 'manhattan']):
+				if (startLoc != endLoc):
+					locs = [startLoc, endLoc]
+					[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
+					warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			try:
+				cesiumStyle = cesiumStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]	
+
+
+def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	if (nodeSeq == None):
+		valFlag = False
+		errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		for i in range(len(nodeSeq)):
+			if (not valFlag):
+				break
+			if (valFlag):
+				[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(nodeSeq[i], 'nodeSeq')
+			if (valFlag):
+				if (nodeSeq[i] not in nodes['id'].tolist()):
+					valFlag = False
+					errorMsg = "Error: 'nodes' dataframe does not contain a node with `id = %s`." % (nodeSeq[i])
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(modelScale, 'modelScale')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(modelMinPxSize, 'modelMinPxSize')
+		warningMsg += newWarningMsg
+
+	dummyExpDurationSec = None
+	
+	if (valFlag):
+		if (expDurationArgs is not None):
+			if ('timeSecDict' in expDurationArgs):
+				dummyExpDurationSec = 1.23		# dummy positive value
+				
+				# make sure there are valid times here
+				if (type(expDurationArgs['timeSecDict']) is not dict):
+					valFlag = False
+					errorMsg = "Error: `expDurationArgs['timeSecDict']` must be a travel time dictionary, with travel times in units of seconds."
+				else:
+					for i in range(0, len(nodeSeq)-1):
+						if (not valFlag):
+							break
+						if ((nodeSeq[i], nodeSeq[i+1]) not in expDurationArgs['timeSecDict']):
+							valFlag = False
+							errorMsg = "Error: `expDurationArgs['timeSecDict']` does not contain a travel time from node %d to node %d" % (nodeSeq[i], nodeSeq[i+1])
+						else:
+							[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(expDurationArgs['timeSecDict'][nodeSeq[i], nodeSeq[i+1]], "expDurationArgs['timeSecDict'][%d, %d]" % (nodeSeq[i], nodeSeq[i+1]))
+								
+			elif ('getTravelTimes' in expDurationArgs):
+				if (type(expDurationArgs['getTravelTimes']) is not bool):
+					valFlag = False
+					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value." 
+				else:
+					if (expDurationArgs['getTravelTimes']):
+						dummyExpDurationSec = 1.23		# dummy positive value
+					else:
+						dummyExpDurationSec = None		# won't use exp duration			
+	
+			else:
+				valFlag = False
+				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(serviceTimeSec, 'serviceTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (odID is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(odID, 'odID')
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `odID` is required."
+
+	if (valFlag):
+		if (objectID == None):
+			warningMsg += "Warning: `objectID` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		for i in range(0, len(nodeSeq)-1):
+			if (not valFlag):
+				break
+
+			startLoc = [nodes.loc[nodes['id'] == nodeSeq[i]]['lat'].values[0],
+						nodes.loc[nodes['id'] == nodeSeq[i]]['lon'].values[0]]
+			endLoc   = [nodes.loc[nodes['id'] == nodeSeq[i+1]]['lat'].values[0],
+						nodes.loc[nodes['id'] == nodeSeq[i+1]]['lon'].values[0]]
+	
+			if (startLoc != endLoc):
+				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
+				warningMsg += newWarningMsg
+
+			if (valFlag and routeType not in ['euclidean2d', 'manhattan']):
+				if (startLoc != endLoc):
+					locs = [startLoc, endLoc]
+					[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
+					warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			try:
+				cesiumStyle = cesiumStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]	
+
+def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	if (locSeq == None):
+		valFlag = False
+		errorMsg = "Error: `locSeq` is required.  Please enter the sequence of locations in the format of [[lat, lon], [lat, lon], ...] or [[lat, lon, alt], [lat, lon, alt], ...]."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locSeq)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(modelScale, 'modelScale')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(modelMinPxSize, 'modelMinPxSize')
+		warningMsg += newWarningMsg
+
+	dummyExpDurationSec = None
+	
+	if (valFlag):
+		if (expDurationArgs is not None):
+			if ('getTravelTimes' in expDurationArgs):
+				if (type(expDurationArgs['getTravelTimes']) is not bool):
+					valFlag = False
+					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value." 
+				else:
+					if (expDurationArgs['getTravelTimes']):
+						dummyExpDurationSec = 1.23		# dummy positive value
+					else:
+						dummyExpDurationSec = None		# won't use exp duration
+			else:
+				valFlag = False
+				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(serviceTimeSec, 'serviceTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (odID is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(odID, 'odID')
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `odID` is required."
+
+	if (valFlag):
+		if (objectID == None):
+			warningMsg += "Warning: `objectID` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		for i in range(0, len(locSeq)-1):
+			if (not valFlag):
+				break
+
+			startLoc = locSeq[i]
+			endLoc   = locSeq[i+1]
+	
+			if (startLoc != endLoc):
+				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
+				warningMsg += newWarningMsg
+
+			if (valFlag and routeType not in ['euclidean2d', 'manhattan']):
+				if (startLoc != endLoc):
+					locs = [startLoc, endLoc]
+					[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
+					warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			try:
+				cesiumStyle = cesiumStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]	
+
+
+def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (valFlag):
+		if (odID is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(odID, 'odID')
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `odID` is required for `addAssignment2D()`."
+
+	if (valFlag):
+		if (objectID == None):
+			warningMsg += "Warning: `objectID` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (startLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(startLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `startLoc` is required for `addAssignment2D()`."
+
+	if (valFlag):
+		if (endLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(endLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `endLoc` is required for `addAssignment2D()`."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (startLoc != endLoc):
+			[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvider)
+			warningMsg += newWarningMsg
+
+	if (valFlag and routeType not in ['euclidean2d', 'manhattan']):
+		if (startLoc != endLoc):
+			locs = [startLoc, endLoc]
+			[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			try:
+				cesiumStyle = cesiumStyle.lower()
+			except:
+				pass
+				
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+			warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+	
+
+def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (initAssignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(initAssignments)
+		warningMsg += newWarningMsg
+
+	try:
+		routeType = routeType.lower()
+	except:
+		pass
+
+	if (valFlag):
+		if (odID is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(odID, 'odID')
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `odID` is required for `addAssignment3D()`."
+
+	if (valFlag):
+		if (startLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(startLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `startLoc` is required for `addAssignment3D()`."
+
+	if (valFlag):
+		if (endLoc is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLon(endLoc)
+			warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error: `endLoc` is required for `addAssignment3D()`."
+
+	if (valFlag):
+		if (objectID == None):
+			warningMsg += "Warning: `objectID` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag):
+		if (modelFile == None):
+			warningMsg += "Warning: `modelFile` is None; the Assignments dataframe can not be visualized by Cesium.\n"
+
+	if (valFlag and startTimeSec is not None):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(startTimeSec, 'startTimeSec')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valRouteType3D(routeType, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
+		warningMsg += newWarningMsg
+
+	if (valFlag and routeType != 'straight'):
+		if (len(startLoc)==3):
+			startAlt = startLoc[2]
+		else:
+			startAlt = 0
+		if (len(endLoc)==3):
+			endAlt = endLoc[2]
+		else:
+			endAlt = 0
+		[valFlag, errorMsg, newWarningMsg] = _valAltitude(startAlt, cruiseAltMetersAGL, endAlt)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLoiterPosition(loiterPosition)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
+			try:
+				leafletColor = leafletColor.lower()
+			except:
+				pass
+				
+			try:
+				leafletStyle = leafletStyle.lower()
+			except:
+				pass
+		
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
+			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
@@ -1436,7 +1996,7 @@ def valAssignments(assignments):
 		warningMsg += newWarningMsg
 
 	if (valFlag):
-		for i in range(len(assignments)):
+		for i in assignments.index:
 			assignments.at[i, 'modelFile'] = addHeadSlash(assignments.at[i, 'modelFile'])
 
 	return [valFlag, errorMsg, warningMsg]
@@ -1674,6 +2234,57 @@ def valGetMapBoundary(nodes, arcs, locs):
 		
 	return [valFlag, errorMsg, warningMsg]
 
+
+def valFindLocsAtTime(assignments, timeSec):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (assignments is None):
+		valFlag = False
+		errorMsg = "Error: An assignments dataframe is required."
+		
+	if (valFlag and assignments is not None):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(assignments)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(timeSec, 'timeSec')
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+	
+	
+def valGeocode(location, dataProvider, dataProviderArgs):    
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (location == None):
+		valFlag = False
+		errorMsg = "Error: A location (as a text string) is required for `geocode()`."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGeoDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]    
+	
+def valReverseGeocode(location, dataProvider, dataProviderArgs):    
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+	warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGeoDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]    
+
+	
 def _valMapBoundary(mapBoundary, zoomStart):
 	valFlag = True
 	errorMsg = ""
@@ -1918,6 +2529,36 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 
+
+def _valGeoDataProvider(dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		dataProvider = dataProvider.lower()
+	except:
+		pass
+
+	if (dataProvider == None):
+		pass
+	elif (dataProvider not in geoDataProviderDictionary.keys()):
+		errorMsg = "Error: Invalid `dataProvider` value. Valid options include 'MapQuest', and 'ORS-online'."
+		valFlag = False
+	else:
+		if (geoDataProviderDictionary[dataProvider] == "mapquest"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'MapQuest'`."
+
+		if (geoDataProviderDictionary[dataProvider] == "ors-online"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+	return [valFlag, errorMsg, warningMsg]
+	
+	
 def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 	valFlag = True
 	errorMsg = ""

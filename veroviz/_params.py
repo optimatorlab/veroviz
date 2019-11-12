@@ -86,7 +86,8 @@ nodesColumnList = [
 ]
 
 arcsColumnList = [
-	'odID', 
+	'odID',
+	'objectID', 
 	'startLat', 
 	'startLon',
 	'endLat', 
@@ -244,6 +245,18 @@ dataProviderDictionary = {
 
 	'osrm-online': 'osrm-online',
 	'osrm-ol': 'osrm-online',
+
+	'openrouteservice-online': 'ors-online',
+	'openrouteservice-ol': 'ors-online',
+	'ors-online': 'ors-online',
+	'ors-ol': 'ors-online'
+}
+
+# NOTE:  The only valid dataProviders for the geocode()/reverseGeocode() functions are:
+#        None, 'ors-online', and 'mapquest'
+geoDataProviderDictionary = {
+	'mapquest': 'mapquest',
+	'mq': 'mapquest',
 
 	'openrouteservice-online': 'ors-online',
 	'openrouteservice-ol': 'ors-online',

@@ -131,7 +131,7 @@ def createCesium(assignments=None, nodes=None, startDate=None, startTime='08:00:
 	lstNonStationarySubAssignments = deconstructAssignments(assignments=assignments, includeVerticalFlag=True)
 
 	# Update 'intervalStart' and 'intervalEnd' to cesiumTime
-	for i in range(len(path)):
+	for i in path.index:
 		path.at[i, 'intervalStart'] = _getCesiumTime(startDate, startTime, path.at[i, 'startTimeSec'])
 		path.at[i, 'intervalEnd'] = _getCesiumTime(startDate, startTime, path.at[i, 'endTimeSec']) if (path.at[i, 'endTimeSec'] >= 0) else availEnd
 	path.drop(columns = ['startTimeSec', 'endTimeSec'])

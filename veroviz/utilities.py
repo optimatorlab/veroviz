@@ -2,6 +2,7 @@ from veroviz._common import *
 from veroviz._validation import *
 from veroviz._geometry import *
 from veroviz._internal import *
+from veroviz._geocode import privGeocode, privReverseGeocode
 
 def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 	"""
@@ -876,7 +877,7 @@ def importDataFromCSV(dataType, filename):
 					# print("Message: %s was successfully imported as Nodes dataframe" % filename)
 					pass
 				else:
-					print("Error: %s was not successfully imported.  Check the data type." % filename)
+					print("%s  %s was not successfully imported." % (errorMsg, filename))
 					return
 			elif (dataType.lower() == 'arcs'):
 				[valFlag, errorMsg, warningMsg] = valArcs(data)
@@ -884,7 +885,7 @@ def importDataFromCSV(dataType, filename):
 					# print("Message: %s was successfully imported as Arcs dataframe" % filename)
 					pass
 				else:
-					print("Error: %s was not successfully imported.  Check the data type." % filename)
+					print("%s  %s was not successfully imported." % (errorMsg, filename))
 					return
 			elif (dataType.lower() == 'assignments'):
 				[valFlag, errorMsg, warningMsg] = valAssignments(data)
@@ -892,7 +893,7 @@ def importDataFromCSV(dataType, filename):
 					# print("Message: %s was successfully imported as Assignments dataframe" % filename)
 					pass
 				else:
-					print("Error: %s was not successfully imported.  Check the data type." % filename)
+					print("%s  %s was not successfully imported." % (errorMsg, filename))
 					return
 			else:
 				return
@@ -902,7 +903,7 @@ def importDataFromCSV(dataType, filename):
 			dataframe.columns = dataframe.columns.astype(int)
 			data = convertMatricesDataframeToDictionary(dataframe)
 		else:
-			print("Error: data type not supported, expecting 'nodes', 'arcs', 'assignments' or 'matrix' (for time matrix or distance matrix)")
+			print("Error: data type not supported.  Expected 'nodes', 'arcs', 'assignments' or 'matrix' (for time matrix or distance matrix)")
 
 	except (TypeError, ValueError):
 		print("Error: Cannot import file: %s, check if `dataType` is correct for inputs." % (filename))
@@ -1732,3 +1733,445 @@ def getHeading(currentLoc, goalLoc):
 
 	return bearingInDegree
 
+
+
+def findLocsAtTime(assignments=None, timeSec=0.0):
+	"""
+	Finds the estimated location of each unique `objectID` in an input `assignments` dataframe at the given time.  The output is a dictionary, where the keys are unique objectIDs.  The corresponding value for each `objectID` key will be `None` if the object is not defined at the given value of `timeSec`, the value will be a list of the form [lat, lon, alt] if a single match is found, or the value will be a list of lists of the form [[lat1, lon1, alt1], ..., [latn, lonn, altn]] if n matches are found.  In the latter case, this is typically indicative of duplicate entries in the assignments dataframe (as each object should not appear in multiple locations simultaneously).
+
+	Parameters
+	----------
+	assignments: :ref:`Assignments` dataframe, Required, default as None
+		Each row of an :ref:`Assignments` dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).
+	timeSec: float, Optional, default as 0.0
+		The time, in seconds, at which it is desired to find an estimate of each object's location.
+	
+	Return
+	------
+	dictionary
+		A dictionary describing the estimated location of each unique `objectID` in the input assignments dataframe.  See above for a description of the key/value pairs.
+
+	Example
+	-------
+	Import veroviz and check if it's the latest version:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Define 5 node locations, as [lat, lon] pairs:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Generate a nodes dataframe from these locations:
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+
+	Construct an assignments dataframe for two vehicles, a drone and a truck.  The truck will visit nodes 1 -> 2 -> 3 -> 1.  The drone will visit nodes 1 -> 4 -> 5 -> 1.
+		>>> mySolution = {
+		...     'truck': [[1,2], [2,3], [3,1]],
+		...     'drone': [[1,4], [4,5], [5,1]]
+		... }
+
+	Define some information about our 2 vehicles, for use below:
+		>>> vehicleProperties = {
+		...     'drone': {'model': 'veroviz/models/drone.gltf',
+		...               'leafletColor': 'red',
+		...               'cesiumColor': 'Cesium.Color.RED'},
+		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...               'leafletColor': 'blue',
+		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		... }
+
+	This example assumes the use of ORS as the data provider. 
+		>>> # If you have saved your API key as an environment variable, you may use `os.environ` to access it:
+		>>> import os
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> # Otherwise, you may specify your key here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+
+	Initialize an empty assignments dataframe:
+		>>> myAssignments = vrv.initDataframe('assignments')
+
+
+	Build assignments for the truck route:
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['truck']:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments  = myAssignments,
+		...             objectID         = 'truck',
+		...             modelFile        = vehicleProperties['truck']['model'],
+		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec     = endTimeSec,
+		...             leafletColor     = vehicleProperties['truck']['leafletColor'],
+		...             cesiumColor      = vehicleProperties['truck']['cesiumColor'], 
+		...             routeType        = 'fastest',
+		...             dataProvider     = 'ORS-online', 
+		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myAssignments
+		
+	Build assignments for the drone deliveries:
+		>>> endTimeSec = 0.0
+		>>> for arc in mySolution['drone']:
+		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...         initAssignments    = myAssignments,
+		...         objectID           = 'drone',
+		...         modelFile          = vehicleProperties['drone']['model'],
+		...         startLoc           = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...         endLoc             = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...         startTimeSec       = endTimeSec,
+		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...         routeType          = 'square',
+		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
+		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		>>> myAssignments
+		
+	Show the nodes and assignments on a map:
+		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
+
+	Find the location of each vehicle at time 30.0:
+		>>> currentLocs = vrv.findLocsAtTime(assignments=myAssignments, timeSec=30.0)
+		>>> 
+		>>> # Or, we can just find the location of the drone at time 30.0:
+		>>> # currentLocs = vrv.findLocsAtTime(
+		>>> #    assignments=myAssignments[myAssignments['objectID'] == 'drone'], 
+		>>> #    timeSec=30.0)
+		>>> currentLocs
+		
+	Display the estimated locations on a map:		
+		>>> myMap = vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
+		>>> for objectID in currentLocs:
+		...     if (type(currentLocs[objectID]) is list):
+		...         # This objectID has at least 1 location at this time:
+		...         if (type(currentLocs[objectID][0]) is list):
+		...             # There were multiple matches for this objectID:
+		...             for i in currentLocs[objectID]:
+		...                 myMap = vrv.addLeafletMarker(mapObject=myMap, center=i)
+		...         else:
+		...             # We only have one location for this objectID:
+		...             myMap = vrv.addLeafletMarker(mapObject=myMap, 
+		...                                          center=currentLocs[objectID], 
+		...                                          radius=9, 
+		...                                          fillOpacity=0.7, 
+		...                                          fillColor='black')
+		>>> myMap		
+	"""
+
+	[valFlag, errorMsg, warningMsg] = valFindLocsAtTime(assignments, timeSec)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+
+	output = {}
+
+	asgnCopy = assignments.copy()
+
+	# Get list of unique objectIDs:
+	uniqueIDs = list(asgnCopy['objectID'].unique())
+
+	# Replace "-1" end time with +infinity
+	asgnCopy.loc[asgnCopy['endTimeSec'] < 0, 'endTimeSec'] = float('Inf')
+
+	for objectID in uniqueIDs:
+		tmpAsgn = asgnCopy[(asgnCopy['objectID'] == objectID) & 
+			(asgnCopy['startTimeSec'] <= timeSec) & 
+			(asgnCopy['endTimeSec'] >= timeSec)] 
+	
+		if (len(tmpAsgn) == 0):
+			output[objectID] = None
+			print("Warning: objectID `%s` is not tracked at time %.2f seconds" % (objectID, t))
+		else:
+			outList = []
+			for id in tmpAsgn.index:
+				startLat     = tmpAsgn['startLat'].at[id]
+				startLon     = tmpAsgn['startLon'].at[id]
+				startAlt     = tmpAsgn['startAltMeters'].at[id]
+				startTimeSec = tmpAsgn['startTimeSec'].at[id]
+			
+				endLat     = tmpAsgn['endLat'].at[id]
+				endLon     = tmpAsgn['endLon'].at[id]
+				endAlt     = tmpAsgn['endAltMeters'].at[id]
+				endTimeSec = tmpAsgn['endTimeSec'].at[id]
+
+				# Find percentage of time:
+				if (endTimeSec < float('Inf')):
+					pct = (timeSec - startTimeSec) / (endTimeSec - startTimeSec)
+				else:
+					pct = 0.0
+			
+				# Find distance from start to end:
+				distMeters = geoDistance2D([startLat, startLon], [endLat, endLon])
+			
+				if (distMeters == 0.0):
+					newLoc = [startLat, startLon]
+				else: 
+					# Get initial heading from start to end:
+					hdgDeg = geoGetHeading([startLat, startLon], [endLat, endLon])
+
+					# Get expected lat/lon coords:
+					newLoc = geoPointInDistance2D([startLat, startLon], hdgDeg, distMeters*pct)
+
+				# Interpolate altitude:
+				newAlt = startAlt + (endAlt - startAlt)*pct
+			
+				# Add to our list of expected locations for this id:
+				outList.append([newLoc[0], newLoc[1], newAlt])
+
+			if (len(outList) == 1):
+				output[objectID] = outList[0]
+					
+			else:
+				# 
+				print("Warning: objectID `%s` appears in %d matching rows.  Perhaps the assignments dataframe has duplicate entries?" % (objectID, len(tmpAsgn)))
+				output[objectID] = outList
+	
+	return output			
+				
+def geocode(location=None, dataProvider=None, dataProviderArgs=None):
+	"""
+	Convert a street address, city, state, or zip code to GPS coordinates ([lat, lon] format).
+
+	Parameters
+	----------
+	location: string, Required
+		A text string indicating a street address, state, or zip code.
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	list
+		A GPS coordinate, of the form [lat, lon].
+
+	Note
+	----
+	Neither pgRouting nor OSRM are supported.  
+	pgRouting would require a database of the entire planet.  
+	OSRM doesn't have a geocode function.
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
+
+	Example 1 - Find [lat, lon] of Buckingham Palace, without specifying a data provider:
+		>>> myLoc = vrv.geocode(location='Westminster, London SW1A 1AA, United Kingdom')
+		>>> myLoc
+		[51.5008719, -0.1252387]
+	
+	Example 2 - Find [lat, lon] of Buckingham Palace, using ORS-online as the data provider:
+		>>> myLoc = vrv.geocode(location         ='Westminster, London SW1A 1AA, United Kingdom', 
+		...                     dataProvider     ='ors-online', 
+		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc
+		[51.497991, -0.12875]
+        
+	Example 3 - Find [lat, lon] of Seattle, Washington, USA:
+		>>> myLoc = vrv.geocode(location         ='seattle, wa', 
+		...                     dataProvider     ='mapquest', 
+		...                     dataProviderArgs = {'APIkey': MQ_API_KEY})
+		>>> myLoc
+		[47.603229, -122.33028]
+
+	Example 4 - Find [lat, lon] of the state of Florida, USA:
+		>>> myLoc = vrv.geocode(location         ='florida', 
+		...                     dataProvider     ='ors-ONLINE', 
+		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc
+		[27.97762, -81.769611]
+
+	Example 5 - Find [lat, lon] of the Space Needle (in Seattle, WA):
+		>>> myLoc = vrv.geocode(location         ='space needle', 
+		...                     dataProvider     ='ors-ONLINE', 
+		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc
+		[47.620336, -122.349314]  
+
+	Draw the geocoded location as a red dot on a Leaflet map:
+		>>> vrv.addLeafletMarker(center=myLoc)
+		 
+	"""
+	
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGeocode(location, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	loc = privGeocode(location, dataProvider, dataProviderArgs)
+	
+	return loc
+	
+	
+def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):    
+	"""
+	Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
+
+	Parameters
+	----------
+	location: list, Required
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	list
+		A GPS coordinate, of the form [lat, lon], indicating the location of the returned address.  Note that this location might not match the input coordinates.
+	dictionary
+		A dataProvider-specific dictionary containing address details.  The keys in this dictionary may differ according to data provider.
+
+	Note
+	----
+	Neither pgRouting nor OSRM are supported.  
+	pgRouting would require a database of the entire planet.  
+	OSRM doesn't have a geocode function.
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
+	
+	Example 1 -- Without specifying a dataProvider:
+		>>> [loc, addr] = vrv.reverseGeocode(location=[47.603229, -122.33028])
+		>>> loc
+		[47.6030474, -122.3302567]
+        
+		>>> addr
+		{'place_id': 18472401,
+		 'licence': 'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
+		 'osm_type': 'node',
+		 'osm_id': 1769027877,
+		 'lat': '47.6030474',
+		 'lon': '-122.3302567',
+		 'display_name': 'SDOT, 4th Avenue, West Edge, International District/Chinatown, Seattle, King County, Washington, 98104, USA',
+		 'address': {'bicycle_parking': 'SDOT',
+		 'road': '4th Avenue',
+		 'neighbourhood': 'West Edge',
+		 'suburb': 'International District/Chinatown',
+		 'city': 'Seattle',
+		 'county': 'King County',
+		 'state': 'Washington',
+		 'postcode': '98104',
+		 'country': 'USA',
+		 'country_code': 'us'},
+		 'boundingbox': ['47.6029474', '47.6031474', '-122.3303567', '-122.3301567']}
+	
+	Example 2 -- Using MapQuest:
+		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
+		...                                  dataProvider     = 'MapQuest', 
+		...                                  dataProviderArgs = {'APIkey': MQ_API_KEY})
+		>>> loc
+		[47.603229, -122.33028]
+		
+		>>> addr
+		{'street': '431 James St',
+		 'adminArea6': '',
+		 'adminArea6Type': 'Neighborhood',
+		 'adminArea5': 'Seattle',
+		 'adminArea5Type': 'City',
+		 'adminArea4': 'King',
+		 'adminArea4Type': 'County',
+		 'adminArea3': 'WA',
+		 'adminArea3Type': 'State',
+		 'adminArea1': 'US',
+		 'adminArea1Type': 'Country',
+		 'postalCode': '98104',
+		 'geocodeQualityCode': 'L1AAA',
+		 'geocodeQuality': 'ADDRESS',
+		 'dragPoint': False,
+		 'sideOfStreet': 'R',
+		 'linkId': '0',
+		 'unknownInput': '',
+		 'type': 's',
+		 'latLng': {'lat': 47.603229, 'lng': -122.33028},
+		 'displayLatLng': {'lat': 47.603229, 'lng': -122.33028},
+		 'nearestIntersection': {'streetDisplayName': '4th Ave',
+		 'distanceMeters': '0.0',
+		 'latLng': {'longitude': -122.33028, 'latitude': 47.603229},
+		 'label': 'James St & 4th Ave'},
+		 'roadMetadata': {'speedLimitUnits': 'mph',
+		 'tollRoad': None,
+		 'speedLimit': 25}}
+		 
+	Example 3 -- Using OpenRouteService:
+		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
+		...                                  dataProvider     = 'ORS-online', 
+		...                                  dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> loc
+		[47.603077, -122.330139]
+		
+		>>> addr
+		{'id': 'node/4491511984',
+		 'gid': 'openstreetmap:venue:node/4491511984',
+		 'layer': 'venue',
+		 'source': 'openstreetmap',
+		 'source_id': 'node/4491511984',
+		 'name': '4th Ave & James St',
+		 'confidence': 0.8,
+		 'distance': 0.02,
+		 'accuracy': 'point',
+		 'country': 'United States',
+		 'country_gid': 'whosonfirst:country:85633793',
+		 'country_a': 'USA',
+		 'region': 'Washington',
+		 'region_gid': 'whosonfirst:region:85688623',
+		 'region_a': 'WA',
+		 'county': 'King County',
+		 'county_gid': 'whosonfirst:county:102086191',
+		 'county_a': 'KN',
+		 'locality': 'Seattle',
+		 'locality_gid': 'whosonfirst:locality:101730401',
+		 'neighbourhood': 'Pioneer Square',
+		 'neighbourhood_gid': 'whosonfirst:neighbourhood:85866047',
+		 'continent': 'North America',
+		 'continent_gid': 'whosonfirst:continent:102191575',
+		 'label': '4th Ave & James St, Seattle, WA, USA'}
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valReverseGeocode(location, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
+
+	return (loc, address)	

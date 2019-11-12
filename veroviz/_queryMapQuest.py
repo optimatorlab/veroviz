@@ -328,3 +328,77 @@ def mqGetTimeDistMany2One(fromLocs, toLoc, routeType='fastest', APIkey=None):
 		print("Message: Unable to connect MapQuest, the most common causes are 1) that your computer isn't connected to the network; 2) an invalid key is provided.")
 
 	return [timeSecs, distMeters]
+	
+def mqGeocode(text, APIkey):
+	"""
+	Geocode from a text string using MapQuest
+	
+	Parameters
+	----------
+	text: string
+		A text string describing an address, city, or landmark.
+	    
+	Returns
+	-------
+	loc: list
+		A geocoded location in the format of [lat, lon].
+	"""
+	
+	geocodeUrl = ('http://www.mapquestapi.com/geocoding/v1/address?key=%s&maxResults=1&thumbMaps=false&outFormat=json&location=%s') % (APIkey, text)
+	
+	try:
+		http = urllib3.PoolManager()
+		response = http.request('GET', geocodeUrl)
+		data = json.loads(response.data.decode('utf-8'))
+		http_status = response.status
+		if (data['info']['statuscode'] == 0):
+			loc = [data['results'][0]['locations'][0]['latLng']['lat'], data['results'][0]['locations'][0]['latLng']['lng']]
+			return loc
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+	except:
+		print("Message: Unable to connect to MapQuest, the most common causes are 1) that your computer isn't connected to the network; 2) an invalid key is provided.")
+		print("Error: ", sys.exc_info()[1])
+		raise 
+		
+def mqReverseGeocode(loc, APIkey):
+	"""
+	Reverse Geocode from a [lat, lon] or [lat, lon, alt] location using MapQuest
+	
+	Parameters
+	----------
+	loc: list
+		Of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.
+	    
+	Returns
+	-------
+	snapLoc: list
+		Of the form [lat, lon].  This is the nearest point to the given (input) location.
+	address: dictionary
+		A dataProvider-specific dictionary containing address details.
+	"""
+	
+	geocodeUrl = ('http://www.mapquestapi.com/geocoding/v1/reverse?key=%s&thumbMaps=false&outFormat=json&includeNearestIntersection=true&includeRoadMetadata=true&location=%s,%s') % (APIkey, loc[0], loc[1])
+	try:
+		http = urllib3.PoolManager()
+		response = http.request('GET', geocodeUrl)
+		data = json.loads(response.data.decode('utf-8'))
+		http_status = response.status
+		if (data['info']['statuscode'] == 0):
+			snapLoc = [data['results'][0]['locations'][0]['latLng']['lat'], 
+                       data['results'][0]['locations'][0]['latLng']['lng']]
+			address = data['results'][0]['locations'][0]
+			return (snapLoc, address)
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+	except:
+		print("Message: Unable to connect to MapQuest, the most common causes are that 1) your computer isn't connected to the network; 2) an invalid key was provided.")
+		print("Error: ", sys.exc_info()[1])
+		raise
+		

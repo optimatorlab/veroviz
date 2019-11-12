@@ -4,19 +4,21 @@ from veroviz._validation import valCreateArcsFromNodeSeq
 
 from veroviz._createEntitiesFromList import privCreateArcsFromLocSeq
 
-def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
 
 	"""
 	Create an "arcs" dataframe from an ordered list of coordinates.
 
 	Parameters
 	----------
-	locSeq: list, Required, default as None
+	locSeq: list of lists, Required, default as None
 		An ordered list of locations that will be converted into an :ref:`Arcs` dataframe. The list should be formated as [[lat1, lon1], [lat2, lon2], ..., [latn, lonn]].
 	initArcs: :ref:`Arcs`, Optional, default as None
 		An :ref:`Arcs` dataframe.  If provided, the arcs to be created will be appended to this dataframe.
 	startArc: int, Optional, default as 1
 		Specifies the starting index number for the arcs.  This will be reflected in the `odID` column of the resulting :ref:`Arcs` dataframe.  If `startArc` is less than the minimum value of the `odID` found in the dataframe specified by `initArcs`, the value of `startArc` will be ignored in favor of the smallest integer greater than the maximum existing `odID` value.
+	objectID: int/string, Optional, default as None
+		A descriptive name or index for a particular vehicle or object (e.g., 'truck 1', or 'red car'). 
 	leafletColor: string, Optional, default as "orange"
 		The color of the arcs when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.
 	leafletWeight: int, Optional, default as 3
@@ -67,6 +69,7 @@ def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, leafletColor=VR
 		...                       [42.3424, -78.6424]],
 		...     initArcs       = None, 
 		...     startArc       = 1, 
+		...     objectID       = 'car', 
 		...     leafletColor   = 'orange', 
 		...     leafletWeight  = 5, 
 		...     leafletStyle   = 'dashed', 
@@ -80,18 +83,18 @@ def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, leafletColor=VR
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	[valFlag, errorMsg, warningMsg] = valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 	if (not valFlag):
 		print (errorMsg)
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 
 	return arcs
 
-def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True,
+def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True,
 	cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
 
 	"""
@@ -107,6 +110,8 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, l
 		An :ref:`Arcs` dataframe.  If provided, the arcs to be created will be appended to this dataframe.
 	startArc: int, Optional, default as 1
 		Specifies the starting index number for the arcs.  This will be reflected in the `odID` column of the resulting :ref:`Arcs` dataframe.  If `startArc` is less than the minimum value of the `odID` found in the dataframe specified by `initArcs`, the value of `startArc` will be ignored in favor of the smallest integer greater than the maximum existing `odID` value.
+	objectID: int/string, Optional, default as None
+		A descriptive name or index for a particular vehicle or object (e.g., 'truck 1', or 'red car'). 
 	leafletColor: string, Optional, default as "orange"
 		The color of the arcs when displayed in Leaflet.  See :ref:`Leaflet style` for a list of available colors.
 	leafletWeight: int, Optional, default as 3
@@ -164,6 +169,7 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, l
 		...     nodes          = myNodes, 
 		...     initArcs       = myArcs, 
 		...     startArc       = 7, 
+		...     objectID       = 'car',
 		...     leafletColor   = 'cadetblue', 
 		...     leafletWeight  = 3, 
 		...     leafletStyle   = 'dotted', 
@@ -180,7 +186,7 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, l
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	[valFlag, errorMsg, warningMsg] = valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -194,6 +200,6 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, l
 				nodes.loc[nodes['id'] == nodeSeq[i]]['lon'].values[0],
 			])
 
-	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 
 	return arcs

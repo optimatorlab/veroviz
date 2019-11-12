@@ -93,7 +93,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	arcWeight: int, Optional, default as None
 		Overrides the `leafletWeight` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this line thickness (in pixels).  
 	arcStyle: string, Optional, default as None
-		Overrides the `leafletStyle` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe. If provided, all arcs will be displayed with this stype.  Valid options are 'solid', 'dotted', or 'dashed'.  See :ref:`Leaflet Style` for more information.
+		Overrides the `leafletStyle` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe. If provided, all arcs will be displayed with this type.  Valid options are 'solid', 'dotted', or 'dashed'.  See :ref:`Leaflet Style` for more information.
 	arcOpacity: float in [0, 1], Optional, default as None
 		Overrides the `leafletOpacity` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency). 
 	arcColor: string, Optional, default as None
