@@ -1,4 +1,4 @@
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
