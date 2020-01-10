@@ -20,7 +20,7 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 		Distance units for the speed after conversion. See :ref:`Units` for options.
 	toUnitTime: string
 		Time units for the speed after conversion. See :ref:`Units` for options.
-	
+
 	Returns
 	-------
 	float
@@ -32,7 +32,7 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 		>>> speedFPS = 10
 		>>> speedMPH = vrv.convertSpeed(speedFPS, 'ft', 's', 'mi', 'h')
 		>>> speedMPH
-		6.818198764711	
+		6.818198764711
 	"""
 
 	# validation
@@ -42,12 +42,12 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
-	
+
 	try:
 		fromUnitsDist = fromUnitsDist.lower()
 	except:
 		pass
-	
+
 	fromUnitsDist = distanceUnitsDictionary[fromUnitsDist]
 	if (fromUnitsDist == 'm'):
 		tmpSpeed = speed * 1.0
@@ -168,7 +168,7 @@ def convertDistance(distance, fromUnits, toUnits):
 		toUnits = toUnits.lower()
 	except:
 		pass
-		
+
 	toUnits = distanceUnitsDictionary[toUnits]
 	if (toUnits == 'm'):
 		convDist = tmpDist / 1.0
@@ -225,7 +225,7 @@ def convertTime(time, fromUnits, toUnits):
 		fromUnits = fromUnits.lower()
 	except:
 		pass
-		
+
 	fromUnits = timeUnitsDictionary[fromUnits]
 	if (fromUnits == 's'):
 		tmpTime = time * 1.0
@@ -238,7 +238,7 @@ def convertTime(time, fromUnits, toUnits):
 		toUnits = toUnits.lower()
 	except:
 		pass
-		
+
 	toUnits = timeUnitsDictionary[toUnits]
 	if (toUnits == 's'):
 		convTime = tmpTime / 1.0
@@ -252,7 +252,7 @@ def convertTime(time, fromUnits, toUnits):
 def convertArea(area, fromUnits, toUnits):
 	"""
 	Convert an area from `fromUnits` to `toUnits`.
-	
+
 	Parameters
 	----------
 	area: float
@@ -266,12 +266,12 @@ def convertArea(area, fromUnits, toUnits):
 	-------
 	float
 		New value of area, after conversion.
-		
+
 	Example
 	-------
 	    >>> import veroviz as vrv
 	    >>> areaSQKM = 1.0
-	    >>> areaSqMiles = vrv.convertArea(50, 'sqkm', 'sqmi')	
+	    >>> areaSqMiles = vrv.convertArea(50, 'sqkm', 'sqmi')
 	    >>> areaSqMiles
 	    >>> 19.305
 	"""
@@ -282,39 +282,39 @@ def convertArea(area, fromUnits, toUnits):
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
-		
+
 	try:
 		fromUnits = fromUnits.lower()
 	except:
 		pass
-				
-	# Convert input to square meters:	
+
+	# Convert input to square meters:
 	fromUnits = areaUnitsDictionary[fromUnits]
 	if (fromUnits == 'sqft'):
-		tmpArea = area / VRV_CONST_SQFT_PER_SQMETER 
+		tmpArea = area / VRV_CONST_SQFT_PER_SQMETER
 	elif (fromUnits == 'sqmi'):
 		tmpArea = area / VRV_CONST_SQMILES_PER_SQMETER
 	elif (fromUnits == 'sqkm'):
 		tmpArea = area / VRV_CONST_SQKM_PER_SQMETER
 	else:
 		tmpArea = area
-	
+
 	try:
 		toUnits = toUnits.lower()
 	except:
 		pass
-		
+
 	# Convert from square meters to desired output units:
 	toUnits = areaUnitsDictionary[toUnits]
 	if (toUnits == 'sqft'):
-		convArea = tmpArea * VRV_CONST_SQFT_PER_SQMETER 
+		convArea = tmpArea * VRV_CONST_SQFT_PER_SQMETER
 	elif (toUnits == 'sqmi'):
 		convArea = tmpArea * VRV_CONST_SQMILES_PER_SQMETER
 	elif (toUnits == 'sqkm'):
 		convArea = tmpArea * VRV_CONST_SQFT_PER_SQMETER
 	else:
 		convArea = tmpArea
-	
+
 	return convArea
 
 def initDataframe(dataframeType):
@@ -350,7 +350,7 @@ def initDataframe(dataframeType):
 		dataframeType = dataframeType.lower()
 	except:
 		pass
-	
+
 	if (dataframeType == 'nodes'):
 		dataframe = pd.DataFrame(
 			columns=nodesColumnList)
@@ -368,7 +368,7 @@ def initDataframe(dataframeType):
 def getMapBoundary(nodes=None, arcs=None, locs=None):
 	"""
 	Find the smallest rectangle that encloses a collection of nodes, arcs, assignments, and/or locations.  This function returns a list of lists, of the form [minLat, maxLon], [maxLat, minLon]].  This is equivalent to finding the southeast and northwest corners of the rectangle.
-	
+
 	Parameters
 	----------
 	nodes: :ref:`Nodes`, Conditional, `nodes`, `arcs`, and `locs` cannot be None at the same time
@@ -376,7 +376,7 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 	arcs: :ref:`Arcs` or :ref:`Assignments`, Conditional, `nodes`, `arcs`, and `locs` cannot be None at the same time
 		An :ref:`Arcs` or :ref:`Assignments` dataframe.
 	locs: list of lists, Conditional, `nodes`, `arcs`, and `locs` cannot be None at the same time
-		A list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  
+		A list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 	Returns
 	-------
 	list of lists
@@ -388,16 +388,16 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 		>>>
 		>>> # Create 3 nodes, with blue pin markers (default):
 		>>> myNodes = vrv.createNodesFromLocs(
-		...     locs = [[42.1343, -78.1234], 
-		...             [42.5323, -78.2534], 
+		...     locs = [[42.1343, -78.1234],
+		...             [42.5323, -78.2534],
 		...             [42.9812, -78.1353]])
-		>>> 
+		>>>
 		>>> # Create 1 arc, with orange arrows (default):
-		>>> myArc = vrv.createArcsFromLocSeq(locSeq = [[42.62, -78.20], 
+		>>> myArc = vrv.createArcsFromLocSeq(locSeq = [[42.62, -78.20],
 		...                                            [42.92, -78.30]])
-		>>> 
+		>>>
 		>>> # Define 2 locations, with altitude.  (We'll color these purple later):
-		>>> myLocs = [[42.03, -78.26, 100], [42.78, -78.25, 200]] 
+		>>> myLocs = [[42.03, -78.26, 100], [42.78, -78.25, 200]]
 		>>>
 		>>> # Find the boundary of these objects:
 		>>> myBoundary = vrv.getMapBoundary(nodes = myNodes,
@@ -405,24 +405,24 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 		...                                 locs  = myLocs)
 		>>> myBoundary
 		[[42.03, -78.1234], [42.9812, -78.3]]
-		
+
 		>>> # Initialize a map with nodes (blue) and an arc (orange):
-		>>> myMap = vrv.createLeaflet(nodes = myNodes, 
+		>>> myMap = vrv.createLeaflet(nodes = myNodes,
 		...                           arcs  = myArc)
 		>>>
 		>>> # Add red (default) circle markers for the locations:
 		>>> for i in range(0, len(myLocs)):
-		...    myMap = vrv.addLeafletMarker(mapObject = myMap, 
-		...                                 center    = myLocs[i])    
+		...    myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                                 center    = myLocs[i])
 		>>>
 		>>> # Convert myBoundary to a 4-point polygon:
-		>>> myBoundingRegion = [myBoundary[0], 
-		...                     [myBoundary[0][0], myBoundary[1][1]], 
-		...                     myBoundary[1], 
+		>>> myBoundingRegion = [myBoundary[0],
+		...                     [myBoundary[0][0], myBoundary[1][1]],
+		...                     myBoundary[1],
 		...                     [myBoundary[1][0], myBoundary[0][1]]]
 		>>>
 		>>> # Add the bounding region to the map:
-		>>> myMap = vrv.createLeaflet(mapObject      = myMap, 
+		>>> myMap = vrv.createLeaflet(mapObject      = myMap,
 		...                           boundingRegion = myBoundingRegion)
 		>>> # Display the map:
 		>>> myMap
@@ -489,19 +489,19 @@ def convertMatricesDataframeToDictionary(dataframe):
 	Note
 	----
 	Pandas dataframes can be confusing when used with time and distance matrices.  In particular, suppose you have a distance dataframe named `distDF`.  The value of `distDF[1][2]` will actually return the distance from 2 to 1.  Conversely, if you have a distance dictionary named `distDict`, the value of `distDict[1,2]` will be the distance from 1 to 2.
-	
+
 	Example
 	-------
 	Prepare some data.
 		>>> import veroviz as vrv
 		>>> locs = [
-		...     [42.1538, -78.4253], 
-		...     [42.3465, -78.6234], 
+		...     [42.1538, -78.4253],
+		...     [42.3465, -78.6234],
 		...     [42.6343, -78.1146]]
 		>>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...     nodes        = exampleNodes, 
-		...     routeType    = 'fastest', 
+		...     nodes        = exampleNodes,
+		...     routeType    = 'fastest',
 		...     dataProvider = 'OSRM-online')
 		>>> [timeDict]
 		[{(1, 1): 0.0,
@@ -517,7 +517,7 @@ def convertMatricesDataframeToDictionary(dataframe):
 		>>> print("The travel time from node 1 to node 2 is %.2f seconds" % (timeDict[1, 2]))
 		The travel time from node 1 to node 2 is 2869.90 seconds
 
-		
+
 	timeDict is a dictionary.  Convert to a dataframe:
 		>>> timeDF = vrv.convertMatricesDictionaryToDataframe(timeDict)
 		>>> timeDF
@@ -546,7 +546,7 @@ def convertMatricesDataframeToDictionary(dataframe):
 		>>> # Find the travel time *from* 1 *to* 3:
 		>>> timeDict2[1,3]
 		4033.9
-		
+
 	"""
 
 	dictionary = {}
@@ -566,7 +566,7 @@ def convertMatricesDictionaryToDataframe(dictionary):
 
 	Parameters
 	----------
-	dictionary: 
+	dictionary:
 		The keys are tuples of (originIndex, destinationIndex) format.
 
 	Return
@@ -577,19 +577,19 @@ def convertMatricesDictionaryToDataframe(dictionary):
 	Note
 	----
 	Pandas dataframes can be confusing when used with time and distance matrices.  In particular, suppose you have a distance dataframe named `distDF`.  The value of `distDF[1][2]` will actually return the distance from 2 to 1.  Conversely, if you have a distance dictionary named `distDict`, the value of `distDict[1,2]` will be the distance from 1 to 2.
-	
+
 	Example
 	-------
 	Prepare some data.
 		>>> import veroviz as vrv
 		>>> locs = [
-		...     [42.1538, -78.4253], 
-		...     [42.3465, -78.6234], 
+		...     [42.1538, -78.4253],
+		...     [42.3465, -78.6234],
 		...     [42.6343, -78.1146]]
 		>>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...     nodes        = exampleNodes, 
-		...     routeType    = 'fastest', 
+		...     nodes        = exampleNodes,
+		...     routeType    = 'fastest',
 		...     dataProvider = 'OSRM-online')
 		>>> [timeDict]
 		[{(1, 1): 0.0,
@@ -605,7 +605,7 @@ def convertMatricesDictionaryToDataframe(dictionary):
 		>>> print("The travel time from node 1 to node 2 is %.2f seconds" % (timeDict[1, 2]))
 		The travel time from node 1 to node 2 is 2869.90 seconds
 
-		
+
 	timeDict is a dictionary.  Convert to a dataframe:
 		>>> timeDF = vrv.convertMatricesDictionaryToDataframe(timeDict)
 		>>> timeDF
@@ -657,7 +657,7 @@ def convertMatricesDictionaryToDataframe(dictionary):
 		dataframe = pd.DataFrame(columns=columns, index=rows)
 		for keys in dictionary:
 			dataframe.at[keys[0], keys[1]] = dictionary[keys]
-		
+
 	except:
 		print("Error: Failed to convert dictionary to dataframe.")
 
@@ -684,14 +684,14 @@ def exportDataToCSV(data, filename):
 
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(
-		...              locs = [[42.1538, -78.4253], 
-		...                      [42.3465, -78.6234], 
+		...              locs = [[42.1538, -78.4253],
+		...                      [42.3465, -78.6234],
 		...                      [42.6343, -78.1146]])
-		>>> nodesDF	
+		>>> nodesDF
 
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
 		>>> vrv.exportDataToCSV(data = nodesDF, filename = 'test/nodes.csv')
-	
+
 	Import the dataframe we just saved:
 		>>> importedNodes = vrv.importDataFromCSV(
 		...     dataType = 'nodes',
@@ -700,7 +700,7 @@ def exportDataToCSV(data, filename):
 
 	If the data type is inconsistent with the data, an error message will be thrown and nothing will be imported.
 		>>> importedArcs = vrv.importDataFromCSV(
-		...     dataType = 'arcs', 
+		...     dataType = 'arcs',
 		...     filename = 'test/nodes.csv')
 		Error: test/nodes.csv was not successfully imported.  Check the data type.
 
@@ -710,8 +710,8 @@ def exportDataToCSV(data, filename):
 
 	Get travel time/distance matrices using the nodes we just created:
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...           nodes        = nodesDF, 
-		...           routeType    = 'fastest', 
+		...           nodes        = nodesDF,
+		...           routeType    = 'fastest',
 		...           dataProvider = 'OSRM-online')
 		>>> timeDict
 		{(1, 1): 0.0,
@@ -800,14 +800,14 @@ def importDataFromCSV(dataType, filename):
 
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(
-		...              locs = [[42.1538, -78.4253], 
-		...                      [42.3465, -78.6234], 
+		...              locs = [[42.1538, -78.4253],
+		...                      [42.3465, -78.6234],
 		...                      [42.6343, -78.1146]])
-		>>> nodesDF	
+		>>> nodesDF
 
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
 		>>> vrv.exportDataToCSV(data = nodesDF, filename = 'test/nodes.csv')
-	
+
 	Import the dataframe we just saved:
 		>>> importedNodes = vrv.importDataFromCSV(
 		...     dataType = 'nodes',
@@ -816,7 +816,7 @@ def importDataFromCSV(dataType, filename):
 
 	If the data type is inconsistent with the data, an error message will be thrown and nothing will be imported.
 		>>> importedArcs = vrv.importDataFromCSV(
-		...     dataType = 'arcs', 
+		...     dataType = 'arcs',
 		...     filename = 'test/nodes.csv')
 		Error: test/nodes.csv was not successfully imported.  Check the data type.
 
@@ -826,8 +826,8 @@ def importDataFromCSV(dataType, filename):
 
 	Get travel time/distance matrices using the nodes we just created:
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...           nodes        = nodesDF, 
-		...           routeType    = 'fastest', 
+		...           nodes        = nodesDF,
+		...           routeType    = 'fastest',
 		...           dataProvider = 'OSRM-online')
 		>>> timeDict
 		{(1, 1): 0.0,
@@ -925,21 +925,21 @@ def exportDataframe(dataframe, filename):
 		The path and the name of file to be exported.
 
 	Example
-	-------	
+	-------
 	Import veroviz and check if it is the latest version:
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
-	
+
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(locs=[
-		...     [42.1538, -78.4253], 
-		...     [42.3465, -78.6234], 
+		...     [42.1538, -78.4253],
+		...     [42.3465, -78.6234],
 		...     [42.6343, -78.1146]])
 		>>> nodesDF
-	
+
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
 		>>> vrv.exportDataframe(dataframe = nodesDF, filename = 'test/nodes.csv')
-	
+
 	Import the saved dataframe:
 		>>> importedNodesDF = vrv.importDataframe('test/nodes.csv')
 		>>> importedNodesDF
@@ -987,7 +987,7 @@ def importDataframe(filename, intCols=False, useIndex=True):
 	Note
 	----
 	If the dataframe is one of the following, the column names are not integers; leave `intCols=False` (default).  Also, leave `useIndex=True` (default):
-	
+
 	- nodes
 	- arcs
 	- assignments
@@ -1003,21 +1003,21 @@ def importDataframe(filename, intCols=False, useIndex=True):
 		A dataframe constructed from the contents of the imported .csv file.
 
 	Example
-	-------	
+	-------
 	Import veroviz and check if it is the latest version:
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
-	
+
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(locs=[
-		...     [42.1538, -78.4253], 
-		...     [42.3465, -78.6234], 
+		...     [42.1538, -78.4253],
+		...     [42.3465, -78.6234],
 		...     [42.6343, -78.1146]])
 		>>> nodesDF
-	
+
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
 		>>> vrv.exportDataframe(dataframe = nodesDF, filename = 'test/nodes.csv')
-	
+
 	Import the saved dataframe:
 		>>> importedNodesDF = vrv.importDataframe('test/nodes.csv')
 		>>> importedNodesDF
@@ -1032,9 +1032,9 @@ def importDataframe(filename, intCols=False, useIndex=True):
 
 	try:
 		if (useIndex):
-			df = pd.read_csv(filename, index_col=0)	
+			df = pd.read_csv(filename, index_col=0)
 		else:
-			df = pd.read_csv(filename, index_col=False)	
+			df = pd.read_csv(filename, index_col=False)
 		if (intCols):
 			df.columns = df.columns.astype(int)
 	except:
@@ -1045,7 +1045,7 @@ def importDataframe(filename, intCols=False, useIndex=True):
 def getConvexHull(locs):
 	"""
 	Find the convex hull of a set of points.
-	
+
 	Parameters
 	----------
 	locs: list of lists
@@ -1055,15 +1055,15 @@ def getConvexHull(locs):
 	-------
 	list of lists
 		A list of lat/lon coordinates of the convex hull.  This is in the same form as the input points.
-		
+
 	Example
 	-------
 		>>> # Find the convex hull of 5 locs that straddle the Prime Meridian:
 		>>> import veroviz as vrv
-		>>> locs = [[51.4865,  0.0008], 
-		...         [51.4777, -0.0002], 
-		...         [51.4801,  0.0029], 
-		...         [51.4726, -0.0161], 
+		>>> locs = [[51.4865,  0.0008],
+		...         [51.4777, -0.0002],
+		...         [51.4801,  0.0029],
+		...         [51.4726, -0.0161],
 		...         [51.4752,  0.0158]]
 		>>> convexHull = vrv.getConvexHull(locs)
 		>>> convexHull
@@ -1077,7 +1077,7 @@ def getConvexHull(locs):
 		>>> myMap = vrv.addLeafletPolygon(mapObject=myMap, points=convexHull)
 		>>> myMap
 	"""
-	
+
 	# FIXME -- How does this work when crossing meridians?
 	# I did some simple tests and it seems to be OK.
 
@@ -1091,7 +1091,7 @@ def getConvexHull(locs):
 	locs2D = []
 	for i in range(len(locs)):
 		locs2D.append([locs[i][0], locs[i][1]])
-	
+
 	ch2D = [locs[i] for i in scipy.spatial.ConvexHull(locs2D).vertices]
 
 	ch = []
@@ -1111,7 +1111,7 @@ def isPointInPoly(loc, poly):
 	loc: list
 		The coordinate of the point, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
 	poly: list of lists
-		A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored. 
+		A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 
 	Returns
 	-------
@@ -1128,11 +1128,11 @@ def isPointInPoly(loc, poly):
 		>>> poly = [[42.00, -78.00], [42.10, -78.10], [42.00, -78.10]]
 		>>> vrv.isPointInPoly(loc, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletMarker(center = loc)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
-	
+
 	Example 2 - Location is outside polygon:
 		>>> loc = [42.07, -78.05]
 		>>> poly = [[42.00, -78.00], [42.10, -78.10], [42.00, -78.10]]
@@ -1152,17 +1152,17 @@ def isPointInPoly(loc, poly):
 		>>> myMap = vrv.addLeafletMarker(center = loc)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
-						
+
 	Example 4 - Location is on a polygon vertex:
 		>>> loc = [42.10, -78.10]
 		>>> poly = [[42.00, -78.00], [42.10, -78.10], [42.00, -78.10]]
 		>>> vrv.isPointInPoly(loc, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletMarker(center = loc)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
-		
+
 	Example 5 - Non-convex poly region:
 		>>> loc = [42.50, -78.90]
 		>>> poly = [[42.00, -78.00], [43.00, -78.00], [42.2, -78.5], [43.00, -79.00], [42.00, -79.00]]
@@ -1171,17 +1171,17 @@ def isPointInPoly(loc, poly):
 		>>> myMap = vrv.addLeafletMarker(center = loc)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
-		
+
 	Example 6 - Altitudes are included (but ignored):
 		>>> loc = [42.05, -78.10, 100]
 		>>> poly = [[42.00, -78.00, 200], [42.10, -78.10, 300], [42.00, -78.10, 200]]
-		>>> vrv.isPointInPoly(loc, poly)		
+		>>> vrv.isPointInPoly(loc, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletMarker(center = loc)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
-				
+
 	"""
 
 	# validation
@@ -1198,12 +1198,12 @@ def isPointInPoly(loc, poly):
 		poly2D.append([poly[i][0], poly[i][1]])
 
 	inside = geoIsPointInPoly(loc2D, poly2D)
-		
+
 	return inside
 
 def isPathInPoly(path, poly):
 	"""
-	Determine if a given path is completely within the boundary of a polygon. 
+	Determine if a given path is completely within the boundary of a polygon.
 
 	Parameters
 	----------
@@ -1211,8 +1211,8 @@ def isPathInPoly(path, poly):
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
 	poly: list of lists
 		A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
-	
-	
+
+
 	Returns
 	-------
 	boolean
@@ -1228,7 +1228,7 @@ def isPathInPoly(path, poly):
 		>>> poly = [[42.00, -78.00], [43.00, -78.00], [43.00, -79.00], [42.00, -79.00]]
 		>>> vrv.isPathInPoly(path, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletPolyline(points = path)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
@@ -1248,7 +1248,7 @@ def isPathInPoly(path, poly):
 		>>> poly = [[42.00, -78.00], [43.00, -78.00], [43.00, -79.00], [42.00, -79.00]]
 		>>> vrv.isPathInPoly(path, poly)
 		False
-		
+
 		>>> myMap = vrv.addLeafletPolyline(points = path)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
@@ -1258,21 +1258,21 @@ def isPathInPoly(path, poly):
 		>>> poly = [[42.00, -78.00], [43.00, -78.00], [42.2, -78.5], [43.00, -79.00], [42.00, -79.00]]
 		>>> vrv.isPathInPoly(path, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletPolyline(points = path)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
 
 	Example 5 - Path and poly coordinates include altitude (which is ignored):
 		>>> path = [[42.50, -78.10, 100], [42.50, -78.90, 200]]
-		>>> poly = [[42.00, -78.00, 100], 
-		...         [43.00, -78.00, 100], 
-		...         [42.2, -78.5, 100], 
-		...         [43.00, -79.00, 200], 
+		>>> poly = [[42.00, -78.00, 100],
+		...         [43.00, -78.00, 100],
+		...         [42.2, -78.5, 100],
+		...         [43.00, -79.00, 200],
 		...         [42.00, -79.00, 200]]
 		>>> vrv.isPathInPoly(path, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletPolyline(points = path)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
@@ -1344,11 +1344,11 @@ def isPathCrossPoly(path, poly):
 		>>> poly = [[42.00, -78.00], [43.00, -78.00], [43.00, -79.00], [42.00, -79.00]]
 		>>> vrv.isPathCrossPoly(path, poly)
 		True
-		
+
 		>>> myMap = vrv.addLeafletPolyline(points = path)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
 		>>> myMap
-		
+
 	Example 4 - Endpoints are in poly, but poly isn't convex:
 		>>> path = [[42.50, -78.10], [42.50, -78.90]]
 		>>> poly = [[42.00, -78.00], [43.00, -78.00], [42.2, -78.5], [43.00, -79.00], [42.00, -79.00]]
@@ -1357,17 +1357,17 @@ def isPathCrossPoly(path, poly):
 
 		>>> myMap = vrv.addLeafletPolyline(points = path)
 		>>> myMap = vrv.addLeafletPolygon(mapObject = myMap, points = poly)
-		>>> myMap	
-		
+		>>> myMap
+
 	Example 5 - Path and poly include altitudes (which are ignored):
 		>>> path = [[42.50, -78.10, 100], [42.50, -78.90, 300]]
-		>>> poly = [[42.00, -78.00, 100], 
-		...         [43.00, -78.00, 200], 
-		...         [42.2, -78.5, 100], 
-		...         [43.00, -79.00, 300], 
+		>>> poly = [[42.00, -78.00, 100],
+		...         [43.00, -78.00, 200],
+		...         [42.2, -78.5, 100],
+		...         [43.00, -79.00, 300],
 		...         [42.00, -79.00, 100]]
-		>>> vrv.isPathCrossPoly(path, poly)	
-		
+		>>> vrv.isPathCrossPoly(path, poly)
+
 	"""
 
 	# validation
@@ -1402,8 +1402,8 @@ def isPassPath(loc, path, tolerance):
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
 	tolerance: float
 		How close must the path be to the stationary location to be considered as "passed".  The units are in meters.
-	
-		
+
+
 	Returns
 	-------
 	boolean
@@ -1419,7 +1419,7 @@ def isPassPath(loc, path, tolerance):
 		>>> awayLoc = [42.51, -78.50]
 		>>> vrv.isPassPath(awayLoc, path, 1000)
 		False
-		
+
 		>>> # Find the minimum distance, in meters, from the location to the path:
 		>>> vrv.minDistLoc2Path(awayLoc, path)
 		1105.9845259826711
@@ -1432,19 +1432,19 @@ def isPassPath(loc, path, tolerance):
 		>>> closeLoc = [42.505, -78.50]
 		>>> vrv.isPassPath(closeLoc, path, 1000)
 		True
-		
+
 		>>> # Find the minimum distance, in meters, from the location to the path:
-		>>> vrv.minDistLoc2Path(closeLoc, path)	
+		>>> vrv.minDistLoc2Path(closeLoc, path)
 		550.5689415111023
-		
+
 		>>> myMap = vrv.addLeafletMarker(center = closeLoc)
 		>>> myMap = vrv.addLeafletPolyline(mapObject = myMap, points = path)
 		>>> myMap
-		
+
 	Example 3 - Location and path include altitudes (which are ignored):
 		>>> loc  = [42.505, -78.50, 100]
-		>>> path = [[42.50, -78.40, 100], 
-		...         [42.50, -78.60, 200], 
+		>>> path = [[42.50, -78.40, 100],
+		...         [42.50, -78.60, 200],
 		...         [42.40, -78.70, 100]]
 		>>> vrv.isPassPath(loc, path, 1000)
 	'''
@@ -1473,7 +1473,7 @@ def pointInDistance2D(loc, direction, distMeters):
 	Parameters
 	----------
 	loc: list
-		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.		
+		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.
 	direction: float
 		The direction of travel from the current location, in units of degrees.  The range is [0, 360], where north is 0 degrees, east is 90 degrees, south is 180 degrees, and west is 270 degrees.
 	distMeters: float
@@ -1490,17 +1490,17 @@ def pointInDistance2D(loc, direction, distMeters):
 		>>> startPt  = [42.80, -78.30, 200]
 		>>> heading  = 45 # degrees. travel northeast.
 		>>> distance = 300 # meters.
-		>>> 
+		>>>
 		>>> endPt = vrv.pointInDistance2D(startPt, heading, distance)
 		>>> endPt
-		
+
 		>>> myArc = vrv.createArcsFromLocSeq(locSeq = [startPt, endPt])
 		>>> myMap = vrv.createLeaflet(arcs=myArc)
 		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=startPt, fillColor='red')
 		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=endPt, fillColor='green')
 		>>> myMap
 	"""
-	
+
 	# validation
 	[valFlag, errorMsg, warningMsg] = valPointInDistance2D(loc, direction, distMeters)
 	if (not valFlag):
@@ -1527,7 +1527,7 @@ def minDistLoc2Path(loc, path):
 	loc: list
 		The coordinate of the stationary location, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
 	path: list of lists
-		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  
+		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 
 	Returns
 	-------
@@ -1550,7 +1550,7 @@ def minDistLoc2Path(loc, path):
 	Example 2 - The minimum distance is between points on the path:
 		>>> vrv.minDistLoc2Path(loc2, path)
 		1105.9845259826711
-		
+
 	Example 3 - The minimum distance is to an endpoint of the path:
 		>>> vrv.minDistLoc2Path(loc3, path)
 		8293.970453010765
@@ -1561,10 +1561,10 @@ def minDistLoc2Path(loc, path):
 		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc3, fillColor='purple')
 		>>> myMap = vrv.addLeafletPolyline(mapObject=myMap, points=path)
 		>>> myMap
-		
+
 	Example 4 - The location and path include altitudes (which are ignored):
-		>>> path2 = [[42.50, -78.40, 100], 
-		...          [42.50, -78.60, 200], 
+		>>> path2 = [[42.50, -78.40, 100],
+		...          [42.50, -78.60, 200],
 		...          [42.40, -78.70, 100]]
 		>>> loc4  = [42.51, -78.3, 300]
 		>>> vrv.minDistLoc2Path(loc4, path2)
@@ -1592,7 +1592,7 @@ def distance2D(loc1, loc2):
 		First location, in [lat, lon] format.
 	loc2: list
 		Second location, in [lat, lon] format.
-	
+
 	Return
 	------
 	float
@@ -1614,7 +1614,7 @@ def distance2D(loc1, loc2):
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
-	
+
 	distMeters = geoDistance2D(loc1, loc2)
 
 	return distMeters
@@ -1629,7 +1629,7 @@ def distance3D(loc1, loc2):
 		First location, in [lat, lon, alt] format.
 	loc2: list
 		Second location, in [lat, lon, alt] format.
-	
+
 	Return
 	------
 	float
@@ -1644,7 +1644,7 @@ def distance3D(loc1, loc2):
 		>>> dist3D
 		2775.2957304861734
 	"""
-	
+
 	[valFlag, errorMsg, warningMsg] = valDistance3D(loc1, loc2)
 	if (not valFlag):
 		print (errorMsg)
@@ -1658,7 +1658,7 @@ def distance3D(loc1, loc2):
 
 def distancePath2D(path):
 	"""
-	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.  
+	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.
 
 	Parameters
 	----------
@@ -1716,10 +1716,10 @@ def getHeading(currentLoc, goalLoc):
 		>>> heading = vrv.getHeading(locCurrent, locGoal)
 		>>> heading
 		36.24057197338239
-		
+
 		>>> # View the arc from the current location to the goal:
 		>>> arc = vrv.createArcsFromLocSeq(locSeq = [locCurrent, locGoal])
-		>>> vrv.createLeaflet(arcs=arc)		
+		>>> vrv.createLeaflet(arcs=arc)
 	"""
 
 	[valFlag, errorMsg, warningMsg] = valGetHeading(currentLoc, goalLoc)
@@ -1745,7 +1745,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		Each row of an :ref:`Assignments` dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).
 	timeSec: float, Optional, default as 0.0
 		The time, in seconds, at which it is desired to find an estimate of each object's location.
-	
+
 	Return
 	------
 	dictionary
@@ -1783,7 +1783,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		...               'cesiumColor': 'Cesium.Color.BLUE'}
 		... }
 
-	This example assumes the use of ORS as the data provider. 
+	This example assumes the use of ORS as the data provider.
 		>>> # If you have saved your API key as an environment variable, you may use `os.environ` to access it:
 		>>> import os
 		>>> ORS_API_KEY = os.environ['ORSKEY']
@@ -1805,12 +1805,12 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
 		...             startTimeSec     = endTimeSec,
 		...             leafletColor     = vehicleProperties['truck']['leafletColor'],
-		...             cesiumColor      = vehicleProperties['truck']['cesiumColor'], 
+		...             cesiumColor      = vehicleProperties['truck']['cesiumColor'],
 		...             routeType        = 'fastest',
-		...             dataProvider     = 'ORS-online', 
+		...             dataProvider     = 'ORS-online',
 		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myAssignments
-		
+
 	Build assignments for the drone deliveries:
 		>>> endTimeSec = 0.0
 		>>> for arc in mySolution['drone']:
@@ -1829,20 +1829,20 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
 		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
 		>>> myAssignments
-		
+
 	Show the nodes and assignments on a map:
 		>>> vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
 
 	Find the location of each vehicle at time 30.0:
 		>>> currentLocs = vrv.findLocsAtTime(assignments=myAssignments, timeSec=30.0)
-		>>> 
+		>>>
 		>>> # Or, we can just find the location of the drone at time 30.0:
 		>>> # currentLocs = vrv.findLocsAtTime(
-		>>> #    assignments=myAssignments[myAssignments['objectID'] == 'drone'], 
+		>>> #    assignments=myAssignments[myAssignments['objectID'] == 'drone'],
 		>>> #    timeSec=30.0)
 		>>> currentLocs
-		
-	Display the estimated locations on a map:		
+
+	Display the estimated locations on a map:
 		>>> myMap = vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
 		>>> for objectID in currentLocs:
 		...     if (type(currentLocs[objectID]) is list):
@@ -1853,12 +1853,12 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		...                 myMap = vrv.addLeafletMarker(mapObject=myMap, center=i)
 		...         else:
 		...             # We only have one location for this objectID:
-		...             myMap = vrv.addLeafletMarker(mapObject=myMap, 
-		...                                          center=currentLocs[objectID], 
-		...                                          radius=9, 
-		...                                          fillOpacity=0.7, 
+		...             myMap = vrv.addLeafletMarker(mapObject=myMap,
+		...                                          center=currentLocs[objectID],
+		...                                          radius=9,
+		...                                          fillOpacity=0.7,
 		...                                          fillColor='black')
-		>>> myMap		
+		>>> myMap
 	"""
 
 	[valFlag, errorMsg, warningMsg] = valFindLocsAtTime(assignments, timeSec)
@@ -1880,10 +1880,10 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 	asgnCopy.loc[asgnCopy['endTimeSec'] < 0, 'endTimeSec'] = float('Inf')
 
 	for objectID in uniqueIDs:
-		tmpAsgn = asgnCopy[(asgnCopy['objectID'] == objectID) & 
-			(asgnCopy['startTimeSec'] <= timeSec) & 
-			(asgnCopy['endTimeSec'] >= timeSec)] 
-	
+		tmpAsgn = asgnCopy[(asgnCopy['objectID'] == objectID) &
+			(asgnCopy['startTimeSec'] <= timeSec) &
+			(asgnCopy['endTimeSec'] >= timeSec)]
+
 		if (len(tmpAsgn) == 0):
 			output[objectID] = None
 			print("Warning: objectID `%s` is not tracked at time %.2f seconds" % (objectID, timeSec))
@@ -1894,7 +1894,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 				startLon     = tmpAsgn['startLon'].at[id]
 				startAlt     = tmpAsgn['startAltMeters'].at[id]
 				startTimeSec = tmpAsgn['startTimeSec'].at[id]
-			
+
 				endLat     = tmpAsgn['endLat'].at[id]
 				endLon     = tmpAsgn['endLon'].at[id]
 				endAlt     = tmpAsgn['endAltMeters'].at[id]
@@ -1905,13 +1905,13 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 					pct = (timeSec - startTimeSec) / (endTimeSec - startTimeSec)
 				else:
 					pct = 0.0
-			
+
 				# Find distance from start to end:
 				distMeters = geoDistance2D([startLat, startLon], [endLat, endLon])
-			
+
 				if (distMeters == 0.0):
 					newLoc = [startLat, startLon]
-				else: 
+				else:
 					# Get initial heading from start to end:
 					hdgDeg = geoGetHeading([startLat, startLon], [endLat, endLon])
 
@@ -1920,20 +1920,20 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 
 				# Interpolate altitude:
 				newAlt = startAlt + (endAlt - startAlt)*pct
-			
+
 				# Add to our list of expected locations for this id:
 				outList.append([newLoc[0], newLoc[1], newAlt])
 
 			if (len(outList) == 1):
 				output[objectID] = outList[0]
-					
+
 			else:
-				# 
+				#
 				print("Warning: objectID `%s` appears in %d matching rows.  Perhaps the assignments dataframe has duplicate entries?" % (objectID, len(tmpAsgn)))
 				output[objectID] = outList
-	
-	return output			
-				
+
+	return output
+
 def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	Convert a street address, city, state, or zip code to GPS coordinates ([lat, lon] format).
@@ -1946,7 +1946,7 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
 	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
-	
+
 	Return
 	------
 	list
@@ -1954,8 +1954,8 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 
 	Note
 	----
-	Neither pgRouting nor OSRM are supported.  
-	pgRouting would require a database of the entire planet.  
+	Neither pgRouting nor OSRM are supported.
+	pgRouting would require a database of the entire planet.
 	OSRM doesn't have a geocode function.
 
 	Examples
@@ -1963,13 +1963,13 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 	Import veroviz and check if the version is up-to-date:
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
-	
+
 	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
 		>>> import os
-		>>> 
+		>>>
 		>>> ORS_API_KEY = os.environ['ORSKEY']
 		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
-		>>> 
+		>>>
 		>>> # Otherwise, you may specify your keys here:
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
@@ -1978,40 +1978,40 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 		>>> myLoc = vrv.geocode(location='Westminster, London SW1A 1AA, United Kingdom')
 		>>> myLoc
 		[51.5008719, -0.1252387]
-	
+
 	Example 2 - Find [lat, lon] of Buckingham Palace, using ORS-online as the data provider:
-		>>> myLoc = vrv.geocode(location         ='Westminster, London SW1A 1AA, United Kingdom', 
-		...                     dataProvider     ='ors-online', 
+		>>> myLoc = vrv.geocode(location         ='Westminster, London SW1A 1AA, United Kingdom',
+		...                     dataProvider     ='ors-online',
 		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myLoc
 		[51.497991, -0.12875]
-        
+
 	Example 3 - Find [lat, lon] of Seattle, Washington, USA:
-		>>> myLoc = vrv.geocode(location         ='seattle, wa', 
-		...                     dataProvider     ='mapquest', 
+		>>> myLoc = vrv.geocode(location         ='seattle, wa',
+		...                     dataProvider     ='mapquest',
 		...                     dataProviderArgs = {'APIkey': MQ_API_KEY})
 		>>> myLoc
 		[47.603229, -122.33028]
 
 	Example 4 - Find [lat, lon] of the state of Florida, USA:
-		>>> myLoc = vrv.geocode(location         ='florida', 
-		...                     dataProvider     ='ors-ONLINE', 
+		>>> myLoc = vrv.geocode(location         ='florida',
+		...                     dataProvider     ='ors-ONLINE',
 		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myLoc
 		[27.97762, -81.769611]
 
 	Example 5 - Find [lat, lon] of the Space Needle (in Seattle, WA):
-		>>> myLoc = vrv.geocode(location         ='space needle', 
-		...                     dataProvider     ='ors-ONLINE', 
+		>>> myLoc = vrv.geocode(location         ='space needle',
+		...                     dataProvider     ='ors-ONLINE',
 		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myLoc
-		[47.620336, -122.349314]  
+		[47.620336, -122.349314]
 
 	Draw the geocoded location as a red dot on a Leaflet map:
 		>>> vrv.addLeafletMarker(center=myLoc)
-		 
+
 	"""
-	
+
 	# validation
 	[valFlag, errorMsg, warningMsg] = valGeocode(location, dataProvider, dataProviderArgs)
 	if (not valFlag):
@@ -2021,11 +2021,11 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 		print (warningMsg)
 
 	loc = privGeocode(location, dataProvider, dataProviderArgs)
-	
+
 	return loc
-	
-	
-def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):    
+
+
+def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
 
@@ -2037,7 +2037,7 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
 	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
-	
+
 	Return
 	------
 	list
@@ -2047,8 +2047,8 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 
 	Note
 	----
-	Neither pgRouting nor OSRM are supported.  
-	pgRouting would require a database of the entire planet.  
+	Neither pgRouting nor OSRM are supported.
+	pgRouting would require a database of the entire planet.
 	OSRM doesn't have a geocode function.
 
 	Examples
@@ -2056,22 +2056,22 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	Import veroviz and check if the version is up-to-date:
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
-	
+
 	The following examples assume the use of ORS or MapQuest as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
 		>>> import os
-		>>> 
+		>>>
 		>>> ORS_API_KEY = os.environ['ORSKEY']
 		>>> MQ_API_KEY = os.environ['MAPQUESTKEY']
-		>>> 
+		>>>
 		>>> # Otherwise, you may specify your keys here:
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 		>>> # MQ_API_KEY = 'YOUR_MAPQUEST_KEY_GOES_HERE'
-	
+
 	Example 1 -- Without specifying a dataProvider:
 		>>> [loc, addr] = vrv.reverseGeocode(location=[47.603229, -122.33028])
 		>>> loc
 		[47.6030474, -122.3302567]
-        
+
 		>>> addr
 		{'place_id': 18472401,
 		 'licence': 'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
@@ -2091,14 +2091,14 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		 'country': 'USA',
 		 'country_code': 'us'},
 		 'boundingbox': ['47.6029474', '47.6031474', '-122.3303567', '-122.3301567']}
-	
+
 	Example 2 -- Using MapQuest:
-		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
-		...                                  dataProvider     = 'MapQuest', 
+		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028],
+		...                                  dataProvider     = 'MapQuest',
 		...                                  dataProviderArgs = {'APIkey': MQ_API_KEY})
 		>>> loc
 		[47.603229, -122.33028]
-		
+
 		>>> addr
 		{'street': '431 James St',
 		 'adminArea6': '',
@@ -2128,14 +2128,14 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		 'roadMetadata': {'speedLimitUnits': 'mph',
 		 'tollRoad': None,
 		 'speedLimit': 25}}
-		 
+
 	Example 3 -- Using OpenRouteService:
-		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028], 
-		...                                  dataProvider     = 'ORS-online', 
+		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028],
+		...                                  dataProvider     = 'ORS-online',
 		...                                  dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> loc
 		[47.603077, -122.330139]
-		
+
 		>>> addr
 		{'id': 'node/4491511984',
 		 'gid': 'openstreetmap:venue:node/4491511984',
@@ -2174,4 +2174,153 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 
 	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
 
-	return (loc, address)	
+	return (loc, address)
+
+def closestNodeLoc2Path(loc, path):
+    """
+    Gives the closest node on a path given a given GPS location
+
+    Parameters
+    ----------
+    loc: list
+        The coordinate of the current coordinate, in [lat, lon, alt] format
+    path:
+        list of lists
+        A list of coordinates in the form of [[lat, lon], [lat, lon], ..., [lat, lon]], it will be considered as open polyline
+    Returns
+    -------
+    minLoc: list of lat and lon of a location
+        A location in distance with given direction, in [lat, lon] form.
+    """
+
+    distMeters = geoDistance3D(loc, path[0])
+    minLoc = path[0]
+
+    for i in range(len(path)):
+        tmpDistMeters = geoDistance3D(loc, path[i])
+        tempLoc = path[i]
+        if (distMeters > tmpDistMeters):
+            distMeters = tmpDistMeters
+            minLoc = tempLoc
+
+    return minLoc
+
+    distMeters = geoDistance3D(loc, path[0])
+    minLoc = path[0]
+
+    for i in range(len(path)):
+        tmpDistMeters = geoDistance3D(loc, path[i])
+        tempLoc = path[i]
+        if (distMeters > tmpDistMeters):
+            distMeters = tmpDistMeters
+            minLoc = tempLoc
+
+    return minLoc
+
+def closestPointLoc2Path(loc, line):
+     """
+    Given a line of a path find the closest point on a path given a given GPS location
+
+    Parameters
+    ----------
+    loc: list
+        The coordinate of the current coordinate, in [lat, lon, alt] format
+    line:
+        list of locations
+        A list of two coordinates in the form of [lat, lon]
+    Returns
+    -------
+    minLoc: list of lat and lon of a location
+        A location in distance with given direction, in [lat, lon] form.
+    """
+    # The line is denoted as AB, the stationary location is denoted by S
+    locA = line[0]
+    locB = line[1]
+    locS = loc
+    minLoc =[locA[0],locA[1]]
+
+    # Check if the loc is on line, if so return the location
+    if (geoIsOnSegment(loc, line)):
+            return locS
+
+
+    # Vectors start from A
+    vecAS = [float(locS[0] - locA[0]), float(locS[1] - locA[1])]
+    vecAB = [float(locB[0] - locA[0]), float(locB[1] - locA[1])]
+
+    # Vectors start from B
+    vecBS = [float(locS[0] - locB[0]), float(locS[1] - locB[1])]
+    vecBA = [float(locA[0] - locB[0]), float(locA[1] - locB[1])]
+
+    # cos value for A angle and B angle
+    cosSAB = geoFindCos(vecAS, vecAB)
+    cosSBA = geoFindCos(vecBS, vecBA)
+
+    # if both angles are sharp, the closest point will be in the line and sloved for, otherwise the closest point is at the edge and that location is returned
+    if (cosSAB >= 0 and cosSBA >= 0):
+        print(2)
+        xA = locA[0]
+        yA =locA[1]
+
+        xB = locB[0]
+        yB =locB[1]
+
+        xS = locS[0]
+        yS =locS[1]
+
+        dx = xB-xA
+        dy = yB-yA
+
+        det = dx*dx + dy*dy
+        a = (((dy*(yS-yA)) + (dx*(xS-xA)))/ det)
+
+        xP = xA+(a*dx)
+        yP = yA+(a*dy)
+
+        minLoc = [xP,yP]
+
+    else:
+        distAS = geoDistance2D(locS, locA)
+        distBS = geoDistance2D(locS, locB)
+
+        if(distAS < distBS):
+            print(3)
+            minLoc = locA
+        else:
+            print(3)
+            minLoc = locB
+
+    return minLoc
+
+def minDistLoc2Path(loc, path):
+  """
+    Given a path, it find the closest point on a path given a given GPS location
+
+    Parameters
+    ----------
+    loc: list
+        The coordinate of the current coordinate, in [lat, lon, alt] format
+    Path:
+        list of locations
+        A list of coordinates in the form of [lat, lon]
+    Returns
+    -------
+    minLoc: list of lat and lon of a location
+        A location in distance with given direction, in [lat, lon] form.
+    """
+    lstLine = []
+    for i in range(1, len(path)):
+        lstLine.append([path[i - 1], path[i]])
+
+    distMeters = closestPointLoc2Path(loc, lstLine[0])
+    minPoint = loc
+
+    for i in range(len(lstLine)):
+        tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
+        minPoint = geoMinLoc2Line(loc, lstLine[i])
+
+        if (distMeters > tmpDistMeters):
+            distMeters = tmpDistMeters
+            minPoint = geoMinLoc2Line(loc, lstLine[i])
+
+    return minPoint
