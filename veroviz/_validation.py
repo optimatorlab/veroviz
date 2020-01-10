@@ -79,17 +79,17 @@ def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, increme
 				leafletIconPrefix = leafletIconPrefix.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletIconType = leafletIconType.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-		
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletNodeInputs(leafletIconPrefix, leafletIconType, leafletColor)
 			warningMsg += newWarningMsg
 
@@ -145,7 +145,7 @@ def valGetTimeDist2D(nodes, matrixType, fromNodeID, toNodeID, outputDistUnits, o
 			outputDistUnits = outputDistUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(outputDistUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -200,7 +200,7 @@ def valGetTimeDistScalar2D(startLoc, endLoc, outputDistUnits, outputTimeUnits, r
 			outputDistUnits = outputDistUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(outputDistUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -209,7 +209,7 @@ def valGetTimeDistScalar2D(startLoc, endLoc, outputDistUnits, outputTimeUnits, r
 			outputTimeUnits = outputTimeUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valTimeUnits(outputTimeUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -247,7 +247,7 @@ def valGetTimeDist3D(nodes, matrixType, fromNodeID, toNodeID, outputDistUnits, o
 			outputDistUnits = outputDistUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(outputDistUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -256,7 +256,7 @@ def valGetTimeDist3D(nodes, matrixType, fromNodeID, toNodeID, outputDistUnits, o
 			outputTimeUnits = outputTimeUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valTimeUnits(outputTimeUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -297,7 +297,7 @@ def valGetTimeDistScalar3D(startLoc, endLoc, outputDistUnits, outputTimeUnits, t
 			outputDistUnits = outputDistUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(outputDistUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -306,7 +306,7 @@ def valGetTimeDistScalar3D(startLoc, endLoc, outputDistUnits, outputTimeUnits, t
 			outputTimeUnits = outputTimeUnits.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valTimeUnits(outputTimeUnits, "output")
 		warningMsg += newWarningMsg
 
@@ -391,12 +391,12 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -406,7 +406,7 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 				cesiumStyle = cesiumStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
@@ -484,12 +484,12 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-		
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -589,7 +589,7 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 			lineColor = lineColor.lower()
 		except:
 			pass
-			
+
 		if (lineColor not in leafletColorList):
 			[valFlag, errorMsg, newWarningMsg] = _valHexColor(lineColor)
 			warningMsg += newWarningMsg
@@ -603,7 +603,7 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 			lineStyle = lineStyle.lower()
 		except:
 			pass
-			
+
 		if (lineStyle not in leafletStyleList):
 			valFlag = False
 			errorMsg = "Error: Invalid `lineStyle` value. Valid options are 'solid', 'dotted', and 'dashed'."
@@ -613,7 +613,7 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 			fillColor = fillColor.lower()
 		except:
 			pass
-			
+
 		if (fillColor not in leafletColorList):
 			[valFlag, errorMsg, newWarningMsg] = _valHexColor(fillColor)
 			warningMsg += newWarningMsg
@@ -660,7 +660,7 @@ def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 			lineColor = lineColor.lower()
 		except:
 			pass
-			
+
 		if (lineColor not in leafletColorList):
 			[valFlag, errorMsg, newWarningMsg] = _valHexColor(lineColor)
 			warningMsg += newWarningMsg
@@ -972,7 +972,7 @@ def valConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTim
 			fromUnitsDist = fromUnitsDist.lower()
 		except:
 			pass
-	
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(fromUnitsDist, "input")
 		warningMsg += newWarningMsg
 
@@ -981,7 +981,7 @@ def valConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTim
 			toUnitsDist = toUnitsDist.lower()
 		except:
 			pass
-			
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(toUnitsDist, "output")
 		warningMsg += newWarningMsg
 
@@ -1019,7 +1019,7 @@ def valConvertDistance(distance, fromUnitsDist, toUnitsDist):
 			fromUnitsDist = fromUnitsDist.lower()
 		except:
 			pass
-	
+
 		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(fromUnitsDist, "input")
 		warningMsg += newWarningMsg
 
@@ -1170,7 +1170,7 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
@@ -1238,7 +1238,7 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
@@ -1308,17 +1308,17 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 				leafletIconPrefix = leafletIconPrefix.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletIconType = leafletIconType.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletNodeInputs(leafletIconPrefix, leafletIconType, leafletColor)
 			warningMsg += newWarningMsg
 
@@ -1349,7 +1349,7 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 		if (arcs is None):
 			valFlag = False
 			errorMsg = "Error: The 'arcs' dataframe is required."
-			
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = valArcs(arcs)
 		warningMsg += newWarningMsg
@@ -1363,18 +1363,18 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 		warningMsg += newWarningMsg
 
 	dummyExpDurationSec = None
-	
+
 	if (valFlag):
 		if (expDurationArgs is not None):
 			if ('getTravelTimes' in expDurationArgs):
 				if (type(expDurationArgs['getTravelTimes']) is not bool):
 					valFlag = False
-					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value." 
+					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value."
 				else:
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
 					else:
-						dummyExpDurationSec = None		# won't use exp duration			
+						dummyExpDurationSec = None		# won't use exp duration
 			else:
 				valFlag = False
 				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
@@ -1399,7 +1399,7 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 
 			startLoc = [arcs['startLat'].at[i], arcs['startLon'].at[i]]
 			endLoc   = [arcs['endLat'].at[i], arcs['endLon'].at[i]]
-	
+
 			if (startLoc != endLoc):
 				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
 				warningMsg += newWarningMsg
@@ -1416,12 +1416,12 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -1431,11 +1431,11 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 				cesiumStyle = cesiumStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
-	return [valFlag, errorMsg, warningMsg]	
+	return [valFlag, errorMsg, warningMsg]
 
 
 def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
@@ -1481,12 +1481,12 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 		warningMsg += newWarningMsg
 
 	dummyExpDurationSec = None
-	
+
 	if (valFlag):
 		if (expDurationArgs is not None):
 			if ('timeSecDict' in expDurationArgs):
 				dummyExpDurationSec = 1.23		# dummy positive value
-				
+
 				# make sure there are valid times here
 				if (type(expDurationArgs['timeSecDict']) is not dict):
 					valFlag = False
@@ -1500,17 +1500,17 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 							errorMsg = "Error: `expDurationArgs['timeSecDict']` does not contain a travel time from node %d to node %d" % (nodeSeq[i], nodeSeq[i+1])
 						else:
 							[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(expDurationArgs['timeSecDict'][nodeSeq[i], nodeSeq[i+1]], "expDurationArgs['timeSecDict'][%d, %d]" % (nodeSeq[i], nodeSeq[i+1]))
-								
+
 			elif ('getTravelTimes' in expDurationArgs):
 				if (type(expDurationArgs['getTravelTimes']) is not bool):
 					valFlag = False
-					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value." 
+					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value."
 				else:
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
 					else:
-						dummyExpDurationSec = None		# won't use exp duration			
-	
+						dummyExpDurationSec = None		# won't use exp duration
+
 			else:
 				valFlag = False
 				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
@@ -1548,7 +1548,7 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 						nodes.loc[nodes['id'] == nodeSeq[i]]['lon'].values[0]]
 			endLoc   = [nodes.loc[nodes['id'] == nodeSeq[i+1]]['lat'].values[0],
 						nodes.loc[nodes['id'] == nodeSeq[i+1]]['lon'].values[0]]
-	
+
 			if (startLoc != endLoc):
 				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
 				warningMsg += newWarningMsg
@@ -1565,12 +1565,12 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -1580,11 +1580,11 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 				cesiumStyle = cesiumStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
-	return [valFlag, errorMsg, warningMsg]	
+	return [valFlag, errorMsg, warningMsg]
 
 def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
 
@@ -1618,13 +1618,13 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 		warningMsg += newWarningMsg
 
 	dummyExpDurationSec = None
-	
+
 	if (valFlag):
 		if (expDurationArgs is not None):
 			if ('getTravelTimes' in expDurationArgs):
 				if (type(expDurationArgs['getTravelTimes']) is not bool):
 					valFlag = False
-					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value." 
+					errorMsg = "Error: `expDurationArgs['getTravelTimes']` must have a boolean (True or False) value."
 				else:
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
@@ -1665,7 +1665,7 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 
 			startLoc = locSeq[i]
 			endLoc   = locSeq[i+1]
-	
+
 			if (startLoc != endLoc):
 				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
 				warningMsg += newWarningMsg
@@ -1682,12 +1682,12 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -1697,11 +1697,11 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 				cesiumStyle = cesiumStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
-	return [valFlag, errorMsg, warningMsg]	
+	return [valFlag, errorMsg, warningMsg]
 
 
 def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
@@ -1771,12 +1771,12 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -1786,12 +1786,12 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 				cesiumStyle = cesiumStyle.lower()
 			except:
 				pass
-				
+
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
-	
+
 
 def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
@@ -1869,12 +1869,12 @@ def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec,
 				leafletColor = leafletColor.lower()
 			except:
 				pass
-				
+
 			try:
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-		
+
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
@@ -2133,7 +2133,7 @@ def valMinDistLoc2Path(loc, path):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valDistance2D(loc1, loc2):
@@ -2148,7 +2148,7 @@ def valDistance2D(loc1, loc2):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc2)
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valDistance3D(loc1, loc2):
@@ -2163,7 +2163,7 @@ def valDistance3D(loc1, loc2):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc2)
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valDistancePath2D(path):
@@ -2174,7 +2174,7 @@ def valDistancePath2D(path):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valPointInDistance2D(loc, direction, distMeters):
@@ -2193,7 +2193,7 @@ def valPointInDistance2D(loc, direction, distMeters):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(distMeters, "distMeters")
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valGetHeading(currentLoc, goalLoc):
@@ -2208,7 +2208,7 @@ def valGetHeading(currentLoc, goalLoc):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(goalLoc)
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valGetMapBoundary(nodes, arcs, locs):
@@ -2231,7 +2231,7 @@ def valGetMapBoundary(nodes, arcs, locs):
 	if (valFlag and locs is not None):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locs)
 		warningMsg += newWarningMsg
-		
+
 	return [valFlag, errorMsg, warningMsg]
 
 
@@ -2243,7 +2243,7 @@ def valFindLocsAtTime(assignments, timeSec):
 	if (assignments is None):
 		valFlag = False
 		errorMsg = "Error: An assignments dataframe is required."
-		
+
 	if (valFlag and assignments is not None):
 		[valFlag, errorMsg, newWarningMsg] = valAssignments(assignments)
 		warningMsg += newWarningMsg
@@ -2253,9 +2253,9 @@ def valFindLocsAtTime(assignments, timeSec):
 		warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
-	
-	
-def valGeocode(location, dataProvider, dataProviderArgs):    
+
+
+def valGeocode(location, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2268,9 +2268,9 @@ def valGeocode(location, dataProvider, dataProviderArgs):
 		[valFlag, errorMsg, newWarningMsg] = _valGeoDataProvider(dataProvider, dataProviderArgs)
 		warningMsg += newWarningMsg
 
-	return [valFlag, errorMsg, warningMsg]    
-	
-def valReverseGeocode(location, dataProvider, dataProviderArgs):    
+	return [valFlag, errorMsg, warningMsg]
+
+def valReverseGeocode(location, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2282,9 +2282,9 @@ def valReverseGeocode(location, dataProvider, dataProviderArgs):
 		[valFlag, errorMsg, newWarningMsg] = _valGeoDataProvider(dataProvider, dataProviderArgs)
 		warningMsg += newWarningMsg
 
-	return [valFlag, errorMsg, warningMsg]    
+	return [valFlag, errorMsg, warningMsg]
 
-	
+
 def _valMapBoundary(mapBoundary, zoomStart):
 	valFlag = True
 	errorMsg = ""
@@ -2323,7 +2323,7 @@ def _valBoundingRegion(boundingRegion):
 	if (len(boundingRegion) < 3):
 		valFlag = False
 		errorMsg = "Error: At least 3 coordinates are required to form a polygon."
-	
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(boundingRegion)
 
@@ -2557,8 +2557,8 @@ def _valGeoDataProvider(dataProvider, dataProviderArgs):
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
 
 	return [valFlag, errorMsg, warningMsg]
-	
-	
+
+
 def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 	valFlag = True
 	errorMsg = ""
@@ -2573,7 +2573,7 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 		routeType = routeType.lower()
 	except:
 		pass
-		
+
 	if (routeType not in routeType2DList):
 		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'."
 		valFlag = False
@@ -2616,7 +2616,7 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds used by the data provider will be ignored.\n"
-				
+
 	return [valFlag, errorMsg, warningMsg]
 
 def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvider):
@@ -2633,7 +2633,7 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 		routeType = routeType.lower()
 	except:
 		pass
-		
+
 	if (routeType not in routeType2DList):
 		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'."
 		valFlag = False
@@ -2645,12 +2645,12 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 		if (valFlag and expDurationSec is not None):
 			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(expDurationSec, 'expDurationSec')
 			warningMsg += newWarningMsg
-		
+
 		if (routeType in ['euclidean2d', 'manhattan']):
 			if (speedMPS is None and expDurationSec is None):
 				valFlag = False
 				errorMsg = "Error: Please provide `expDurationSec` or `speedMPS` for calculating shapepoints."
-			
+
 			elif (speedMPS is not None and expDurationSec is not None):
 				warningMsg += "Warning: `speedMPS` and `expDurationSec` are both provided, but `expDurationSec` will override `speedMPS`. To calculate by `speedMPS` (rather than by an expected duration), leave `expDurationSec` at its default value (None).\n"
 
@@ -2699,7 +2699,7 @@ def _valMatrixType(matrixType, fromNodeID, toNodeID):
 		matrixType = matrixType.lower()
 	except:
 		pass
-		
+
 	if (matrixType not in matrixTypeList):
 		valFlag = False
 		errorMsg = "Error: matrixType not included"
@@ -2761,7 +2761,7 @@ def _valAreaUnits(areaUnits, parameterName):
 		areaUnits = areaUnits.lower()
 	except:
 		pass
-		
+
 	if (areaUnits not in areaUnitsDictionary.keys()):
 		valFlag = False
 		errorMsg = "Error: Invalid units for %s area. Valid area options include 'sf', 'sqft', 'sqfeet', 'smi', 'sqmi', 'sqmiles', 'sm', 'sqm', 'sqmeters', 'skm', 'sqkm', 'sqkilometers'." % (parameterName)
@@ -2958,7 +2958,7 @@ def _valLeafletNodeInputs(leafletIconPrefix, leafletIconType, leafletColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
-	
+
 	if (valFlag == True):
 		if (leafletIconPrefix is not None and leafletIconType is not None):
 			if (leafletIconPrefix.lower() not in leafletIconPrefixList):
@@ -2992,7 +2992,7 @@ def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpaci
 	if (valFlag == True and leafletWeight is not None):
 		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(leafletWeight, "leafletWeight")
 		warningMsg += newWarningMsg
-	
+
 	if (valFlag == True and leafletStyle is not None):
 		if (leafletStyle.lower() not in leafletStyleList):
 			valFlag = False
@@ -3022,7 +3022,7 @@ def _valLeafletBoundingInputs(leafletColor, leafletWeight, leafletStyle, leaflet
 	if (valFlag == True and leafletWeight is not None):
 		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(leafletWeight, "leafletWeight")
 		warningMsg += newWarningMsg
-	
+
 	if (valFlag == True and leafletStyle is not None):
 		if (leafletStyle.lower() not in leafletStyleList):
 			valFlag = False
@@ -3061,13 +3061,13 @@ def _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	if (valFlag == True):
 		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(cesiumWeight, "cesiumWeight")
 		warningMsg += newWarningMsg
-	
+
 	if (valFlag == True):
 		try:
 			cesiumStyle = cesiumStyle.lower()
 		except:
 			pass
-			
+
 		if (cesiumStyle not in cesiumStyleList):
 			valFlag = False
 			errorMsg = "Error: Choose cesiumStyle from 'solid', 'dashed', and 'dotted'."
@@ -3097,7 +3097,7 @@ def _valGreaterOrEqualToZeroInteger(number, parameterName):
 	if (valFlag):
 		if (float(number).is_integer() == False):
 			valFlag = False
-			errorMsg = "Error: %s should be an integer number and greater than or equal to 0." % (parameterName)	
+			errorMsg = "Error: %s should be an integer number and greater than or equal to 0." % (parameterName)
 
 	if (valFlag):
 		if (number < 0):
@@ -3145,7 +3145,7 @@ def _valGreaterThanZeroInteger(number, parameterName):
 	if (valFlag):
 		if (float(number).is_integer() == False):
 			valFlag = False
-			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)	
+			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)
 
 	if (valFlag):
 		if (number <= 0):
@@ -3193,7 +3193,7 @@ def _valBetweenOrEqualToInterger(lower, upper, number, parameterName):
 	if (valFlag):
 		if (float(number).is_integer() == False):
 			valFlag = False
-			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)	
+			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)
 
 	if (valFlag):
 		if (number < lower):
@@ -3203,7 +3203,7 @@ def _valBetweenOrEqualToInterger(lower, upper, number, parameterName):
 	if (valFlag):
 		if (number > upper):
 			valFlag = False
-			errorMsg = "Error: %s should be an integer number and less than or equal to %s." % (parameterName, upper)		
+			errorMsg = "Error: %s should be an integer number and less than or equal to %s." % (parameterName, upper)
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3225,7 +3225,7 @@ def _valBetweenInterger(lower, upper, number, parameterName):
 	if (valFlag):
 		if (float(number).is_integer() == False):
 			valFlag = False
-			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)	
+			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)
 
 	if (valFlag):
 		if (number <= lower):
@@ -3235,7 +3235,7 @@ def _valBetweenInterger(lower, upper, number, parameterName):
 	if (valFlag):
 		if (number >= upper):
 			valFlag = False
-			errorMsg = "Error: %s should be an integer number and less than %s." % (parameterName, upper)		
+			errorMsg = "Error: %s should be an integer number and less than %s." % (parameterName, upper)
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3262,7 +3262,7 @@ def _valBetweenOrEqualToFloat(lower, upper, number, parameterName):
 	if (valFlag):
 		if (number > upper):
 			valFlag = False
-			errorMsg = "Error: %s should be a float number and less than or equal to %s." % (parameterName, upper)		
+			errorMsg = "Error: %s should be a float number and less than or equal to %s." % (parameterName, upper)
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3289,6 +3289,51 @@ def _valBetweenFloat(lower, upper, number, parameterName):
 	if (valFlag):
 		if (number >= upper):
 			valFlag = False
-			errorMsg = "Error: %s should be a float number and less than %s." % (parameterName, upper)		
+			errorMsg = "Error: %s should be a float number and less than %s." % (parameterName, upper)
 
 	return [valFlag, errorMsg, warningMsg]
+
+	def _valClosestNodeLoc2Path(loc, path):
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+        warningMsg += newWarningMsg
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+        warningMsg += newWarningMsg
+
+    return [valFlag, errorMsg, warningMsg]
+
+def _valClosestPointLoc2Path(loc, line):
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+        warningMsg += newWarningMsg
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(line)
+        warningMsg += newWarningMsg
+
+    return [valFlag, errorMsg, warningMsg]
+
+def _valMinDistLoc2Path(loc, path):
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+        warningMsg += newWarningMsg
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+        warningMsg += newWarningMsg
+
+    return [valFlag, errorMsg, warningMsg]
