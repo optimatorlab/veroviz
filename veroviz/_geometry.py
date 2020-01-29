@@ -29,13 +29,13 @@ def geoIsPointInPoly(loc, poly):
 		yi = poly[i][0]
 		xj = poly[j][1]
 		yj = poly[j][0]
-		intersect = (yi > y) != (yj > y)		
+		intersect = (yi > y) != (yj > y)
 		if (intersect):
 			intersect = (x < (xj - xi) * (y - yi) / float(yj - yi) + xi)
 		if (intersect):
 			inside = not inside
 		j = i
-		
+
 	return inside
 
 def geoIsPathInPoly(path, poly):
@@ -48,7 +48,7 @@ def geoIsPathInPoly(path, poly):
 		A list of coordinates in the form of [[lat, lon], [lat, lon], ..., [lat, lon]], it will be considered as open polyline
 	poly: list of lists
 		A list of coordinates in the form of [[lat, lon], [lat, lon], ..., [lat, lon]], it will be considered as closed polygon
-	
+
 	Returns
 	-------
 	boolean
@@ -65,7 +65,7 @@ def geoIsPathInPoly(path, poly):
 	if (insideFlag and geoIsPathCrossPoly(path, poly)):
 		insideFlag = False
 
-	return insideFlag 
+	return insideFlag
 
 def geoIsPathCrossPoly(path, poly):
 	"""
@@ -254,7 +254,7 @@ def geoIsPassLine(loc, line, tolerance):
 		A line segment to be tested if it is passing a stationary point, in [[lat, lon], [lat, lon]] format
 	tolerance: float
 		How close the line to stationary location is considered as passed
-	
+
 	Returns
 	-------
 	boolean
@@ -266,7 +266,7 @@ def geoIsPassLine(loc, line, tolerance):
 		passFlag = True
 	else:
 		passFlag = False
-		
+
 	return passFlag
 
 def geoIsPassPath(loc, path, tolerance):
@@ -282,7 +282,7 @@ def geoIsPassPath(loc, path, tolerance):
 		A list of coordinates in the form of [[lat, lon], [lat, lon], ..., [lat, lon]], it will be considered as open polyline
 	tolerance: float
 		How close the path to stationary location is considered as passed
-	
+
 	Returns
 	-------
 	boolean
@@ -294,7 +294,7 @@ def geoIsPassPath(loc, path, tolerance):
 		passFlag = True
 	else:
 		passFlag = False
-		
+
 	return passFlag
 
 def geoMinDistLoc2Path(loc, path):
@@ -385,7 +385,7 @@ def geoMinDistLoc2Line(loc, line):
 def geoFindCos(vec1, vec2):
 	cosAngle = (vec1[0] * vec2[0] + vec1[1] * vec2[1]) / (math.sqrt(vec1[0] * vec1[0] + vec1[1] * vec1[1]) * math.sqrt(vec2[0] * vec2[0] + vec2[1] * vec2[1]))
 	return cosAngle
-  
+
 def geoPointInDistance2D(loc, direction, distMeters):
 	"""
 	Generate a GPS coordinate given a current coordinate, a direction and a distance
@@ -418,13 +418,13 @@ def geoDistance2D(loc1, loc2):
 		First location, in [lat, lon]
 	loc2: list
 		Second location, in [lat, lon]
-	
+
 	Return
 	------
 	float
 		Distance between to locations.
 	"""
-	
+
 	distMeters = geopy.distance.distance(loc1, loc2).meters
 
 	return distMeters
@@ -439,7 +439,7 @@ def geoDistance3D(loc1, loc2):
 		First location, in [lat, lon, alt]
 	loc2: list
 		Second location, in [lat, lon, alt]
-	
+
 	Return
 	------
 	float
@@ -591,3 +591,78 @@ def geoGetHeading(currentLoc, goalLoc):
 		bearingInDegree += 360
 
 	return bearingInDegree
+
+def geoClosestPointLoc2Path(loc, line):
+     """
+    Given a line of a path find the closest point on a path given a given GPS location
+
+    Parameters
+    ----------
+    loc: list
+        The coordinate of the current coordinate, in [lat, lon, alt] format
+    line:
+        list of locations
+        A list of two coordinates in the form of [lat, lon]
+    Returns
+    -------
+    minLoc: list of lat and lon of a location
+        A location in distance with given direction, in [lat, lon] form.
+    """
+    # The line is denoted as AB, the stationary location is denoted by S
+    locA = line[0]
+    locB = line[1]
+    locS = loc
+    minLoc =[locA[0],locA[1]]
+
+    # Check if the loc is on line, if so return the location
+    if (geoIsOnSegment(loc, line)):
+            return locS
+
+
+    # Vectors start from A
+    vecAS = [float(locS[0] - locA[0]), float(locS[1] - locA[1])]
+    vecAB = [float(locB[0] - locA[0]), float(locB[1] - locA[1])]
+
+    # Vectors start from B
+    vecBS = [float(locS[0] - locB[0]), float(locS[1] - locB[1])]
+    vecBA = [float(locA[0] - locB[0]), float(locA[1] - locB[1])]
+
+    # cos value for A angle and B angle
+    cosSAB = geoFindCos(vecAS, vecAB)
+    cosSBA = geoFindCos(vecBS, vecBA)
+
+    # if both angles are sharp, the closest point will be in the line and sloved for, otherwise the closest point is at the edge and that location is returned
+    if (cosSAB >= 0 and cosSBA >= 0):
+        print(2)
+        xA = locA[0]
+        yA =locA[1]
+
+        xB = locB[0]
+        yB =locB[1]
+
+        xS = locS[0]
+        yS =locS[1]
+
+        dx = xB-xA
+        dy = yB-yA
+
+        det = dx*dx + dy*dy
+        a = (((dy*(yS-yA)) + (dx*(xS-xA)))/ det)
+
+        xP = xA+(a*dx)
+        yP = yA+(a*dy)
+
+        minLoc = [xP,yP]
+
+    else:
+        distAS = geoDistance2D(locS, locA)
+        distBS = geoDistance2D(locS, locB)
+
+        if(distAS < distBS):
+            print(3)
+            minLoc = locA
+        else:
+            print(3)
+            minLoc = locB
+
+    return minLoc

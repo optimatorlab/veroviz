@@ -3293,7 +3293,7 @@ def _valBetweenFloat(lower, upper, number, parameterName):
 
 	return [valFlag, errorMsg, warningMsg]
 
-	def _valClosestNodeLoc2Path(loc, path):
+def valClosestNodeLoc2Path(loc, nodes):
     valFlag = True
     errorMsg = ""
     warningMsg = ""
@@ -3303,27 +3303,13 @@ def _valBetweenFloat(lower, upper, number, parameterName):
         warningMsg += newWarningMsg
 
     if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+        [valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
         warningMsg += newWarningMsg
 
     return [valFlag, errorMsg, warningMsg]
 
-def _valClosestPointLoc2Path(loc, line):
-    valFlag = True
-    errorMsg = ""
-    warningMsg = ""
+def valClosestPointLoc2Path(loc, path):
 
-    if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
-        warningMsg += newWarningMsg
-
-    if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(line)
-        warningMsg += newWarningMsg
-
-    return [valFlag, errorMsg, warningMsg]
-
-def _valMinDistLoc2Path(loc, path):
     valFlag = True
     errorMsg = ""
     warningMsg = ""
