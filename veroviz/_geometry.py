@@ -666,3 +666,27 @@ def geoClosestPointLoc2Path(loc, line):
             minLoc = locB
 
     return minLoc
+
+def geoAreaOfPolygon(boundingRegion = None):
+	"""
+	Calculates the area of triangle defined by three locations
+
+	Parameters
+	----------
+	boundingRegion: the boundary of the
+
+	Return
+	------
+	float
+		Area of polygon
+	"""
+	# Use polygon triangulation to cut the bounding region into a list of triangules, calculate the area of each triangle
+	lstTriangle = tripy.earclip(boundingRegion)
+	lstArea = []
+	for i in range(len(lstTriangle)):
+		lstArea.append(areaOfTriangle(lstTriangle[i][0], lstTriangle[i][1], lstTriangle[i][2]))
+
+	for i in lstArea
+		polyArea = lstArea[i] + polyArea
+
+	return poylArea
