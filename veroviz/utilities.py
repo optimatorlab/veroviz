@@ -1581,7 +1581,137 @@ def minDistLoc2Path(loc, path):
 	distMeters = geoMinDistLoc2Path(loc, path)
 
 	return distMeters
+def closestPointLoc2Path(loc, path):
+  """
+    Given a path, it find the closest point on a path given a given GPS location
 
+    Parameters
+    ----------
+    loc: list
+        The coordinate of the current coordinate, in [lat, lon, alt] format
+    Path:
+        list of locations
+        A list of coordinates in the form of [lat, lon]
+    Returns
+    -------
+    minLoc: list of lat and lon of a location
+        A location in distance with given direction, in [lat, lon, alt=0] form.
+
+	distMeters: The minimum distance is returned
+	Examples
+	--------
+	Prepare some data
+		>>> import veroviz
+		>>> path = [[42.50, -78.10], [42.50, -78.90]]
+		>>> loc1 = [42.50, -78.50]
+		>>> loc2 = [42.51, -78.50]
+		>>> loc3 = [42.51, -78.00]
+
+	Example 1 - The location is on the path:
+		>>> vrv.closestPointLoc2Path(loc1, path)
+
+	Example 2 - The minimum distance is between points on the path:
+		>>> vrv.closestPointLoc2Path(loc2, path)
+
+
+	Example 3 - The minimum distance is to an endpoint of the path:
+		>>> vrv.closestPointLoc2Path(loc3, path)
+
+	Show the objects on a map:
+		>>> myMap = vrv.addLeafletMarker(center=loc1, fillColor='blue')
+		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc2, fillColor='green')
+		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc3, fillColor='purple')
+		>>> myMap = vrv.addLeafletPolyline(mapObject=myMap, points=path)
+		>>> myMap
+
+	Example 4 - The location and path include altitudes (which are ignored):
+		>>> path2 = [[42.50, -78.40, 100],
+		...          [42.50, -78.60, 200],
+		...          [42.40, -78.70, 100]]
+		>>> loc4  = [42.51, -78.3, 300]
+		>>> vrv.closestPointLoc2Path(loc4, path2)
+
+    """
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Path(loc, path)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+    lstLine = []
+    for i in range(1, len(path)):
+        lstLine.append([path[i - 1], path[i]])
+
+    distMeters = minDistLoc2Path(loc, lstLine[0])
+    minPoint = loc
+
+    for i in range(len(lstLine)):
+        tmpDistMeters = minDistLoc2Line(loc, lstLine[i])
+        minPoint = geoClosestPointLoc2Path(loc, lstLine[i])
+
+        if (distMeters > tmpDistMeters):
+            distMeters = tmpDistMeters
+            minPoint = geoClosestPointLoc2Path(loc, lstLine[i])
+
+    return (minPoint, distMeters)
+
+def closestNodeLoc2Path(loc, nodes = None):
+  """
+    Given a path, it find the closest point on a path given a given GPS location
+
+    Parameters
+    ----------
+    loc: list
+        The coordinate of the current coordinate, in [lat, lon, alt] format
+    nodes: Node Dataframe: dataframe containing an existing set of nodes.
+        Required, default as None
+
+	Returns
+    -------
+    minLoc: list of lat and lon of a location
+        A location in distance with given direction, in [lat, lon, alt=0] form.
+	distMeters: The minimum distance is returned
+
+	Examples
+	--------
+	Prepare some data
+		>>> import veroviz
+		>>> loc1 = [42.50, -78.50]
+		>>> myNodes = vrv.createNodesFromLocs(
+		...     nodes = [[42.1343, -78.1234],
+		...             [42.5323, -78.2534],
+		...             [42.9812, -78.1353]])
+
+	Example 1 - Closest node:
+		>>> vrv.closestPointLoc2Path(loc1, nodes)
+
+    """
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestNodeLoc2Path(loc, nodes)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+    locs = list(zip(nodes['lat'].tolist(), nodes['lon'].tolist()))
+    for i in range(1, len(locs)):
+        lstLine.append([locs[i - 1], locs[i]])
+
+    distMeters = minDistLoc2Path(loc, lstLine[0])
+    minPoint = loc
+
+    for i in range(len(lstLine)):
+        tmpDistMeters = minDistLoc2Line(loc, lstLine[i])
+
+        if (distMeters > tmpDistMeters):
+            distMeters = tmpDistMeters
+            minPoint = lstLine[i]
+
+    return (minPoint, distMeters)
+	
 def distance2D(loc1, loc2):
 	"""
 	Calculates the geodesic distance between two locations, using the geopy library.  Altitude is ignored.
@@ -2175,134 +2305,3 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
 
 	return (loc, address)
-
-def closestPointLoc2Path(loc, path):
-  """
-    Given a path, it find the closest point on a path given a given GPS location
-
-    Parameters
-    ----------
-    loc: list
-        The coordinate of the current coordinate, in [lat, lon, alt] format
-    Path:
-        list of locations
-        A list of coordinates in the form of [lat, lon]
-    Returns
-    -------
-    minLoc: list of lat and lon of a location
-        A location in distance with given direction, in [lat, lon, alt=0] form.
-
-	distMeters: The minimum distance is returned
-	Examples
-	--------
-	Prepare some data
-		>>> import veroviz
-		>>> path = [[42.50, -78.10], [42.50, -78.90]]
-		>>> loc1 = [42.50, -78.50]
-		>>> loc2 = [42.51, -78.50]
-		>>> loc3 = [42.51, -78.00]
-
-	Example 1 - The location is on the path:
-		>>> vrv.closestPointLoc2Path(loc1, path)
-
-	Example 2 - The minimum distance is between points on the path:
-		>>> vrv.closestPointLoc2Path(loc2, path)
-
-
-	Example 3 - The minimum distance is to an endpoint of the path:
-		>>> vrv.closestPointLoc2Path(loc3, path)
-
-	Show the objects on a map:
-		>>> myMap = vrv.addLeafletMarker(center=loc1, fillColor='blue')
-		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc2, fillColor='green')
-		>>> myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc3, fillColor='purple')
-		>>> myMap = vrv.addLeafletPolyline(mapObject=myMap, points=path)
-		>>> myMap
-
-	Example 4 - The location and path include altitudes (which are ignored):
-		>>> path2 = [[42.50, -78.40, 100],
-		...          [42.50, -78.60, 200],
-		...          [42.40, -78.70, 100]]
-		>>> loc4  = [42.51, -78.3, 300]
-		>>> vrv.closestPointLoc2Path(loc4, path2)
-
-    """
-	# validation
-	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Path(loc, path)
-	if (not valFlag):
-		print (errorMsg)
-		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
-		print (warningMsg)
-
-    lstLine = []
-    for i in range(1, len(path)):
-        lstLine.append([path[i - 1], path[i]])
-
-    distMeters = minDistLoc2Path(loc, lstLine[0])
-    minPoint = loc
-
-    for i in range(len(lstLine)):
-        tmpDistMeters = minDistLoc2Line(loc, lstLine[i])
-        minPoint = geoClosestPointLoc2Path(loc, lstLine[i])
-
-        if (distMeters > tmpDistMeters):
-            distMeters = tmpDistMeters
-            minPoint = geoClosestPointLoc2Path(loc, lstLine[i])
-
-    return (minPoint, distMeters)
-
-def closestNodeLoc2Path(loc, nodes = None):
-  """
-    Given a path, it find the closest point on a path given a given GPS location
-
-    Parameters
-    ----------
-    loc: list
-        The coordinate of the current coordinate, in [lat, lon, alt] format
-    nodes: Node Dataframe: dataframe containing an existing set of nodes.
-        Required, default as None
-
-	Returns
-    -------
-    minLoc: list of lat and lon of a location
-        A location in distance with given direction, in [lat, lon, alt=0] form.
-	distMeters: The minimum distance is returned
-
-	Examples
-	--------
-	Prepare some data
-		>>> import veroviz
-		>>> loc1 = [42.50, -78.50]
-		>>> myNodes = vrv.createNodesFromLocs(
-		...     nodes = [[42.1343, -78.1234],
-		...             [42.5323, -78.2534],
-		...             [42.9812, -78.1353]])
-
-	Example 1 - Closest node:
-		>>> vrv.closestPointLoc2Path(loc1, nodes)
-
-    """
-	# validation
-	[valFlag, errorMsg, warningMsg] = valClosestNodeLoc2Path(loc, nodes)
-	if (not valFlag):
-		print (errorMsg)
-		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
-		print (warningMsg)
-
-    locs = list(zip(nodes['lat'].tolist(), nodes['lon'].tolist()))
-    for i in range(1, len(locs)):
-        lstLine.append([locs[i - 1], locs[i]])
-
-    distMeters = minDistLoc2Path(loc, lstLine[0])
-    minPoint = loc
-
-    for i in range(len(lstLine)):
-        tmpDistMeters = minDistLoc2Line(loc, lstLine[i])
-
-        if (distMeters > tmpDistMeters):
-            distMeters = tmpDistMeters
-            minPoint = lstLine[i]
-
-    return (minPoint, distMeters)

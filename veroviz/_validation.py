@@ -2284,6 +2284,38 @@ def valReverseGeocode(location, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 
+def valClosestNodeLoc2Path(loc, nodes):
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+        warningMsg += newWarningMsg
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
+        warningMsg += newWarningMsg
+
+    return [valFlag, errorMsg, warningMsg]
+
+def valClosestPointLoc2Path(loc, path):
+
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+        warningMsg += newWarningMsg
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+        warningMsg += newWarningMsg
+
+    return [valFlag, errorMsg, warningMsg]
+
+
 
 def _valMapBoundary(mapBoundary, zoomStart):
 	valFlag = True
@@ -3227,7 +3259,37 @@ def _valBetweenInterger(lower, upper, number, parameterName):
 			valFlag = False
 			errorMsg = "Error: %s should be an integer number and greater than 0." % (parameterName)
 
-	if (valFlag):
+	if (valFlag):def valClosestNodeLoc2Path(loc, nodes):
+	    valFlag = True
+	    errorMsg = ""
+	    warningMsg = ""
+
+	    if (valFlag):
+	        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+	        warningMsg += newWarningMsg
+
+	    if (valFlag):
+	        [valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
+	        warningMsg += newWarningMsg
+
+	    return [valFlag, errorMsg, warningMsg]
+
+	def valClosestPointLoc2Path(loc, path):
+
+	    valFlag = True
+	    errorMsg = ""
+	    warningMsg = ""
+
+	    if (valFlag):
+	        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+	        warningMsg += newWarningMsg
+
+	    if (valFlag):
+	        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+	        warningMsg += newWarningMsg
+
+	    return [valFlag, errorMsg, warningMsg]
+
 		if (number <= lower):
 			valFlag = False
 			errorMsg = "Error: %s should be an integer number and greater than %s." % (parameterName, lower)
@@ -3292,34 +3354,3 @@ def _valBetweenFloat(lower, upper, number, parameterName):
 			errorMsg = "Error: %s should be a float number and less than %s." % (parameterName, upper)
 
 	return [valFlag, errorMsg, warningMsg]
-
-def valClosestNodeLoc2Path(loc, nodes):
-    valFlag = True
-    errorMsg = ""
-    warningMsg = ""
-
-    if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
-        warningMsg += newWarningMsg
-
-    if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
-        warningMsg += newWarningMsg
-
-    return [valFlag, errorMsg, warningMsg]
-
-def valClosestPointLoc2Path(loc, path):
-
-    valFlag = True
-    errorMsg = ""
-    warningMsg = ""
-
-    if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
-        warningMsg += newWarningMsg
-
-    if (valFlag):
-        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
-        warningMsg += newWarningMsg
-
-    return [valFlag, errorMsg, warningMsg]
