@@ -321,6 +321,7 @@ def _writeNodes(nodes, cesiumIconColor, fullDir):
 	for i in range(0, len(indNodes)):
 		jsStr += "    pin[%s] = viewer.entities.add({\n" % (i)
 		jsStr += "        name : '%s',\n" % (indNodes.iloc[i]['cesiumIconText'])
+		jsStr += "        parent : nodePins,"
 		jsStr += "        position : Cesium.Cartesian3.fromDegrees(%s, %s),\n" % (indNodes.iloc[i]['lon'], indNodes.iloc[i]['lat'])
 		jsStr += "        billboard : {\n"
 		jsStr += "            image : pinBuilder.fromText('%s', %s, 40).toDataURL(),\n" % (indNodes.iloc[i]['id'], cesiumIconColor if (cesiumIconColor != None) else indNodes.iloc[i]['cesiumColor'])
