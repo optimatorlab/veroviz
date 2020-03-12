@@ -2284,7 +2284,7 @@ def valReverseGeocode(location, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valClosestNodeLoc2Path(loc, nodes):
+def valClosestNode2Loc(loc, nodes):
     valFlag = True
     errorMsg = ""
     warningMsg = ""

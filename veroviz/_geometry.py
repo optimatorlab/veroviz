@@ -493,18 +493,18 @@ def geoAreaOfTriangle(loc1, loc2, loc3):
 
 def geoAreaOfPolygon(boundingRegion = None):
 	"""
-	Calculates the area of triangle defined by three locations
+	Calculates the area of a polygon defined by boundingRegion. Assumes a solid, but not necessarily convex, polygon.
 
 	Parameters
 	----------
-	boundingRegion: the boundary of the
+	boundingRegion: A list of lat/lon defines the boundary, in the form of [[lat, lon], [lat, lon], ... , [lat, lon]]
 
 	Return
 	------
 	float
 		Area of polygon
 	"""
-	# Use polygon triangulation to cut the bounding region into a list of triangules, calculate the area of each triangle
+	# Use polygon triangulation to cut the bounding region into a list of triangles, calculate the area of each triangle
 	lstTriangle = tripy.earclip(boundingRegion)
 	lstArea = []
 	for i in range(len(lstTriangle)):
@@ -536,7 +536,7 @@ def geoDistancePath2D(path):
 
 	return dist
 
-def geoClosestPointLoc2Path(loc, line):
+def geoClosestPointLoc2Line(loc, line):
      """
     Given a line of a path find the closest point on a path given a given GPS location
 
@@ -577,7 +577,6 @@ def geoClosestPointLoc2Path(loc, line):
 
     # if both angles are sharp, the closest point will be in the line and sloved for, otherwise the closest point is at the edge and that location is returned
     if (cosSAB >= 0 and cosSBA >= 0):
-        print(2)
         xA = locA[0]
         yA =locA[1]
 
@@ -603,10 +602,8 @@ def geoClosestPointLoc2Path(loc, line):
         distBS = geoDistance2D(locS, locB)
 
         if(distAS < distBS):
-            print(3)
             minLoc = locA
         else:
-            print(3)
             minLoc = locB
 
     return minLoc
