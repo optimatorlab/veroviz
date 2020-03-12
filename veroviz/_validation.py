@@ -1004,7 +1004,74 @@ def valConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTim
 		warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
+def valCalcPerimeter2D(path, closeLoop, distUnits):
 
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (valFlag):
+        [valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+        warningMsg += newWarningMsg
+
+    if (valFlag):
+        if (type(closeLoop) is not bool):
+            valFlag = False
+            errorMsg = "Error: `closeLoop` must be boolean (True or False)."
+
+    if (valFlag):
+        try:
+            distUnits = distUnits.lower()
+        except:
+            pass
+
+        [valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(distUnits, "distUnits")
+        warningMsg += newWarningMsg
+
+    return [valFlag, errorMsg, warningMsg]
+
+def valLengthFromNodeSeq(nodeSeq, lengthDict):
+
+    valFlag = True
+    errorMsg = ""
+    warningMsg = ""
+
+    if (nodeSeq == None):
+        valFlag = False
+        errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+    if (valFlag):
+        if (lengthDict == None):
+            valFlag = False
+            errorMsg = "Error: `lengthDict` is required.  Please provide either a distance or time matrix, in the form of a dictionary."
+
+    if (valFlag):
+        if (type(nodeSeq) is not list):
+            valFlag = False
+            errorMsg = "Error: `nodeSeq` must be a sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+    if (valFlag):
+        if (len(nodeSeq) <= 1):
+            valFlag = False
+            errorMsg = "Error: `nodeSeq` must be a sequence of locations, in the format of [nodeID1, nodeID2, ...], with at least 2 nodes."
+
+    if (valFlag):
+        if (type(lengthDict) is not dict):
+            valFlag = False
+            errorMsg = "Error: `lengthDict` must be a distance or time matrix, in the form of a dictionary."
+
+    if (valFlag):
+        for i in range(0, len(nodeSeq)-1):
+            if (not valFlag):
+                break
+            if (valFlag):
+                [valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(nodeSeq[i], 'nodeSeq')
+            if (valFlag):
+                if ((nodeSeq[i], nodeSeq[i+1]) not in lengthDict):
+                    valFlag = False
+                    errorMsg = "Error: (%d, %d) is not a key in the `lengthDict` dictionary." % (nodeSeq[i], nodeSeq[i+1])
+
+    return [valFlag, errorMsg, warningMsg]
 def valConvertDistance(distance, fromUnitsDist, toUnitsDist):
 	valFlag = True
 	errorMsg = ""

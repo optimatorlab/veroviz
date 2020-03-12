@@ -172,7 +172,7 @@ def addHeadSlash(originStr):
 		firstChar = originStr[:1]
 		if (firstChar != "/"):
 			originStr = '/' + originStr
-		
+
 	return originStr
 
 def addTailSlash(originStr):
@@ -191,3 +191,45 @@ def replaceBackslashToSlash(path):
 	if (path is not None):
 		path = path.replace("\\", "/")
 	return path
+
+def privConvertDistance(dist, fromUnits, toUnits):
+
+    try:
+        fromUnits = fromUnits.lower()
+    except:
+        pass
+
+    fromUnits = distanceUnitsDictionary[fromUnits]
+    if (fromUnits == 'm'):
+        tmpDist = dist * 1.0
+    elif (fromUnits == 'km'):
+        tmpDist = dist * VRV_CONST_METERS_PER_KILOMETER
+    elif (fromUnits == 'mi'):
+        tmpDist = dist * VRV_CONST_METERS_PER_MILE
+    elif (fromUnits == 'ft'):
+        tmpDist = dist * VRV_CONST_METERS_PER_FEET
+    elif (fromUnits == 'yard'):
+        tmpDist = dist * VRV_CONST_METERS_PER_YARD
+    elif (fromUnits == 'nmi'):
+        tmpDist = dist * VRV_CONST_METERS_PER_NAUTICAL_MILE
+
+    try:
+        toUnits = toUnits.lower()
+    except:
+        pass
+
+    toUnits = distanceUnitsDictionary[toUnits]
+    if (toUnits == 'm'):
+        convDist = tmpDist / 1.0
+    elif (toUnits == 'km'):
+        convDist = tmpDist / VRV_CONST_METERS_PER_KILOMETER
+    elif (toUnits == 'mi'):
+        convDist = tmpDist / VRV_CONST_METERS_PER_MILE
+    elif (toUnits == 'ft'):
+        convDist = tmpDist / VRV_CONST_METERS_PER_FEET
+    elif (toUnits == 'yard'):
+        convDist = tmpDist / VRV_CONST_METERS_PER_YARD
+    elif (toUnits == 'nmi'):
+        convDist = tmpDist / VRV_CONST_METERS_PER_NAUTICAL_MILE
+
+    return convDist

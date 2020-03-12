@@ -108,6 +108,101 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 		convSpeed = tmpSpeed * VRV_CONST_SECONDS_PER_HOUR
 
 	return convSpeed
+def lengthFromNodeSeq(nodeSeq, lengthDict):
+    """
+    Calculate the total "length" (either in time or distance) along a path defined a sequence of node IDs.
+
+    Parameters
+    ----------
+    nodeSeq: list, Required
+        An ordered list of node IDs.  These IDs must be included in the `id` column of the :ref:`Nodes` dataframe specified in the `nodes` input argument to this function. The format for `nodeSeq` is [node_id_1, node_id_2, ...].
+    lengthDict: dictionary, Required
+
+    Return
+    ------
+    float
+        Total length of the path.
+
+    Example
+    -------
+        >>> import veroviz as vrv
+
+        >>> locs = [[42.8871085, -78.8731949],
+        ...[42.8888311, -78.8649649],
+        ...[42.8802158, -78.8660787],
+        ...[42.8845705, -78.8762794],
+        ...[42.8908031, -78.8770140]]
+        >>>myNodes = vrv.createNodesFromLocs(locs=locs)
+
+        >>>[timeSecDict, distMetersDict] = vrv.getTimeDist2D( nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
+        >>>nodeSeq = [1, 3, 2]
+        >>>totalTimeSec = lengthFromNodeSeq(nodeSeq, timeSecDict)
+        >>>totalTimeSec
+        128.18625959867046
+
+        >>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
+        >>> totalDistMeters
+        1922.7938939800567
+    """
+
+    validation
+    [valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
+    if (not valFlag):
+        print (errorMsg)
+        return
+    elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+        print (warningMsg)
+
+    length = 0
+    for i in range(0, len(nodeSeq)-1):
+        length += lengthDict[nodeSeq[i], nodeSeq[i+1]]
+    return length
+
+def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
+    """
+    Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.
+
+    Parameters
+    ----------
+    path: list of lists, Required, default as None
+    A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...] or [[lat, lon, alt], [lat, lon, alt], ...].  If provided, altitude will be ignored.
+    closeLoop: Boolean, Optional, default as False
+    Indicates whether the path should be closed (i.e., connecting the last location to the first).
+    distUnits: string, Optional, default as 'meters'
+    Specifies the desired distance units for the output. See :ref:`Units` for options.
+
+    Return
+    ------
+    float
+    Total length of the path.
+
+    Example
+    -------
+    >>> import veroviz as vrv
+    >>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
+    >>> perimDist = vrv.calcPerimeter2D(path=locs, closeLoop=True, distUnits='mi')
+    >>> perimDist
+    6.857172388864359
+    """
+
+    [valFlag, errorMsg, warningMsg] = valCalcPerimeter2D(path, closeLoop, distUnits)
+    if (not valFlag):
+        print (errorMsg)
+        return
+    elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+        print (warningMsg)
+
+    dist = 0
+    for i in range(0, len(path) - 1):
+        dist += distance2D(path[i][0:2], path[i + 1][0:2])
+
+    if (closeLoop):
+        dist += distance2D(path[-1][0:2], path[0][0:2])
+
+    dist = privConvertDistance(dist, 'meters', distUnits)
+
+    return dist
+
 
 def convertDistance(distance, fromUnits, toUnits):
 	"""
@@ -145,45 +240,9 @@ def convertDistance(distance, fromUnits, toUnits):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	try:
-		fromUnits = fromUnits.lower()
-	except:
-		pass
+	convDist = privConvertDistance(distance, fromUnits, toUnits)
 
-	fromUnits = distanceUnitsDictionary[fromUnits]
-	if (fromUnits == 'm'):
-		tmpDist = distance * 1.0
-	elif (fromUnits == 'km'):
-		tmpDist = distance * VRV_CONST_METERS_PER_KILOMETER
-	elif (fromUnits == 'mi'):
-		tmpDist = distance * VRV_CONST_METERS_PER_MILE
-	elif (fromUnits == 'ft'):
-		tmpDist = distance * VRV_CONST_METERS_PER_FEET
-	elif (fromUnits == 'yard'):
-		tmpDist = distance * VRV_CONST_METERS_PER_YARD
-	elif (fromUnits == 'nmi'):
-		tmpDist = distance * VRV_CONST_METERS_PER_NAUTICAL_MILE
-
-	try:
-		toUnits = toUnits.lower()
-	except:
-		pass
-
-	toUnits = distanceUnitsDictionary[toUnits]
-	if (toUnits == 'm'):
-		convDist = tmpDist / 1.0
-	elif (toUnits == 'km'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_KILOMETER
-	elif (toUnits == 'mi'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_MILE
-	elif (toUnits == 'ft'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_FEET
-	elif (toUnits == 'yard'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_YARD
-	elif (toUnits == 'nmi'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_NAUTICAL_MILE
-
-	return convDist
+    return convDist
 
 def convertTime(time, fromUnits, toUnits):
 	"""
