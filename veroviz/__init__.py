@@ -1,4 +1,4 @@
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
@@ -113,11 +113,3 @@ def checkVersion():
 		versionStatus = "Error: Cannot determine the latest version of veroviz. The most common cause is that your computer isn't connected to the network."
 
 	return versionStatus
-
-# def disableWarningMessages():
-# 	os.environ['VEROVIZ_SHOWWARNINGMESSAGE'] = 'False'
-# 	return
-
-# def enableWarningMessages():
-# 	os.environ['VEROVIZ_SHOWWARNINGMESSAGE'] = 'True'
-# 	return

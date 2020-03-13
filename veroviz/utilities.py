@@ -108,101 +108,101 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 		convSpeed = tmpSpeed * VRV_CONST_SECONDS_PER_HOUR
 
 	return convSpeed
+
 def lengthFromNodeSeq(nodeSeq, lengthDict):
-    """
-    Calculate the total "length" (either in time or distance) along a path defined a sequence of node IDs.
+	"""
+	Calculate the total "length" (either in time or distance) along a path defined a sequence of node IDs.
 
-    Parameters
-    ----------
-    nodeSeq: list, Required
-        An ordered list of node IDs.  These IDs must be included in the `id` column of the :ref:`Nodes` dataframe specified in the `nodes` input argument to this function. The format for `nodeSeq` is [node_id_1, node_id_2, ...].
-    lengthDict: dictionary, Required
+	Parameters
+	----------
+	nodeSeq: list, Required
+		An ordered list of node IDs.  These IDs must be included in the `id` column of the :ref:`Nodes` dataframe specified in the `nodes` input argument to this function. The format for `nodeSeq` is [node_id_1, node_id_2, ...].
+	lengthDict: dictionary, Required
 
-    Return
-    ------
-    float
-        Total length of the path.
+	Return
+	------
+	float
+		Total length of the path.
 
-    Example
-    -------
-        >>> import veroviz as vrv
+	Example
+	-------
+		>>> import veroviz as vrv
 
-        >>> locs = [[42.8871085, -78.8731949],
-        ...[42.8888311, -78.8649649],
-        ...[42.8802158, -78.8660787],
-        ...[42.8845705, -78.8762794],
-        ...[42.8908031, -78.8770140]]
-        >>>myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> locs = [[42.8871085, -78.8731949],
+		...[42.8888311, -78.8649649],
+		...[42.8802158, -78.8660787],
+		...[42.8845705, -78.8762794],
+		...[42.8908031, -78.8770140]]
+		>>>myNodes = vrv.createNodesFromLocs(locs=locs)
 
-        >>>[timeSecDict, distMetersDict] = vrv.getTimeDist2D( nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
-        >>>nodeSeq = [1, 3, 2]
-        >>>totalTimeSec = lengthFromNodeSeq(nodeSeq, timeSecDict)
-        >>>totalTimeSec
-        128.18625959867046
+		>>>[timeSecDict, distMetersDict] = vrv.getTimeDist2D( nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
+		>>>nodeSeq = [1, 3, 2]
+		>>>totalTimeSec = lengthFromNodeSeq(nodeSeq, timeSecDict)
+		>>>totalTimeSec
+		128.18625959867046
 
-        >>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
-        >>> totalDistMeters
-        1922.7938939800567
-    """
+		>>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
+		>>> totalDistMeters
+		1922.7938939800567
+	"""
 
-    validation
-    [valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
-    if (not valFlag):
-        print (errorMsg)
-        return
-    elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
-        print (warningMsg)
+	validation
+	[valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
 
-    length = 0
-    for i in range(0, len(nodeSeq)-1):
-        length += lengthDict[nodeSeq[i], nodeSeq[i+1]]
-    return length
+	length = 0
+	for i in range(0, len(nodeSeq)-1):
+		length += lengthDict[nodeSeq[i], nodeSeq[i+1]]
+	return length
 
 def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
-    """
-    Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.
+	"""
+	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.
 
-    Parameters
-    ----------
-    path: list of lists, Required, default as None
-    A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...] or [[lat, lon, alt], [lat, lon, alt], ...].  If provided, altitude will be ignored.
-    closeLoop: Boolean, Optional, default as False
-    Indicates whether the path should be closed (i.e., connecting the last location to the first).
-    distUnits: string, Optional, default as 'meters'
-    Specifies the desired distance units for the output. See :ref:`Units` for options.
+	Parameters
+	----------
+	path: list of lists, Required, default as None
+	A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...] or [[lat, lon, alt], [lat, lon, alt], ...].  If provided, altitude will be ignored.
+	closeLoop: Boolean, Optional, default as False
+	Indicates whether the path should be closed (i.e., connecting the last location to the first).
+	distUnits: string, Optional, default as 'meters'
+	Specifies the desired distance units for the output. See :ref:`Units` for options.
 
-    Return
-    ------
-    float
-    Total length of the path.
+	Return
+	------
+	float
+	Total length of the path.
 
-    Example
-    -------
-    >>> import veroviz as vrv
-    >>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
-    >>> perimDist = vrv.calcPerimeter2D(path=locs, closeLoop=True, distUnits='mi')
-    >>> perimDist
-    6.857172388864359
-    """
+	Example
+	-------
+	>>> import veroviz as vrv
+	>>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
+	>>> perimDist = vrv.calcPerimeter2D(path=locs, closeLoop=True, distUnits='mi')
+	>>> perimDist
+	6.857172388864359
+	"""
 
-    [valFlag, errorMsg, warningMsg] = valCalcPerimeter2D(path, closeLoop, distUnits)
-    if (not valFlag):
-        print (errorMsg)
-        return
-    elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
-        print (warningMsg)
+	[valFlag, errorMsg, warningMsg] = valCalcPerimeter2D(path, closeLoop, distUnits)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
 
-    dist = 0
-    for i in range(0, len(path) - 1):
-        dist += distance2D(path[i][0:2], path[i + 1][0:2])
+	dist = 0
+	for i in range(0, len(path) - 1):
+		dist += distance2D(path[i][0:2], path[i + 1][0:2])
 
-    if (closeLoop):
-        dist += distance2D(path[-1][0:2], path[0][0:2])
+	if (closeLoop):
+		dist += distance2D(path[-1][0:2], path[0][0:2])
 
-    dist = privConvertDistance(dist, 'meters', distUnits)
+	dist = convertDistance(dist, 'meters', distUnits)
 
-    return dist
-
+	return dist
 
 def convertDistance(distance, fromUnits, toUnits):
 	"""
@@ -224,11 +224,11 @@ def convertDistance(distance, fromUnits, toUnits):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> distanceMiles = 1.0
-	    >>> distanceKilometers = vrv.convertDistance(distanceMiles, 'miles', 'km')
-	    >>> distanceKilometers
-	    1.60934
+		>>> import veroviz as vrv
+		>>> distanceMiles = 1.0
+		>>> distanceKilometers = vrv.convertDistance(distanceMiles, 'miles', 'km')
+		>>> distanceKilometers
+		1.60934
 
 	"""
 
@@ -240,9 +240,45 @@ def convertDistance(distance, fromUnits, toUnits):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	convDist = privConvertDistance(distance, fromUnits, toUnits)
+	try:
+		fromUnits = fromUnits.lower()
+	except:
+		pass
 
-    return convDist
+	fromUnits = distanceUnitsDictionary[fromUnits]
+	if (fromUnits == 'm'):
+		tmpDist = distance * 1.0
+	elif (fromUnits == 'km'):
+		tmpDist = distance * VRV_CONST_METERS_PER_KILOMETER
+	elif (fromUnits == 'mi'):
+		tmpDist = distance * VRV_CONST_METERS_PER_MILE
+	elif (fromUnits == 'ft'):
+		tmpDist = distance * VRV_CONST_METERS_PER_FEET
+	elif (fromUnits == 'yard'):
+		tmpDist = distance * VRV_CONST_METERS_PER_YARD
+	elif (fromUnits == 'nmi'):
+		tmpDist = distance * VRV_CONST_METERS_PER_NAUTICAL_MILE
+
+	try:
+		toUnits = toUnits.lower()
+	except:
+		pass
+
+	toUnits = distanceUnitsDictionary[toUnits]
+	if (toUnits == 'm'):
+		convDist = tmpDist / 1.0
+	elif (toUnits == 'km'):
+		convDist = tmpDist / VRV_CONST_METERS_PER_KILOMETER
+	elif (toUnits == 'mi'):
+		convDist = tmpDist / VRV_CONST_METERS_PER_MILE
+	elif (toUnits == 'ft'):
+		convDist = tmpDist / VRV_CONST_METERS_PER_FEET
+	elif (toUnits == 'yard'):
+		convDist = tmpDist / VRV_CONST_METERS_PER_YARD
+	elif (toUnits == 'nmi'):
+		convDist = tmpDist / VRV_CONST_METERS_PER_NAUTICAL_MILE
+
+	return convDist
 
 def convertTime(time, fromUnits, toUnits):
 	"""
@@ -264,11 +300,11 @@ def convertTime(time, fromUnits, toUnits):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> timeHours = 1.5
-	    >>> timeMinutes = vrv.convertTime(timeHours, 'h', 'min')
-	    >>> timeMinutes
-	    90.0
+		>>> import veroviz as vrv
+		>>> timeHours = 1.5
+		>>> timeMinutes = vrv.convertTime(timeHours, 'h', 'min')
+		>>> timeMinutes
+		90.0
 
 	"""
 
@@ -328,11 +364,11 @@ def convertArea(area, fromUnits, toUnits):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> areaSQKM = 1.0
-	    >>> areaSqMiles = vrv.convertArea(50, 'sqkm', 'sqmi')
-	    >>> areaSqMiles
-	    >>> 19.305
+		>>> import veroviz as vrv
+		>>> areaSQKM = 1.0
+		>>> areaSqMiles = vrv.convertArea(50, 'sqkm', 'sqmi')
+		>>> areaSqMiles
+		>>> 19.305
 	"""
 
 	[valFlag, errorMsg, warningMsg] = valConvertArea(area, fromUnits, toUnits)
@@ -392,9 +428,9 @@ def initDataframe(dataframeType):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> newNodes = vrv.initDataframe('Nodes')
-	    >>> newNodes
+		>>> import veroviz as vrv
+		>>> newNodes = vrv.initDataframe('Nodes')
+		>>> newNodes
 	"""
 
 	# validation
@@ -447,42 +483,42 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 		>>>
 		>>> # Create 3 nodes, with blue pin markers (default):
 		>>> myNodes = vrv.createNodesFromLocs(
-		...     locs = [[42.1343, -78.1234],
-		...             [42.5323, -78.2534],
-		...             [42.9812, -78.1353]])
+		...	 locs = [[42.1343, -78.1234],
+		...			 [42.5323, -78.2534],
+		...			 [42.9812, -78.1353]])
 		>>>
 		>>> # Create 1 arc, with orange arrows (default):
 		>>> myArc = vrv.createArcsFromLocSeq(locSeq = [[42.62, -78.20],
-		...                                            [42.92, -78.30]])
+		...											[42.92, -78.30]])
 		>>>
 		>>> # Define 2 locations, with altitude.  (We'll color these purple later):
 		>>> myLocs = [[42.03, -78.26, 100], [42.78, -78.25, 200]]
 		>>>
 		>>> # Find the boundary of these objects:
 		>>> myBoundary = vrv.getMapBoundary(nodes = myNodes,
-		...                                 arcs  = myArc,
-		...                                 locs  = myLocs)
+		...								 arcs  = myArc,
+		...								 locs  = myLocs)
 		>>> myBoundary
 		[[42.03, -78.1234], [42.9812, -78.3]]
 
 		>>> # Initialize a map with nodes (blue) and an arc (orange):
 		>>> myMap = vrv.createLeaflet(nodes = myNodes,
-		...                           arcs  = myArc)
+		...						   arcs  = myArc)
 		>>>
 		>>> # Add red (default) circle markers for the locations:
 		>>> for i in range(0, len(myLocs)):
-		...    myMap = vrv.addLeafletMarker(mapObject = myMap,
-		...                                 center    = myLocs[i])
+		...	myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...								 center	= myLocs[i])
 		>>>
 		>>> # Convert myBoundary to a 4-point polygon:
 		>>> myBoundingRegion = [myBoundary[0],
-		...                     [myBoundary[0][0], myBoundary[1][1]],
-		...                     myBoundary[1],
-		...                     [myBoundary[1][0], myBoundary[0][1]]]
+		...					 [myBoundary[0][0], myBoundary[1][1]],
+		...					 myBoundary[1],
+		...					 [myBoundary[1][0], myBoundary[0][1]]]
 		>>>
 		>>> # Add the bounding region to the map:
-		>>> myMap = vrv.createLeaflet(mapObject      = myMap,
-		...                           boundingRegion = myBoundingRegion)
+		>>> myMap = vrv.createLeaflet(mapObject	  = myMap,
+		...						   boundingRegion = myBoundingRegion)
 		>>> # Display the map:
 		>>> myMap
 	"""
@@ -554,14 +590,14 @@ def convertMatricesDataframeToDictionary(dataframe):
 	Prepare some data.
 		>>> import veroviz as vrv
 		>>> locs = [
-		...     [42.1538, -78.4253],
-		...     [42.3465, -78.6234],
-		...     [42.6343, -78.1146]]
+		...	 [42.1538, -78.4253],
+		...	 [42.3465, -78.6234],
+		...	 [42.6343, -78.1146]]
 		>>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...     nodes        = exampleNodes,
-		...     routeType    = 'fastest',
-		...     dataProvider = 'OSRM-online')
+		...	 nodes		= exampleNodes,
+		...	 routeType	= 'fastest',
+		...	 dataProvider = 'OSRM-online')
 		>>> [timeDict]
 		[{(1, 1): 0.0,
 		  (1, 2): 2869.9,
@@ -642,14 +678,14 @@ def convertMatricesDictionaryToDataframe(dictionary):
 	Prepare some data.
 		>>> import veroviz as vrv
 		>>> locs = [
-		...     [42.1538, -78.4253],
-		...     [42.3465, -78.6234],
-		...     [42.6343, -78.1146]]
+		...	 [42.1538, -78.4253],
+		...	 [42.3465, -78.6234],
+		...	 [42.6343, -78.1146]]
 		>>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...     nodes        = exampleNodes,
-		...     routeType    = 'fastest',
-		...     dataProvider = 'OSRM-online')
+		...	 nodes		= exampleNodes,
+		...	 routeType	= 'fastest',
+		...	 dataProvider = 'OSRM-online')
 		>>> [timeDict]
 		[{(1, 1): 0.0,
 		  (1, 2): 2869.9,
@@ -743,9 +779,9 @@ def exportDataToCSV(data, filename):
 
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(
-		...              locs = [[42.1538, -78.4253],
-		...                      [42.3465, -78.6234],
-		...                      [42.6343, -78.1146]])
+		...			  locs = [[42.1538, -78.4253],
+		...					  [42.3465, -78.6234],
+		...					  [42.6343, -78.1146]])
 		>>> nodesDF
 
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
@@ -753,14 +789,14 @@ def exportDataToCSV(data, filename):
 
 	Import the dataframe we just saved:
 		>>> importedNodes = vrv.importDataFromCSV(
-		...     dataType = 'nodes',
-		...     filename = 'test/nodes.csv')
+		...	 dataType = 'nodes',
+		...	 filename = 'test/nodes.csv')
 		>>> importedNodes
 
 	If the data type is inconsistent with the data, an error message will be thrown and nothing will be imported.
 		>>> importedArcs = vrv.importDataFromCSV(
-		...     dataType = 'arcs',
-		...     filename = 'test/nodes.csv')
+		...	 dataType = 'arcs',
+		...	 filename = 'test/nodes.csv')
 		Error: test/nodes.csv was not successfully imported.  Check the data type.
 
 	Similarly we can import and export the 'arcs' and 'assignments' dataframe
@@ -769,9 +805,9 @@ def exportDataToCSV(data, filename):
 
 	Get travel time/distance matrices using the nodes we just created:
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...           nodes        = nodesDF,
-		...           routeType    = 'fastest',
-		...           dataProvider = 'OSRM-online')
+		...		   nodes		= nodesDF,
+		...		   routeType	= 'fastest',
+		...		   dataProvider = 'OSRM-online')
 		>>> timeDict
 		{(1, 1): 0.0,
 		 (1, 2): 2869.9,
@@ -788,8 +824,8 @@ def exportDataToCSV(data, filename):
 
 	Import the saved dictionary
 		>>> importedTime = vrv.importDataFromCSV(
-		...     dataType = 'matrix',
-		...     filename = 'test/timeMatrix.csv')
+		...	 dataType = 'matrix',
+		...	 filename = 'test/timeMatrix.csv')
 		>>> importedTime
 		{(1, 1): 0.0,
 		 (1, 2): 2869.9,
@@ -859,9 +895,9 @@ def importDataFromCSV(dataType, filename):
 
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(
-		...              locs = [[42.1538, -78.4253],
-		...                      [42.3465, -78.6234],
-		...                      [42.6343, -78.1146]])
+		...			  locs = [[42.1538, -78.4253],
+		...					  [42.3465, -78.6234],
+		...					  [42.6343, -78.1146]])
 		>>> nodesDF
 
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
@@ -869,14 +905,14 @@ def importDataFromCSV(dataType, filename):
 
 	Import the dataframe we just saved:
 		>>> importedNodes = vrv.importDataFromCSV(
-		...     dataType = 'nodes',
-		...     filename = 'test/nodes.csv')
+		...	 dataType = 'nodes',
+		...	 filename = 'test/nodes.csv')
 		>>> importedNodes
 
 	If the data type is inconsistent with the data, an error message will be thrown and nothing will be imported.
 		>>> importedArcs = vrv.importDataFromCSV(
-		...     dataType = 'arcs',
-		...     filename = 'test/nodes.csv')
+		...	 dataType = 'arcs',
+		...	 filename = 'test/nodes.csv')
 		Error: test/nodes.csv was not successfully imported.  Check the data type.
 
 	Similarly we can import and export the 'arcs' and 'assignments' dataframe
@@ -885,9 +921,9 @@ def importDataFromCSV(dataType, filename):
 
 	Get travel time/distance matrices using the nodes we just created:
 		>>> [timeDict, distDict] = vrv.getTimeDist2D(
-		...           nodes        = nodesDF,
-		...           routeType    = 'fastest',
-		...           dataProvider = 'OSRM-online')
+		...		   nodes		= nodesDF,
+		...		   routeType	= 'fastest',
+		...		   dataProvider = 'OSRM-online')
 		>>> timeDict
 		{(1, 1): 0.0,
 		 (1, 2): 2869.9,
@@ -904,8 +940,8 @@ def importDataFromCSV(dataType, filename):
 
 	Import the saved dictionary
 		>>> importedTime = vrv.importDataFromCSV(
-		...     dataType = 'matrix',
-		...     filename = 'test/timeMatrix.csv')
+		...	 dataType = 'matrix',
+		...	 filename = 'test/timeMatrix.csv')
 		>>> importedTime
 		{(1, 1): 0.0,
 		 (1, 2): 2869.9,
@@ -991,9 +1027,9 @@ def exportDataframe(dataframe, filename):
 
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(locs=[
-		...     [42.1538, -78.4253],
-		...     [42.3465, -78.6234],
-		...     [42.6343, -78.1146]])
+		...	 [42.1538, -78.4253],
+		...	 [42.3465, -78.6234],
+		...	 [42.6343, -78.1146]])
 		>>> nodesDF
 
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
@@ -1069,9 +1105,9 @@ def importDataframe(filename, intCols=False, useIndex=True):
 
 	Create a nodes dataframe:
 		>>> nodesDF = vrv.createNodesFromLocs(locs=[
-		...     [42.1538, -78.4253],
-		...     [42.3465, -78.6234],
-		...     [42.6343, -78.1146]])
+		...	 [42.1538, -78.4253],
+		...	 [42.3465, -78.6234],
+		...	 [42.6343, -78.1146]])
 		>>> nodesDF
 
 	Save the nodesDF dataframe as a .csv file in a subdirectory named "test":
@@ -1120,10 +1156,10 @@ def getConvexHull(locs):
 		>>> # Find the convex hull of 5 locs that straddle the Prime Meridian:
 		>>> import veroviz as vrv
 		>>> locs = [[51.4865,  0.0008],
-		...         [51.4777, -0.0002],
-		...         [51.4801,  0.0029],
-		...         [51.4726, -0.0161],
-		...         [51.4752,  0.0158]]
+		...		 [51.4777, -0.0002],
+		...		 [51.4801,  0.0029],
+		...		 [51.4726, -0.0161],
+		...		 [51.4752,  0.0158]]
 		>>> convexHull = vrv.getConvexHull(locs)
 		>>> convexHull
 		[[51.4726, -0.0161], [51.4865, 0.0008], [51.4752, 0.0158]]
@@ -1132,7 +1168,7 @@ def getConvexHull(locs):
 		>>> # Display the 5 locations and the convex hull on a map:
 		>>> myMap = None
 		>>> for loc in locs:
-		...     myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc)
+		...	 myMap = vrv.addLeafletMarker(mapObject=myMap, center=loc)
 		>>> myMap = vrv.addLeafletPolygon(mapObject=myMap, points=convexHull)
 		>>> myMap
 	"""
@@ -1180,7 +1216,7 @@ def isPointInPoly(loc, poly):
 	Examples
 	--------
 	Import veroviz:
-	    >>> import veroviz as vrv
+		>>> import veroviz as vrv
 
 	Example 1 - Location is inside polygon:
 		>>> loc = [42.03, -78.05]
@@ -1280,7 +1316,7 @@ def isPathInPoly(path, poly):
 	Examples
 	--------
 	Import veroviz:
-	    >>> import veroviz as vrv
+		>>> import veroviz as vrv
 
 	Example 1 - Entire path is inside polygon:
 		>>> path = [[42.50, -78.10], [42.50, -78.50], [42.50, -78.90]]
@@ -1325,10 +1361,10 @@ def isPathInPoly(path, poly):
 	Example 5 - Path and poly coordinates include altitude (which is ignored):
 		>>> path = [[42.50, -78.10, 100], [42.50, -78.90, 200]]
 		>>> poly = [[42.00, -78.00, 100],
-		...         [43.00, -78.00, 100],
-		...         [42.2, -78.5, 100],
-		...         [43.00, -79.00, 200],
-		...         [42.00, -79.00, 200]]
+		...		 [43.00, -78.00, 100],
+		...		 [42.2, -78.5, 100],
+		...		 [43.00, -79.00, 200],
+		...		 [42.00, -79.00, 200]]
 		>>> vrv.isPathInPoly(path, poly)
 		True
 
@@ -1376,7 +1412,7 @@ def isPathCrossPoly(path, poly):
 	Examples
 	--------
 	First import veroviz
-	    >>> import veroviz
+		>>> import veroviz
 
 	Example 1 - Entire path is inside poly
 		>>> path = [[42.50, -78.10], [42.50, -78.50], [42.50, -78.90]]
@@ -1421,10 +1457,10 @@ def isPathCrossPoly(path, poly):
 	Example 5 - Path and poly include altitudes (which are ignored):
 		>>> path = [[42.50, -78.10, 100], [42.50, -78.90, 300]]
 		>>> poly = [[42.00, -78.00, 100],
-		...         [43.00, -78.00, 200],
-		...         [42.2, -78.5, 100],
-		...         [43.00, -79.00, 300],
-		...         [42.00, -79.00, 100]]
+		...		 [43.00, -78.00, 200],
+		...		 [42.2, -78.5, 100],
+		...		 [43.00, -79.00, 300],
+		...		 [42.00, -79.00, 100]]
 		>>> vrv.isPathCrossPoly(path, poly)
 
 	"""
@@ -1503,8 +1539,8 @@ def isPassPath(loc, path, tolerance):
 	Example 3 - Location and path include altitudes (which are ignored):
 		>>> loc  = [42.505, -78.50, 100]
 		>>> path = [[42.50, -78.40, 100],
-		...         [42.50, -78.60, 200],
-		...         [42.40, -78.70, 100]]
+		...		 [42.50, -78.60, 200],
+		...		 [42.40, -78.70, 100]]
 		>>> vrv.isPassPath(loc, path, 1000)
 	'''
 
@@ -1623,8 +1659,8 @@ def minDistLoc2Path(loc, path):
 
 	Example 4 - The location and path include altitudes (which are ignored):
 		>>> path2 = [[42.50, -78.40, 100],
-		...          [42.50, -78.60, 200],
-		...          [42.40, -78.70, 100]]
+		...		  [42.50, -78.60, 200],
+		...		  [42.40, -78.70, 100]]
 		>>> loc4  = [42.51, -78.3, 300]
 		>>> vrv.minDistLoc2Path(loc4, path2)
 
@@ -1640,21 +1676,22 @@ def minDistLoc2Path(loc, path):
 	distMeters = geoMinDistLoc2Path(loc, path)
 
 	return distMeters
-def closestPointLoc2Path(loc, path):
-  """
-    Given a path, it find the closest point on a path given a given GPS location
 
-    Parameters
-    ----------
-    loc: list
-        The coordinate of the current coordinate, in [lat, lon, alt] format
-    Path:
-        list of locations
-        A list of coordinates in the form of [lat, lon]
-    Returns
-    -------
-    minLoc: list of lat and lon of a location
-        A location in distance with given direction, in [lat, lon, alt=0] form.
+def closestPointLoc2Path(loc, path):
+	"""
+	Given a path, it find the closest point on a path given a given GPS location
+
+	Parameters
+	----------
+	loc: list
+		The coordinate of the current coordinate, in [lat, lon, alt] format
+	Path:
+		list of locations
+		A list of coordinates in the form of [lat, lon]
+	Returns
+	-------
+	minLoc: list of lat and lon of a location
+		A location in distance with given direction, in [lat, lon, alt=0] form.
 
 	distMeters: The minimum distance is returned
 	Examples
@@ -1677,13 +1714,14 @@ def closestPointLoc2Path(loc, path):
 
 	Example 3 - The location and path include altitudes (which are ignored):
 		>>> path2 = [[42.50, -78.40, 100],
-		...          [42.50, -78.60, 200],
-		...          [42.40, -78.70, 100]]
+		...		  [42.50, -78.60, 200],
+		...		  [42.40, -78.70, 100]]
 		>>> loc4  = [42.51, -78.3, 300]
 		>>> vrv.closestPointLoc2Path(loc4, path2)
 		([42.5, -78.6, 0], 8293.970453010768)
 
-    """
+	"""
+
 	# validation
 	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Path(loc, path)
 	if (not valFlag):
@@ -1692,42 +1730,43 @@ def closestPointLoc2Path(loc, path):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-    lstLine = []
-    for i in range(1, len(path)):
-        lstLine.append([path[i - 1], path[i]])
+	lstLine = []
+	for i in range(1, len(path)):
+		lstLine.append([path[i - 1], path[i]])
 
-    distMeters = geoMinDistLoc2Line(loc, lstLine[0])
-    minPoint = loc
+	distMeters = geoMinDistLoc2Line(loc, lstLine[0])
+	minPoint = loc
 
-    for i in range(len(lstLine)):
-        tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
-        minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
+	for i in range(len(lstLine)):
+		tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
+		minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
 
-        if (distMeters > tmpDistMeters):
-            distMeters = tmpDistMeters
-            minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
+		if (distMeters > tmpDistMeters):
+			distMeters = tmpDistMeters
+			minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
 
-        if(len(minPoint)==3):
-            minPoint[2]=0
+		if(len(minPoint)==3):
+			minPoint[2]=0
 
-    return (minPoint, distMeters)
+	return (minPoint, distMeters)
 
+def closestNode2Loc(loc, nodes):
+	"""
+	Return the closest node in the dataframe to the given location.
 
-def closestNode2Loc(loc, nodes = None):
-  """
-    Return the closest node in the dataframe to the given location.
-
-    Parameters
-    ----------
-    loc: list
-        The coordinate of the current coordinate, in [lat, lon, alt] format
-    nodes: Node Dataframe: dataframe containing an existing set of nodes.
-        Required, default as None
+	Parameters
+	----------
+	loc: list
+		The coordinate of the current coordinate, in [lat, lon, alt] format
+	nodes: :ref:`Nodes` Required, default as None
+		dataframe containing an existing set of nodes.
 
 	Returns
-    -------
-    minNodeID: A node id of the closest node
-	distMeters: The minimum distance is returned
+	-------
+	minNodeID: int
+		A node id of the closest node
+	distMeters: float
+		The minimum distance is returned
 
 	Examples
 	--------
@@ -1735,17 +1774,17 @@ def closestNode2Loc(loc, nodes = None):
 		>>> import veroviz
 		>>> loc1 = [42.50, -78.50]
 		locs = [[42.8871085, -78.8731949],
-        [42.8888311, -78.8649649],
-        [42.8802158, -78.8660787],
-        [42.8845705, -78.8762794],
-        [42.8908031, -78.8770140]]
+		[42.8888311, -78.8649649],
+		[42.8802158, -78.8660787],
+		[42.8845705, -78.8762794],
+		[42.8908031, -78.8770140]]
 
 		myNodes = vrv.createNodesFromLocs(locs=locs)
 
 	Example 1 - Closest node:
 		>>> vrv.closestNode2Loc(loc1, myNodes)
 		(3, 51806.78820361799)
-    """
+	"""
 	# validation
 	[valFlag, errorMsg, warningMsg] = valclosestNode2Loc(loc, nodes)
 	if (not valFlag):
@@ -1754,22 +1793,22 @@ def closestNode2Loc(loc, nodes = None):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-    distMeters = float('Inf')
-    minNodeID = None
+	distMeters = float('Inf')
+	minNodeID = None
 
-    for i in range(len(nodes)):
-        nodeLat=nodes.iloc[i]['lat']
-        nodeLon=nodes.iloc[i]['lon']
-        tmpDistMeters = vrv.distance2D(loc, [nodeLat,nodeLon])
+	for i in range(len(nodes)):
+		nodeLat=nodes.iloc[i]['lat']
+		nodeLon=nodes.iloc[i]['lon']
+		tmpDistMeters = vrv.distance2D(loc, [nodeLat, nodeLon])
 
-        if (tmpDistMeters < distMeters):
-            distMeters = tmpDistMeters
-            minNodeID = nodes.iloc[i]['id']
+		if (tmpDistMeters < distMeters):
+			distMeters = tmpDistMeters
+			minNodeID = nodes.iloc[i]['id']
 
-    if minNodeID == None:
-        return(None, None)
+	if minNodeID == None:
+		return [None, None]
 
-    return (minNodeID, distMeters)
+	return [minNodeID, distMeters]
 
 def distance2D(loc1, loc2):
 	"""
@@ -1877,7 +1916,7 @@ def distancePath2D(path):
 
 	dist = 0
 	for i in range(0, len(path) - 1):
-		dist += distance2D(path[i], path[i + 1])
+		dist += geoDistance2D(path[i], path[i + 1])
 
 	return dist
 
@@ -1901,7 +1940,7 @@ def getHeading(currentLoc, goalLoc):
 	-------
 		>>> import veroviz as vrv
 		>>> locCurrent = [42.80, -78.90]
-		>>> locGoal    = [42.85, -78.85]
+		>>> locGoal	= [42.85, -78.85]
 		>>> heading = vrv.getHeading(locCurrent, locGoal)
 		>>> heading
 		36.24057197338239
@@ -1921,8 +1960,6 @@ def getHeading(currentLoc, goalLoc):
 	bearingInDegree = geoGetHeading(currentLoc, goalLoc)
 
 	return bearingInDegree
-
-
 
 def findLocsAtTime(assignments=None, timeSec=0.0):
 	"""
@@ -1948,28 +1985,28 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 
 	Define 5 node locations, as [lat, lon] pairs:
 		>>> locs = [[42.8871085, -78.8731949],
-		...         [42.8888311, -78.8649649],
-		...         [42.8802158, -78.8660787],
-		...         [42.8845705, -78.8762794],
-		...         [42.8908031, -78.8770140]]
+		...		 [42.8888311, -78.8649649],
+		...		 [42.8802158, -78.8660787],
+		...		 [42.8845705, -78.8762794],
+		...		 [42.8908031, -78.8770140]]
 
 	Generate a nodes dataframe from these locations:
 		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
 
 	Construct an assignments dataframe for two vehicles, a drone and a truck.  The truck will visit nodes 1 -> 2 -> 3 -> 1.  The drone will visit nodes 1 -> 4 -> 5 -> 1.
 		>>> mySolution = {
-		...     'truck': [[1,2], [2,3], [3,1]],
-		...     'drone': [[1,4], [4,5], [5,1]]
+		...	 'truck': [[1,2], [2,3], [3,1]],
+		...	 'drone': [[1,4], [4,5], [5,1]]
 		... }
 
 	Define some information about our 2 vehicles, for use below:
 		>>> vehicleProperties = {
-		...     'drone': {'model': 'veroviz/models/drone.gltf',
-		...               'leafletColor': 'red',
-		...               'cesiumColor': 'Cesium.Color.RED'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
-		...               'leafletColor': 'blue',
-		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		...	 'drone': {'model': 'veroviz/models/drone.gltf',
+		...			   'leafletColor': 'red',
+		...			   'cesiumColor': 'Cesium.Color.RED'},
+		...	 'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...			   'leafletColor': 'blue',
+		...			   'cesiumColor': 'Cesium.Color.BLUE'}
 		... }
 
 	This example assumes the use of ORS as the data provider.
@@ -1986,37 +2023,37 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 	Build assignments for the truck route:
 		>>> endTimeSec = 0.0
 		>>> for arc in mySolution['truck']:
-		...     [myAssignments, endTimeSec] = vrv.addAssignment2D(
-		...             initAssignments  = myAssignments,
-		...             objectID         = 'truck',
-		...             modelFile        = vehicleProperties['truck']['model'],
-		...             startLoc         = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
-		...             endLoc           = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
-		...             startTimeSec     = endTimeSec,
-		...             leafletColor     = vehicleProperties['truck']['leafletColor'],
-		...             cesiumColor      = vehicleProperties['truck']['cesiumColor'],
-		...             routeType        = 'fastest',
-		...             dataProvider     = 'ORS-online',
-		...             dataProviderArgs = {'APIkey': ORS_API_KEY})
+		...	 [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...			 initAssignments  = myAssignments,
+		...			 objectID		 = 'truck',
+		...			 modelFile		= vehicleProperties['truck']['model'],
+		...			 startLoc		 = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...			 endLoc		   = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...			 startTimeSec	 = endTimeSec,
+		...			 leafletColor	 = vehicleProperties['truck']['leafletColor'],
+		...			 cesiumColor	  = vehicleProperties['truck']['cesiumColor'],
+		...			 routeType		= 'fastest',
+		...			 dataProvider	 = 'ORS-online',
+		...			 dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myAssignments
 
 	Build assignments for the drone deliveries:
 		>>> endTimeSec = 0.0
 		>>> for arc in mySolution['drone']:
-		...     [myAssignments, endTimeSec] = vrv.addAssignment3D(
-		...         initAssignments    = myAssignments,
-		...         objectID           = 'drone',
-		...         modelFile          = vehicleProperties['drone']['model'],
-		...         startLoc           = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
-		...         endLoc             = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
-		...         startTimeSec       = endTimeSec,
-		...         takeoffSpeedMPS    = vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
-		...         cruiseSpeedMPS     = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
-		...         landSpeedMPS       = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
-		...         cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
-		...         routeType          = 'square',
-		...         leafletColor       = vehicleProperties['drone']['leafletColor'],
-		...         cesiumColor        = vehicleProperties['drone']['cesiumColor'])
+		...	 [myAssignments, endTimeSec] = vrv.addAssignment3D(
+		...		 initAssignments	= myAssignments,
+		...		 objectID		   = 'drone',
+		...		 modelFile		  = vehicleProperties['drone']['model'],
+		...		 startLoc		   = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...		 endLoc			 = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...		 startTimeSec	   = endTimeSec,
+		...		 takeoffSpeedMPS	= vrv.convertSpeed(30, 'miles', 'hr', 'meters', 'sec'),
+		...		 cruiseSpeedMPS	 = vrv.convertSpeed(80, 'miles', 'hr', 'meters', 'sec'),
+		...		 landSpeedMPS	   = vrv.convertSpeed( 5, 'miles', 'hr', 'meters', 'sec'),
+		...		 cruiseAltMetersAGL = vrv.convertDistance(350, 'feet', 'meters'),
+		...		 routeType		  = 'square',
+		...		 leafletColor	   = vehicleProperties['drone']['leafletColor'],
+		...		 cesiumColor		= vehicleProperties['drone']['cesiumColor'])
 		>>> myAssignments
 
 	Show the nodes and assignments on a map:
@@ -2027,26 +2064,26 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		>>>
 		>>> # Or, we can just find the location of the drone at time 30.0:
 		>>> # currentLocs = vrv.findLocsAtTime(
-		>>> #    assignments=myAssignments[myAssignments['objectID'] == 'drone'],
-		>>> #    timeSec=30.0)
+		>>> #	assignments=myAssignments[myAssignments['objectID'] == 'drone'],
+		>>> #	timeSec=30.0)
 		>>> currentLocs
 
 	Display the estimated locations on a map:
 		>>> myMap = vrv.createLeaflet(nodes=myNodes, arcs=myAssignments)
 		>>> for objectID in currentLocs:
-		...     if (type(currentLocs[objectID]) is list):
-		...         # This objectID has at least 1 location at this time:
-		...         if (type(currentLocs[objectID][0]) is list):
-		...             # There were multiple matches for this objectID:
-		...             for i in currentLocs[objectID]:
-		...                 myMap = vrv.addLeafletMarker(mapObject=myMap, center=i)
-		...         else:
-		...             # We only have one location for this objectID:
-		...             myMap = vrv.addLeafletMarker(mapObject=myMap,
-		...                                          center=currentLocs[objectID],
-		...                                          radius=9,
-		...                                          fillOpacity=0.7,
-		...                                          fillColor='black')
+		...	 if (type(currentLocs[objectID]) is list):
+		...		 # This objectID has at least 1 location at this time:
+		...		 if (type(currentLocs[objectID][0]) is list):
+		...			 # There were multiple matches for this objectID:
+		...			 for i in currentLocs[objectID]:
+		...				 myMap = vrv.addLeafletMarker(mapObject=myMap, center=i)
+		...		 else:
+		...			 # We only have one location for this objectID:
+		...			 myMap = vrv.addLeafletMarker(mapObject=myMap,
+		...										  center=currentLocs[objectID],
+		...										  radius=9,
+		...										  fillOpacity=0.7,
+		...										  fillColor='black')
 		>>> myMap
 	"""
 
@@ -2079,14 +2116,14 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		else:
 			outList = []
 			for id in tmpAsgn.index:
-				startLat     = tmpAsgn['startLat'].at[id]
-				startLon     = tmpAsgn['startLon'].at[id]
-				startAlt     = tmpAsgn['startAltMeters'].at[id]
+				startLat	 = tmpAsgn['startLat'].at[id]
+				startLon	 = tmpAsgn['startLon'].at[id]
+				startAlt	 = tmpAsgn['startAltMeters'].at[id]
 				startTimeSec = tmpAsgn['startTimeSec'].at[id]
 
-				endLat     = tmpAsgn['endLat'].at[id]
-				endLon     = tmpAsgn['endLon'].at[id]
-				endAlt     = tmpAsgn['endAltMeters'].at[id]
+				endLat	 = tmpAsgn['endLat'].at[id]
+				endLon	 = tmpAsgn['endLon'].at[id]
+				endAlt	 = tmpAsgn['endAltMeters'].at[id]
 				endTimeSec = tmpAsgn['endTimeSec'].at[id]
 
 				# Find percentage of time:
@@ -2169,30 +2206,30 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 		[51.5008719, -0.1252387]
 
 	Example 2 - Find [lat, lon] of Buckingham Palace, using ORS-online as the data provider:
-		>>> myLoc = vrv.geocode(location         ='Westminster, London SW1A 1AA, United Kingdom',
-		...                     dataProvider     ='ors-online',
-		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc = vrv.geocode(location		 ='Westminster, London SW1A 1AA, United Kingdom',
+		...					 dataProvider	 ='ors-online',
+		...					 dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myLoc
 		[51.497991, -0.12875]
 
 	Example 3 - Find [lat, lon] of Seattle, Washington, USA:
-		>>> myLoc = vrv.geocode(location         ='seattle, wa',
-		...                     dataProvider     ='mapquest',
-		...                     dataProviderArgs = {'APIkey': MQ_API_KEY})
+		>>> myLoc = vrv.geocode(location		 ='seattle, wa',
+		...					 dataProvider	 ='mapquest',
+		...					 dataProviderArgs = {'APIkey': MQ_API_KEY})
 		>>> myLoc
 		[47.603229, -122.33028]
 
 	Example 4 - Find [lat, lon] of the state of Florida, USA:
-		>>> myLoc = vrv.geocode(location         ='florida',
-		...                     dataProvider     ='ors-ONLINE',
-		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc = vrv.geocode(location		 ='florida',
+		...					 dataProvider	 ='ors-ONLINE',
+		...					 dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myLoc
 		[27.97762, -81.769611]
 
 	Example 5 - Find [lat, lon] of the Space Needle (in Seattle, WA):
-		>>> myLoc = vrv.geocode(location         ='space needle',
-		...                     dataProvider     ='ors-ONLINE',
-		...                     dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myLoc = vrv.geocode(location		 ='space needle',
+		...					 dataProvider	 ='ors-ONLINE',
+		...					 dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> myLoc
 		[47.620336, -122.349314]
 
@@ -2212,7 +2249,6 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 	loc = privGeocode(location, dataProvider, dataProviderArgs)
 
 	return loc
-
 
 def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	"""
@@ -2282,9 +2318,9 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		 'boundingbox': ['47.6029474', '47.6031474', '-122.3303567', '-122.3301567']}
 
 	Example 2 -- Using MapQuest:
-		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028],
-		...                                  dataProvider     = 'MapQuest',
-		...                                  dataProviderArgs = {'APIkey': MQ_API_KEY})
+		>>> [loc, addr] = vrv.reverseGeocode(location		 = [47.603229, -122.33028],
+		...								  dataProvider	 = 'MapQuest',
+		...								  dataProviderArgs = {'APIkey': MQ_API_KEY})
 		>>> loc
 		[47.603229, -122.33028]
 
@@ -2319,9 +2355,9 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 		 'speedLimit': 25}}
 
 	Example 3 -- Using OpenRouteService:
-		>>> [loc, addr] = vrv.reverseGeocode(location         = [47.603229, -122.33028],
-		...                                  dataProvider     = 'ORS-online',
-		...                                  dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> [loc, addr] = vrv.reverseGeocode(location		 = [47.603229, -122.33028],
+		...								  dataProvider	 = 'ORS-online',
+		...								  dataProviderArgs = {'APIkey': ORS_API_KEY})
 		>>> loc
 		[47.603077, -122.330139]
 

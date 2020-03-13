@@ -1,5 +1,13 @@
 from veroviz._common import *
 
+###############################################################################
+# General Naming Rules for Input Parameters
+# loc - Location, coordinate in [lat, lon], if the location is specific, name it with xxxLoc, e.g., startLoc, endLoc, etc.
+# line - Line, two locations in [[lat1, lon1], [lat2, lon2]]
+# path - Path, a list of locs, in [[lat1, lon1], [lat2, lon2], [lat3, lon3], ...]
+# poly - Polygon, a sequence of locations, assuming solid and closed, in [[lat1, lon1], [lat2, lon2], [lat3, lon3], ...]
+###############################################################################
+
 def geoIsPointInPoly(loc, poly):
 	"""
 	Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be "inside".
@@ -491,26 +499,28 @@ def geoAreaOfTriangle(loc1, loc2, loc3):
 
 	return area
 
-def geoAreaOfPolygon(boundingRegion = None):
+def geoAreaOfPolygon(poly):
 	"""
-	Calculates the area of a polygon defined by boundingRegion. Assumes a solid, but not necessarily convex, polygon.
+	Calculates the area of a polygon. Assumes a solid, but not necessarily convex.
 
 	Parameters
 	----------
-	boundingRegion: A list of lat/lon defines the boundary, in the form of [[lat, lon], [lat, lon], ... , [lat, lon]]
+	poly: list of lists
+		A list of lat/lon defines the boundary, in the form of [[lat, lon], [lat, lon], ... , [lat, lon]]
 
 	Return
 	------
 	float
 		Area of polygon
 	"""
+
 	# Use polygon triangulation to cut the bounding region into a list of triangles, calculate the area of each triangle
-	lstTriangle = tripy.earclip(boundingRegion)
+	lstTriangle = tripy.earclip(poly)
 	lstArea = []
 	for i in range(len(lstTriangle)):
 		lstArea.append(areaOfTriangle(lstTriangle[i][0], lstTriangle[i][1], lstTriangle[i][2]))
 
-	for i in lstArea
+	for i in lstArea:
 		polyArea = lstArea[i] + polyArea
 
 	return poylArea
@@ -537,76 +547,48 @@ def geoDistancePath2D(path):
 	return dist
 
 def geoClosestPointLoc2Line(loc, line):
-     """
-    Given a line of a path find the closest point on a path given a given GPS location
+	"""
+	Given a line of a path find the closest point on a path given a given GPS location
 
-    Parameters
-    ----------
-    loc: list
-        The coordinate of the current coordinate, in [lat, lon, alt] format
-    line:
-        list of locations
-        A list of two coordinates in the form of [lat, lon]
-    Returns
-    -------
-    minLoc: list of lat and lon of a location
-        A location in distance with given direction, in [lat, lon] form.
-    """
-    # The line is denoted as AB, the stationary location is denoted by S
-    locA = line[0]
-    locB = line[1]
-    locS = loc
-    minLoc =[locA[0],locA[1]]
+	Parameters
+	----------
+	loc: list
+		The coordinate of the current coordinate, in [lat, lon, alt] format
+	line:
+		list of locations
+		A list of two coordinates in the form of [lat, lon]
+	Returns
+	-------
+	minLoc: list of lat and lon of a location
+		A location in distance with given direction, in [lat, lon] form.
+	"""
+	# The line is denoted as AB, the stationary location is denoted by S
+	locA = line[0]
+	locB = line[1]
+	locS = loc
+	minLoc = None
 
-    # Check if the loc is on line, if so return the location
-    if (geoIsOnSegment(loc, line)):
-            return locS
+	# Check if the loc is on line, if so return the location
+	if (geoIsOnSegment(loc, line)):
+		minLoc = locS
+	else:
+		# Vectors start from A
+		vecAS = [float(locS[0] - locA[0]), float(locS[1] - locA[1])]
+		vecAB = [float(locB[0] - locA[0]), float(locB[1] - locA[1])]
 
+		area = geoAreaOfTriangle(locA, locB, locS)
+		h = 2 * area / geoDistance2D(locA, locB)
+		lAS = geoDistance2D(locA, locS)
+		dist = math.sqrt(lAS * lAS - h * h)
 
-    # Vectors start from A
-    vecAS = [float(locS[0] - locA[0]), float(locS[1] - locA[1])]
-    vecAB = [float(locB[0] - locA[0]), float(locB[1] - locA[1])]
+		cosSAB = geoFindCos(vecAS, vecAB)
 
-    # Vectors start from B
-    vecBS = [float(locS[0] - locB[0]), float(locS[1] - locB[1])]
-    vecBA = [float(locA[0] - locB[0]), float(locA[1] - locB[1])]
+		if cosSAB >= 0:
+			minLoc = geoMileageInPath2D([locA, locB], dist)[0]
+		else:
+			minLoc = locA
 
-    # cos value for A angle and B angle
-    cosSAB = geoFindCos(vecAS, vecAB)
-    cosSBA = geoFindCos(vecBS, vecBA)
-
-    # if both angles are sharp, the closest point will be in the line and sloved for, otherwise the closest point is at the edge and that location is returned
-    if (cosSAB >= 0 and cosSBA >= 0):
-        xA = locA[0]
-        yA =locA[1]
-
-        xB = locB[0]
-        yB =locB[1]
-
-        xS = locS[0]
-        yS =locS[1]
-
-        dx = xB-xA
-        dy = yB-yA
-
-        det = dx*dx + dy*dy
-        a = (((dy*(yS-yA)) + (dx*(xS-xA)))/ det)
-
-        xP = xA+(a*dx)
-        yP = yA+(a*dy)
-
-        minLoc = [xP,yP]
-
-    else:
-        distAS = geoDistance2D(locS, locA)
-        distBS = geoDistance2D(locS, locB)
-
-        if(distAS < distBS):
-            minLoc = locA
-        else:
-            minLoc = locB
-
-    return minLoc
+	return minLoc
 
 def geoMileageInPath2D(path, mileageInMeters):
 	"""
