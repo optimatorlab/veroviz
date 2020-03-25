@@ -145,8 +145,6 @@ def lengthFromNodeSeq(nodeSeq, lengthDict):
 		>>> totalDistMeters
 		1922.7938939800567
 	"""
-
-	#validation
 	[valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
 	if (not valFlag):
 		print (errorMsg)
