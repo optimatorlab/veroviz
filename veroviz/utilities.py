@@ -146,7 +146,7 @@ def lengthFromNodeSeq(nodeSeq, lengthDict):
 		1922.7938939800567
 	"""
 
-	validation
+	#validation
 	[valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
 	if (not valFlag):
 		print (errorMsg)
