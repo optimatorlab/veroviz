@@ -1799,7 +1799,7 @@ def closestNode2Loc(loc, nodes):
 	for i in range(len(nodes)):
 		nodeLat=nodes.iloc[i]['lat']
 		nodeLon=nodes.iloc[i]['lon']
-		tmpDistMeters = vrv.distance2D(loc, [nodeLat, nodeLon])
+		tmpDistMeters = distance2D(loc, [nodeLat, nodeLon])
 
 		if (tmpDistMeters < distMeters):
 			distMeters = tmpDistMeters
