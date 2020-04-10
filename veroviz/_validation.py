@@ -553,7 +553,7 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
+def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, text, fontSize, fontColor, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -580,6 +580,21 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(radius, 'radius')
 		warningMsg += newWarningMsg
 
+	if (text is not None):
+		if (valFlag):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(fontSize, 'fontSize')
+			warningMsg += newWarningMsg
+
+		if (valFlag):
+			try:
+				fontColor = fontColor.lower()
+			except:
+				pass
+
+			if (fontColor not in leafletColorList):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(fontColor)
+				warningMsg += newWarningMsg
+	
 	if (valFlag and lineWeight is not None):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(lineWeight, 'lineWeight')
 		warningMsg += newWarningMsg
@@ -759,7 +774,7 @@ def valAddLeafletIsochrones(mapObject, mapFilename, mapBackground, mapBoundary, 
 
 
 	
-def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
+def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, text, fontSize, fontColor, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -785,6 +800,21 @@ def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(radius, 'radius')
 		warningMsg += newWarningMsg
+
+	if (text is not None):
+		if (valFlag):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(fontSize, 'fontSize')
+			warningMsg += newWarningMsg
+
+		if (valFlag):
+			try:
+				fontColor = fontColor.lower()
+			except:
+				pass
+
+			if (fontColor not in leafletColorList):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(fontColor)
+				warningMsg += newWarningMsg
 
 	if (valFlag and lineWeight is not None):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(lineWeight, 'lineWeight')

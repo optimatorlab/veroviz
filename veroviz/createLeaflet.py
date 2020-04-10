@@ -605,7 +605,7 @@ def _createLeafletArrowsPath(mapObject=None, path=None, color=None, size=7, mode
 	
 	return mapObject
 
-def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=None, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
+def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=None, text=None, fontSize=VRV_DEFAULT_LEAFLET_FONTSIZE, fontColor=VRV_DEFAULT_LEAFLET_FONTCOLOR, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
 
 	"""
 	Add a circle, with a radius specified in [meters], to a Leaflet map.
@@ -630,6 +630,12 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		Specifies the center point of the circle.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).
 	radius: float, Required, default None
 		The radius of the circle, in units of [meters]. 
+	text: string, Optional, default None
+		Specifies the text to be displayed on the map, centered as the `center` location.
+	fontSize: float, Optional, default 24
+		The size of the font, in units of [points].  The default is 24-point font.
+	fontColor: string, Optional, default 'orange'
+		The color of the text string.  `fontColor` may be one of Leaflet's pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). 		
 	popupText: string, Optional, default as None
 		The circle will include this text as a popup label (you will need to click on the circle in the map to see this label).  		
 	lineWeight: int, Optional, default 3
@@ -673,6 +679,9 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		...     zoomStart = 13,
 		...     center = [43.00154, -78.7871],
 		...     radius = 2000,
+		...     text = 'UB',
+		...     fontSize = 24,
+		...     fontColor = 'black',
 		...     popupText = 'Univ. at Buffalo',
 		...     lineWeight = 6,
 		...     lineColor = '#ff66ff',
@@ -684,7 +693,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity)
+	[valFlag, errorMsg, warningMsg] = valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, text, fontSize, fontColor, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -744,6 +753,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	if (popupText is not None):
 		popupText = str(popupText)
 		
+	# Draw circle:		
 	folium.Circle(center, 
 		radius = radius,  
 		stroke = True, 
@@ -755,6 +765,22 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		fill_opacity = fillOpacity,
 		popup = popupText
 		).add_to(mapObject)
+		
+	# Add text:
+	if (text is not None):
+		try:
+			fontColor = fontColor.lower()
+		except:
+			pass
+
+		iconSizeX = 900		# FIXME -- Not sure if this is good.
+		iconAnchorX = iconSizeX / 2
+					
+		folium.map.Marker(center, icon=DivIcon(
+			icon_size = (iconSizeX, fontSize), 
+			icon_anchor = (iconAnchorX, fontSize), 
+			html = "<div style=\"font-size: %dpt; color: %s; text-align: center;\">%s</div>" %  (fontSize, fontColor, text)
+			)).add_to(mapObject)
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
@@ -763,7 +789,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	return mapObject
 	
-def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=5, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
+def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=5, text=None, fontSize=VRV_DEFAULT_LEAFLET_FONTSIZE, fontColor=VRV_DEFAULT_LEAFLET_FONTCOLOR, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
 
 	"""
 	Add a circle-shaped marker, with a radius specified in [pixels], to a Leaflet map.
@@ -788,6 +814,12 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		Specifies the center point of the circle marker.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).
 	radius: float, Required, default None
 		The radius of the circle marker, in units of [pixels]. 
+	text: string, Optional, default None
+		Specifies the text to be displayed on the map, centered as the `center` location.
+	fontSize: float, Optional, default 24
+		The size of the font, in units of [points].  The default is 24-point font.
+	fontColor: string, Optional, default 'orange'
+		The color of the text string.  `fontColor` may be one of Leaflet's pre-specified colors (see :ref:`Leaflet style`), or it may be a hex value, such as `#ff0000` (see https://www.w3schools.com/colors/colors_picker.asp). 		
 	popupText: string, Optional, default as None
 		The marker will include this text as a popup label (you will need to click on the marker in the map to see this label).  		
 	lineWeight: int, Optional, default 3
@@ -830,6 +862,9 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		...     zoomStart = 11, 
 		...     center = [43.00154, -78.7871],
 		...     radius = 30, 
+		...     text = 'UB',
+		...     fontSize = 24,
+		...     fontColor = 'black',
 		...     popupText = 'Univ. at Buffalo',
 		...     lineWeight = 3, 
 		...     lineColor = 'orange', 
@@ -841,7 +876,7 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity)
+	[valFlag, errorMsg, warningMsg] = valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, text, fontSize, fontColor, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -901,6 +936,7 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	if (popupText is not None):
 		popupText = str(popupText)
 
+	# Add marker:
 	folium.CircleMarker(center, 
 		radius = radius,  
 		stroke = True, 
@@ -912,6 +948,22 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		fill_opacity = fillOpacity,
 		popup = popupText
 		).add_to(mapObject)
+
+	# Add text:
+	if (text is not None):
+		try:
+			fontColor = fontColor.lower()
+		except:
+			pass
+
+		iconSizeX = 900		# FIXME -- Not sure if this is good.
+		iconAnchorX = iconSizeX / 2
+					
+		folium.map.Marker(center, icon=DivIcon(
+			icon_size = (iconSizeX, fontSize), 
+			icon_anchor = (iconAnchorX, fontSize), 
+			html = "<div style=\"font-size: %dpt; color: %s; text-align: center;\">%s</div>" %  (fontSize, fontColor, text)
+			)).add_to(mapObject)
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
