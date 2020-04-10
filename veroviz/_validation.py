@@ -624,6 +624,141 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 
 	return [valFlag, errorMsg, warningMsg]
 
+def valAddLeafletIcon(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, location, iconPrefix, iconType, iconColor, popupText):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valMapBoundary(mapBoundary, zoomStart)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		try:
+			mapBackground = mapBackground.lower()
+		except:
+			pass
+
+		if (mapBackground not in mapBackgroundList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapBackground` value. Valid options include 'CartoDB positron', 'CartoDB dark_matter', 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'arcGIS Aerial', 'arcGIS Gray', 'arcGIS Ocean', 'arcGIS Roadmap', 'arcGIS Shaded Relief', 'arcGIS Topo', 'Open Topo'"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (iconPrefix is None):
+			valFlag = False
+			errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
+		elif (iconType is None):	
+			valFlag = False
+			errorMsg = "Error: A valid `iconType` is required."
+		else:
+			if (iconPrefix.lower() not in leafletIconPrefixList):
+				valFlag = False
+				errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
+			elif (iconPrefix.lower() == 'glyphicon'):
+				if (iconType.lower() not in leafletIconGlyphicon):
+					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
+			elif (iconPrefix.lower() == 'fa'):
+				if (iconType.lower() not in leafletIconFa):
+					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
+
+	if (valFlag):
+		if (iconColor is None):
+			valFlag = False
+			errorMsg = "Error: A valid `iconColor` is required."
+		elif (iconColor.lower() not in leafletColorList):
+			warningMsg += "Warning: `iconColor` value (%s) is not recognized; it may not be displayed properly.\n" % (iconColor)
+
+	return [valFlag, errorMsg, warningMsg]
+	
+def valAddLeafletIsochrones(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, iso, showBoundingRegion, iconPrefix, iconType, iconColor, popupText, lineWeight, lineOpacity, lineStyle, fillOpacity):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valMapBoundary(mapBoundary, zoomStart)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		try:
+			mapBackground = mapBackground.lower()
+		except:
+			pass
+
+		if (mapBackground not in mapBackgroundList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapBackground` value. Valid options include 'CartoDB positron', 'CartoDB dark_matter', 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'arcGIS Aerial', 'arcGIS Gray', 'arcGIS Ocean', 'arcGIS Roadmap', 'arcGIS Shaded Relief', 'arcGIS Topo', 'Open Topo'"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valIso(iso)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(showBoundingRegion) is not bool):
+			valFlag = False
+			errorMsg = "Error: `showBoundingRegion` must be a boolean value (True or False)."
+			
+	if (valFlag):
+		if (iconPrefix is None):
+			valFlag = False
+			errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
+		elif (iconType is None):	
+			valFlag = False
+			errorMsg = "Error: A valid `iconType` is required."
+		else:
+			if (iconPrefix.lower() not in leafletIconPrefixList):
+				valFlag = False
+				errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
+			elif (iconPrefix.lower() == 'glyphicon'):
+				if (iconType.lower() not in leafletIconGlyphicon):
+					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
+			elif (iconPrefix.lower() == 'fa'):
+				if (iconType.lower() not in leafletIconFa):
+					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
+
+	if (valFlag):
+		if (iconColor is None):
+			valFlag = False
+			errorMsg = "Error: A valid `iconColor` is required."
+		elif (iconColor.lower() not in leafletColorList):
+			warningMsg += "Warning: `iconColor` value (%s) is not recognized; it may not be displayed properly.\n" % (iconColor)
+
+	if (valFlag):
+		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(lineWeight, "lineWeight")
+		warningMsg += newWarningMsg
+		
+	if (valFlag):
+		if (lineStyle is None):
+			valFlag = False
+			errorMsg = "Error: A valid `lineStyle` is required."
+		elif (lineStyle.lower() not in leafletStyleList):
+			valFlag = False
+			errorMsg = "Error: Choose `lineStyle` from 'solid', 'dashed', and 'dotted'."
+
+	if (valFlag):
+		if (lineOpacity is None):
+			valFlag = False
+			errorMsg = "Error: A valid `lineOpacity` is required."		
+		else:
+			[valFlag, errorMsg, newWarningMsg] = _valBetweenOrEqualToFloat(0, 1, lineOpacity, 'lineOpacity')
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (fillOpacity is None):
+			valFlag = False
+			errorMsg = "Error: A valid `fillOpacity` is required."		
+		else:
+			[valFlag, errorMsg, newWarningMsg] = _valBetweenOrEqualToFloat(0, 1, fillOpacity, 'fillOpacity')
+			warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]
+
+
+	
 def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
 	valFlag = True
 	errorMsg = ""
@@ -958,10 +1093,99 @@ def valGetSnapLocBatch(locs, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 
+def valCalcPerimeter2D(path, closeLoop, distUnits):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(closeLoop) is not bool):
+			valFlag = False
+			errorMsg = "Error: `closeLoop` must be boolean (True or False)."
+
+	if (valFlag):
+		try:
+			distUnits = distUnits.lower()
+		except:
+			pass
+
+		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(distUnits, "distUnits")
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+def valCalcArea(poly):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (poly is None):
+		valFlag = False
+		errorMsg = "Error: Function `calcArea()` requires a polygon as an input."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(poly)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+
+def valLengthFromNodeSeq(nodeSeq, lengthDict):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (nodeSeq == None):
+		valFlag = False
+		errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		if (lengthDict == None):
+			valFlag = False
+			errorMsg = "Error: `lengthDict` is required.  Please provide either a distance or time matrix, in the form of a dictionary."
+
+	if (valFlag):
+		if (type(nodeSeq) is not list):
+			valFlag = False
+			errorMsg = "Error: `nodeSeq` must be a sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		if (len(nodeSeq) <= 1):
+			valFlag = False
+			errorMsg = "Error: `nodeSeq` must be a sequence of locations, in the format of [nodeID1, nodeID2, ...], with at least 2 nodes."
+
+	if (valFlag):
+		if (type(lengthDict) is not dict):
+			valFlag = False
+			errorMsg = "Error: `lengthDict` must be a distance or time matrix, in the form of a dictionary."
+
+	if (valFlag):
+		for i in range(0, len(nodeSeq)-1):
+			if (not valFlag):
+				break
+			if (valFlag):
+				[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(nodeSeq[i], 'nodeSeq')
+			if (valFlag):
+				if ((nodeSeq[i], nodeSeq[i+1]) not in lengthDict):
+					valFlag = False
+					errorMsg = "Error: (%d, %d) is not a key in the `lengthDict` dictionary." % (nodeSeq[i], nodeSeq[i+1])
+
+	return [valFlag, errorMsg, warningMsg]
+
 def valConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	
+	if ((speed is None) or (fromUnitsDist is None) or (fromUnitsTime is None) or (toUnitsDist is None) or (toUnitsTime is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 5 required input parameters to function `convertSpeed()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(speed, 'speed')
@@ -1010,6 +1234,10 @@ def valConvertDistance(distance, fromUnitsDist, toUnitsDist):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((distance is None) or (fromUnitsDist is None) or (toUnitsDist is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `convertDistance()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(distance, 'distance')
 		warningMsg += newWarningMsg
@@ -1039,6 +1267,10 @@ def valConvertArea(area, fromUnits, toUnits):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((area is None) or (fromUnits is None) or (toUnits is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `convertArea()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(area, 'area')
 		warningMsg += newWarningMsg
@@ -1067,6 +1299,10 @@ def valConvertTime(time, fromUnitsTime, toUnitsTime):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((time is None) or (fromUnitsTime is None) or (toUnitsTime is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `convertTime()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(time, 'time')
@@ -1374,7 +1610,7 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
 					else:
-						dummyExpDurationSec = None		# won't use exp duration			
+						dummyExpDurationSec = None		# won't use exp duration
 			else:
 				valFlag = False
 				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
@@ -1509,8 +1745,7 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
 					else:
-						dummyExpDurationSec = None		# won't use exp duration			
-	
+						dummyExpDurationSec = None		# won't use exp duration
 			else:
 				valFlag = False
 				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
@@ -1964,7 +2199,7 @@ def valNodes(nodes):
 					break
 
 	if (valFlag and nodes is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(nodes.lat, nodes.lon)))
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(nodes.lat, nodes.lon))))
 		warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
@@ -1988,11 +2223,11 @@ def valAssignments(assignments):
 					break
 
 	if (valFlag and assignments is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(assignments.startLat, assignments.startLon)))
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.startLat, assignments.startLon))))
 		warningMsg += newWarningMsg
 
 	if (valFlag and assignments is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(assignments.endLat, assignments.endLon)))
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.endLat, assignments.endLon))))
 		warningMsg += newWarningMsg
 
 	if (valFlag):
@@ -2020,11 +2255,11 @@ def valArcs(arcs):
 					break
 
 	if (valFlag and arcs is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(arcs.startLat, arcs.startLon)))
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.startLat, arcs.startLon))))
 		warningMsg += newWarningMsg
 
 	if (valFlag and arcs is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(arcs.endLat, arcs.endLon)))
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.endLat, arcs.endLon))))
 		warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
@@ -2034,12 +2269,16 @@ def valGetConvexHull(locs):
 	errorMsg = ""
 	warningMsg = ""
 
+	if (locs is None):
+		valFlag = False
+		errorMsg = "Error: Missing required input for function `getConvexHull()`."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locs)
 		warningMsg += newWarningMsg
 
 	if (valFlag):
-		if (len(locs) <= 4):
+		if (len(locs) < 4):
 			valFlag = False
 			errorMsg = "Error: Need at least 4 locations to find convex hull."
 
@@ -2049,6 +2288,10 @@ def valIsPointInPoly(loc, poly):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((loc is None) or (poly is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `isPointInPoly()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
@@ -2069,6 +2312,10 @@ def valIsPathInPoly(path, poly):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((path is None) or (poly is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `isPathInPoly()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
 		warningMsg += newWarningMsg
@@ -2087,6 +2334,10 @@ def valIsPathCrossPoly(path, poly):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((path is None) or (poly is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `isPathCrossPoly()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
@@ -2107,6 +2358,10 @@ def valIsPassPath(loc, path, tolerance):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((loc is None) or (path is None) or (tolerance is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `isPassPath()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
 		warningMsg += newWarningMsg
@@ -2126,6 +2381,10 @@ def valMinDistLoc2Path(loc, path):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((loc is None) or (path is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `minDistLoc2Path()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
 		warningMsg += newWarningMsg
@@ -2140,6 +2399,10 @@ def valDistance2D(loc1, loc2):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((loc1 is None) or (loc2 is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `distance2D()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc1)
@@ -2156,6 +2419,10 @@ def valDistance3D(loc1, loc2):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((loc1 is None) or (loc2 is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `distance3D()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc1)
 		warningMsg += newWarningMsg
@@ -2171,6 +2438,10 @@ def valDistancePath2D(path):
 	errorMsg = ""
 	warningMsg = ""
 
+	if (path is None):
+		valFlag = False
+		errorMsg = "Error: Missing required input parameter to function `distancePath2D()`."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
 		warningMsg += newWarningMsg
@@ -2181,6 +2452,10 @@ def valPointInDistance2D(loc, direction, distMeters):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((loc is None) or (direction is None) or (distMeters is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `pointInDistance2D()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
@@ -2200,6 +2475,10 @@ def valGetHeading(currentLoc, goalLoc):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((currentLoc is None) or (goalLoc is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `getHeading()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(currentLoc)
@@ -2270,7 +2549,7 @@ def valGeocode(location, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]    
 	
-def valReverseGeocode(location, dataProvider, dataProviderArgs):    
+def valReverseGeocode(location, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2284,6 +2563,93 @@ def valReverseGeocode(location, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]    
 
+def valIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+	warningMsg += newWarningMsg
+
+	if (valFlag):
+		try:
+			locationType = locationType.lower()
+		except:
+			pass
+
+		if (locationType not in ['start', 'destination']):
+			valFlag = False
+			errorMsg = "Error: `locationType` must be either 'start' or 'destination'."
+						
+	if (valFlag):
+		try:
+			rangeType = rangeType.lower()
+		except:
+			pass
+
+		if (rangeType not in ['distance', 'time']):
+			valFlag = False
+			errorMsg = "Error: `rangeType` must be either 'distance' or 'time'."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(rangeSize, 'rangeSize')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (interval is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(interval, 'interval')
+			warningMsg += newWarningMsg
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valBetweenOrEqualToFloat(0, 100, smoothing, 'smoothing')
+		warningMsg += newWarningMsg
+
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valIsoDataProvider(travelMode, dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]    
+
+
+def valClosestNode2Loc(loc, nodes):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if ((loc is None) or (nodes is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `closestNode2Loc()` are missing."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+def valClosestPointLoc2Path(loc, path):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if ((loc is None) or (path is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `closestPointLoc2Path()` are missing."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
 	
 def _valMapBoundary(mapBoundary, zoomStart):
 	valFlag = True
@@ -2439,12 +2805,17 @@ def _valLatLonList(locs):
 		valFlag = False
 		errorMsg = "Error: `locs` should not be None."
 	else:
-		for i in range(len(locs)):
-			if (valFlag):
-				[valFlag, errorMsg, newWarningMsg] = _valLatLon(locs[i])
-				warningMsg += newWarningMsg
-			else:
-				break
+		if (type(locs[0]) is not list):
+			valFlag = False
+			errorMsg = "Error: A list of lists was expected to describe a sequence of locations, in the format of form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...]."
+	
+		if (valFlag):
+			for i in range(len(locs)):
+				if (valFlag):
+					[valFlag, errorMsg, newWarningMsg] = _valLatLon(locs[i])
+					warningMsg += newWarningMsg
+				else:
+					break
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2456,6 +2827,9 @@ def _valLatLon(loc):
 	if (loc is None):
 		valFlag = False
 		errorMsg = "Error: `loc` should not be None."
+	elif (type(loc) is not list):
+		valFlag = False
+		errorMsg = "Error: `loc` should be a list, of the form [lat, lon] or [lat, lon, alt]."	
 	else:
 		if (len(loc) == 2 or len(loc) == 3):
 			if (valFlag):
@@ -2558,6 +2932,124 @@ def _valGeoDataProvider(dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 	
+def _valIsoDataProvider(travelMode, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		travelMode = travelMode.lower()
+	except:
+		pass
+
+	if (travelMode not in isoTravelModeList):
+		valFlag = False
+		errorMsg = "Error: Invalid `travelMode` value."
+	
+	if (valFlag):
+		try:
+			dataProvider = dataProvider.lower()
+		except:
+			pass
+
+		if (dataProvider not in isoDataProviderDictionary.keys()):
+			valFlag = False
+			errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid option is 'ORS-online'."
+		else:
+			if (isoDataProviderDictionary[dataProvider] == "ors-online"):
+				if ('APIkey' not in dataProviderArgs):
+					valFlag = False
+					errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+	return [valFlag, errorMsg, warningMsg]
+
+def _valIso(iso):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (type(iso) is not dict):
+		valFlag = False
+		errorMsg = "Error: `iso` must be a dictionary."
+
+	if (valFlag):
+		if ('location' not in iso):
+			valFlag = False
+			errorMsg = "Error: `iso` dictionary must include `location` key."
+
+	if (valFlag):
+		if ('boundingRegion' not in iso):
+			valFlag = False
+			errorMsg = "Error: `iso` dictionary must include `boundingRegion` key."
+
+	if (valFlag):
+		if (type(iso['boundingRegion']) is not list):
+			valFlag = False
+			errorMsg = "Error: `iso['boundingRegion]` must be a list."
+
+	if (valFlag):
+		if (len(iso['boundingRegion']) != 5):
+			valFlag = False
+			errorMsg = "Error: `iso['boundingRegion]` must be a list with 5 [lat, lon] pairs."
+						
+	if (valFlag):
+		if ('isochrones' not in iso):
+			valFlag = False
+			errorMsg = "Error: `iso` dictionary must include `isochrones` key."
+			
+	if (valFlag):
+		if (type(iso['isochrones']) is not list):
+			valFlag = False
+			errorMsg = "Error: `iso['isochrones]` must be a list."
+			
+	if (valFlag):
+		for i in range(0, len(iso['isochrones'])):
+			if (type(iso['isochrones'][i]) is not dict):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must be a dictionary."
+				break
+	
+			if ('value' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'value' key."
+				break
+
+			if ('valueUnits' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'valueUnits' key."
+				break
+
+			if ('area' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include an 'area' key."
+				break
+				
+			if ('pop' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'pop' key."
+				break
+
+			if ('reachfactor' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'reachfactor' key."
+				break
+				
+			if ('poly' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'poly' key."
+				break
+		
+			if (type(iso['isochrones'][i]['poly']) is not list):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'poly' key with a list structure."
+				break
+
+			# FIXME -- Could continue to drill down into poly structure,
+			#          but this already seems like overkill at this point.
+
+
+	return [valFlag, errorMsg, warningMsg]
+
 	
 def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 	valFlag = True
@@ -3292,3 +3784,4 @@ def _valBetweenFloat(lower, upper, number, parameterName):
 			errorMsg = "Error: %s should be a float number and less than %s." % (parameterName, upper)		
 
 	return [valFlag, errorMsg, warningMsg]
+	

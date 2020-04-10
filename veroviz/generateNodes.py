@@ -45,7 +45,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	leafletIconPrefix: string, Optional, default as "glyphicon"
 		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
 	leafletIconType: string, Optional, default as "info-sign"
-		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconType`. See :ref:`Leaflet Style` for available options.
+		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconPrefix`. See :ref:`Leaflet Style` for available options.
 	leafletColor: string, Optional, default as "blue"
 		Specifies the icon color of the generated nodes when displayed in Leaflet. See :ref:`Leaflet Style` for a list of available colors.
 	leafletIconText: string, Optional, default as None

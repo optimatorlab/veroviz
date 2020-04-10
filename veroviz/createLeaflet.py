@@ -5,6 +5,8 @@ from veroviz._validation import valAddLeafletMarker
 from veroviz._validation import valAddLeafletPolygon
 from veroviz._validation import valAddLeafletPolyline
 from veroviz._validation import valAddLeafletText
+from veroviz._validation import valAddLeafletIcon
+from veroviz._validation import valAddLeafletIsochrones
 from veroviz._internal import replaceBackslashToSlash
 
 from veroviz._deconstructAssignments import deconstructAssignments
@@ -603,7 +605,7 @@ def _createLeafletArrowsPath(mapObject=None, path=None, color=None, size=7, mode
 	
 	return mapObject
 
-def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
+def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=None, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
 
 	"""
 	Add a circle, with a radius specified in [meters], to a Leaflet map.
@@ -628,6 +630,8 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		Specifies the center point of the circle.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).
 	radius: float, Required, default None
 		The radius of the circle, in units of [meters]. 
+	popupText: string, Optional, default as None
+		The circle will include this text as a popup label (you will need to click on the circle in the map to see this label).  		
 	lineWeight: int, Optional, default 3
 		The width of the circle's outline, in units of [pixels].  This value is ignored if `lineColor = None`. 
 	lineColor: string, Optional, default None
@@ -661,7 +665,6 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		>>> # Draw a circle of radius 2000 meters, centered on the Univ. at Buffalo campus.
 		>>> # This example includes all of the available function arguments.
 		>>> import veroviz as vrv
-		>>> import veroviz as vrv
 		>>> myMap = vrv.addLeafletCircle(
 		...     mapObject = None,
 		...     mapFilename = None,
@@ -670,6 +673,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		...     zoomStart = 13,
 		...     center = [43.00154, -78.7871],
 		...     radius = 2000,
+		...     popupText = 'Univ. at Buffalo',
 		...     lineWeight = 6,
 		...     lineColor = '#ff66ff',
 		...     lineOpacity = 0.7,
@@ -736,6 +740,10 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	except:
 		pass
 		
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
+		
 	folium.Circle(center, 
 		radius = radius,  
 		stroke = True, 
@@ -744,7 +752,8 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		opacity = lineOpacity, 
 		dash_array = dashArray,
 		fill_color = fillColor,
-		fill_opacity = fillOpacity
+		fill_opacity = fillOpacity,
+		popup = popupText
 		).add_to(mapObject)
 
 	if (mapFilename is not None):
@@ -754,7 +763,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	return mapObject
 	
-def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=5, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
+def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=5, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
 
 	"""
 	Add a circle-shaped marker, with a radius specified in [pixels], to a Leaflet map.
@@ -779,6 +788,8 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		Specifies the center point of the circle marker.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).
 	radius: float, Required, default None
 		The radius of the circle marker, in units of [pixels]. 
+	popupText: string, Optional, default as None
+		The marker will include this text as a popup label (you will need to click on the marker in the map to see this label).  		
 	lineWeight: int, Optional, default 3
 		The width of the circle marker's outline, in units of [pixels].  This value is ignored if `line = False`. 
 	lineColor: string, Optional, default 'red'
@@ -819,6 +830,7 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		...     zoomStart = 11, 
 		...     center = [43.00154, -78.7871],
 		...     radius = 30, 
+		...     popupText = 'Univ. at Buffalo',
 		...     lineWeight = 3, 
 		...     lineColor = 'orange', 
 		...     lineOpacity = 0.6, 
@@ -885,6 +897,10 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	except:
 		pass
 
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
+
 	folium.CircleMarker(center, 
 		radius = radius,  
 		stroke = True, 
@@ -893,7 +909,8 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 		opacity = lineOpacity, 
 		dash_array = dashArray,
 		fill_color = fillColor,
-		fill_opacity = fillOpacity
+		fill_opacity = fillOpacity,
+		popup = popupText
 		).add_to(mapObject)
 
 	if (mapFilename is not None):
@@ -903,7 +920,7 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	return mapObject	
 
-def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid', fillColor=None, fillOpacity=0.3):
+def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid', fillColor=None, fillOpacity=0.3):
 	"""
 	Add a polygon, as defined by an ordered collection of lat/lon coordinates, to a Leaflet map.
 		
@@ -924,7 +941,9 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 	zoomStart: int, Optional, default as None
 		Specifies the default zoom level.  1 --> global view;  18 --> max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).
 	points: list of lists, Required, default None
-		Specifies the ordered collection of lat/lon coordinates comprising the polygon.  This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  It is not necessary for `[lat1, lon1]` and `[latn, lonn]` to be the same point.  In other words, the polygon will automatically connect the first and last locations specified in the `points` list.		
+		Specifies the ordered collection of lat/lon coordinates comprising the polygon.  This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  It is not necessary for `[lat1, lon1]` and `[latn, lonn]` to be the same point.  In other words, the polygon will automatically connect the first and last locations specified in the `points` list.	
+	popupText: string, Optional, default as None
+		The polygon will include this text as a popup label (you will need to click on the polygon in the map to see this label).  	
 	lineWeight: int, Optional, default 3
 		The width of the polygon's outline, in units of [pixels].  This value is ignored if `lineColor = None`. 
 	lineColor: string, Optional, default 'red'
@@ -971,6 +990,7 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints), 
 		...     zoomStart = 15, 
 		...     points = campusPoints, 
+		...     popupText = 'Univ. at Buffalo',		
 		...     lineWeight = 7, 
 		...     lineColor = '#ff00ff', 
 		...     lineOpacity = 0.9, 
@@ -1053,6 +1073,10 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 	for i in range(len(points)):
 		points2D.append([points[i][0], points[i][1]])
 
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
+
 	folium.Polygon(locations = points2D, 
 		stroke = True, 
 		weight = lineWeight, 
@@ -1060,7 +1084,8 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 		opacity = lineOpacity, 
 		dash_array = dashArray,
 		fill_color = fillColor,
-		fill_opacity = fillOpacity
+		fill_opacity = fillOpacity,
+		popup = popupText
 		).add_to(mapObject)
 
 
@@ -1071,7 +1096,7 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 
 	return mapObject
 
-def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid'):
+def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid'):
 
 	"""
 	Add a polyline, as described by an ordered collection of lat/lon coordinates, to a Leaflet map.  
@@ -1094,6 +1119,8 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		Specifies the default zoom level.  1 --> global view;  18 --> max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).
 	points: list of lists, Required, default None
 		Specifies the ordered collection of lat/lon coordinates comprising the polyline.   This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  Note that the polyline will not automatically connect the first and last locations specified in the `points` list.  (By contrast the "polygon" function does connect those locatons.)
+	popupText: string, Optional, default as None
+		The polyline will include this text as a popup label (you will need to click on the polyline in the map to see this label).  		
 	lineWeight: int, Optional, default 3
 		The width of the polyline's outline, in units of [pixels].  This value is ignored if `lineColor = None`. 
 	lineColor: string, Optional, default 'red'
@@ -1134,6 +1161,7 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints),
 		...     zoomStart = 14, 
 		...     points = campusPoints,
+		...     popupText = 'Univ. at Buffalo',
 		...     lineWeight = 13, 
 		...     lineColor = '#0055ff', 
 		...     lineOpacity = 0.8, 
@@ -1201,6 +1229,10 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 	points2D = []
 	for i in range(len(points)):
 		points2D.append([points[i][0], points[i][1]])
+
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
 		
 	folium.PolyLine(locations = points2D, 
 		stroke = True, 
@@ -1208,7 +1240,8 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		color = lineColor,
 		opacity = lineOpacity, 
 		dash_array = dashArray,
-		fill = False
+		fill = False,
+		popup = popupText
 		).add_to(mapObject)
 
 
@@ -1347,3 +1380,284 @@ def addLeafletText(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject
+	
+	
+def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, location=None, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, popupText=None):
+
+	"""
+	Add a single icon/pin to a Leaflet map.
+		
+	Parameters
+	----------
+	mapObject: Folium object, Optional, default None
+		A Folium map object.  If provided, the marker will be added to an existing map.  Otherwise, a new map will be created.
+	mapFilename: string, Optional, default None 
+		If provided, the map will be saved to this file, which should have a `.html` extension.  `mapFilename` can contain a filepath.  If `mapFilename` is not provided, no file will be generated.  The returned mapObject can be viewed within a Jupyter notebook. 
+	mapBackground: string, Optional, default 'CartoDB positron'
+		The tiles of the map, default to be 'CartoDB positron', for options, see :ref:`Leaflet Style`, also see folium documentation (https://python-visualization.github.io/folium/modules.html) for more options
+	mapBoundary: list of lists, Optional, default None
+		If provided, the mapBoundary coordinates are used to determine a zoom level such that these coordinates are contained within view when the map is opened.  This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  `mapBoundary` must be in the form [[south lat, west lon], [north lat, east lon]].	
+	zoomStart: int, Optional, default as None
+		Specifies the default zoom level.  1 --> global view;  18 --> max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).
+	location: list, Required, default as None
+		Specifies the GPS coordinates of the icon/pin.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).	
+	iconPrefix: string, Optional, default as "glyphicon"
+		There are a large number of Leaflet icons available. The `iconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
+	iconType: string, Optional, default as "info-sign"
+		Specifies the particular icon to be used for the icon/pin.  The list of available options depends on the choice of `iconPrefix`. See :ref:`Leaflet Style` for available options.
+	iconColor: string, Optional, default as "blue"
+		Defines the color of the icon/pin.  See :ref:`Leaflet Style` for the list of available color options.
+	popupText: string, Optional, default as None
+		The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).  
+	
+	Return
+	------
+	Folium object
+		A Folium map object containing an icon/pin (and pre-existing items previously specified in mapObject).
+		
+	Example
+	-------
+		>>> # Draw an icon/pin, centered on the Univ. at Buffalo campus.
+		>>> # Save this as "an_icon.html".
+		>>> import veroviz as vrv
+		>>> myMap = vrv.addLeafletIcon(
+		...     location=[43.00154, -78.7871],
+		...     mapFilename="an_icon.html")
+		>>> myMap
+
+		>>> # Draw an icon/pin, centered on the Univ. at Buffalo campus.
+		>>> # This example includes all of the available function arguments.
+		>>> import veroviz as vrv
+		>>> myMap = vrv.addLeafletIcon(
+		...     mapObject = None, 
+		...     mapFilename = None, 
+		...     mapBackground = 'CartoDB positron', 
+		...     mapBoundary = None, 
+		...     zoomStart = 11, 
+		...     location = [43.00154, -78.7871],
+		...     iconPrefix='glyphicon',
+		...     iconType='info-sign',
+		...     iconColor:'blue',
+		...     popupText:'test')
+		>>> myMap
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valAddLeafletIcon(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, location, iconPrefix, iconType, iconColor, popupText)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	try:
+		mapBackground = mapBackground.lower()
+	except:
+		pass
+
+	location = [location[0], location[1]]
+
+	# If no mapObject exists, set a new mapObject
+	if (mapObject == None):
+		if (mapBackground in foliumMaps):
+			mapObject = folium.Map(
+				location=location, 
+				zoom_start=zoomStart if (zoomStart != None) else 10, 
+				tiles=mapBackground)
+		elif (mapBackground in customMaps):
+			mapObject = folium.Map(
+				location=location, 
+				zoom_start=zoomStart if (zoomStart != None) else 10, 
+				tiles=customMaps[mapBackground]['tiles'],
+				attr=customMaps[mapBackground]['attr'])
+
+	# set the map boundary for mapObject
+	if (zoomStart is None):
+		if (mapBoundary is not None):
+			mapObject.fit_bounds(mapBoundary)
+		
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
+			
+	# Folium draw nodes
+	folium.Marker(
+		location, 
+		icon=folium.Icon(
+			color=iconColor.lower(), 
+			prefix=iconPrefix.lower(), 
+			icon=iconType.lower()), 
+		popup=popupText
+	).add_to(mapObject)
+	
+	if (mapFilename is not None):
+		mapObject.save(mapFilename)
+		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+			print("Message: Map page written to %s." % (mapFilename))
+
+	return mapObject	
+	
+def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, iso=None, showBoundingRegion=False, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, popupText=None, lineWeight=3, lineOpacity=0.8, lineStyle='solid', fillOpacity=0.3):
+	"""
+	Easily draw isochrones on a Leaflet map.  Be sure to run the `isochrones()` function first.
+		
+	Parameters
+	----------
+	mapObject: Folium object, Optional, default None
+		A Folium map object.  If provided, the marker will be added to an existing map.  Otherwise, a new map will be created.
+	mapFilename: string, Optional, default None 
+		If provided, the map will be saved to this file, which should have a `.html` extension.  `mapFilename` can contain a filepath.  If `mapFilename` is not provided, no file will be generated.  The returned mapObject can be viewed within a Jupyter notebook. 
+	mapBackground: string, Optional, default 'CartoDB positron'
+		The tiles of the map, default to be 'CartoDB positron', for options, see :ref:`Leaflet Style`, also see folium documentation (https://python-visualization.github.io/folium/modules.html) for more options
+	mapBoundary: list of lists, Optional, default None
+		If provided, the mapBoundary coordinates are used to determine a zoom level such that these coordinates are contained within view when the map is opened.  This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  `mapBoundary` must be in the form [[south lat, west lon], [north lat, east lon]].	
+	zoomStart: int, Optional, default as None
+		Specifies the default zoom level.  1 --> global view;  18 --> max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).
+	iso: isochrone object, Required, default as None
+		FIXME -- Include link/reference to `isochrones()` function.
+	showBoundingRegion: boolean, Optional, default as False
+		The isochrone object contains a bounding region, which is the smallest rectangle enclosing the isochrones.  If you wish to include this rectangle on the map, set `showBoundingRegion=True`.  
+	iconPrefix: string, Optional, default as "glyphicon"
+		There are a large number of Leaflet icons available. The `iconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
+	iconType: string, Optional, default as "info-sign"
+		Specifies the particular icon to be used for the icon/pin.  The list of available options depends on the choice of `iconPrefix`. See :ref:`Leaflet Style` for available options.
+	iconColor: string, Optional, default as "blue"
+		Defines the color of the icon/pin.  See :ref:`Leaflet Style` for the list of available color options.
+	popupText: string, Optional, default as None
+		The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).  
+	lineWeight: int, Optional, default 3
+		The width of the polygon's outline, in units of [pixels].  This value is ignored if `lineColor = None`. 
+	lineOpacity: float in [0, 1], Optional, default 0.8
+		Specifies the opacity of the polygon's outline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).
+	lineStyle: string, Optional, default 'solid'
+		The style of the polygon's outline.  See :ref:`Leaflet Style` for a list of valid options.  
+	fillOpacity: float in [0, 1], Optional, default 0.3
+		Specifies the opacity of the polygon's interior.  Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+
+	Return
+	------
+	Folium object
+		A Folium map object containing a polygon (and pre-existing items previously specified in mapObject).
+		
+	Example
+	-------
+	FIXME
+	"""
+	
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valAddLeafletIsochrones(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, iso, showBoundingRegion, iconPrefix, iconType, iconColor, popupText, lineWeight, lineOpacity, lineStyle, fillOpacity)
+
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	# Adjust the scope of the map to properly show all objects
+	[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, iso['boundingRegion'])
+
+	try:
+		mapBackground = mapBackground.lower()
+	except:
+		pass
+
+	# If no mapObject exists, set a new mapObject
+	if (mapObject == None):
+		midLat = (maxLat + minLat) / 2.0
+		midLon = (maxLon + minLon) / 2.0
+		if (mapBackground in foliumMaps):
+			mapObject = folium.Map(
+				location=[midLat, midLon], 
+				zoom_start=zoomStart if (zoomStart != None) else 10, 
+				tiles=mapBackground)
+		elif (mapBackground in customMaps):
+			mapObject = folium.Map(
+				location=[midLat, midLon], 
+				zoom_start=zoomStart if (zoomStart != None) else 10,  
+				tiles=customMaps[mapBackground]['tiles'],
+				attr=customMaps[mapBackground]['attr'])
+
+	# set the map boundary for mapObject
+	if (zoomStart is None):
+		if (mapBoundary is not None):
+			mapObject.fit_bounds(mapBoundary)
+		elif (mapBoundary is None):
+			mapObject.fit_bounds(getMapBoundary(None, None, iso['boundingRegion']))
+
+
+	if (showBoundingRegion):
+		folium.PolyLine(
+			iso['boundingRegion'], 
+			color = VRV_DEFAULT_LEAFLETBOUNDINGCOLOR,
+			weight = VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT,
+			opacity = VRV_DEFAULT_LEAFLETBOUNDINGOPACITY,
+			dash_array = '30 10',
+			popup = 'bounding region'
+		).add_to(mapObject)
+
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
+
+	# Draw marker for location
+	folium.Marker(
+		iso['location'], 
+		icon=folium.Icon(
+			color=iconColor.lower(), 
+			prefix=iconPrefix.lower(), 
+			icon=iconType.lower()), 
+		popup=popupText
+	).add_to(mapObject)
+
+
+	try:
+		lineStyle = lineStyle.lower()
+	except:
+		pass
+		
+	# Interpret line style
+	if (lineStyle == 'dashed'):
+		dashArray = '30 10'
+	elif (lineStyle == 'dotted'):
+		dashArray = '1 6'
+	else:
+		dashArray = None
+		
+	try:
+		fillColor = fillColor.lower()
+	except:
+		pass
+	
+	isoColorList = ['#9e0142', '#d53e4f', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#e6f598', '#abdda4', '#66c2a5', '#3288bd', '#5e4fa2']
+	
+	# Need to draw in reverse order (largest to smallest) so they are layered properly on map.  Otherwise, the big polygon will prevent clicking on smaller ones.
+	for i in range(len(iso['isochrones'])-1, -1, -1):
+		tmpText  = 'value: {} {}\n'.format(iso['isochrones'][i]['value'], iso['isochrones'][i]['valueUnits'])
+		tmpText += 'area: {} sq meters\n'.format(iso['isochrones'][i]['area'])
+		tmpText += 'pop: {}\n'.format(iso['isochrones'][i]['pop'])
+		tmpText += 'reachfactor: {}\n'.format(iso['isochrones'][i]['reachfactor'])
+
+		lineColor = isoColorList[i%len(isoColorList)]
+		fillColor = lineColor
+				
+		# Each isochrone may have several polylines.
+		for j in range(0, len(iso['isochrones'][i]['poly'])):
+			folium.Polygon(locations = iso['isochrones'][i]['poly'][j], 
+				stroke = True, 
+				weight = lineWeight, 
+				color = lineColor, 
+				opacity = lineOpacity, 
+				dash_array = dashArray,
+				fill_color = fillColor,
+				fill_opacity = fillOpacity,
+				popup=str(tmpText)
+				).add_to(mapObject)
+
+	if (mapFilename is not None):
+		mapObject.save(mapFilename)
+		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+			print("Message: Map page written to %s." % (mapFilename))
+
+	return mapObject	
+	

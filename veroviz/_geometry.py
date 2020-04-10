@@ -1,5 +1,16 @@
 from veroviz._common import *
 
+#####################################################################
+# General Naming Rules for Input Parameters
+# loc  - Location.  A coordinate in the form of [lat, lon].
+#        If the location is specific, name it with xxxLoc 
+#        (e.g., startLoc, endLoc, etc.)
+# line - Line.  Two locations in the form of [[lat1, lon1], [lat2, lon2]].
+# path - Path.  A list of locs, in [[lat1, lon1], [lat2, lon2], [lat3, lon3], ...]
+# poly - Polygon.  A sequence of locations, 
+#        assuming solid and closed, in [[lat1, lon1], [lat2, lon2], [lat3, lon3], ...]
+#####################################################################
+
 def geoIsPointInPoly(loc, poly):
 	"""
 	Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be "inside".
@@ -29,7 +40,7 @@ def geoIsPointInPoly(loc, poly):
 		yi = poly[i][0]
 		xj = poly[j][1]
 		yj = poly[j][0]
-		intersect = (yi > y) != (yj > y)		
+		intersect = (yi > y) != (yj > y)
 		if (intersect):
 			intersect = (x < (xj - xi) * (y - yi) / float(yj - yi) + xi)
 		if (intersect):
@@ -410,7 +421,7 @@ def geoPointInDistance2D(loc, direction, distMeters):
 
 def geoDistance2D(loc1, loc2):
 	"""
-	Distance between two locations in 2D
+	Distance, in meters, between two locations in 2D
 
 	Parameters
 	----------
@@ -422,7 +433,7 @@ def geoDistance2D(loc1, loc2):
 	Return
 	------
 	float
-		Distance between to locations.
+		Distance, in meters, between two locations.
 	"""
 	
 	distMeters = geopy.distance.distance(loc1, loc2).meters
@@ -431,7 +442,7 @@ def geoDistance2D(loc1, loc2):
 
 def geoDistance3D(loc1, loc2):
 	"""
-	Distance between two locations in 3D
+	Distance, in meters, between two locations in 3D
 
 	Parameters
 	----------
@@ -443,7 +454,7 @@ def geoDistance3D(loc1, loc2):
 	Return
 	------
 	float
-		Distance between to locations.
+		Distance, in meters, between two locations.
 	"""
 
 	# FIXME! For now we assume the earth is flat
@@ -491,6 +502,41 @@ def geoAreaOfTriangle(loc1, loc2, loc3):
 
 	return area
 
+def geoAreaOfPolygon(poly):
+	"""
+	Calculates the area of a polygon. Assumes a solid, but not necessarily convex, shape.
+
+	Parameters
+	----------
+	poly: list of lists
+		A list of lat/lon defines the boundary, in the form of [[lat, lon], [lat, lon], ... , [lat, lon]]
+
+	Return
+	------
+	float
+		Area of polygon
+	"""
+
+	# poly must be a list of [lat, lon] lists.  Altitude cannot be included,
+	# as it will break tripy.earclip.
+	cleanPoly = []
+	for i in poly:
+		# Just add [lat, lon]
+		cleanPoly.append([i[0], i[1]])
+		
+	polyArea = 0
+	
+	# Use polygon triangulation to cut the bounding region into a list of triangles, calculate the area of each triangle
+	lstTriangle = tripy.earclip(poly)
+	lstArea = []
+	for i in range(len(lstTriangle)):
+		lstArea.append(geoAreaOfTriangle(lstTriangle[i][0], lstTriangle[i][1], lstTriangle[i][2]))
+
+	for i in lstArea:
+		polyArea = i + polyArea
+
+	return polyArea
+
 def geoDistancePath2D(path):
 	"""
 	Given a list of lats and lons, calculate the total distance along the path
@@ -512,6 +558,48 @@ def geoDistancePath2D(path):
 
 	return dist
 
+def geoClosestPointLoc2Line(loc, line):
+	"""
+	Find the point along a given line that is closest to a given location.
+
+	Parameters
+	----------
+	loc: list
+		The coordinate of the current coordinate, in [lat, lon, alt] format
+	line: list of locations
+		A list of two coordinates in the form of [lat, lon]
+	Returns
+	-------
+	minLoc: list specifying a location, in [lat, lon] format.
+	"""
+	# The line is denoted as AB, the stationary location is denoted by S
+	locA = line[0]
+	locB = line[1]
+	locS = loc
+	minLoc = None
+
+	# Check if the loc is on line, if so return the location
+	if (geoIsOnSegment(loc, line)):
+		minLoc = locS
+	else:
+		# Vectors start from A
+		vecAS = [float(locS[0] - locA[0]), float(locS[1] - locA[1])]
+		vecAB = [float(locB[0] - locA[0]), float(locB[1] - locA[1])]
+
+		area = geoAreaOfTriangle(locA, locB, locS)
+		h = 2 * area / geoDistance2D(locA, locB)
+		lAS = geoDistance2D(locA, locS)
+		dist = math.sqrt(lAS * lAS - h * h)
+
+		cosSAB = geoFindCos(vecAS, vecAB)
+
+		if cosSAB >= 0:
+			minLoc = geoMileageInPath2D([locA, locB], dist)[0]
+		else:
+			minLoc = locA
+
+	return minLoc
+	
 def geoMileageInPath2D(path, mileageInMeters):
 	"""
 	Given a path in 2D, and a mileage, find the GPS coordinate and the coordinates of source/target of the segment that coordinate at.
@@ -591,3 +679,4 @@ def geoGetHeading(currentLoc, goalLoc):
 		bearingInDegree += 360
 
 	return bearingInDegree
+	

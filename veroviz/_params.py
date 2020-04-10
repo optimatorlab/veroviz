@@ -236,6 +236,18 @@ routeType3DList = [
 	'straight'
 ]
 
+isoTravelModeList = [
+	'driving-car',
+	'driving-hgv',
+	'cycling-regular',
+	'cycling-road',
+	'cycling-mountain',
+	'cycling-electric',
+	'foot-walking',
+	'foot-hiking',					
+	'wheelchair'
+]
+
 dataProviderDictionary = {
 	'mapquest': 'mapquest',
 	'mq': 'mapquest',
@@ -263,6 +275,16 @@ geoDataProviderDictionary = {
 	'ors-online': 'ors-online',
 	'ors-ol': 'ors-online'
 }
+
+# NOTE: The only valid dataProvider for isochrones functions is:
+#       ors-online
+isoDataProviderDictionary = {
+	'openrouteservice-online': 'ors-online',
+	'openrouteservice-ol': 'ors-online',
+	'ors-online': 'ors-online',
+	'ors-ol': 'ors-online'
+}
+
 
 matrixTypeList = [
 	'all2all', 

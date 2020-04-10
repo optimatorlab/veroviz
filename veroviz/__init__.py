@@ -1,4 +1,4 @@
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
@@ -31,6 +31,8 @@ from veroviz.createLeaflet import addLeafletMarker
 from veroviz.createLeaflet import addLeafletPolygon
 from veroviz.createLeaflet import addLeafletPolyline
 from veroviz.createLeaflet import addLeafletText
+from veroviz.createLeaflet import addLeafletIcon
+from veroviz.createLeaflet import addLeafletIsochrones
 from veroviz.createCesium import createCesium
 
 # Internal shared small functions/constants/validation
@@ -54,6 +56,7 @@ from veroviz._queryORS import orsGetTimeDistOne2Many
 from veroviz._queryORS import orsGetTimeDistMany2One
 from veroviz._queryORS import orsGeocode
 from veroviz._queryORS import orsReverseGeocode
+from veroviz._queryORS import orsIsochrones
 
 # OSRM related
 from veroviz._queryOSRM import osrmGetSnapToRoadLatLon
@@ -114,10 +117,3 @@ def checkVersion():
 
 	return versionStatus
 
-# def disableWarningMessages():
-# 	os.environ['VEROVIZ_SHOWWARNINGMESSAGE'] = 'False'
-# 	return
-
-# def enableWarningMessages():
-# 	os.environ['VEROVIZ_SHOWWARNINGMESSAGE'] = 'True'
-# 	return

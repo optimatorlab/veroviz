@@ -3,22 +3,23 @@ from veroviz._validation import *
 from veroviz._geometry import *
 from veroviz._internal import *
 from veroviz._geocode import privGeocode, privReverseGeocode
+from veroviz._isochrones import privIsochrones
 
-def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
+def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist=None, toUnitsTime=None):
 	"""
 	Convert a speed to different units.
 
 	Parameters
 	----------
-	speed: float
+	speed: float, Required
 		The numeric value describing a speed to be converted.
-	fromUnitsDist: string
+	fromUnitsDist: string, Required
 		Distance units for the given speed, before conversion. See :ref:`Units` for options.
-	fromUnitsTime: string
+	fromUnitsTime: string, Required
 		Time units for the given speed, before conversion. See :ref:`Units` for options.
-	toUnitsDist: string
+	toUnitsDist: string, Required
 		Distance units for the speed after conversion. See :ref:`Units` for options.
-	toUnitTime: string
+	toUnitTime: string, Required
 		Time units for the speed after conversion. See :ref:`Units` for options.
 	
 	Returns
@@ -109,17 +110,17 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 
 	return convSpeed
 
-def convertDistance(distance, fromUnits, toUnits):
+def convertDistance(distance=None, fromUnits=None, toUnits=None):
 	"""
 	Convert a distance to different units.
 
 	Parameters
 	----------
-	distance: float
+	distance: float, Required
 		The numeric value describing a distance to be converted.
-	fromUnits: string
+	fromUnits: string, Required
 		Distance units before conversion. See :ref:`Units` for options.
-	toUnits: string
+	toUnits: string, Required
 		Distance units after conversion. See :ref:`Units` for options.
 
 	Returns
@@ -185,17 +186,17 @@ def convertDistance(distance, fromUnits, toUnits):
 
 	return convDist
 
-def convertTime(time, fromUnits, toUnits):
+def convertTime(time=None, fromUnits=None, toUnits=None):
 	"""
 	Convert a time to different units.
 
 	Parameters
 	----------
-	time: float
+	time: float, Required
 		The numeric value describing a time to be converted.
-	fromUnits: string
+	fromUnits: string, Required
 		Time units before conversion. See :ref:`Units` for options.
-	toUnits: string
+	toUnits: string, Required
 		Time units after conversion. See :ref:`Units` for options.
 
 	Returns
@@ -249,17 +250,17 @@ def convertTime(time, fromUnits, toUnits):
 
 	return convTime
 
-def convertArea(area, fromUnits, toUnits):
+def convertArea(area=None, fromUnits=None, toUnits=None):
 	"""
 	Convert an area from `fromUnits` to `toUnits`.
 	
 	Parameters
 	----------
-	area: float
+	area: float, Required
 		The numeric value describing an area to be converted.
-	fromUnits: string
+	fromUnits: string, Required
 		Area units, before conversion. See :ref:`Units` for options.
-	toUnits: string
+	toUnits: string, Required
 		Desired units of area after conversion. See :ref:`Units` for options.
 
 	Returns
@@ -317,13 +318,141 @@ def convertArea(area, fromUnits, toUnits):
 	
 	return convArea
 
-def initDataframe(dataframeType):
+def lengthFromNodeSeq(nodeSeq=None, lengthDict=None):
+	"""
+	Calculate the total "length" (either in time or distance) along a path defined by a sequence of node IDs.
+
+	Parameters
+	----------
+	nodeSeq: list, Required
+		An ordered list of node IDs.  These IDs must be included in the `id` column of the :ref:`Nodes` dataframe specified in the `nodes` input argument to this function. The format for `nodeSeq` is [node_id_1, node_id_2, ...].
+	lengthDict: dictionary, Required
+
+	Return
+	------
+	float
+		Total length of the path.
+
+	Example
+	-------
+	>>> import veroviz as vrv
+
+	>>> locs = [[42.8871085, -78.8731949],
+	...         [42.8888311, -78.8649649],
+	...         [42.8802158, -78.8660787],
+	...         [42.8845705, -78.8762794],
+	...         [42.8908031, -78.8770140]]
+	>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+
+	>>> [timeSecDict, distMetersDict] = vrv.getTimeDist2D( nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
+	>>> nodeSeq = [1, 3, 2]
+	>>> totalTimeSec = lengthFromNodeSeq(nodeSeq, timeSecDict)
+	>>> totalTimeSec
+	128.18625959867046
+
+	>>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
+	>>> totalDistMeters
+	1922.7938939800567
+	"""
+	[valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	length = 0
+	for i in range(0, len(nodeSeq)-1):
+		length += lengthDict[nodeSeq[i], nodeSeq[i+1]]
+	return length
+
+def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
+	"""
+	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.
+
+	Parameters
+	----------
+	path: list of lists, Required, default as None
+	A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...] or [[lat, lon, alt], [lat, lon, alt], ...].  If provided, altitude will be ignored.
+	closeLoop: Boolean, Optional, default as False
+	Indicates whether the path should be closed (i.e., connecting the last location to the first).
+	distUnits: string, Optional, default as 'meters'
+	Specifies the desired distance units for the output. See :ref:`Units` for options.
+
+	Returns
+	-------
+	float
+	Total length of the path.
+
+	Example
+	-------
+	>>> import veroviz as vrv
+	>>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
+	>>> perimDist = vrv.calcPerimeter2D(path=locs, closeLoop=True, distUnits='mi')
+	>>> perimDist
+	6.857172388864359
+	"""
+
+	[valFlag, errorMsg, warningMsg] = valCalcPerimeter2D(path, closeLoop, distUnits)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	dist = 0
+	for i in range(0, len(path) - 1):
+		dist += distance2D(path[i][0:2], path[i + 1][0:2])
+
+	if (closeLoop):
+		dist += distance2D(path[-1][0:2], path[0][0:2])
+
+	dist = convertDistance(dist, 'meters', distUnits)
+
+	return dist
+
+def calcArea(poly=None):
+	"""
+	Calculate the area, in square meters, of a polygon.
+	
+	Parameters
+	----------
+	poly: list of lists, Required
+		A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored. 
+		
+	Returns
+	-------
+	float
+	Area, in meters, of the polygon.
+	
+	Example
+	-------
+	>>> import veroviz as vrv
+	>>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
+	>>> area = vrv.calcArea(locs)
+	>>> area
+	
+	"""
+	
+	[valFlag, errorMsg, warningMsg] = valCalcArea(poly)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+			
+	area = geoAreaOfPolygon(poly)
+	
+	return area		
+	
+
+def initDataframe(dataframeType=None):
 	"""
 	Return an empty dataframe of a given type.
 
 	Parameters
 	----------
-	dataframeType: string
+	dataframeType: string, Required
 		The options are 'Nodes', 'Arcs', and 'Assignments'.  These options are case insensitive.
 
 	Returns
@@ -472,13 +601,13 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 
 	return [[minLat, maxLon], [maxLat, minLon]]
 
-def convertMatricesDataframeToDictionary(dataframe):
+def convertMatricesDataframeToDictionary(dataframe=None):
 	"""
 	This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dataframe into  a dictionary, such that the indices of columns and rows become a tuple key for the dictionary.
 
 	Parameters
 	----------
-	dataframe: pandas.dataframe
+	dataframe: pandas.dataframe, Required
 		The rows and columns are both integers. There should not be duplicated origin/destination pairs.
 
 	Return
@@ -549,6 +678,16 @@ def convertMatricesDataframeToDictionary(dataframe):
 		
 	"""
 
+	# Make sure an input argument was provided
+	if (dataframe is None):
+		print("Error: dataframe is missing as an input to function `convertMatricesDataframeToDictionary()`.")		
+		return
+
+	# Make sure the input is a dataframe
+	if (type(dataframe) is not pd.core.frame.DataFrame):
+		print("Error: The input to function `convertMatricesDataframeToDictionary()` must be a pandas dataframe.")		
+		return
+	
 	dictionary = {}
 	try:
 		(rowNum, columnNum) = dataframe.shape
@@ -560,7 +699,7 @@ def convertMatricesDataframeToDictionary(dataframe):
 
 	return dictionary
 
-def convertMatricesDictionaryToDataframe(dictionary):
+def convertMatricesDictionaryToDataframe(dictionary=None):
 	"""
 	This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dictionary into a pandas dataframe.  The dictionary is assumed to have 2-tuple indices (the first index represents the ID of the "from" location, the second index is the ID of the "to" location).  In the resulting pandas dataframe, the row indices will represent the "from" location, the column indices the "to" location.
 
@@ -636,6 +775,17 @@ def convertMatricesDictionaryToDataframe(dictionary):
 		4033.9
 	"""
 
+	# Make sure an input argument was provided
+	if (dictionary is None):
+		print("Error: dictionary is missing as an input to function `convertMatricesDictionaryToDataframe()`.")		
+		return
+
+	# Make sure the input is a dictionary
+	if (type(dictionary) is not dict):
+		print("Error: The input to function `convertMatricesDictionaryToDataframe()` must be a python dictionary.")		
+		return
+
+
 	rows = []
 	columns = []
 	keys = dictionary.keys()
@@ -663,7 +813,7 @@ def convertMatricesDictionaryToDataframe(dictionary):
 
 	return dataframe
 
-def exportDataToCSV(data, filename):
+def exportDataToCSV(data=None, filename=None):
 	"""
 	Export a dataframe or python time/distance matrix dictionary to a `.csv` file.
 
@@ -744,6 +894,11 @@ def exportDataToCSV(data, filename):
 
 	"""
 
+	# Make sure both input args are provided:
+	if ((data is None) or (filename is None)):
+		print("Error: 1 or more of the 2 required input parameters to function `exportDataToCSV()` are missing.")
+		return
+	
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -774,7 +929,7 @@ def exportDataToCSV(data, filename):
 
 	return
 
-def importDataFromCSV(dataType, filename):
+def importDataFromCSV(dataType=None, filename=None):
 	"""
 	Import from a `.csv` file into a dataframe or python time/distance matrix dictionary.
 
@@ -860,6 +1015,11 @@ def importDataFromCSV(dataType, filename):
 
 	"""
 
+	# Make sure both input args are provided:
+	if ((dataType is None) or (filename is None)):
+		print("Error: 1 or more of the 2 required input parameters to function `importDataFromCSV()` are missing.")
+		return
+
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -913,7 +1073,7 @@ def importDataFromCSV(dataType, filename):
 
 	return data
 
-def exportDataframe(dataframe, filename):
+def exportDataframe(dataframe=None, filename=None):
 	"""
 	Exports a nodes, arcs, or assignments dataframe to a `.csv` file.
 
@@ -945,6 +1105,11 @@ def exportDataframe(dataframe, filename):
 		>>> importedNodesDF
 	"""
 
+	# Make sure both input args are provided:
+	if ((dataframe is None) or (filename is None)):
+		print("Error: 1 or more of the 2 required input parameters to function `exportDataframe()` are missing.")
+		return
+
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -971,7 +1136,7 @@ def exportDataframe(dataframe, filename):
 
 	return
 
-def importDataframe(filename, intCols=False, useIndex=True):
+def importDataframe(filename=None, intCols=False, useIndex=True):
 	"""
 	Imports a VeRoViz nodes, arcs, or assignments dataframe from a .csv file.  This function returns a pandas dataframe.
 
@@ -1023,6 +1188,11 @@ def importDataframe(filename, intCols=False, useIndex=True):
 		>>> importedNodesDF
 	"""
 
+	# Make sure filename is provided
+	if (filename is None):
+		print("Error: filename is missing as an input to function `importDataframe()`.")
+		return
+
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -1042,7 +1212,7 @@ def importDataframe(filename, intCols=False, useIndex=True):
 
 	return df
 
-def getConvexHull(locs):
+def getConvexHull(locs=None):
 	"""
 	Find the convex hull of a set of points.
 	
@@ -1102,15 +1272,15 @@ def getConvexHull(locs):
 
 	return ch
 
-def isPointInPoly(loc, poly):
+def isPointInPoly(loc=None, poly=None):
 	"""
 	Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be "inside".
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The coordinate of the point, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
-	poly: list of lists
+	poly: list of lists, Required
 		A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored. 
 
 	Returns
@@ -1201,15 +1371,15 @@ def isPointInPoly(loc, poly):
 		
 	return inside
 
-def isPathInPoly(path, poly):
+def isPathInPoly(path=None, poly=None):
 	"""
 	Determine if a given path is completely within the boundary of a polygon. 
 
 	Parameters
 	----------
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
-	poly: list of lists
+	poly: list of lists, Required
 		A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 	
 	
@@ -1298,15 +1468,15 @@ def isPathInPoly(path, poly):
 
 	return inside
 
-def isPathCrossPoly(path, poly):
+def isPathCrossPoly(path=None, poly=None):
 	"""
 	Determine if a given path crosses the boundary of a polygon.
 
 	Parameters
 	----------
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
-	poly: list of lists
+	poly: list of lists, Required
 		A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 
 	Returns
@@ -1389,18 +1559,17 @@ def isPathCrossPoly(path, poly):
 
 	return crossFlag
 
-def isPassPath(loc, path, tolerance):
+def isPassPath(loc=None, path=None, tolerance=None):
 	'''
-	Determine if any point along a path is within tolerance meters of a stationary point.
-	(did our path pass by the target?)
+	Determine if any point along a path is within tolerance meters of a stationary point (i.e., did our path pass by the target?).
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The stationary point to be tested if it has been passed, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
-	tolerance: float
+	tolerance: float, Required
 		How close must the path be to the stationary location to be considered as "passed".  The units are in meters.
 	
 		
@@ -1466,17 +1635,17 @@ def isPassPath(loc, path, tolerance):
 
 	return passFlag
 
-def pointInDistance2D(loc, direction, distMeters):
+def pointInDistance2D(loc=None, direction=None, distMeters=None):
 	"""
 	Find the [lat, lon, alt] coordinate of a point that is a given distance away from a current location at a given heading. This can be useful for determining where a vehicle may be in the future (assuming constant velocity and straight-line travel).
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.		
-	direction: float
+	direction: float, Required
 		The direction of travel from the current location, in units of degrees.  The range is [0, 360], where north is 0 degrees, east is 90 degrees, south is 180 degrees, and west is 270 degrees.
-	distMeters: float
+	distMeters: float, Required
 		The straight-line distance to be traveled, in meters, from the current location in the given direction.
 
 	Returns
@@ -1518,15 +1687,15 @@ def pointInDistance2D(loc, direction, distMeters):
 
 	return newLoc
 
-def minDistLoc2Path(loc, path):
+def minDistLoc2Path(loc=None, path=None):
 	"""
 	Calculate the minimum distance, in [meters], from a single stationary location (target) to any point along a path.
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The coordinate of the stationary location, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  
 
 	Returns
@@ -1582,21 +1751,152 @@ def minDistLoc2Path(loc, path):
 
 	return distMeters
 
-def distance2D(loc1, loc2):
+
+def closestPointLoc2Path(loc=None, path=None):
 	"""
-	Calculates the geodesic distance between two locations, using the geopy library.  Altitude is ignored.
+	Find the point along a given line that is closest to a given location.
 
 	Parameters
 	----------
-	loc1: list
+	loc: list, Required
+		The coordinate of the current coordinate, in [lat, lon, alt] format
+	path: list of lists, Required
+		Specifies the ordered collection of lat/lon coordinates comprising a path.   This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored. 	
+
+	Returns
+	-------
+	minLoc: list specifying a location, in [lat, lon] format.
+	distMeters: The distance from the given location to minLoc.
+
+	Examples
+	--------
+	Prepare some data
+		>>> import veroviz
+		>>> path = [[42.50, -78.10], [42.50, -78.90]]
+		>>> loc1 = [42.50, -78.50]
+		>>> loc2 = [42.51, -78.50]
+
+	Example 1 - The location is on the path:
+		>>> vrv.closestPointLoc2Path(loc1, path)
+		([42.5, -78.5], 0.0)
+
+	Example 2 - The minimum distance is between points on the path:
+		>>> vrv.closestPointLoc2Path(loc2, path)
+		([42.5, -78.5], 1033.287213199036)
+
+
+	Example 3 - The location and path include altitudes (which are ignored):
+		>>> path2 = [[42.50, -78.40, 100],
+		...          [42.50, -78.60, 200],
+		...          [42.40, -78.70, 100]]
+		>>> loc3  = [42.51, -78.3, 300]
+		>>> vrv.closestPointLoc2Path(loc3, path2)
+		([42.5, -78.6, 0], 8293.970453010768)
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Path(loc, path)
+	if (not valFlag):
+		print (errorMsg)
+		return (None, None)
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	lstLine = []
+	for i in range(1, len(path)):
+		lstLine.append([path[i - 1], path[i]])
+
+	distMeters = geoMinDistLoc2Line(loc, lstLine[0])
+	minPoint = loc
+
+	for i in range(len(lstLine)):
+		tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
+		minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
+
+		if (distMeters > tmpDistMeters):
+			distMeters = tmpDistMeters
+			minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
+
+		if (len(minPoint)==3):
+			minPoint[2] = 0
+
+	return (minPoint, distMeters)
+	
+def closestNode2Loc(loc=None, nodes=None):
+	"""
+	Return the closest node in the dataframe to the given location.
+
+	Parameters
+	----------
+	loc: list, Required
+		The coordinate of given location, in [lat, lon, alt] format.
+	nodes: A :ref:`Nodes` dataframe, Required
+		Dataframe containing an existing set of nodes.
+
+	Returns
+	-------
+	minNodeID: int
+		A node id of the closest node
+	distMeters: float
+		The minimum distance is returned
+
+	Examples
+	--------
+	Prepare some data
+		>>> import veroviz
+		>>> loc1 = [42.50, -78.50]
+		locs = [[42.8871085, -78.8731949],
+		[42.8888311, -78.8649649],
+		[42.8802158, -78.8660787],
+		[42.8845705, -78.8762794],
+		[42.8908031, -78.8770140]]
+
+		myNodes = vrv.createNodesFromLocs(locs=locs)
+
+	Example 1 - Closest node:
+		>>> vrv.closestNode2Loc(loc1, myNodes)
+		(3, 51806.78820361799)
+	"""
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestNode2Loc(loc, nodes)
+	if (not valFlag):
+		print (errorMsg)
+		return [None, None]
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	distMeters = float('Inf')
+	minNodeID = None
+
+	for i in range(len(nodes)):
+		nodeLat=nodes.iloc[i]['lat']
+		nodeLon=nodes.iloc[i]['lon']
+		tmpDistMeters = distance2D(loc, [nodeLat, nodeLon])
+
+		if (tmpDistMeters < distMeters):
+			distMeters = tmpDistMeters
+			minNodeID = nodes.iloc[i]['id']
+
+	if (minNodeID == None):
+		return [None, None]
+
+	return [minNodeID, distMeters]	
+	
+def distance2D(loc1=None, loc2=None):
+	"""
+	Calculates the geodesic distance, in meters, between two locations, using the geopy library.  Altitude is ignored.
+
+	Parameters
+	----------
+	loc1: list, Required
 		First location, in [lat, lon] format.
-	loc2: list
+	loc2: list, Required
 		Second location, in [lat, lon] format.
 	
 	Return
 	------
 	float
-		Geodesic distance between the two locations.
+		Geodesic distance, in meters, between the two locations.
 
 	Example
 	-------
@@ -1619,21 +1919,21 @@ def distance2D(loc1, loc2):
 
 	return distMeters
 
-def distance3D(loc1, loc2):
+def distance3D(loc1=None, loc2=None):
 	"""
-	Estimates the distance between two point, including changes in altitude.  The calculation combines geopy's geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.
+	Estimates the distance, in meters, between two point, including changes in altitude.  The calculation combines geopy's geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.
 
 	Parameters
 	----------
-	loc1: list
+	loc1: list, Required
 		First location, in [lat, lon, alt] format.
-	loc2: list
+	loc2: list, Required
 		Second location, in [lat, lon, alt] format.
 	
 	Return
 	------
 	float
-		Distance between the two locations.
+		Distance, in meters, between the two locations.
 
 	Example
 	-------
@@ -1656,19 +1956,19 @@ def distance3D(loc1, loc2):
 
 	return distMeters
 
-def distancePath2D(path):
+def distancePath2D(path=None):
 	"""
-	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.  
+	Calculate the total geodesic distance, in meters, along a path defined by [lat, lon] coordinates.  
 
 	Parameters
 	----------
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...].
 
 	Return
 	------
 	float
-		Total length of the path.
+		Total length of the path, in meters.
 
 	Example
 	-------
@@ -1688,19 +1988,19 @@ def distancePath2D(path):
 
 	dist = 0
 	for i in range(0, len(path) - 1):
-		dist += distance2D(path[i], path[i + 1])
+		dist += geoDistance2D(path[i], path[i + 1])
 
 	return dist
 
-def getHeading(currentLoc, goalLoc):
+def getHeading(currentLoc=None, goalLoc=None):
 	"""
 	Finds the heading required to travel from a current location to a goal location.  North is 0-degrees, east is 90-degrees, south is 180-degrees, west is 270-degrees.
 
 	Parameters
 	----------
-	currentLoc: list
+	currentLoc: list, Required
 		The [lat, lon] of current location
-	goalLoc: list
+	goalLoc: list, Required
 		The [lat, lon] of goal location
 
 	Return
@@ -2168,10 +2468,90 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	[valFlag, errorMsg, warningMsg] = valReverseGeocode(location, dataProvider, dataProviderArgs)
 	if (not valFlag):
 		print (errorMsg)
-		return
+		return (None, None)
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
 	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
 
 	return (loc, address)	
+
+def isochrones(location=None, locationType='start', travelMode='driving-car', rangeType='distance', rangeSize=None, interval=None, smoothing=25, dataProvider=None, dataProviderArgs=None):    
+	"""
+	Finds isochrones (EXPLAIN) to or from a given location.Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
+
+	Parameters
+	----------
+	location: list, Required
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored (i.e., assumed to be 0).
+	locationType: string, Required, default as 'start'
+		Specifies whether `location` is the start or the destination.  Valid options are 'start' or 'destination'
+	travelMode: string, Required, default as 'driving-car'
+		Specifies the mode of travel.  Valid options are: 'driving-car', 'driving-hgv', 'cycling-regular', 'cycling-road', 'cycling-mountain', 'cycling-electric', 'foot-walking', 'foot-hiking', or 'wheelchair'.
+	rangeType: string, Required, default as 'distance'
+		Indicates whether the isochrones are based on distance or time.  Valid options are 'distance' or 'time'.
+	rangeSize: positive float, Required, default as None
+		The isochrones will indicate the area accessible from the given location within the rangeSize.  rangeSize is in units of [meters] if rangeType equals 'distance'; rangeSize is in units of [seconds] if rangeType equals 'time'.
+	interval: float, Optional, default as None
+		If provided, this parameter can be used to generate multiple concentric isochrones.  For example, if rangeSize = 90, and interval = 30, isochrones will be identified for ranges of 30, 60, and 90 units.  If interval is not provided (as is the default), only one isochrone will be determined.
+	smoothing: float in range [0, 100], Optional, default as 25
+		Indicates the granularity of the isochrones.  Smoothing values close to 0 will produce jagged isochrones; values close to 100 will generally result in smooth isochrones.	
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining isochrone data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	dictionary with nested dictionaries and lists
+		This dictionary has the following structure:
+			{
+				'location': [lat, lon],		# Matches the user's 'location' input value
+				'boundingRegion': [[lat, lon], [lat, lon], [lat, lon], [lat, lon]],  # The smallest rectangle that encloses all isochrones.
+				'isochrones':
+				[
+					{
+						'value':  # Either the time or distance assoc. with this isochrone.
+						'valueUnits': # either 'seconds' or 'meters'.
+						'area':  # The area enclosed by the isochrone, in square meters.
+						'pop':   # The estimated population within the isochrone.
+						'reachfactor':  # FIXME -- not sure what this represents.
+						'poly': [[]]	# A list of lists describing polylines.  (FIXME).
+								A list of GPS coordinates, of the form [[[lat, lon], [lat, lon], ..., [lat, lon]], []] defining a polygon.  This polygon describes the isochrones.
+					},
+					{
+						...
+					}
+				]
+			}    						
+		
+	Note
+	----
+	Currently, only 'ors-online' is supported.
+	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for isochrones.  
+
+	Examples
+	--------
+                     	
+	FIXME
+
+	"""
+	
+	
+	# validation
+	[valFlag, errorMsg, warningMsg] = valIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	
+	if (interval == None):
+		interval = rangeSize
+	else:
+		interval = min(interval, rangeSize)
+		
+	iso = privIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs)
+	
+	return iso

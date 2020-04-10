@@ -602,4 +602,135 @@ def orsReverseGeocode(loc, APIkey):
 	except:
 		print("Error: ", sys.exc_info()[1])
 		raise 
+
+
+
+def orsIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoothing, APIkey):
+	"""
+	
+	FIXME!
+	
+	A function to get a list of shapepoints from start coordinate to end coordinate. 
+	Parameters
+	----------
+	startLoc: list
+		Start location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
+	endLoc: list
+		End location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
+	travelMode: string, {fastest}
+		Optional, default as 'fastest'. Choose a travel mode as a parameter for ORS
+	Returns
+	-------
+	path: list of lists
+		A list of coordinates in sequence that shape the route from startLoc to endLoc
+	timeInSeconds: double   FIXME????
+		time between current shapepoint and previous shapepoint, the first element should be 0  FIXME???
+	distInMeters: double    FIXME???
+		distance between current shapepoint and previous shapepoint, the first element should be 0  FIXME???
+	"""
+
+
+	"""
+	The following "travelMode" options are available in ORS:
+		'driving-car'		('fastest')	
+		'driving-hgv'		('truck' - fastest)
+		'cycling-regular'	('cycling')
+		'cycling-road'
+		'cycling-mountain'
+		'cycling-electric'
+		'foot-walking'
+		'foot-hiking'
+		'wheelchair'
+		
+		There is no "shortest" option    
+	"""
+		
+	try:
+		travelMode = travelMode.lower()
+	except:
+		pass
+
+	try:
+		locType = locType.lower()
+	except:
+		pass
+	    
+	isoUrl = ('https://api.openrouteservice.org/v2/isochrones/%s' % (travelMode))
+
+	headers = {
+				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+				'Authorization': APIkey,
+				'Content-Type': 'application/json'}
+
+	try:
+
+		# ORS uses [lon, lat] order:
+		locations  = [[loc[1], loc[0]]]
+		attributes = ['area', 'reachfactor', 'total_pop']
+		units      = 'm'	# only applicable if rangeType == 'distance'
+		areaUnits  = 'm'
+		if (rangeType == 'time'):
+			valueUnits = 'seconds'
+		else:
+			valueUnits = 'meters'
+		
+		encoded_body = json.dumps({
+			"locations": locations,
+			"location_type": locType,
+			"attributes": attributes,
+			"range": [rangeSize],
+			"interval": interval,
+			"range_type": rangeType,
+			"smoothing": smoothing,
+			"area_units": areaUnits,
+			"units": units})
+
+		http = urllib3.PoolManager()
+		response = http.request('POST', isoUrl, headers=headers, body=encoded_body)
+
+		data = json.loads(response.data.decode('utf-8'))
+		http_status = response.status
+
+		if (http_status == 200):
+			# OK	
+			iso = {}
+
+			iso['location'] = loc
+
+			# Build boundingRegion, from [wLon, sLat, eLon, nLat]
+			# Ex:  [8.685772, 49.417915, 8.689263, 49.421278]
+			[wLon, sLat, eLon, nLat] = data['bbox']
+			iso['boundingRegion'] = [[sLat, wLon], [nLat, wLon], [nLat, eLon], [sLat, eLon], [sLat, wLon]]
+
+			iso['isochrones'] = []
+
+			for i in range(0, len(data['features'])):
+				iso['isochrones'].append({
+					'value'      : data['features'][i]['properties']['value'],
+					'valueUnits' : valueUnits,
+					'area'       : data['features'][i]['properties']['area'],
+					'pop'        : data['features'][i]['properties']['total_pop'],
+					'reachfactor': data['features'][i]['properties']['reachfactor'],
+					'poly'       : []
+					})
+	
+				for j in range(0, len(data['features'][i]['geometry']['coordinates'])):
+					tmp = []
+					for k in range(0, len(data['features'][i]['geometry']['coordinates'][j])):
+						tmp.append([
+							data['features'][i]['geometry']['coordinates'][j][k][1], 
+							data['features'][i]['geometry']['coordinates'][j][k][0] ])
+			
+					iso['isochrones'][i]['poly'].append(tmp)            
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+
+		return iso
+
+	except:
+		print("Error: ", sys.exc_info()[1])
+		raise
 		
