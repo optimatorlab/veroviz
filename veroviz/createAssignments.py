@@ -295,7 +295,7 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	
 	if (not valFlag):
 		print (errorMsg)
-		return
+		return (None, None)
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 		

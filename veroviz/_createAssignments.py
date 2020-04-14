@@ -8,6 +8,9 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
 
+	# Ensure leading slash
+	modelFile = addHeadSlash(modelFile)
+
 	# assignment dataframe
 	assignments = initDataframe('Assignments')
 

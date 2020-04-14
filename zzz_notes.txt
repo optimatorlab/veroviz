@@ -1,0 +1,73 @@
+https://developer.here.com/documentation/routing/dev_guide/topics/resource-calculate-isoline.html#resource-calculate-isoline
+
+
+https://api.openrouteservice.org/v2/isochrones/wheelchair
+
+profile:
+	(this goes in the URL)
+	'driving-car'
+	'driving-hgv'
+	'cycling-regular'
+	'cycling-road'
+	'cycling-mountain'
+	'cycling-electric'
+	'foot-walking'
+	'foot-hiking'						
+	'wheelchair'
+
+location(s):
+	list [lon, lat]
+	(we'll convert to list of list)
+	
+
+range:
+	float
+	(we'll convert to list)
+
+range_type / rangeType
+	string
+	either 'time' or 'distance'
+	
+
+attributes:
+	list?
+	area
+	reachfactor
+	total_pop
+	
+xxx intersections
+	boolean
+	leave as default (false)
+	
+interval
+	float
+	
+location_type
+	string
+	start or destination
+	
+options
+	???
+	ignored
+	
+smoothing
+	float in [0,100]
+	defaults as 25
+	0 --> rough, 100 --> smooth
+	
+area_units
+	string
+	defaults as 'm'		
+	(is this for the output??)
+	
+units
+	string
+	defaults as 'm'
+	This only applies if range_type == 'distance'
+	We'll just leave this as-is.
+	
+
+
+
+	
+	

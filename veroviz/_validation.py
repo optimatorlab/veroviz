@@ -2229,8 +2229,9 @@ def valNodes(nodes):
 					break
 
 	if (valFlag and nodes is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(nodes.lat, nodes.lon))))
-		warningMsg += newWarningMsg
+		if (len(nodes) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(nodes.lat, nodes.lon))))
+			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2253,12 +2254,14 @@ def valAssignments(assignments):
 					break
 
 	if (valFlag and assignments is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.startLat, assignments.startLon))))
-		warningMsg += newWarningMsg
+		if (len(assignments) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.startLat, assignments.startLon))))
+			warningMsg += newWarningMsg
 
 	if (valFlag and assignments is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.endLat, assignments.endLon))))
-		warningMsg += newWarningMsg
+		if (len(assignments) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.endLat, assignments.endLon))))
+			warningMsg += newWarningMsg
 
 	if (valFlag):
 		for i in assignments.index:
@@ -2285,12 +2288,14 @@ def valArcs(arcs):
 					break
 
 	if (valFlag and arcs is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.startLat, arcs.startLon))))
-		warningMsg += newWarningMsg
+		if (len(arcs) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.startLat, arcs.startLon))))
+			warningMsg += newWarningMsg
 
 	if (valFlag and arcs is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.endLat, arcs.endLon))))
-		warningMsg += newWarningMsg
+		if (len(arcs) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.endLat, arcs.endLon))))
+			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2835,9 +2840,13 @@ def _valLatLonList(locs):
 		valFlag = False
 		errorMsg = "Error: `locs` should not be None."
 	else:
-		if (type(locs[0]) is not list):
+		if (type(locs) is not list):
 			valFlag = False
-			errorMsg = "Error: A list of lists was expected to describe a sequence of locations, in the format of form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...]."
+			errorMsg = "Error: A list of lists was expected to describe a sequence of locations, in the format of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...]."
+		if (valFlag):
+			if (len(locs) == 0):
+				valFlag = False
+				errorMsg = "Error: A list of lists was expected to describe a sequence of locations, in the format of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...]."
 	
 		if (valFlag):
 			for i in range(len(locs)):

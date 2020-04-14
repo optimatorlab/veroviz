@@ -8,7 +8,7 @@ from veroviz._queryORS import orsGetShapepointsTimeDist
 from veroviz._internal import distributeTimeDist
 from veroviz._internal import locs2Dict
 from veroviz._internal import loc2Dict
-from veroviz._internal import replaceBackslashToSlash
+from veroviz._internal import replaceBackslashToSlash, addHeadSlash
 
 from veroviz._buildFlightProfile import buildNoLoiteringFlight
 from veroviz._buildFlightProfile import getTimeDistFromFlight
@@ -23,6 +23,9 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
+
+	# Ensure leading slash
+	modelFile = addHeadSlash(modelFile)
 
 	try:
 		dataProvider = dataProvider.lower()
@@ -155,6 +158,9 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
+	
+	# Ensure leading slash
+	modelFile = addHeadSlash(modelFile)
 
 	# Generate flight profile without loitering
 	flight = buildNoLoiteringFlight(routeType, startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)

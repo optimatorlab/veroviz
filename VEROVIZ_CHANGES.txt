@@ -1,0 +1,169 @@
+Fixed bug in validation for getConvexHull (valGetConvexHull()).
+
+Added validation for lists of lat/lon coordinates (_valLatLonList()).  Now checks for existence of list of lists.
+
+Added validation for all Utility functions.  Now checks for existence of required inputs.
+
+
+New Utility Functions:
+	closestNode2Loc()
+	closestPointLoc2Path()
+	lengthFromNodeSeq()
+	calcArea()
+	isochrones()
+
+	LP:  zip function(s)?
+	CM:  gantt()?
+	
+	CM:  elevation?
+	CM:  draw elevation profile?
+	CM:  import from GTFS?
+	
+
+New Leaflet Functions:
+	addLeafletIcon()
+	addLeafletIsochrones()
+
+
+Updates:
+	addLeafletCircle()
+		added `popupText` option
+		added `text` option. (to display text in center of object)
+		added `fontSize`
+		added `fontColor`
+		
+	addLeafletMarker()
+		added `popupText` option
+		added `text` option. (to display text in center of object)
+		added `fontSize`
+		added `fontColor`
+		
+	addLeafletPolygon()
+		added `popupText` option
+
+	addLeafletPolyline()
+		added `popupText` option
+
+		
+New mini-tutorials:
+	- findLocsAtTime (#179)
+	- paths from arcs/assignments (#177)  ???	
+				
+				
+	
+Updated VeRoViz Cesium Viewer/Plugin
+	What's the deal with server.cjs?
+	What version of Cesium to use?
+	
+	
+	
+		
+
+
+
+def valCalcPerimeter2D(path, closeLoop, distUnits):
+
+def valLengthFromNodeSeq(nodeSeq, lengthDict):
+
+2354 -- def valClosestNode2Loc(loc, nodes):
+
+
+2369 -- def valClosestPointLoc2Path(loc, path):
+
+
+3341 -- def valclosestNode2Loc(loc, nodes):
+	Wrong case
+	Duplicate
+
+3356 -- def valClosestPointLoc2Path(loc, path):
+	Duplicate
+
+
+
+
+
+#30 -- Validate _valLatLonList
+
+- [x] valAddLeafletPolygon(points)
+
+- [x] valAddLeafletPolyline(points)
+
+- [x] valGetSnapLocBatch(locs)
+
+- [x] valCalcPerimeter2D(path)
+
+- [x] valCreateArcsFromLocSeq(locSeq)
+
+- [x] valCreateNodesFromLocs(locs)
+
+- [x] valCreateAssignmentsFromLocSeq2D(locSeq)
+
+
+- [x] * valNodes(nodes)
+
+- [x] * valAssignments(assignments)
+
+- [x] * valArcs(arcs)
+
+
+- [x] valGetConvexHull(locs)
+
+- [x] valIsPointInPoly(poly)
+
+- [x] valIsPathInPoly(path, poly)
+
+- [x] valIsPathCrossPoly(path, poly)
+
+- [x] valIsPassPath(path)
+
+- [x] valMinDistLoc2Path(path)
+
+- [x] valDistancePath2D(path)
+
+- [x] valGetMapBoundary(locs)
+
+- [x] NEW valClosestPointLoc2Path(path)
+
+- [x] _valBoundingRegion(boundingRegion)
+
+
+
+
+	if (valFlag):
+		if (type(nodeSeq) is not list):
+			valFlag = False
+			errorMsg = "Error: `nodeSeq` must be a sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+
+
+def _valLatLon(loc):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (loc is None):
+		valFlag = False
+		errorMsg = "Error: `loc` should not be None."
+	else:
+		if (len(loc) == 2 or len(loc) == 3):
+			if (valFlag):
+				if (loc[0] < -90 or loc[0] > 90):
+					valFlag = False
+					errorMsg = "Error: latitude is out of range.  The valid range is [-90, +90] degrees."
+			if (valFlag):
+				if (loc[1] < -180 or loc[1] > 180):
+					valFlag = False
+					errorMsg = "Error: longitude is out of range.  The valid range is [-180, +180] degrees."
+			if (valFlag and len(loc) == 3):
+				[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(loc[2], "altitude")
+				warningMsg += newWarningMsg
+		else:
+			valFlag = False
+			errorMsg = "Error:  location must be in the format of [lat, lon] or [lat, lon, alt]."
+
+	return [valFlag, errorMsg, warningMsg]
+
+
+
+
+
