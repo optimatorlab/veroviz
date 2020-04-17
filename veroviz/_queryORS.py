@@ -64,10 +64,10 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 	-------
 	path: list of lists
 		A list of coordinates in sequence that shape the route from startLoc to endLoc
-	timeInSeconds: double   FIXME????
-		time between current shapepoint and previous shapepoint, the first element should be 0  FIXME???
-	distInMeters: double    FIXME???
-		distance between current shapepoint and previous shapepoint, the first element should be 0  FIXME???
+	timeInSeconds: list
+		time between current shapepoint and previous shapepoint, the first element should be 0 
+	distInMeters: list
+		distance between current shapepoint and previous shapepoint, the first element should be 0
 	"""
 
 	dicStartLoc = loc2Dict(startLoc)
@@ -529,7 +529,9 @@ def orsGeocode(text, APIkey):
 	----------
 	text: string
 		A text string describing an address, city, or landmark.
-	    
+	APIkey: string
+		Enables access to ORS server.
+			    
 	Returns
 	-------
 	loc: list
@@ -569,6 +571,8 @@ def orsReverseGeocode(loc, APIkey):
 	----------
 	loc: list
 		Of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.
+	APIkey: string
+		Enables access to ORS server.
 	    
 	Returns
 	-------
@@ -607,42 +611,31 @@ def orsReverseGeocode(loc, APIkey):
 
 def orsIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoothing, APIkey):
 	"""
-	
-	FIXME!
-	
-	A function to get a list of shapepoints from start coordinate to end coordinate. 
+	Finds isochrones to or from a given location. 
+
 	Parameters
 	----------
-	startLoc: list
-		Start location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
-	endLoc: list
-		End location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
-	travelMode: string, {fastest}
-		Optional, default as 'fastest'. Choose a travel mode as a parameter for ORS
+	loc: list
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored (i.e., assumed to be 0).
+	locType: string
+		Specifies whether `location` is the start or the destination.  Valid options are 'start' or 'destination'
+	travelMode: string
+		Specifies the mode of travel.  Valid options are: 'driving-car', 'driving-hgv', 'cycling-regular', 'cycling-road', 'cycling-mountain', 'cycling-electric', 'foot-walking', 'foot-hiking', or 'wheelchair'.
+	rangeType: string
+		Indicates whether the isochrones are based on distance or time.  Valid options are 'distance' or 'time'.
+	rangeSize: positive float
+		The isochrones will indicate the area accessible from the given location within the rangeSize.  rangeSize is in units of [meters] if rangeType equals 'distance'; rangeSize is in units of [seconds] if rangeType equals 'time'.
+	interval: float
+		If provided, this parameter can be used to generate multiple concentric isochrones.  For example, if rangeSize = 90, and interval = 30, isochrones will be identified for ranges of 30, 60, and 90 units.  If interval is not provided (as is the default), only one isochrone will be determined.
+	smoothing: float in range [0, 100]
+		Indicates the granularity of the isochrones.  Smoothing values close to 0 will produce jagged isochrones; values close to 100 will generally result in smooth isochrones.		
+	APIkey: string
+		Enables access to ORS server.
+	
 	Returns
 	-------
-	path: list of lists
-		A list of coordinates in sequence that shape the route from startLoc to endLoc
-	timeInSeconds: double   FIXME????
-		time between current shapepoint and previous shapepoint, the first element should be 0  FIXME???
-	distInMeters: double    FIXME???
-		distance between current shapepoint and previous shapepoint, the first element should be 0  FIXME???
-	"""
+	dictionary with nested dictionaries and lists
 
-
-	"""
-	The following "travelMode" options are available in ORS:
-		'driving-car'		('fastest')	
-		'driving-hgv'		('truck' - fastest)
-		'cycling-regular'	('cycling')
-		'cycling-road'
-		'cycling-mountain'
-		'cycling-electric'
-		'foot-walking'
-		'foot-hiking'
-		'wheelchair'
-		
-		There is no "shortest" option    
 	"""
 		
 	try:
@@ -729,6 +722,89 @@ def orsIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoo
 			return
 
 		return iso
+
+	except:
+		print("Error: ", sys.exc_info()[1])
+		raise
+
+
+def orsGetElevation(locs, APIkey):
+	"""
+	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  
+
+	Parameters
+	----------
+	locs: list of lists, Required, default as None
+		A list of one or more GPS coordinate of the form [[lat, lon], ...] or [[lat, lon, alt], ...].  If altitude is included in locs, the function will add the elevation to the input altitude.  Otherwise, the input altitude will be assumed to be 0.
+	APIkey: string
+		Enables access to ORS server.
+	
+	Return
+	------
+	list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], ..., [lat, lon, altMSL]].
+	"""
+	
+	if (len(locs) == 1):
+		dataType = 'point'
+		elevUrl = ('https://api.openrouteservice.org/elevation/point')
+		geometry = [locs[0][1], locs[0][0]]   # ORS uses [lon, lat] order:
+
+		encoded_body = json.dumps({
+			"format_in": "point",
+			"format_out": "point",
+			"geometry": geometry})		
+	else:
+		dataType = 'line'
+		elevUrl = ('https://api.openrouteservice.org/elevation/line')
+		geometry = []
+		for i in range(0, len(locs)):
+			geometry.append([locs[i][1], locs[i][0]])
+
+		encoded_body = json.dumps({
+			"format_in": "polyline",
+			"format_out": "polyline",
+			"geometry": geometry})
+	
+	headers = {
+				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+				'Authorization': APIkey,
+				'Content-Type': 'application/json'}
+
+	try:
+		
+		http = urllib3.PoolManager()
+		response = http.request('POST', elevUrl, headers=headers, body=encoded_body)
+
+		data = json.loads(response.data.decode('utf-8'))
+		http_status = response.status
+
+		locsWithAlt = []
+		
+		if (http_status == 200):
+			# OK
+			if (dataType == 'point'):
+				# data['geometry'][]
+				if (len(locs[0]) == 2):
+					alt = data['geometry'][2]
+				else:
+					alt = locs[0][2] + data['geometry'][2]
+				locsWithAlt.append([ data['geometry'][1], data['geometry'][0], alt ])
+			else:
+				# data['geometry'][[],[],...]
+				for i in range(0, len(data['geometry'])):
+					if (len(locs[i]) == 2):
+						alt = data['geometry'][i][2]
+					else:
+						alt = locs[i][2] + data['geometry'][i][2]
+					locsWithAlt.append([ data['geometry'][i][1], data['geometry'][i][0], alt ])
+			
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+
+		return locsWithAlt
 
 	except:
 		print("Error: ", sys.exc_info()[1])

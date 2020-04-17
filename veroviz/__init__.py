@@ -57,6 +57,7 @@ from veroviz._queryORS import orsGetTimeDistMany2One
 from veroviz._queryORS import orsGeocode
 from veroviz._queryORS import orsReverseGeocode
 from veroviz._queryORS import orsIsochrones
+from veroviz._queryORS import orsGetElevation
 
 # OSRM related
 from veroviz._queryOSRM import osrmGetSnapToRoadLatLon

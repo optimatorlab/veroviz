@@ -18,7 +18,7 @@ def privIsochrones(location, locationType, travelMode, rangeType, rangeSize, int
 
 	# FIXME -- None is not allowed    
 
-	if (geoDataProviderDictionary[dataProvider] == 'ors-online'):
+	if (isoDataProviderDictionary[dataProvider] == 'ors-online'):
 		iso = orsIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProviderArgs['APIkey'])
 		return iso
 		

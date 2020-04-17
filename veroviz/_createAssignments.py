@@ -1,9 +1,9 @@
 from veroviz._common import *
 from veroviz._internal import loc2Dict
 from veroviz.utilities import initDataframe
-from veroviz._internal import replaceBackslashToSlash
+from veroviz._internal import replaceBackslashToSlash, addHeadSlash
 
-def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None):
+def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
 				
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
@@ -30,6 +30,8 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 		'endLat': dicLoc['lat'],
 		'endLon': dicLoc['lon'],
 		'endAltMeters': dicLoc['alt'],
+		'ganttColor': ganttColor,
+		'popupText': popupText,
 		'leafletColor': None, 
 		'leafletWeight': None,
 		'leafletStyle': None,

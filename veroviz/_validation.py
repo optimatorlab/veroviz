@@ -2,7 +2,7 @@ from veroviz._common import *
 from veroviz._geometry import *
 from veroviz._internal import *
 
-def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, incrementName, incrementStart, nodeDistrib, nodeDistribArgs, snapToRoad, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText, dataProvider, dataProviderArgs):
+def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, incrementName, incrementStart, nodeDistrib, nodeDistribArgs, snapToRoad, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -328,7 +328,7 @@ def valGetTimeDistScalar3D(startLoc, endLoc, outputDistUnits, outputTimeUnits, t
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -409,6 +409,13 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 				
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -500,7 +507,7 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, useArrows, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor):
+def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, useArrows, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -663,29 +670,13 @@ def valAddLeafletIcon(mapObject, mapFilename, mapBackground, mapBoundary, zoomSt
 		warningMsg += newWarningMsg
 
 	if (valFlag):
-		if (iconPrefix is None):
-			valFlag = False
-			errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
-		elif (iconType is None):	
-			valFlag = False
-			errorMsg = "Error: A valid `iconType` is required."
-		else:
-			if (iconPrefix.lower() not in leafletIconPrefixList):
-				valFlag = False
-				errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
-			elif (iconPrefix.lower() == 'glyphicon'):
-				if (iconType.lower() not in leafletIconGlyphicon):
-					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
-			elif (iconPrefix.lower() == 'fa'):
-				if (iconType.lower() not in leafletIconFa):
-					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
-
+		[valFlag, errorMsg, newWarningMsg] =_valLeafletNodeInputs(iconPrefix, iconType, iconColor) 
+		warningMsg += newWarningMsg
+		
 	if (valFlag):
 		if (iconColor is None):
 			valFlag = False
 			errorMsg = "Error: A valid `iconColor` is required."
-		elif (iconColor.lower() not in leafletColorList):
-			warningMsg += "Warning: `iconColor` value (%s) is not recognized; it may not be displayed properly.\n" % (iconColor)
 
 	return [valFlag, errorMsg, warningMsg]
 	
@@ -716,31 +707,15 @@ def valAddLeafletIsochrones(mapObject, mapFilename, mapBackground, mapBoundary, 
 		if (type(showBoundingRegion) is not bool):
 			valFlag = False
 			errorMsg = "Error: `showBoundingRegion` must be a boolean value (True or False)."
-			
-	if (valFlag):
-		if (iconPrefix is None):
-			valFlag = False
-			errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
-		elif (iconType is None):	
-			valFlag = False
-			errorMsg = "Error: A valid `iconType` is required."
-		else:
-			if (iconPrefix.lower() not in leafletIconPrefixList):
-				valFlag = False
-				errorMsg = "Error: Choose `iconPrefix` from 'glyphyicon' and 'fa'."
-			elif (iconPrefix.lower() == 'glyphicon'):
-				if (iconType.lower() not in leafletIconGlyphicon):
-					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
-			elif (iconPrefix.lower() == 'fa'):
-				if (iconType.lower() not in leafletIconFa):
-					warningMsg += "Warning: `iconType` value (%s) is not recognized.  It may not be displayed properly.\n" % (iconType)
 
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] =_valLeafletNodeInputs(iconPrefix, iconType, iconColor) 
+		warningMsg += newWarningMsg
+		
 	if (valFlag):
 		if (iconColor is None):
 			valFlag = False
 			errorMsg = "Error: A valid `iconColor` is required."
-		elif (iconColor.lower() not in leafletColorList):
-			warningMsg += "Warning: `iconColor` value (%s) is not recognized; it may not be displayed properly.\n" % (iconColor)
 
 	if (valFlag):
 		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(lineWeight, "lineWeight")
@@ -1083,7 +1058,7 @@ def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesium
 
 	if (valFlag == True):
 		if (cesiumIconColor != None):
-			if (cesiumIconColor not in cesiumColorList):
+			if (expandCesiumColor(cesiumIconColor) not in cesiumColorList):
 				warningMsg += "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive.\n"
 
 	if (valFlag):
@@ -1525,7 +1500,7 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText):
+def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1596,7 +1571,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	return [valFlag, errorMsg, warningMsg]
 
 
-def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1701,10 +1676,16 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+			
 	return [valFlag, errorMsg, warningMsg]	
 
 
-def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1849,9 +1830,15 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]	
 
-def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1966,10 +1953,16 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]	
 
 
-def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2055,10 +2048,16 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 	
 
-def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2148,9 +2147,15 @@ def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec,
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScale, modelMinPxSize, loc, startTimeSec, endTimeSec):
+def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScale, modelMinPxSize, loc, startTimeSec, endTimeSec, ganttColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2207,6 +2212,12 @@ def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScal
 		if (startTimeSec > endTimeSec and endTimeSec != -1):
 			valFlag = False
 			errorMsg = "Error: 'startTimeSec' cannot be greater than 'endTimeSec'."
+
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2646,6 +2657,25 @@ def valIsochrones(location, locationType, travelMode, rangeType, rangeSize, inte
 	
 	return [valFlag, errorMsg, warningMsg]    
 
+def valGetElevation(locs, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (locs is None):
+		valFlag = False
+		errorMsg = "Error: Must provide `locs`, as a list of lists."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locs)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGetElevationDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]    
+
 
 def valClosestNode2Loc(loc, nodes):
 	valFlag = True
@@ -2685,6 +2715,112 @@ def valClosestPointLoc2Path(loc, path):
 		warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
+	
+
+def valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayIndices, missingColor, filename):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+
+	if (assignments is None):
+		valFlag = False
+		errorMsg = "Error: An assignments dataframe is required."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(assignments)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (len(assignments) == 0):
+			valFlag = False
+			errorMsg = "Error: The assignments dataframe is empty."
+	
+	if (objectIDorder is not None):
+		if (valFlag):
+			if (type(objectIDorder) is not list):
+				valFlag = False
+				errorMsg = "Error: `objectIDorder` must be either `None` or a list."
+		if (valFlag):
+			for objectID in objectIDorder:
+				if (objectID not in list(assignments['objectID'])):
+					valFlag = False
+					errorMsg = "Error: `objectIDorder` contains a value ({}) that is not found in the `objectID` column of the assignements dataframe.".format(objectID)
+					break
+	
+	if (valFlag):
+		if (type(separateByModelFile) is not bool):
+			valFlag = False
+			errorMsg = "Error: `separateByModelFile` must be boolean (either `True` or `False`)."
+			
+	
+	# title -- not checked
+	# xAxisLabel -- not checked
+	
+	if (valFlag):
+		if (type(xGrid) is not bool):
+			valFlag = False
+			errorMsg = "Error: `xGrid` must be boolean (either `True` or `False`)."
+
+	if (valFlag):
+		if (type(yGrid) is not bool):
+			valFlag = False
+			errorMsg = "Error: `yGrid` must be boolean (either `True` or `False`)."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(xMin, 'xMin')
+		warningMsg += newWarningMsg
+		
+	if (xMax is not None):
+		if (valFlag):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(xMax, 'xMax')
+			warningMsg += newWarningMsg
+		if (valFlag):
+			if (xMax <= xMin):
+				valFlag = False
+				errorMsg = "Error: `xMax` must be greater than or equal to `xMin` (or `xMax` may be left at its default value of `None`)."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(xGridFreq, 'xGridFreq')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(timeFormat) is not str):
+			valFlag = False
+			errorMsg = "Error: `timeFormat` must be a string.  Valid options are 'dhms', 'hms', 'ms', 'd', 'h', 'm', or 's'."
+	
+	if (valFlag):		
+		if (timeFormat.lower() not in ['dhms', 'hms', 'ms', 'd', 'h', 'm', 's']):
+			valFlag = False
+			errorMsg = "Error: `timeFormat` must be either 'dhms', 'hms', 'ms', 'd', 'h', 'm', or 's'."
+
+	# Not sure if we want to add these warnings...
+    # [d, h, m, s] = getDHMS(max(assignments['endTimeSec']))
+    # if ((d > 0) and timeFormat.lower() in ['hms', 'ms']):
+    #    print("Warning: The time exceeds 24 hours.  Consider using the 'DHMS' format.")
+    # elif((h > 0) and timeFormat.lower() in ['ms']):
+    #     print("Warning: The time exceeds 60 minutes.  Consider using the 'HMS' format.")
+
+	if (valFlag):
+		if (type(overlayIndices) is not bool):
+			valFlag = False
+			errorMsg = "Error: `overlayIndices` must be boolean (either `True` or `False`)."
+
+	if (missingColor is not None):
+		if (valFlag):
+			if (missingColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(missingColor)
+				warningMsg += newWarningMsg
+	
+	if (filename is not None):	
+		if (valFlag):	
+			if (type(filename) is not str):
+				valFlag = False
+				errorMsg = "Error: `filename` must be either `None` or a string."
+
+	return [valFlag, errorMsg, warningMsg]
+		
+
 	
 def _valMapBoundary(mapBoundary, zoomStart):
 	valFlag = True
@@ -2970,6 +3106,28 @@ def _valGeoDataProvider(dataProvider, dataProviderArgs):
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
 
 	return [valFlag, errorMsg, warningMsg]
+	
+def _valGetElevationDataProvider(dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		dataProvider = dataProvider.lower()
+	except:
+		pass
+
+	if (dataProvider not in elevDataProviderDictionary.keys()):
+		valFlag = False
+		errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid option is 'ORS-online'."
+	else:
+		if (elevDataProviderDictionary[dataProvider] == "ors-online"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+	return [valFlag, errorMsg, warningMsg]
+
 	
 def _valIsoDataProvider(travelMode, dataProvider, dataProviderArgs):
 	valFlag = True
@@ -3489,25 +3647,42 @@ def _valLeafletNodeInputs(leafletIconPrefix, leafletIconType, leafletColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
-	
+
+	try:
+		leafletIconPrefix = leafletIconPrefix.lower()
+	except:
+		pass
+			
+	try:
+		leafletIconType = leafletIconType.lower()
+	except:
+		pass
+				
 	if (valFlag == True):
 		if (leafletIconPrefix is not None and leafletIconType is not None):
-			if (leafletIconPrefix.lower() not in leafletIconPrefixList):
+			if (leafletIconPrefix not in leafletIconPrefixList):
 				valFlag = False
-				errorMsg = "Error: Choose leafletIconPrefix from 'glyphyicon' and 'fa'."
-			elif (leafletIconPrefix.lower() == 'glyphicon'):
-				if (leafletIconType.lower() not in leafletIconGlyphicon):
+				errorMsg = "Error: Choose leafletIconPrefix from 'glyphyicon', 'fa', or 'custom'."
+			elif (leafletIconPrefix == 'glyphicon'):
+				if (leafletIconType not in leafletIconGlyphicon):
 					warningMsg += "Warning: leafletIconType value (%s) is not recognized.  It may not be displayed properly.\n" % (leafletIconType)
-			elif (leafletIconPrefix.lower() == 'fa'):
-				if (leafletIconType.lower() not in leafletIconFa):
+			elif (leafletIconPrefix == 'fa'):
+				if (leafletIconType not in leafletIconFa):
 					warningMsg += "Warning: leafletIconType value (%s) is not recognized.  It may not be displayed properly.\n" % (leafletIconType)
+			elif (leafletIconPrefix == 'custom'):
+				[valFlag, errorMsg, newWarningMsg] = _valLeafletCustomIconType(leafletIconType)
+				warningMsg += newWarningMsg
 		elif ((leafletIconPrefix is None and leafletIconType is not None) or (leafletIconPrefix is not None and leafletIconType is None)):
 			warningMsg += "Warning: Both leafletIconPrefix and leafletIconType must be valid.\n"
 
 	if (valFlag == True and leafletColor is not None):
-		if (leafletColor.lower() not in leafletColorList):
-			warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (leafletColor)
-
+		if (leafletIconPrefix in ['fa', 'glyphicon']):
+			if (leafletColor.lower() not in leafletColorList):
+				warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (leafletColor)
+		elif (leafletIconPrefix == 'custom'):
+			if (leafletColor.lower() not in matplotlibColorDict.keys()):
+				warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (leafletColor)
+			
 	return [valFlag, errorMsg, warningMsg]
 
 def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows):
@@ -3575,7 +3750,7 @@ def _valCesiumNodeInputs(cesiumIconType, cesiumColor):
 			warningMsg = "Warning: cesiumIconType is not recognized; it may not be displayed properly.  Note that this field is currently case sensitive."
 
 	if (valFlag == True):
-		if (cesiumColor not in cesiumColorList):
+		if (expandCesiumColor(cesiumColor) not in cesiumColorList):
 			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive."
 
 	return [valFlag, errorMsg, warningMsg]
@@ -3586,7 +3761,7 @@ def _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	warningMsg = ""
 
 	if (valFlag == True):
-		if (cesiumColor not in cesiumColorList):
+		if (expandCesiumColor(cesiumColor) not in cesiumColorList):
 			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive"
 
 	if (valFlag == True):
@@ -3607,6 +3782,28 @@ def _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 		if not (cesiumOpacity > 0 and cesiumOpacity <=1):
 			valFlag = False
 			errorMsg = "Error: cesiumOpacity should between 0 and 1."
+
+	return [valFlag, errorMsg, warningMsg]
+
+def _valLeafletCustomIconType(leafletIconType):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	parts = splitLeafletCustomIconType(leafletIconType)
+
+	# first element describes marker size
+	[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(parts[0], "iconType first element")
+
+	# second element should be either None or a valid matplotlib color
+	if (parts[1] is not None):
+		if (valFlag):
+			if (parts[1] not in matplotlibColorDict.keys()):
+				warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (parts[1])
+
+			# last element should be a non-negative number
+			# only checked if second element is not None
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(parts[2], "iconType third element")
 
 	return [valFlag, errorMsg, warningMsg]
 

@@ -2,7 +2,7 @@ from veroviz._common import *
 from veroviz._validation import valGetShapepoints3D
 from veroviz._getShapepoints import privGetShapepoints3D
 
-def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR):
 
 	"""
 	This function generates 3-dimensional "shapepoints" between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates (and altitudes) that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define movement in three dimensions.
@@ -57,14 +57,16 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.
 	modelMinPxSize: int, Optional, default as 75
 		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. 
-	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
+	cesiumColor: string, Optional, default as "orange"
 		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.
 	cesiumWeight: int, Optional, default as 3
 		The pixel width of the route when displayed in Cesium. 
 	cesiumStyle: string, Optional, default as 'solid'
 		The line style of the route when displayed in Cesium.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Cesium Style` for more information.
 	cesiumOpacity: float in [0, 1], Optional, default as 0.8
-		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency).
+	ganttColor: string, Optional, default as "darkgray"
+		The color of the route elements when displayed in a Gantt chart.		
 
 	Return
 	-------
@@ -91,7 +93,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...     climbRateMPS       = None,
 		...     descentRateMPS     = None,    
 		...     routeType          = 'square',
-		...     cesiumColor        = 'Cesium.Color.RED')
+		...     cesiumColor        = 'red')
 		>>> shapepoints3D_1
 
 
@@ -109,7 +111,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...     climbRateMPS       = None,
 		...     descentRateMPS     = None,    
 		...     routeType          = 'straight',
-		...     cesiumColor        = 'Cesium.Color.GREEN')
+		...     cesiumColor        = 'green')
 		>>> shapepoints3D_2
 
 
@@ -127,7 +129,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...     climbRateMPS       = 10,
 		...     descentRateMPS     = 5,    
 		...     routeType          = 'trapezoidal',
-		...     cesiumColor        = 'Cesium.Color.BLACK')
+		...     cesiumColor        = 'black')
 		>>> shapepoints3D_3a
 
 		>>> shapepoints3D_3b = vrv.getShapepoints3D(
@@ -143,7 +145,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...     climbRateMPS       = 5,
 		...     descentRateMPS     = 1,    
 		...     routeType          = 'trapezoidal',
-		...     cesiumColor        = 'Cesium.Color.BLACK',
+		...     cesiumColor        = 'black',
 		...     cesiumStyle        = 'dashed')
 		>>> shapepoints3D_3b
 
@@ -162,7 +164,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...     climbRateMPS       = None,
 		...     descentRateMPS     = None,    
 		...     routeType          = 'triangular',
-		...     cesiumColor        = 'Cesium.Color.LIGHTPINK')
+		...     cesiumColor        = 'lightpink')
 		>>> shapepoints3D_4
 
 
@@ -211,7 +213,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...     leafletStyle       = 'solid', 
 		...     leafletOpacity     = 0.8, 
 		...     useArrows          = True, 
-		...     cesiumColor        = 'Cesium.Color.ORANGE', 
+		...     cesiumColor        = 'orange', 
 		...     cesiumWeight       = 3, 
 		...     cesiumStyle        = 'solid', 
 		...     cesiumOpacity      = 0.8)
@@ -257,7 +259,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...        dataProvider     = 'ORS-online',
 		...        dataProviderArgs = {'APIkey': os.environ['ORSKEY']}, 
 		...        leafletColor     = 'blue', 
-		...        cesiumColor      = 'Cesium.Color.BLUE')
+		...        cesiumColor      = 'blue')
 
 		>>> # Make the truck stay idle when it arrives at node 3:
 		>>> truckShapepoints = vrv.addStaticAssignment(
@@ -287,7 +289,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...        descentRateMPS     = None,    
 		...        routeType          = 'square',
 		...        earliestLandTime   = -1,      # Can land as soon as it arrives.
-		...        cesiumColor        = 'Cesium.Color.ORANGE')
+		...        cesiumColor        = 'orange')
 
 		>>> # Route the drone from 2 to 3, but wait for the truck before landing:
 		>>> droneShapepoints_2 = vrv.getShapepoints3D(
@@ -306,7 +308,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...        routeType          = 'square',
 		...        earliestLandTime   = truckTimeSec,    # Must wait for truck to arrive.
 		...        loiterPosition     = 'arrivalAtAlt',
-		...        cesiumColor        = 'Cesium.Color.ORANGE')
+		...        cesiumColor        = 'orange')
 		
 		>>> # Initialize an empty "assignments" dataframe:
 		>>> assignmentsDF = vrv.initDataframe('assignments')
@@ -337,6 +339,6 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	assignments = privGetShapepoints3D(odID=odID, objectID=objectID, modelFile=modelFile, startTimeSec=startTimeSec, startLoc=startLoc, endLoc=endLoc, takeoffSpeedMPS=takeoffSpeedMPS, cruiseSpeedMPS=cruiseSpeedMPS, landSpeedMPS=landSpeedMPS, cruiseAltMetersAGL=cruiseAltMetersAGL, routeType=routeType, climbRateMPS=climbRateMPS, descentRateMPS=descentRateMPS, earliestLandTime=earliestLandTime, loiterPosition=loiterPosition, leafletColor=leafletColor, leafletWeight=leafletWeight, leafletStyle=leafletStyle, leafletOpacity=leafletOpacity, useArrows=useArrows, modelScale=modelScale, modelMinPxSize=modelMinPxSize, cesiumColor=cesiumColor, cesiumWeight=cesiumWeight, cesiumStyle=cesiumStyle, cesiumOpacity=cesiumOpacity)
+	assignments = privGetShapepoints3D(odID=odID, objectID=objectID, modelFile=modelFile, startTimeSec=startTimeSec, startLoc=startLoc, endLoc=endLoc, takeoffSpeedMPS=takeoffSpeedMPS, cruiseSpeedMPS=cruiseSpeedMPS, landSpeedMPS=landSpeedMPS, cruiseAltMetersAGL=cruiseAltMetersAGL, routeType=routeType, climbRateMPS=climbRateMPS, descentRateMPS=descentRateMPS, earliestLandTime=earliestLandTime, loiterPosition=loiterPosition, leafletColor=leafletColor, leafletWeight=leafletWeight, leafletStyle=leafletStyle, leafletOpacity=leafletOpacity, useArrows=useArrows, modelScale=modelScale, modelMinPxSize=modelMinPxSize, cesiumColor=cesiumColor, cesiumWeight=cesiumWeight, cesiumStyle=cesiumStyle, cesiumOpacity=cesiumOpacity, ganttColor=ganttColor)
 
 	return assignments

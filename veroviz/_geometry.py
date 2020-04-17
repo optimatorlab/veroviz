@@ -527,7 +527,7 @@ def geoAreaOfPolygon(poly):
 	polyArea = 0
 	
 	# Use polygon triangulation to cut the bounding region into a list of triangles, calculate the area of each triangle
-	lstTriangle = tripy.earclip(poly)
+	lstTriangle = tripy.earclip(cleanPoly)
 	lstArea = []
 	for i in range(len(lstTriangle)):
 		lstArea.append(geoAreaOfTriangle(lstTriangle[i][0], lstTriangle[i][1], lstTriangle[i][2]))

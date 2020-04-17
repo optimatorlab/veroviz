@@ -4,6 +4,7 @@ from veroviz._geometry import *
 from veroviz._internal import *
 from veroviz._geocode import privGeocode, privReverseGeocode
 from veroviz._isochrones import privIsochrones
+from veroviz._elevation import privGetElevation
 
 def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist=None, toUnitsTime=None):
 	"""
@@ -337,22 +338,29 @@ def lengthFromNodeSeq(nodeSeq=None, lengthDict=None):
 	-------
 	>>> import veroviz as vrv
 
-	>>> locs = [[42.8871085, -78.8731949],
-	...         [42.8888311, -78.8649649],
-	...         [42.8802158, -78.8660787],
-	...         [42.8845705, -78.8762794],
-	...         [42.8908031, -78.8770140]]
-	>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+	Define some sample locations and create a nodes dataframe:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
 
-	>>> [timeSecDict, distMetersDict] = vrv.getTimeDist2D( nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
-	>>> nodeSeq = [1, 3, 2]
-	>>> totalTimeSec = lengthFromNodeSeq(nodeSeq, timeSecDict)
-	>>> totalTimeSec
-	128.18625959867046
+	Calculate time and distance matrices:
+		>>> [timeSecDict, distMetersDict] = vrv.getTimeDist2D(nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
 
-	>>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
-	>>> totalDistMeters
-	1922.7938939800567
+	Define a sequence of nodes to visit:
+		>>> nodeSeq = [1, 3, 2]
+
+	Find the total travel time to visit the nodes:
+		>>> totalTimeSec = vrv.lengthFromNodeSeq(nodeSeq, timeSecDict)
+		>>> totalTimeSec
+		128.18625959871764
+		
+	Find the total length of the node sequence:
+		>>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
+		>>> totalDistMeters
+		1922.793893980765		
 	"""
 	[valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
 	if (not valFlag):
@@ -428,10 +436,20 @@ def calcArea(poly=None):
 	Example
 	-------
 	>>> import veroviz as vrv
-	>>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
-	>>> area = vrv.calcArea(locs)
-	>>> area
 	
+	Define a sequence of locations:
+		>>> locs = [[42.82, -78.80, 0], [42.86, -78.82, 0], [42.84, -78.84, 0]]
+
+	Calculate the area of the polygon formed by these locations:
+		>>> area = vrv.calcArea(poly=locs)
+		>>> area	
+		5449365.537915299
+	
+	Draw the polygon:
+		>>> myNodes = vrv.createNodesFromLocs(locs)
+		>>> myMap = vrv.addLeafletPolygon(points=locs, fillColor='red')
+		>>> myMap = vrv.createLeaflet(mapObject=myMap, nodes=myNodes)
+		>>> myMap		
 	"""
 	
 	[valFlag, errorMsg, warningMsg] = valCalcArea(poly)
@@ -1754,7 +1772,7 @@ def minDistLoc2Path(loc=None, path=None):
 
 def closestPointLoc2Path(loc=None, path=None):
 	"""
-	Find the point along a given line that is closest to a given location.
+	Find the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.
 
 	Parameters
 	----------
@@ -1772,7 +1790,7 @@ def closestPointLoc2Path(loc=None, path=None):
 	--------
 	Prepare some data
 		>>> import veroviz
-		>>> path = [[42.50, -78.10], [42.50, -78.90]]
+		>>> path = [[42.50, -78.65], [42.50, -78.40]]
 		>>> loc1 = [42.50, -78.50]
 		>>> loc2 = [42.51, -78.50]
 
@@ -1782,7 +1800,7 @@ def closestPointLoc2Path(loc=None, path=None):
 
 	Example 2 - The minimum distance is between points on the path:
 		>>> vrv.closestPointLoc2Path(loc2, path)
-		([42.5, -78.5], 1033.287213199036)
+		([42.5, -78.50000397522506], 1103.5612443321572)
 
 
 	Example 3 - The location and path include altitudes (which are ignored):
@@ -1806,14 +1824,12 @@ def closestPointLoc2Path(loc=None, path=None):
 	for i in range(1, len(path)):
 		lstLine.append([path[i - 1], path[i]])
 
-	distMeters = geoMinDistLoc2Line(loc, lstLine[0])
-	minPoint = loc
+	distMeters = float('inf')
 
 	for i in range(len(lstLine)):
 		tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
-		minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
 
-		if (distMeters > tmpDistMeters):
+		if (tmpDistMeters < distMeters):
 			distMeters = tmpDistMeters
 			minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
 
@@ -1824,7 +1840,7 @@ def closestPointLoc2Path(loc=None, path=None):
 	
 def closestNode2Loc(loc=None, nodes=None):
 	"""
-	Return the closest node in the dataframe to the given location.
+	Return the closest node in the dataframe to the given location.  Also return the Euclidean distance (in [meters]) from the location to the nearest node.
 
 	Parameters
 	----------
@@ -1844,18 +1860,18 @@ def closestNode2Loc(loc=None, nodes=None):
 	--------
 	Prepare some data
 		>>> import veroviz
-		>>> loc1 = [42.50, -78.50]
-		locs = [[42.8871085, -78.8731949],
-		[42.8888311, -78.8649649],
-		[42.8802158, -78.8660787],
-		[42.8845705, -78.8762794],
-		[42.8908031, -78.8770140]]
-
-		myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> loc1 = [42.885, -78.861]
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
 
 	Example 1 - Closest node:
-		>>> vrv.closestNode2Loc(loc1, myNodes)
-		(3, 51806.78820361799)
+		>>> [nearestNode, distMeters] = vrv.closestNode2Loc(loc1, myNodes)
+		>>> nearestNode, distMeters
+		(2, 534.828771310757)
 	"""
 	# validation
 	[valFlag, errorMsg, warningMsg] = valClosestNode2Loc(loc, nodes)
@@ -2077,10 +2093,10 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		>>> vehicleProperties = {
 		...     'drone': {'model': 'veroviz/models/drone.gltf',
 		...               'leafletColor': 'red',
-		...               'cesiumColor': 'Cesium.Color.RED'},
+		...               'cesiumColor': 'red'},
 		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
 		...               'leafletColor': 'blue',
-		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		...               'cesiumColor': 'blue'}
 		... }
 
 	This example assumes the use of ORS as the data provider. 
@@ -2478,7 +2494,7 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 
 def isochrones(location=None, locationType='start', travelMode='driving-car', rangeType='distance', rangeSize=None, interval=None, smoothing=25, dataProvider=None, dataProviderArgs=None):    
 	"""
-	Finds isochrones (EXPLAIN) to or from a given location.Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
+	Finds isochrones (FIXME -- EXPLAIN) to or from a given location.Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
 
 	Parameters
 	----------
@@ -2555,3 +2571,215 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 	iso = privIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs)
 	
 	return iso
+
+
+def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False, 
+                title=None, xAxisLabel='time', 
+                xGrid=False, yGrid=False, xMin=0, xMax=None, xGridFreq=60, timeFormat='s', 
+                overlayIndices=False, missingColor='lightgray', 
+                filename=None):
+	"""
+	EXPERIMENTAL.  Draws a Gantt chart from an :ref:`Assignments` dataframe.  This has the appearance of a horizontal bar chart.  The x-axis indicates the elapsed time.  Each `objectID` forms a horizontal bar.
+
+	Parameters
+	----------
+	assignments: :ref:`Assignments` dataframe, Required, default as None
+		The activities and event times are drawn from the `Assignments` dataframe.  Bar colors are specified by the `leafletColor` column of the dataframe.
+	objectIDorder: list, Optional, default as None
+		A list containing values from the `objectID` column of the `assignments` dataframe.  If provided, this list will be used to determine the order in which `objectID`s are displayed on the y-axis of the Gantt chart, where the first item in the list will be on the bottom and the last item will be on top.
+	separateByModelFile: boolean, Optional, default as False
+		If `True`, Gantt chart bars will be formed by the unique combination of the `objectID` and `modelFile` columns of the `assignments` dataframe.  By default, only the `objectID` column will be used to specify the bars.
+	title: string, Optional, default as None
+		A title to appear above the Gantt chart.
+	xAxisLabel: string, Optional, default as 'time'
+		A label to appear below the x-axis.		  
+	xGrid: boolean, Optional, default as False
+		If `True`, vertical lines will be displayed on the Gantt chart.
+	yGrid: boolean, Optional, default as False
+		If `True`, horizontal lines will be displayed on the Gantt chart.
+	xMin: non-negative float, Optional, default as 0 
+		Specifies the minimum value to display on the x-axis, in units of [seconds].
+	xMax: positive float, Optional, default as None
+		Specifies the maximum value to display on the x-axis, in units of [seconds].  If None (default), xMax will be automatically determined from the `endTimeSeconds` column of the `assignments` dataframe.
+	xGridFreq: positive float, Optional, default as 60
+		Specifies the spacing between tick labels on the x-axis, in units of [seconds].
+	timeFormat: string, Optional, default as 's'
+		Specifies the formatting of the x-axis tick marks.  Valid options are: 'DHMS' (days:hours:minutes:seconds), 'HMS' (hours:minutes:seconds), 'MS' (minutes:seconds), 'D' (fractional number of days), 'H' (fractional number of hours), 'M' (fractional number of minutes), or 'S' (integer number of seconds).
+	overlayIndices: boolean, Optional, default as False
+		If `True`, the index column value of the `assignments` dataframe will be shown on each bar cell of the Gantt chart.  This can be cluttered, but may be useful for debugging (allowing a mapping from the Gantt chart elements to the particular rows of the assignments dataframe).
+	missingColor: string, Optional, default as 'lightgray'
+		Specifies the default color to use if the assignments dataframe is missing a color for a particular row.  Use `None` if you do not want to use a default color.
+	filename: string, Optional, default as None
+		If provided, the Gant chart will be saved to this file.  The image format will be automatically determined by the file extension (e.g., `.jpg`, `.png`, or `.pdf`).
+
+	Return
+	------
+	A matplotlib figure object.
+
+	Examples
+	--------
+					
+	FIXME
+
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayIndices, missingColor, filename)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+
+	BAR_HEIGHT    = 8
+	BAR_STEP_SIZE = 10
+
+	fig, ax = plt.subplots()
+
+	if (objectIDorder is None):
+		objectIDorder = list(assignments['objectID'].unique())
+	
+	
+	if (separateByModelFile):
+		# Group by objectID and modelFile:
+		# yLabels = list((assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str)).unique())
+		yLabels = []
+		yTicks  = []
+		y       = 2
+		for objectID in objectIDorder:
+			modelFiles = list(assignments[assignments['objectID'] == objectID]['modelFile'].unique())
+			for i in range(0, len(modelFiles)):
+				yLabels.append(str(objectID) + ' - ' + str(modelFiles[i]))
+				yTicks.append(y + BAR_HEIGHT/2) 
+				y += BAR_HEIGHT
+			y += 2
+	else:
+		# If we only group by objectID
+		# yGroups = list(assignments['objectID'].unique())
+		yLabels = objectIDorder
+		yTicks  = []
+		y = 2 
+		for i in range(0, len(yLabels)):
+			yTicks.append(y + BAR_HEIGHT/2)
+			y += BAR_STEP_SIZE
+
+	yTicks.append(y)
+
+	maxEnd = max(assignments['endTimeSec'])
+
+	if (xMax is None):
+		xMax = xMin + math.ceil((maxEnd - xMin)/xGridFreq) * xGridFreq
+	
+	ax.set_xlim(xMin, xMax)
+
+	for i in range(0, len(yLabels)):
+		myLabel = yLabels[i]
+		y = yTicks[i]
+		if (separateByModelFile):
+			dummy = assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel]
+		else:    
+			dummy = assignments[assignments['objectID'] == myLabel]
+
+		for j in list(dummy.index):
+			start_x = dummy.loc[j]['startTimeSec']
+			if (dummy.loc[j]['endTimeSec'] < 0):
+				endTime = maxEnd
+			else:
+				endTime = dummy.loc[j]['endTimeSec']
+			duration = endTime - dummy.loc[j]['startTimeSec']
+			if (dummy.loc[j]['ganttColor'] == None):
+				if (missingColor is None):
+					break
+				else:
+					myColor = missingColor
+			else:
+				myColor = dummy.loc[j]['ganttColor']
+			ax.broken_barh([(start_x, duration)], (y-BAR_HEIGHT/2, BAR_HEIGHT), fc=myColor, ec='black')
+
+			if (overlayIndices):
+				if (xMin <= (start_x + duration/2.0) <= xMax):
+					plt.text((start_x + duration/2.0), y, j, color='black', fontsize=12, ha='center', va='center')
+
+
+	if (title is not None):
+		plt.title(title)
+
+	ax.set_ylim(0, max(yTicks))
+
+	if (xAxisLabel is not None):
+		ax.set_xlabel(xAxisLabel)
+
+	ax.set_xticks(range(int(xMin), int(xMax+1), int(xGridFreq)))
+	ax.set_yticks(yTicks)
+	ax.set_yticklabels(yLabels, minor=False)
+	ax.set_yticks(yTicks, minor=False)
+
+	ax.grid(xGrid, axis='x')     
+	ax.grid(yGrid, axis='y')     
+
+	if (timeFormat.lower() == 'dhms'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtDHMS))
+	elif (timeFormat.lower() == 'hms'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtHMS))
+	elif (timeFormat.lower() == 'ms'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtMS))
+	elif (timeFormat.lower() == 'd'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtD))
+	elif (timeFormat.lower() == 'h'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtH))
+	elif (timeFormat.lower() == 'm'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtM))
+	else:
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtS))
+
+	
+	if (filename is not None):
+		fig.savefig(filename, bbox_inches='tight')
+
+	plt.close();
+
+	return fig
+	
+	
+def getElevation(locs=None, dataProvider=None, dataProviderArgs=None):    
+	"""
+	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  
+
+	Parameters
+	----------
+	locs: list of lists, Required, default as None
+		A list of one or more GPS coordinate of the form [[lat, lon], ...] or [[lat, lon, alt], ...].  If altitude is included in locs, the function will add the elevation to the input altitude.  Otherwise, the input altitude will be assumed to be 0.
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], ..., [lat, lon, altMSL]].
+		
+	Note
+	----
+	Currently, only 'ors-online' is supported.
+	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for elevation.  
+
+	Examples
+	--------
+                     	
+	FIXME
+
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGetElevation(locs, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+		
+	locsWithAlt = privGetElevation(locs, dataProvider, dataProviderArgs)
+	
+	return locsWithAlt
+	

@@ -15,7 +15,7 @@ from veroviz.utilities import initDataframe
 from veroviz.utilities import getMapBoundary
 
 
-def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, startNode=1, incrementName=False, incrementStart=1, nodeDistrib=None, nodeDistribArgs=None, snapToRoad=False, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None, dataProvider=None, dataProviderArgs=None):
+def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, startNode=1, incrementName=False, incrementStart=1, nodeDistrib=None, nodeDistribArgs=None, snapToRoad=False, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None, dataProvider=None, dataProviderArgs=None):
 
 	"""
 	This function generates a collection of nodes (locations).
@@ -42,17 +42,19 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		A dictionary of arguments for the distribution. See the table in the notes below for more information.
 	snapToRoad: boolean, Optional, default as False, 
 		If True, nodes will be positioned at locations on the road network. This requires the use of a data provider. See :ref:`Data Providers` for a list of data providers that support this option.
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the `popupText` column of the nodes dataframe.
 	leafletIconPrefix: string, Optional, default as "glyphicon"
-		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
+		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of three collections: "glyphicon", "fa", or "custom".  See :ref:`Leaflet Style` for more information.
 	leafletIconType: string, Optional, default as "info-sign"
 		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconPrefix`. See :ref:`Leaflet Style` for available options.
 	leafletColor: string, Optional, default as "blue"
 		Specifies the icon color of the generated nodes when displayed in Leaflet. See :ref:`Leaflet Style` for a list of available colors.
 	leafletIconText: string, Optional, default as None
-		Specifies the text in label that will be displayed when the node is clicked on a Leaflet map.  This parameter allows for including more information if the node name itself is not sufficiently descriptive.
+		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `leafletIconPrefix` is 'custom' and `leafletIconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.
 	cesiumIconType: string, Optional, default as "pin"
 		'pin' is current the only option. See :ref:`Cesium Style`.
-	cesiumColor: string, Optional, default as "Cesium.Color.BLUE"
+	cesiumColor: string, Optional, default as "blue"
 		The color of the generated nodes when displayed in Cesium.  See :ref:`Cesium Style` for all available color options.
 	cesiumIconText: string, Optional, default as None
 		Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the `id` value. 
@@ -197,12 +199,13 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		...         'boundingRegion' : bounding
 		...     },
 		...     snapToRoad        = True,
+		...     popupText         = 'These nodes are used for demo',
 		...     leafletIconPrefix = 'fa',
 		...     leafletIconType   = 'star',
 		...     leafletColor      = 'darkred',
-		...     leafletIconText   = 'These nodes are used for demo',
+		...     leafletIconText   = None,
 		...     cesiumIconType    = 'pin',
-		...     cesiumColor       = 'Cesium.Color.DARKRED',
+		...     cesiumColor       = 'darkred',
 		...     cesiumIconText    = None,
 		...     dataProvider      = 'OSRM-online',
 		...     dataProviderArgs  = None)
@@ -215,7 +218,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, incrementName, incrementStart, nodeDistrib, nodeDistribArgs, snapToRoad, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, incrementName, incrementStart, nodeDistrib, nodeDistribArgs, snapToRoad, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText, dataProvider, dataProviderArgs)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -247,7 +250,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		locs = _genNodesRoadBased(numNodes, boundingRegion, distToRoad, dataProvider, dataProviderArgs)
 
 	# create nodes from given lats/lons
-	nodes = privCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)
+	nodes = privCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, popupText,  leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)
 	return nodes
 
 def _genNodesUniformBounded(numNodes=None, boundingRegion=None):
@@ -440,7 +443,7 @@ def _genNodesRoadBased(numNodes=None, boundingRegion=None, distToRoad=None, data
 	
 	return locs
 
-def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
+def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
 
 	"""
 	This function generates a "nodes" dataframe from a given collection of [lat, lon], or [lat, lon, alt], coordinates.
@@ -467,17 +470,19 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
 	dataProviderArgs: dictionary, Conditional, default as None
 		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the `popupText` column of the nodes dataframe.
 	leafletIconPrefix: string, Optional, default as "glyphicon"
-		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
+		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of three collections: "glyphicon", "fa", or "custom".  See :ref:`Leaflet Style` for more information.
 	leafletIconType: string, Optional, default as "info-sign"
 		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconType`. See :ref:`Leaflet Style` for available options.
 	leafletColor: string, Optional, default as "blue"
 		Specifies the icon color of the generated nodes when displayed in Leaflet. See :ref:`Leaflet Style` for a list of available colors.
 	leafletIconText: string, Optional, default as None
-		Specifies the text in label that will be displayed when the node is clicked on a Leaflet map.  This parameter allows for including more information if the node name itself is not sufficiently descriptive.
+		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `leafletIconPrefix` is 'custom' and `leafletIconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.
 	cesiumIconType: string, Optional, default as "pin"
 		'pin' is current the only option. See :ref:`Cesium Style`.
-	cesiumColor: string, Optional, default as "Cesium.Color.BLUE"
+	cesiumColor: string, Optional, default as "blue"
 		The color of the generated nodes when displayed in Cesium.  See :ref:`Cesium Style` for all available color options.
 	cesiumIconText: string, Optional, default as None
 		Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the `id` value. 
@@ -528,12 +533,13 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 		...     snapToRoad        = False, 
 		...     dataProvider      = None, 
 		...     dataProviderArgs  = None,
+		...     popupText         = None,
 		...     leafletIconPrefix = 'fa', 
 		...     leafletIconType   = 'user', 
 		...     leafletColor      = 'lightgreen', 
 		...     leafletIconText   = None, 
 		...     cesiumIconType    = 'pin', 
-		...     cesiumColor       = 'Cesium.Color.LIGHTGREEN', 
+		...     cesiumColor       = 'lightgreen', 
 		...     cesiumIconText    = None)
 		>>> myNodes
 
@@ -542,13 +548,13 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)
+	[valFlag, errorMsg, warningMsg] = valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)
 	if (not valFlag):
 		print (errorMsg)
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	nodes = privCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)
+	nodes = privCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)
 
 	return nodes

@@ -8,6 +8,7 @@ from veroviz._validation import valAddLeafletText
 from veroviz._validation import valAddLeafletIcon
 from veroviz._validation import valAddLeafletIsochrones
 from veroviz._internal import replaceBackslashToSlash
+from veroviz._internal import splitLeafletCustomIconType
 
 from veroviz._deconstructAssignments import deconstructAssignments
 
@@ -63,7 +64,7 @@ customMaps = {
 	},
 }
 	
-def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, nodes=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None, arcs=None, arcWeight=None, arcStyle=None, arcOpacity=None, arcColor=None, useArrows=None, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR):
+def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, nodes=None, popupText=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None, arcs=None, arcWeight=None, arcStyle=None, arcOpacity=None, arcColor=None, useArrows=None, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR):
 
 	"""
 	createLeaflet is used to generate Leaflet objects using folium. The function takes a boundingRegion polygon, `Nodes`, `Arcs`, and `Assignments` dataframes as inputs, and creates a folium/leaflet map showing boundings, nodes and/or arcs. 
@@ -82,14 +83,16 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		Specifies the default zoom level.  1 --> global view;  18 --> max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).
 	nodes: :ref:`Nodes`, Conditional, `nodes`, `arcs`, and `boundingRegion` can not be None at the same time
 		A Nodes dataframe describing the collection of nodes to be displayed on the Leaflet map.  See :ref:`Nodes` for documentation on this type of dataframe.
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium. 
 	iconPrefix: string, Optional, default as None
-		Overrides the `leafletIconPrefix` column of an input :ref:`Nodes` dataframe.  If provided, all nodes will use this icon prefix.  Valid options are "glyphicon" or "fa". See :ref:`Leaflet Style` for details.
+		Overrides the `leafletIconPrefix` column of an input :ref:`Nodes` dataframe.  If provided, all nodes will use this icon prefix.  Valid options are "glyphicon", "fa", or "custom". See :ref:`Leaflet Style` for details.
 	iconType: string, Optional, default as None
 		Overrides the `leafletIconType` column of an input :ref:`Nodes` dataframe.  If provided, all nodes will use this icon type.  The valid `iconType` options depend on the choice of `iconPrefix`.  See :ref:`Leaflet Style` for the collection of valid icon prefix/type combinations.
 	iconColor: string, Optional, default as None
 		Overrides the `leafletColor` column of an input :ref:`Nodes` dataframe.  If provided, all icons will use this color when displayed on this Leaflet map.  See :ref:`Leaflet Style` for the list of available color options.
 	iconText: string, Optional, default as None
-		Overrides the `leafletIconText` column of an input :ref:`Nodes` dataframe.  If provided, all node markers in this Leaflet map will include this text as a label (you will need to click on the marker in the map to see this label).  
+		Overrides the `leafletIconText` column of an input :ref:`Nodes` dataframe.  If provided, this text will be displayed within the node on a Leaflet map.  This text will only be shown if `leafletIconPrefix` is 'custom' and `leafletIconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.
 	arcs: :ref:`Arcs` or :ref:`Assignments`, Conditional, `nodes`, `arcs` and `boundingRegion` can not be None at the same time
 		An :ref:`Arcs` or :ref:`Assignments` dataframe describing vehicle routes.  Each row of this dataframe will be shown as a line on the Leaflet map.  See the documentation on :ref:`Arcs` and :ref:`Assignments` for more information.
 	arcWeight: int, Optional, default as None
@@ -206,6 +209,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		...     mapBoundary     = None, 
 		...     zoomStart       = 10, 
 		...     nodes           = exampleNodes, 
+		...     popupText       = None,
 		...     iconPrefix      = 'fa', 
 		...     iconType        = 'flag', 
 		...     iconColor       = 'red', 
@@ -224,7 +228,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, iconPrefix, iconType, iconColor, iconText, arcs, arcWeight, arcStyle, arcOpacity, arcColor, useArrows, boundingRegion, boundingWeight, boundingOpacity, boundingStyle, boundingColor)
+	[valFlag, errorMsg, warningMsg] = valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, iconPrefix, iconType, iconColor, iconText, arcs, arcWeight, arcStyle, arcOpacity, arcColor, useArrows, boundingRegion, boundingWeight, boundingOpacity, boundingStyle, boundingColor)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -264,11 +268,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 			mapObject.fit_bounds(mapBoundary)
 		elif (mapBoundary is None):
 			mapObject.fit_bounds(getMapBoundary(nodes, arcs, boundingRegion))
-	
-	# Plot node markers
-	if (type(nodes) is pd.core.frame.DataFrame):
-		mapObject = _createLeafletNodes(mapObject, nodes, iconPrefix, iconType, iconColor, iconText)
-	
+		
 	# Plot arcs
 	if (type(arcs) is pd.core.frame.DataFrame):
 		mapObject = _createLeafletArcs(mapObject, arcs, arcWeight, arcOpacity, arcStyle, arcColor, useArrows, VRV_DEFAULT_LEAFLET_ARROWSIZE, 4)
@@ -276,6 +276,10 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	# Plot bounding
 	if (type(boundingRegion) is list):
 		mapObject = _createLeafletBoundingRegion(mapObject, boundingRegion, boundingWeight, boundingOpacity, boundingStyle, boundingColor)
+
+	# Plot node markers
+	if (type(nodes) is pd.core.frame.DataFrame):
+		mapObject = _createLeafletNodes(mapObject, nodes, popupText, iconPrefix, iconType, iconColor, iconText)
 
 	if (mapFilename is not None):		
 		mapDirectory = ""
@@ -292,7 +296,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	
 	return mapObject
 
-def _createLeafletNodes(mapObject=None, nodes=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None):
+def _createLeafletNodes(mapObject=None, nodes=None, popupText=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None):
 	"""
 	A sub-function to create leaflet nodes
 
@@ -302,14 +306,16 @@ def _createLeafletNodes(mapObject=None, nodes=None, iconPrefix=None, iconType=No
 		Add content to a folium map.
 	nodes: :ref:`Nodes`, Required
 		The Nodes dataframe to be generated in Leaflet
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium. 
 	iconPrefix: string, Optional
-		The collection of Leaflet icons.  Options are "glyphicon" or "fa". See :ref:`Leaflet Style`
+		The collection of Leaflet icons.  Options are "glyphicon", "fa", or "custom". See :ref:`Leaflet Style`
 	iconType: string, Optional
 		The specific icon to be used for all generated nodes.  The list of available options depends on the choice of the iconType. See :ref:`Leaflet Style`
 	iconColor: string, Optional
 		The icon color of the generated nodes when displayed in Leaflet.  One of a collection of pre-specified colors. See :ref:`Leaflet Style`
 	iconText: string, Optional
-		Text that will be displayed within the node on a Leaflet map. See :ref:`Leaflet Style`
+		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `iconPrefix` is 'custom' and `iconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.
 
 	return
 	------
@@ -318,9 +324,9 @@ def _createLeafletNodes(mapObject=None, nodes=None, iconPrefix=None, iconType=No
 
 	"""
 
-	# Note: In nodes dataframe, we already checked 'leaflet-' columns, and those columns have default values, for sake of consistency in here I delete the 'fail safes'
+	# Note: In nodes dataframe, we already checked 'leaflet-' columns, and those columns have default values, for sake of consistency in here I delete the 'failsafes'
 	for i in range(0, len(nodes)):
-		# If not overrided, use the info in nodes dataframe
+		# If not overridden, use the info in nodes dataframe
 		if (iconColor == None):
 			newColor = nodes.iloc[i]['leafletColor']
 		else:
@@ -338,24 +344,71 @@ def _createLeafletNodes(mapObject=None, nodes=None, iconPrefix=None, iconType=No
 		else:
 			newText = iconText
 
+		if (popupText == None):
+			newPopupText = nodes.iloc[i]['popupText']
+		else:
+			newPopupText = popupText
+
 		if (newColor != None):
 			newColor = newColor.lower()
 		if (newPrefix != None):
 			newPrefix = newPrefix.lower()
 		if (newType != None):
 			newType = newType.lower()
-					
-		# Folium draw nodes
-		folium.Marker(
-			[nodes.iloc[i]['lat'], nodes.iloc[i]['lon']], 
-			icon=folium.Icon(
-				color=newColor, 
-				prefix=newPrefix, 
-				icon=newType), 
-			popup=str(newText)
-		).add_to(mapObject)
+			
+		_drawLeafletNode(mapObject, [nodes.iloc[i]['lat'], nodes.iloc[i]['lon']], newPopupText, newPrefix, newType, newColor, newText)
 
 	return mapObject
+
+
+def _drawLeafletNode(mapObject, loc, popupText, iconPrefix, iconType, iconColor, iconText):
+	
+	# Format popup text
+	if (popupText is not None):
+		popupText = str(popupText)
+
+	if (iconPrefix in ['fa', 'glyphicon']):
+		# Folium draw nodes
+		folium.Marker(
+			loc, 
+			icon=folium.Icon(
+				color = iconColor.lower(), 
+				prefix = iconPrefix.lower(), 
+				icon = iconType.lower()), 
+			popup=popupText
+		).add_to(mapObject)
+	else:
+		[radius, fontColor, fontSize] = splitLeafletCustomIconType(iconType)
+		
+		# Add marker:
+		folium.CircleMarker(
+			loc, 
+			radius = radius,  
+			stroke = True, 
+			weight = 1, 
+			color = iconColor.lower(), 
+			fill_color = iconColor.lower(),
+			fill_opacity = 0.9,
+			popup = popupText
+			).add_to(mapObject)
+
+		# Add text:
+		if ((iconText is not None) and (fontColor is not None)):
+			try:
+				fontColor = fontColor.lower()
+			except:
+				pass
+
+			iconSizeX = radius*2		# FIXME -- Not sure if this is good.
+			iconAnchorX = iconSizeX / 2
+				
+			folium.map.Marker(loc, icon=DivIcon(
+				icon_size = (iconSizeX, fontSize), 
+				icon_anchor = (iconAnchorX, fontSize), 
+				html = "<div style=\"font-size: %dpt; color: %s; text-align: center;\">%s</div>" %  (fontSize, fontColor, iconText)
+				)).add_to(mapObject)
+
+	return
 
 def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=None, arcStyle=None, arcColor=None, useArrows=None, arrowSize=6, arrowsPerArc=4):
 	"""
@@ -1434,7 +1487,7 @@ def addLeafletText(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 	return mapObject
 	
 	
-def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, location=None, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, popupText=None):
+def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, location=None, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, iconText=None, popupText=None):
 
 	"""
 	Add a single icon/pin to a Leaflet map.
@@ -1454,13 +1507,15 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 	location: list, Required, default as None
 		Specifies the GPS coordinates of the icon/pin.  Must be a list of the form `[lat, lon]` or `[lat, lon, alt]`.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).	
 	iconPrefix: string, Optional, default as "glyphicon"
-		There are a large number of Leaflet icons available. The `iconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
+		There are a large number of Leaflet icons available. The `iconPrefix` identifies one of three collections: "glyphicon", "fa", or "custom".  See :ref:`Leaflet Style` for more information.
 	iconType: string, Optional, default as "info-sign"
 		Specifies the particular icon to be used for the icon/pin.  The list of available options depends on the choice of `iconPrefix`. See :ref:`Leaflet Style` for available options.
 	iconColor: string, Optional, default as "blue"
 		Defines the color of the icon/pin.  See :ref:`Leaflet Style` for the list of available color options.
+	iconText: string, Optional, default as None
+		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `iconPrefix` is 'custom' and `iconType` includes a font color and font size.  See :ref:`Leaflet style`.  
 	popupText: string, Optional, default as None
-		The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).  
+		The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).
 	
 	Return
 	------
@@ -1477,7 +1532,7 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 		...     mapFilename="an_icon.html")
 		>>> myMap
 
-		>>> # Draw an icon/pin, centered on the Univ. at Buffalo campus.
+		>>> # Draw a marker, centered on the Univ. at Buffalo campus.
 		>>> # This example includes all of the available function arguments.
 		>>> import veroviz as vrv
 		>>> myMap = vrv.addLeafletIcon(
@@ -1487,9 +1542,10 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 		...     mapBoundary = None, 
 		...     zoomStart = 11, 
 		...     location = [43.00154, -78.7871],
-		...     iconPrefix='glyphicon',
-		...     iconType='info-sign',
+		...     iconPrefix='custom',
+		...     iconType='10-white-12',
 		...     iconColor:'blue',
+		...     iconText:'UB',
 		...     popupText:'test')
 		>>> myMap
 	"""
@@ -1527,20 +1583,8 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 	if (zoomStart is None):
 		if (mapBoundary is not None):
 			mapObject.fit_bounds(mapBoundary)
-		
-	# Format popup text
-	if (popupText is not None):
-		popupText = str(popupText)
-			
-	# Folium draw nodes
-	folium.Marker(
-		location, 
-		icon=folium.Icon(
-			color=iconColor.lower(), 
-			prefix=iconPrefix.lower(), 
-			icon=iconType.lower()), 
-		popup=popupText
-	).add_to(mapObject)
+
+	_drawLeafletNode(mapObject, location, popupText, iconPrefix, iconType, iconColor, iconText)
 	
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
@@ -1549,7 +1593,7 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 
 	return mapObject	
 	
-def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, iso=None, showBoundingRegion=False, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, popupText=None, lineWeight=3, lineOpacity=0.8, lineStyle='solid', fillOpacity=0.3):
+def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, iso=None, showBoundingRegion=False, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, iconText=None, popupText=None, lineWeight=3, lineOpacity=0.8, lineStyle='solid', fillOpacity=0.3):
 	"""
 	Easily draw isochrones on a Leaflet map.  Be sure to run the `isochrones()` function first.
 		
@@ -1570,11 +1614,13 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 	showBoundingRegion: boolean, Optional, default as False
 		The isochrone object contains a bounding region, which is the smallest rectangle enclosing the isochrones.  If you wish to include this rectangle on the map, set `showBoundingRegion=True`.  
 	iconPrefix: string, Optional, default as "glyphicon"
-		There are a large number of Leaflet icons available. The `iconPrefix` identifies one of two collections: "glyphicon" or "fa".  See :ref:`Leaflet Style` for more information.
+		There are a large number of Leaflet icons available. The `iconPrefix` identifies one of three collections: "glyphicon", "fa", or "custom".  See :ref:`Leaflet Style` for more information.
 	iconType: string, Optional, default as "info-sign"
 		Specifies the particular icon to be used for the icon/pin.  The list of available options depends on the choice of `iconPrefix`. See :ref:`Leaflet Style` for available options.
 	iconColor: string, Optional, default as "blue"
 		Defines the color of the icon/pin.  See :ref:`Leaflet Style` for the list of available color options.
+	iconText: string, Optional, default as None
+		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `iconPrefix` is 'custom' and `iconType` includes a font color and font size.  See :ref:`Leaflet style`.
 	popupText: string, Optional, default as None
 		The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).  
 	lineWeight: int, Optional, default 3
@@ -1648,20 +1694,8 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 			popup = 'bounding region'
 		).add_to(mapObject)
 
-	# Format popup text
-	if (popupText is not None):
-		popupText = str(popupText)
 
-	# Draw marker for location
-	folium.Marker(
-		iso['location'], 
-		icon=folium.Icon(
-			color=iconColor.lower(), 
-			prefix=iconPrefix.lower(), 
-			icon=iconType.lower()), 
-		popup=popupText
-	).add_to(mapObject)
-
+	_drawLeafletNode(mapObject, iso['location'], popupText, iconPrefix, iconType, iconColor, iconText)
 
 	try:
 		lineStyle = lineStyle.lower()
@@ -1685,10 +1719,10 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 	
 	# Need to draw in reverse order (largest to smallest) so they are layered properly on map.  Otherwise, the big polygon will prevent clicking on smaller ones.
 	for i in range(len(iso['isochrones'])-1, -1, -1):
-		tmpText  = 'value: {} {}\n'.format(iso['isochrones'][i]['value'], iso['isochrones'][i]['valueUnits'])
-		tmpText += 'area: {} sq meters\n'.format(iso['isochrones'][i]['area'])
-		tmpText += 'pop: {}\n'.format(iso['isochrones'][i]['pop'])
-		tmpText += 'reachfactor: {}\n'.format(iso['isochrones'][i]['reachfactor'])
+		tmpText  = '<nobr>value: {} {}</nobr>\n'.format(iso['isochrones'][i]['value'], iso['isochrones'][i]['valueUnits'])
+		tmpText += '<nobr>area: {} sq meters</nobr>\n'.format(iso['isochrones'][i]['area'])
+		tmpText += '<nobr>pop: {}</nobr>\n'.format(iso['isochrones'][i]['pop'])
+		tmpText += '<nobr>reachfactor: {}</nobr>\n'.format(iso['isochrones'][i]['reachfactor'])
 
 		lineColor = isoColorList[i%len(isoColorList)]
 		fillColor = lineColor

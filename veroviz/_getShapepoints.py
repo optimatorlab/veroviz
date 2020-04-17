@@ -9,6 +9,7 @@ from veroviz._internal import distributeTimeDist
 from veroviz._internal import locs2Dict
 from veroviz._internal import loc2Dict
 from veroviz._internal import replaceBackslashToSlash, addHeadSlash
+from veroviz._internal import stripCesiumColor
 
 from veroviz._buildFlightProfile import buildNoLoiteringFlight
 from veroviz._buildFlightProfile import getTimeDistFromFlight
@@ -19,7 +20,7 @@ from veroviz._geometry import geoDistance2D
 from veroviz.utilities import convertDistance
 from veroviz.utilities import initDataframe
 
-def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, dataProvider=None, dataProviderArgs=None):
+def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
@@ -116,10 +117,12 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 				'leafletOpacity' : leafletOpacity,
 				'modelScale' : modelScale,
 				'modelMinPxSize' : modelMinPxSize,
-				'cesiumColor' : cesiumColor,
+				'cesiumColor' : stripCesiumColor(cesiumColor),
 				'cesiumWeight' : cesiumWeight,
 				'cesiumStyle' : cesiumStyle,
-				'cesiumOpacity' : cesiumOpacity
+				'cesiumOpacity' : cesiumOpacity,
+				'ganttColor' : ganttColor, 
+				'popupText' : popupText
 				}, ignore_index=True)
 	else:
 		# For maintainability, convert locs into dictionary
@@ -145,16 +148,18 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'leafletOpacity' : leafletOpacity,
 			'modelScale' : modelScale,
 			'modelMinPxSize' : modelMinPxSize,
-			'cesiumColor' : cesiumColor,
+			'cesiumColor' : stripCesiumColor(cesiumColor),
 			'cesiumWeight' : cesiumWeight,
 			'cesiumStyle' : cesiumStyle,
-			'cesiumOpacity' : cesiumOpacity
+			'cesiumOpacity' : cesiumOpacity,
+			'ganttColor' : ganttColor, 
+			'popupText' : popupText
 			}, ignore_index=True)
 
 	return assignments
 
 
-def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
@@ -202,10 +207,12 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 			'useArrows': useArrows,
 			'modelScale' : modelScale,
 			'modelMinPxSize' : modelMinPxSize,
-			'cesiumColor': cesiumColor,
+			'cesiumColor': stripCesiumColor(cesiumColor),
 			'cesiumWeight': cesiumWeight,
 			'cesiumStyle': cesiumStyle,
-			'cesiumOpacity': cesiumOpacity			
+			'cesiumOpacity': cesiumOpacity,
+			'ganttColor': ganttColor, 
+			'popupText': popupText			
 			}, ignore_index=True)
 
 		# If they need loitering, add the line of loitering
@@ -229,10 +236,12 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'useArrows': useArrows,
 				'modelScale' : modelScale,
 				'modelMinPxSize' : modelMinPxSize,
-				'cesiumColor': cesiumColor,
+				'cesiumColor': stripCesiumColor(cesiumColor),
 				'cesiumWeight': cesiumWeight,
 				'cesiumStyle': cesiumStyle,
-				'cesiumOpacity': cesiumOpacity
+				'cesiumOpacity': cesiumOpacity,
+				'ganttColor': ganttColor, 
+				'popupText': popupText
 				}, ignore_index=True)
 
 	return assignments

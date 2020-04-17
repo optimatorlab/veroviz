@@ -6,6 +6,7 @@ from veroviz._internal import delTailSlash
 from veroviz._internal import delHeadSlash
 from veroviz._internal import addHeadSlash
 from veroviz._internal import replaceBackslashToSlash
+from veroviz._internal import expandCesiumColor
 
 from veroviz.utilities import getMapBoundary
 from veroviz.utilities import exportDataframe
@@ -313,18 +314,22 @@ def _writeNodes(nodes, cesiumIconColor, fullDir):
 	jsStr +=     "// Display nodes for cesium application\n\n"
 
 	# In case some there is skipped index
-	indNodes = nodes.copy().reset_index(drop=True)
-
+	indNodes = nodes.copy().reset_index(drop=True)	
+	
 	# Display the nodes
 	jsStr +=     "function displayNodes() {\n"
 	jsStr +=     "    var pin = new Array;\n"
 	for i in range(0, len(indNodes)):
+		popupText = indNodes.iloc[i]['popupText']
+
 		jsStr += "    pin[%s] = viewer.entities.add({\n" % (i)
 		jsStr += "        name : '%s',\n" % (indNodes.iloc[i]['cesiumIconText'])
 		jsStr += "        parent : nodePins,"
+		if (popupText is not None):
+			jsStr += "        description : '%s',\n" % (popupText)	
 		jsStr += "        position : Cesium.Cartesian3.fromDegrees(%s, %s),\n" % (indNodes.iloc[i]['lon'], indNodes.iloc[i]['lat'])
 		jsStr += "        billboard : {\n"
-		jsStr += "            image : pinBuilder.fromText('%s', %s, 40).toDataURL(),\n" % (indNodes.iloc[i]['id'], cesiumIconColor if (cesiumIconColor != None) else indNodes.iloc[i]['cesiumColor'])
+		jsStr += "            image : pinBuilder.fromText('%s', %s, 40).toDataURL(),\n" % (indNodes.iloc[i]['id'], expandCesiumColor(cesiumIconColor) if (cesiumIconColor != None) else expandCesiumColor(indNodes.iloc[i]['cesiumColor']))
 		jsStr += "            verticalOrigin : Cesium.VerticalOrigin.BOTTOM\n"
 		jsStr += "        }\n"
 		jsStr += "    });\n\n"
@@ -525,11 +530,11 @@ def _writeAssignmentsJS(lstSubAssignments, cesiumColor, cesiumWeight, cesiumStyl
 		else:
 			assignmentDimension = 3
 
-		# Check if cesium styles have been overrided, if not, assume that for entire path the style is the same
+		# Check if cesium styles have been overridden, if not, assume that for entire path the style is the same
 		if (cesiumColor != None):
-			color = cesiumColor
+			color = expandCesiumColor(cesiumColor)
 		else:
-			color = lstSubAssignments[i].iloc[0]['cesiumColor']
+			color = expandCesiumColor(lstSubAssignments[i].iloc[0]['cesiumColor'])
 		if (cesiumWeight != None):
 			weight = cesiumWeight
 		else:
@@ -555,11 +560,15 @@ def _writeAssignmentsJS(lstSubAssignments, cesiumColor, cesiumWeight, cesiumStyl
 		elif (style == 'solid'):
 			dashLength = 0
 
+		popupText = lstSubAssignments[i].iloc[0]['popupText']
+		
 		if (assignmentDimension == 3):
 			# For each path, generate one polyline entity
 			jsStr +=     "    paths[%d] = viewer.entities.add({\n" % (i)
 			jsStr +=     "        parent: vehiclePolylines['%s'],\n" % (lstSubAssignments[i].iloc[0]['objectID'])
 			jsStr +=     "        name: 'Objects %s',\n" % (lstSubAssignments[i].iloc[0]['objectID'])
+			if (popupText is not None):
+				jsStr +=     "        description: '%s',\n" % (lstSubAssignments[i].iloc[0]['popupText'])
 			jsStr +=     "        polyline: {\n"
 			jsStr +=     "            positions: Cesium.Cartesian3.fromDegreesArrayHeights([\n"
 			for j in range(0, len(assignmentLats)):

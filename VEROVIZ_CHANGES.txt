@@ -4,18 +4,51 @@ Added validation for lists of lat/lon coordinates (_valLatLonList()).  Now check
 
 Added validation for all Utility functions.  Now checks for existence of required inputs.
 
+cesium colors no longer require 'Cesium.Color' prefix.
+
+
+
+
+.rst files
+	Update nodes/arcs/assignments to indicate new column (popupText)
+	
+	Update assignments to indicate we have a new column (ganttColor)
+	Update comparison page (arcs vs assignments)
+	WHAT ELSE???
+	
+	
+
+Dataframe Changes:
+	Assignments
+		Added `ganttColor` column.  Defaults to 'darkgray'.  Used to specify colors in `createGantt()` function.
+
+		Added popupText column.  Defaults to None.
+		
+		??? Added `startAltMSL` and `endAltMSL` columns.  Default to None
+				
+	Nodes:
+		Added options to draw circle nodes
+		Added popupText column.  Defaults to None.
+
+		??? Added `altMSL` column.  Defaults to None
+
+	Arcs:		
+		Added popupText column.  Defaults to None.
+
+		??? Added `startAltMSL` and `endAltMSL` columns.  Default to None
+		
 
 New Utility Functions:
-	closestNode2Loc()
+	isochrones()
+	createGantt()
+	getElevation()
 	closestPointLoc2Path()
+	closestNode2Loc()
 	lengthFromNodeSeq()
 	calcArea()
-	isochrones()
 
 	LP:  zip function(s)?
-	CM:  gantt()?
 	
-	CM:  elevation?
 	CM:  draw elevation profile?
 	CM:  import from GTFS?
 	
@@ -25,7 +58,18 @@ New Leaflet Functions:
 	addLeafletIsochrones()
 
 
-Updates:
+Updates / Existing Function Changes:
+	addStaticAssignment()
+		now includes parameter to specify ganttColor
+
+	createLeaflet() (and similar)
+		now includes popupText for arcs and assignments (nodes changed, too)
+		
+		new node icons
+		
+	createCesium()
+		now includes popupText for nodes and routes
+
 	addLeafletCircle()
 		added `popupText` option
 		added `text` option. (to display text in center of object)
@@ -44,10 +88,11 @@ Updates:
 	addLeafletPolyline()
 		added `popupText` option
 
-		
+
+			
 New mini-tutorials:
-	- findLocsAtTime (#179)
-	- paths from arcs/assignments (#177)  ???	
+	- [ ] findLocsAtTime (#179)
+	- [ ] paths from arcs/assignments (#177)  ???	
 				
 				
 	
@@ -55,7 +100,14 @@ Updated VeRoViz Cesium Viewer/Plugin
 	What's the deal with server.cjs?
 	What version of Cesium to use?
 	
+	Allow hide/show nodes
 	
+	- [ ] Includes generic .gltf models for rectangles and triangles
+	
+	
+
+New Imports/Libraries:
+	added matplotlib
 	
 		
 
