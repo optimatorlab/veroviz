@@ -49,7 +49,7 @@ def orsGetSnapToRoadLatLon(loc, APIkey):
 		raise 
 
 
-def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None):
+def ZZZorsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None):
 	"""
 	A function to get a list of shapepoints from start coordinate to end coordinate. 
 	Parameters
@@ -155,6 +155,164 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		raise
 
 
+def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None):
+	"""
+	A function to get a list of shapepoints from start coordinate to end coordinate. 
+	Parameters
+	----------
+	startLoc: list
+		Start location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
+	endLoc: list
+		End location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
+	travelMode: string, {fastest}
+		Optional, default as 'fastest'. Choose a travel mode as a parameter for ORS
+	Returns
+	-------
+	path: list of lists
+		A list of coordinates in sequence that shape the route from startLoc to endLoc
+	timeInSeconds: list
+		time between current shapepoint and previous shapepoint, the first element should be 0 
+	distInMeters: list
+		distance between current shapepoint and previous shapepoint, the first element should be 0
+	"""
+
+	dicStartLoc = loc2Dict(startLoc)
+	dicEndLoc = loc2Dict(endLoc)
+
+	"""
+	The following "profile" options are available in ORS:
+		'driving-car'		('fastest')	
+		'driving-hgv'		('truck' - fastest)
+		'cycling-regular'	('cycling')
+		'cycling-road'
+		'cycling-mountain'
+		'cycling-electric'
+		'foot-walking'
+		'foot-hiking'
+		'wheelchair'
+		
+		There is no "shortest" option    
+	"""
+
+	preference = 'fastest'
+		
+	try:
+		travelMode = travelMode.lower()
+	except:
+		pass
+
+	if (travelMode == 'fastest'):
+		profile = 'driving-car'
+	elif (travelMode == 'shortest'):
+		profile = 'driving-car'
+		preference = 'shortest'	
+	elif (travelMode == 'pedestrian'):
+		profile = 'foot-walking'
+	elif (travelMode == 'cycling'):
+		profile = 'cycling-road'
+	elif (travelMode == 'truck'):
+		profile = 'driving-hgv'
+	elif (travelMode == 'wheelchair'):
+		profile = 'wheelchair'
+	else:
+		print("Error: Invalid travelMode.")
+		return    
+    
+	shapepointsUrl = ('https://api.openrouteservice.org/v2/directions/%s/geojson' % (profile))
+
+	headers = {
+				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+				'Authorization': APIkey,
+				'Content-Type': 'application/json'}
+
+	try:
+
+		# ORS uses [lon, lat] order:
+		coordinates  = [[dicStartLoc['lon'],dicStartLoc['lat']], 
+						[dicEndLoc['lon'],dicEndLoc['lat']]]
+		units        = 'm'
+		
+		encoded_body = json.dumps({
+			"coordinates": coordinates,
+			"elevation": "true", 
+			"extra_info": ["steepness","surface","waycategory","waytype","tollways"],
+			"instructions": "true",
+			"preference": preference,
+			"units": units})
+
+		http = urllib3.PoolManager()
+		response = http.request('POST', shapepointsUrl, headers=headers, body=encoded_body)
+
+		data = json.loads(response.data.decode('utf-8'))
+		http_status = response.status
+
+		if (http_status == 200):
+			# OK
+			# ORS uses [lon, lat] order:
+			path = []
+			extras = {}
+			timeInSeconds = []
+			distInMeters = []
+			for i in range(len(data['features'][0]['geometry']['coordinates'])):
+				path.append([data['features'][0]['geometry']['coordinates'][i][1], 
+							 data['features'][0]['geometry']['coordinates'][i][0]])
+				extras[i] = {}
+				if (len(data['features'][0]['geometry']['coordinates'][i]) >= 2):
+					extras[i]['elev'] = data['features'][0]['geometry']['coordinates'][i][2]
+				else:
+					extras[i]['elev'] = None
+
+			segs = data['features'][0]['properties']['segments']
+			for i in range(len(segs)):
+				for j in range(len(segs[i]['steps'])):
+					# Find arrival times for each shapepoint location.
+					# ORS gives times for groups of waypoints...we need more granularity.
+
+					subpathTimeSec = segs[i]['steps'][j]['duration']
+					wpStart = segs[i]['steps'][j]['way_points'][0]
+					wpEnd = segs[i]['steps'][j]['way_points'][1]
+
+					[tmpTimeSec, tmpDistMeters] = distributeTimeDist(path[wpStart:wpEnd+1], subpathTimeSec)
+					if (len(timeInSeconds) == 0):
+						timeInSeconds += tmpTimeSec
+						distInMeters += tmpDistMeters
+					else:
+						timeInSeconds += tmpTimeSec[1:]
+						distInMeters += tmpDistMeters[1:]
+					
+					for k in range(wpStart, wpEnd+1):
+						extras[k]['name'] = segs[i]['steps'][j]['name']	
+			
+			ex = data['features'][0]['properties']['extras']			
+			for [wpStart, wpEnd, val] in ex['waycategory']['values']:
+				for i in range(wpStart, wpEnd+1):
+					extras[i]['waycategory'] = orsWaycategoryDict[val]
+			for [wpStart, wpEnd, val] in ex['surface']['values']:
+				for i in range(wpStart, wpEnd+1):
+					extras[i]['surface'] = orsSurfaceDict[val]
+			for [wpStart, wpEnd, val] in ex['waytypes']['values']:
+				for i in range(wpStart, wpEnd+1):
+					extras[i]['waytype'] = orsWaytypeDict[val]
+			for [wpStart, wpEnd, val] in ex['steepness']['values']:
+				for i in range(wpStart, wpEnd+1):
+					extras[i]['steepness'] = val
+			for [wpStart, wpEnd, val] in ex['tollways']['values']:
+				for i in range(wpStart, wpEnd+1):
+					extras[i]['tollway'] = bool(val)
+			
+			print(extras)		
+			
+			return [path, extras, timeInSeconds, distInMeters]
+		else:
+			# Error of some kind
+			http_status_description = responses[http_status]
+			print("Error Code %s: %s" % (http_status, http_status_description))
+			return
+
+	except:
+		print("Error: ", sys.exc_info()[1])
+		raise
+
 def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
 	"""
 	A function to generate distance and time matrices between given coordinates.
@@ -197,12 +355,16 @@ def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
 
 	if (travelMode == 'fastest'):
 		profile = 'driving-car'
+	elif (travelMode == 'shortest'):
+		profile = 'driving-car'		# FIXME -- same as 'fastest'
 	elif (travelMode == 'pedestrian'):
 		profile = 'foot-walking'
 	elif (travelMode == 'cycling'):
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
+	elif (travelMode == 'wheelchair'):
+		profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return    
@@ -333,12 +495,16 @@ def orsGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', APIkey=None):
 
 	if (travelMode == 'fastest'):
 		profile = 'driving-car'
+	elif (travelMode == 'shortest'):
+		profile = 'driving-car'		# FIXME -- same as 'fastest'
 	elif (travelMode == 'pedestrian'):
 		profile = 'foot-walking'
 	elif (travelMode == 'cycling'):
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
+	elif (travelMode == 'wheelchair'):
+		profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return    
@@ -449,12 +615,16 @@ def orsGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', APIkey=None):
 
 	if (travelMode == 'fastest'):
 		profile = 'driving-car'
+	elif (travelMode == 'shortest'):
+		profile = 'driving-car'		# FIXME -- same as 'fastest'
 	elif (travelMode == 'pedestrian'):
 		profile = 'foot-walking'
 	elif (travelMode == 'cycling'):
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
+	elif (travelMode == 'wheelchair'):
+		profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return

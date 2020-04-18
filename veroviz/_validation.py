@@ -416,10 +416,9 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
 				warningMsg += newWarningMsg
 
-
 	return [valFlag, errorMsg, warningMsg]
 
-def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorLoiter):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -504,6 +503,18 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorLoiter is not None):
+			if (ganttColorLoiter.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorLoiter)
+				warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -1571,7 +1582,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	return [valFlag, errorMsg, warningMsg]
 
 
-def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1681,11 +1692,17 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 			if (ganttColor.lower() not in matplotlibColorDict.keys()):
 				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
 				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorService is not None):
+			if (ganttColorService.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorService)
+				warningMsg += newWarningMsg
 			
 	return [valFlag, errorMsg, warningMsg]	
 
 
-def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1836,9 +1853,15 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
 				warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColorService is not None):
+			if (ganttColorService.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorService)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]	
 
-def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1957,6 +1980,12 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 		if (ganttColor is not None):
 			if (ganttColor.lower() not in matplotlibColorDict.keys()):
 				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorService is not None):
+			if (ganttColorService.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorService)
 				warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]	
@@ -3264,7 +3293,7 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 		pass
 		
 	if (routeType not in routeType2DList):
-		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'."
+		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', 'truck', and 'wheelchair'."
 		valFlag = False
 	else:
 		if (routeType == 'euclidean2d'):
@@ -3277,13 +3306,13 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 				errorMsg = "Error: For 'manhattan' routeType, speedMPS is required."
 		elif (routeType == 'fastest'):
 			if (dataProvider not in dataProviderDictionary.keys()):
-				errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting' and 'MapQuest'."
+				errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting', and 'MapQuest'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored. \n"
 		elif (routeType == 'shortest'):
-			if (dataProviderDictionary[dataProvider] not in ['mapquest']):
-				errorMsg = "Error: MapQuest is the only option for routeType = 'shortest' for now."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
+				errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'shortest'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
@@ -3302,6 +3331,12 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 		elif (routeType == 'truck'):
 			if (dataProviderDictionary[dataProvider] not in ['ors-online']):
 				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'truck'."
+				valFlag = False
+			elif (speedMPS is not None):
+				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds used by the data provider will be ignored.\n"
+		elif (routeType == 'wheelchair'):
+			if (dataProviderDictionary[dataProvider] not in ['ors-online']):
+				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'wheelchair'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds used by the data provider will be ignored.\n"
@@ -3324,7 +3359,7 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 		pass
 		
 	if (routeType not in routeType2DList):
-		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'."
+		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', 'truck', and 'wheelchair'."
 		valFlag = False
 	else:
 		if (valFlag and speedMPS is not None):
@@ -3345,14 +3380,14 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 
 			if (valFlag and dataProvider is not None):
 				warningMsg += "Warning: For 'euclidean2d' and 'manhattan', it is not using data provider, therefore `dataProvider` is ignored.\n"
-		elif (routeType in ['fastest', 'shortest', 'pedestrian', 'cycling', 'truck']):
+		elif (routeType in ['fastest', 'shortest', 'pedestrian', 'cycling', 'truck', 'wheelchair']):
 			if (routeType == 'fastest'):
 				if (dataProvider not in dataProviderDictionary.keys()):
 					errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting' and 'MapQuest'."
 					valFlag = False
 			elif (routeType == 'shortest'):
-				if (dataProviderDictionary[dataProvider] not in ['mapquest']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'MapQuest' is currently the only data provider supporting the 'shortest' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
+					errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'shortest'."
 					valFlag = False
 			elif (routeType == 'pedestrian'):
 				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
@@ -3365,6 +3400,10 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 			elif (routeType == 'truck'):
 				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
 					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' is currently the only data provider supporting the 'truck' routeType option."
+					valFlag = False
+			elif (routeType == 'wheelchair'):
+				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
+					errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'wheelchair'."
 					valFlag = False
 
 			if (valFlag):

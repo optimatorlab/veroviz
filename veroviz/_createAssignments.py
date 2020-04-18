@@ -40,7 +40,14 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 		'cesiumWeight': None,
 		'cesiumStyle': None,
 		'cesiumOpacity': None, 
-		'useArrows': None
+		'useArrows': None,
+		'startElevMeters' : None,
+		'endElevMeters' : None,
+		'waycategory' : None,
+		'surface' : None,
+		'waytype' : None, 
+		'steepness' : None,
+		'tollway' : None
 		}, ignore_index=True, sort=False)
 
 	if (type(initAssignments) is pd.core.frame.DataFrame):

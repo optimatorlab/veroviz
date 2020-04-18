@@ -19,7 +19,7 @@ from veroviz._internal import stripCesiumColor
 def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	"""
-	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the "shapepoints" between between given starting and ending locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   
+	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the "shapepoints" between given starting and ending locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   
 
 	Note
 	----
@@ -865,7 +865,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 
 	return assignments
 	
-def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorService=VRV_DEFAULT_GANTTCOLORSERVICE, popupText=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive arcs, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
@@ -916,6 +916,8 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 		Overrides the `cesiumOpacity` column of the input :ref:`Arcs` dataframe.  This will define the opacity of all arcs displayed in Cesium.  See :ref:`Cesium Style` for more information.	
 	ganttColor: string, Optional, default as "darkgray"
 		The color of the route elements when displayed in a Gantt chart. 
+	ganttColorService: string, Optional, default as "lightgray"
+		The color of displayed in a Gantt chart for service activities.
 	popupText: string, Optional, default as None
 		Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium. 		
 	dataProvider: string, Conditional, default as None
@@ -965,7 +967,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 	"""
 	
 	# validatation
-	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs)
 	
 	if (not valFlag):
 		print (errorMsg)
@@ -1055,7 +1057,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 				loc             = endLoc,
 				startTimeSec    = startTime,
 				endTimeSec      = startTime + serviceTimeSec,
-				ganttColor      = ganttColor, 
+				ganttColor      = ganttColorService, 
 				popupText       = popupText)
 
 			odID += 1
@@ -1066,7 +1068,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
     			
 	return assignmentsDF
 
-def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None,   leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None,   leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorService=VRV_DEFAULT_GANTTCOLORSERVICE, popupText=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive node locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
@@ -1124,6 +1126,8 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
 	ganttColor: string, Optional, default as "darkgray"
 		The color of the route elements when displayed in a Gantt chart. 
+	ganttColorService: string, Optional, default as "lightgray"
+		The color of displayed in a Gantt chart for service activities.
 	popupText: string, Optional, default as None
 		Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium.		
 	dataProvider: string, Conditional, default as None
@@ -1244,7 +1248,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	"""	
 	
 	# validatation
-	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs)
 	
 	if (not valFlag):
 		print (errorMsg)
@@ -1326,7 +1330,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 				loc             = endLoc,
 				startTimeSec    = startTime,
 				endTimeSec      = startTime + serviceTimeSec,
-				ganttColor      = ganttColor,
+				ganttColor      = ganttColorService,
 				popupText       = popupText)
 
 			odID += 1
@@ -1339,7 +1343,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	
 	
 
-def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR,  popupText=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorService=VRV_DEFAULT_GANTTCOLORSERVICE, popupText=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
@@ -1395,6 +1399,8 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
 	ganttColor: string, Optional, default as "darkgray"
 		The color of the route elements when displayed in a Gantt chart. 
+	ganttColorService: string, Optional, default as "lightgray"
+		The color of displayed in a Gantt chart for service activities.
 	popupText: string, Optional, default as None
 		Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium.		
 	dataProvider: string, Conditional, default as None
@@ -1491,7 +1497,7 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	"""	
 	
 	# validatation
-	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs)
 	
 	if (not valFlag):
 		print (errorMsg)
@@ -1568,7 +1574,7 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 				loc             = endLoc,
 				startTimeSec    = startTime,
 				endTimeSec      = startTime + serviceTimeSec,
-				ganttColor      = ganttColor,
+				ganttColor      = ganttColorService,
 				popupText       = popupText)
 
 			odID += 1
