@@ -2574,9 +2574,10 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 
 
 def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False, 
+				mergeByodID=True, splitOnColorChange=True, 
                 title=None, xAxisLabel='time', 
                 xGrid=False, yGrid=False, xMin=0, xMax=None, xGridFreq=60, timeFormat='s', 
-                overlayIndices=False, missingColor='lightgray', 
+                overlayColumn=None, missingColor='lightgray', 
                 filename=None):
 	"""
 	EXPERIMENTAL.  Draws a Gantt chart from an :ref:`Assignments` dataframe.  This has the appearance of a horizontal bar chart.  The x-axis indicates the elapsed time.  Each `objectID` forms a horizontal bar.
@@ -2588,7 +2589,11 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	objectIDorder: list, Optional, default as None
 		A list containing values from the `objectID` column of the `assignments` dataframe.  If provided, this list will be used to determine the order in which `objectID`s are displayed on the y-axis of the Gantt chart, where the first item in the list will be on the bottom and the last item will be on top.
 	separateByModelFile: boolean, Optional, default as False
-		If `True`, Gantt chart bars will be formed by the unique combination of the `objectID` and `modelFile` columns of the `assignments` dataframe.  By default, only the `objectID` column will be used to specify the bars.
+		If `True`, Gantt chart bars will be formed by the unique combination of the `objectID` and `modelFile` columns of the `assignments` dataframe.  By default, only the `objectID` column will be used to specify the bars.  Note: This field affects the y-axis groupings.
+	mergeByodID: boolean, Optional, default as True
+		If `True`, consecutive assignments that have the same `odID` value (for a particular row of the Gantt chart) and do not have a gap in timing (i.e., the end time of the preceding assignment row equals the start time of the next assignment) will be combined into a single cell.  If `False`, each row of the assignments dataframe will result in a separate Gantt chart cell.  This can lead to a very cluttered figure.
+	splitOnColorChange: boolean, Optional, default as True
+		If `True`, a cell will be split if the `ganttColor` value in the preceding assignment is different (even if the odID is the same and there are no timing gaps).  This case typically would occur if a static assignment (such as a service activity) was appended to a route, and the static assignment has the same odID, and the static assignment did have a `ganttColor` value in the `assignments` dataframe, and `missingColor` is not None.  This defaults to True to help flag these cases; in which case you probably want to fix your assignments dataframe.
 	title: string, Optional, default as None
 		A title to appear above the Gantt chart.
 	xAxisLabel: string, Optional, default as 'time'
@@ -2605,8 +2610,8 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 		Specifies the spacing between tick labels on the x-axis, in units of [seconds].
 	timeFormat: string, Optional, default as 's'
 		Specifies the formatting of the x-axis tick marks.  Valid options are: 'DHMS' (days:hours:minutes:seconds), 'HMS' (hours:minutes:seconds), 'MS' (minutes:seconds), 'D' (fractional number of days), 'H' (fractional number of hours), 'M' (fractional number of minutes), or 'S' (integer number of seconds).
-	overlayIndices: boolean, Optional, default as False
-		If `True`, the index column value of the `assignments` dataframe will be shown on each bar cell of the Gantt chart.  This can be cluttered, but may be useful for debugging (allowing a mapping from the Gantt chart elements to the particular rows of the assignments dataframe).
+	overlayColumn: string, Optional, default as None
+		There are three options: None, 'odID', or 'index'.  If None (default), no labels will be shown within each bar cell of the Gantt chart.  If 'odID', each bar cell will display the corresponding odID value.  This only makes sense if `mergeByodID` is True.  If 'index', each bar cell will display the index column value of the `assignments` dataframe.  This can be cluttered, but may be useful for debugging (allowing a mapping from the Gantt chart elements to the particular rows of the assignments dataframe).
 	missingColor: string, Optional, default as 'lightgray'
 		Specifies the default color to use if the assignments dataframe is missing a color for a particular row.  Use `None` if you do not want to use a default color.
 	filename: string, Optional, default as None
@@ -2624,7 +2629,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayIndices, missingColor, filename)
+	[valFlag, errorMsg, warningMsg] = valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID, splitOnColorChange, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayColumn, missingColor, filename)
 	if (not valFlag):
 		print (errorMsg)
 		return None
@@ -2642,7 +2647,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	
 	
 	if (separateByModelFile):
-		# Group by objectID and modelFile:
+		# Group y-axis labels by objectID and modelFile:
 		# yLabels = list((assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str)).unique())
 		yLabels = []
 		yTicks  = []
@@ -2655,7 +2660,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 				y += BAR_HEIGHT
 			y += 2
 	else:
-		# If we only group by objectID
+		# Only group y-axis labels by objectID
 		# yGroups = list(assignments['objectID'].unique())
 		yLabels = objectIDorder
 		yTicks  = []
@@ -2677,29 +2682,67 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 		myLabel = yLabels[i]
 		y = yTicks[i]
 		if (separateByModelFile):
-			dummy = assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel]
+			dummy = pd.DataFrame(assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel])
+			dummy['asgnIndex'] = assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel].index.values()
 		else:    
-			dummy = assignments[assignments['objectID'] == myLabel]
+			dummy = pd.DataFrame(assignments[assignments['objectID'].isin([myLabel])])
+			dummy['asgnIndex'] = assignments[assignments['objectID'].isin([myLabel])].index.values()
 
+		# Replace -1 endTime:
+		dummy.loc[dummy['endTimeSec'] < 0, 'endTimeSec'] = maxEnd
+		
+		# If user doesn't want color change to trigger a break,
+		# and if a missing color name is specified,
+		# go ahead and replace missing colors now.
+		if (not splitOnColorChange):
+			if (missingColor is not None):
+				dummy.loc[dummy['ganttColor'].isin([None]), 'ganttColor'] = missingColor
+
+		# Sort by odID and startTime:
+		dummy = dummy.sort_values(by=['odID', 'startTimeSec'], ascending=True)
+		dummy = dummy.reset_index(drop=True)
+		
+		# Add new columns, with values from the *next* row:
+		dummy[['next_odID', 'next_startTimeSec', 'next_ganttColor']] = pd.DataFrame(dummy[1:][['odID', 'startTimeSec', 'ganttColor']].values)
+
+		start_x = None
 		for j in list(dummy.index):
-			start_x = dummy.loc[j]['startTimeSec']
-			if (dummy.loc[j]['endTimeSec'] < 0):
-				endTime = maxEnd
-			else:
-				endTime = dummy.loc[j]['endTimeSec']
-			duration = endTime - dummy.loc[j]['startTimeSec']
-			if (dummy.loc[j]['ganttColor'] == None):
-				if (missingColor is None):
-					break
-				else:
-					myColor = missingColor
-			else:
+			# Set the starting x coordinate for a new cell:
+			if (start_x is None):
 				myColor = dummy.loc[j]['ganttColor']
-			ax.broken_barh([(start_x, duration)], (y-BAR_HEIGHT/2, BAR_HEIGHT), fc=myColor, ec='black')
+				if (myColor is None):
+					if (missingColor is None):
+						break
+					else:
+						myColor = missingColor
+				start_x = dummy.loc[j]['startTimeSec']
+				odID    = dummy.loc[j]['odID']	
+			
+			# Check for ending condition of the cell
+			# Break in times,
+			# mergeByodID and change in odIDs
+			# splitOnColorChange and change in colors
+			if (start_x is not None):
+				if ( (not mergeByodID) or \
+					 (dummy.loc[j]['endTimeSec'] != dummy.loc[j]['next_startTimeSec']) or \
+					 (dummy.loc[j]['odID'] != dummy.loc[j]['next_odID']) or \
+					 (splitOnColorChange and (dummy.loc[j]['ganttColor'] != dummy.loc[j]['next_ganttColor'])) ):
 
-			if (overlayIndices):
-				if (xMin <= (start_x + duration/2.0) <= xMax):
-					plt.text((start_x + duration/2.0), y, j, color='black', fontsize=12, ha='center', va='center')
+					endTime = dummy.loc[j]['endTimeSec']
+					duration = endTime - start_x
+				
+					ax.broken_barh([(start_x, duration)], (y-BAR_HEIGHT/2, BAR_HEIGHT), fc=myColor, ec='black')
+
+					if (overlayColumn == 'index'):
+						if (xMin <= (start_x + duration/2.0) <= xMax):
+							overlayText = dummy.loc[j]['asgnIndex']
+							plt.text((start_x + duration/2.0), y, overlayText, color='black', fontsize=12, ha='center', va='center')
+					elif (overlayColumn == 'odID'):
+						if (xMin <= (start_x + duration/2.0) <= xMax):
+							overlayText = odID
+							plt.text((start_x + duration/2.0), y, overlayText, color='black', fontsize=12, ha='center', va='center')
+					
+					start_x = None		
 
 
 	if (title is not None):

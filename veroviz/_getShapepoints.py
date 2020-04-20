@@ -54,7 +54,11 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			[path, time, dist] = mqGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey)
 		elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-online'):
 			APIkey = dataProviderArgs['APIkey']
-			[path, extras, time, dist] = orsGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey)
+			if ('requestExtras' in dataProviderArgs.keys()):
+				requestExtras = dataProviderArgs['requestExtras']
+			else:
+				requestExtras = True
+			[path, extras, time, dist] = orsGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey, requestExtras)
 		else:
 			return
 
@@ -99,8 +103,9 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 
 		# generate assignments
 		for i in range(1, len(path)):
-			startElev  = extras[i-1]['elev'] if (i-1) in extras else None
-			endElev    = extras[i]['elev'] if i in extras else None
+			startElev   = extras[i-1]['elev'] if (i-1) in extras else None
+			endElev     = extras[i]['elev'] if i in extras else None
+			wayname     = extras[i]['wayname'] if (i-1) in extras else None
 			
 			waycategory = extras[i]['waycategory'] if (i-1) in extras else None
 			surface     = extras[i]['surface'] if (i-1) in extras else None
@@ -135,6 +140,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 				'popupText' : popupText,
 				'startElevMeters' : startElev,
 				'endElevMeters' : endElev,
+				'wayname' : wayname,
 				'waycategory' : waycategory,
 				'surface' : surface,
 				'waytype' : waytype, 
@@ -178,6 +184,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'popupText' : popupText,
 			'startElevMeters' : elev,
 			'endElevMeters' : elev,
+			'wayname' : None,
 			'waycategory' : None,
 			'surface' : None,
 			'waytype' : None, 
@@ -244,6 +251,7 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 			'popupText': popupText,
 			'startElevMeters' : None,
 			'endElevMeters' : None,
+			'wayname' : None,
 			'waycategory' : None,
 			'surface' : None,
 			'waytype' : None, 
@@ -280,6 +288,7 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'popupText': popupText,
 				'startElevMeters' : None,
 				'endElevMeters' : None,
+				'wayname' : None,
 				'waycategory' : None,
 				'surface' : None,
 				'waytype' : None, 

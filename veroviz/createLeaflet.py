@@ -456,7 +456,8 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 				'leafletWeight' : arcs.iloc[i]['leafletWeight'],
 				'leafletStyle' : arcs.iloc[i]['leafletStyle'],
 				'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
-				'useArrows' : arcs.iloc[i]['useArrows']
+				'useArrows' : arcs.iloc[i]['useArrows'],
+				'popupText' : arcs.iloc[i]['popupText']
 				}, ignore_index=True)
 			lstPath.append(newPath.copy())
 
@@ -502,16 +503,24 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			newColor = newColor.lower()
 		except:
 			pass
-			
-		# Folium draw arcs	
-		folium.PolyLine(
-			arcPath, 
-			color = newColor, 
-			weight = newWeight, 
-			opacity = newOpacity, 
-			dash_array = dashArray
-		).add_to(mapObject)	
 
+		for j in range(1, len(arcPath)):
+			# Format popup text
+			if (lstPath[i]['popupText'][j-1] is not None):
+				popupText = str(lstPath[i]['popupText'][j-1])
+			else:
+				popupText = None	
+			
+			# Folium draw arcs	
+			folium.PolyLine(
+				[arcPath[j-1], arcPath[j]], 
+				color = newColor, 
+				weight = newWeight, 
+				opacity = newOpacity, 
+				dash_array = dashArray,
+				popup = popupText
+			).add_to(mapObject)	
+		
 		# Check if we add arrows
 		arrowFlag = False
 		if (useArrows == True):

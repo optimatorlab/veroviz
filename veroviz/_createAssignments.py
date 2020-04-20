@@ -43,6 +43,7 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 		'useArrows': None,
 		'startElevMeters' : None,
 		'endElevMeters' : None,
+		'wayname' : None,
 		'waycategory' : None,
 		'surface' : None,
 		'waytype' : None, 

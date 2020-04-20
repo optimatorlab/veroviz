@@ -155,7 +155,7 @@ def ZZZorsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=
 		raise
 
 
-def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None):
+def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None, requestExtras=True):
 	"""
 	A function to get a list of shapepoints from start coordinate to end coordinate. 
 	Parameters
@@ -170,6 +170,8 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 	-------
 	path: list of lists
 		A list of coordinates in sequence that shape the route from startLoc to endLoc
+	extras: dictionary of dictionaries
+		Describes extra information, such as waynames, waytypes, elevation, etc.	
 	timeInSeconds: list
 		time between current shapepoint and previous shapepoint, the first element should be 0 
 	distInMeters: list
@@ -231,11 +233,17 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		coordinates  = [[dicStartLoc['lon'],dicStartLoc['lat']], 
 						[dicEndLoc['lon'],dicEndLoc['lat']]]
 		units        = 'm'
-		
+		if (requestExtras):
+			elevation = "true"
+			extra_info = ["steepness","surface","waycategory","waytype","tollways"]
+		else:
+			elevation = "false"
+			extra_info = []
+			
 		encoded_body = json.dumps({
 			"coordinates": coordinates,
-			"elevation": "true", 
-			"extra_info": ["steepness","surface","waycategory","waytype","tollways"],
+			"elevation": elevation, 
+			"extra_info": extra_info,
 			"instructions": "true",
 			"preference": preference,
 			"units": units})
@@ -256,11 +264,12 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 			for i in range(len(data['features'][0]['geometry']['coordinates'])):
 				path.append([data['features'][0]['geometry']['coordinates'][i][1], 
 							 data['features'][0]['geometry']['coordinates'][i][0]])
-				extras[i] = {}
-				if (len(data['features'][0]['geometry']['coordinates'][i]) >= 2):
-					extras[i]['elev'] = data['features'][0]['geometry']['coordinates'][i][2]
-				else:
-					extras[i]['elev'] = None
+				if (requestExtras):
+					extras[i] = {}
+					if (len(data['features'][0]['geometry']['coordinates'][i]) >= 2):
+						extras[i]['elev'] = data['features'][0]['geometry']['coordinates'][i][2]
+					else:
+						extras[i]['elev'] = None
 
 			segs = data['features'][0]['properties']['segments']
 			for i in range(len(segs)):
@@ -280,27 +289,39 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 						timeInSeconds += tmpTimeSec[1:]
 						distInMeters += tmpDistMeters[1:]
 					
-					for k in range(wpStart, wpEnd+1):
-						extras[k]['name'] = segs[i]['steps'][j]['name']	
+					if (requestExtras):
+						if (wpStart == 0):
+							extras[0]['wayname'] = segs[i]['steps'][j]['name']
+						for k in range(wpStart+1, wpEnd+1):
+							extras[k]['wayname'] = segs[i]['steps'][j]['name']	
 			
-			ex = data['features'][0]['properties']['extras']			
-			for [wpStart, wpEnd, val] in ex['waycategory']['values']:
-				for i in range(wpStart, wpEnd+1):
-					extras[i]['waycategory'] = orsWaycategoryDict[val]
-			for [wpStart, wpEnd, val] in ex['surface']['values']:
-				for i in range(wpStart, wpEnd+1):
-					extras[i]['surface'] = orsSurfaceDict[val]
-			for [wpStart, wpEnd, val] in ex['waytypes']['values']:
-				for i in range(wpStart, wpEnd+1):
-					extras[i]['waytype'] = orsWaytypeDict[val]
-			for [wpStart, wpEnd, val] in ex['steepness']['values']:
-				for i in range(wpStart, wpEnd+1):
-					extras[i]['steepness'] = val
-			for [wpStart, wpEnd, val] in ex['tollways']['values']:
-				for i in range(wpStart, wpEnd+1):
-					extras[i]['tollway'] = bool(val)
-			
-			print(extras)		
+			if (requestExtras):
+				ex = data['features'][0]['properties']['extras']
+				for [wpStart, wpEnd, val] in ex['waycategory']['values']:
+					if (wpStart == 0):
+						extras[0]['waycategory'] = orsWaycategoryDict[val]
+					for i in range(wpStart+1, wpEnd+1):
+						extras[i]['waycategory'] = orsWaycategoryDict[val]
+				for [wpStart, wpEnd, val] in ex['surface']['values']:
+					if (wpStart == 0):
+						extras[0]['surface'] = orsSurfaceDict[val]
+					for i in range(wpStart+1, wpEnd+1):
+						extras[i]['surface'] = orsSurfaceDict[val]
+				for [wpStart, wpEnd, val] in ex['waytypes']['values']:
+					if (wpStart == 0):
+						extras[0]['waytype'] = orsWaytypeDict[val]
+					for i in range(wpStart+1, wpEnd+1):
+						extras[i]['waytype'] = orsWaytypeDict[val]
+				for [wpStart, wpEnd, val] in ex['steepness']['values']:
+					if (wpStart == 0):
+						extras[0]['steepness'] = val
+					for i in range(wpStart+1, wpEnd+1):
+						extras[i]['steepness'] = val
+				for [wpStart, wpEnd, val] in ex['tollways']['values']:
+					if (wpStart == 0):
+						extras[0]['tollway'] = bool(val)
+					for i in range(wpStart+1, wpEnd+1):
+						extras[i]['tollway'] = bool(val)
 			
 			return [path, extras, timeInSeconds, distInMeters]
 		else:

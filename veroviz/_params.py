@@ -138,6 +138,7 @@ assignmentsColumnList = [
 	'popupText',
 	'startElevMeters',
 	'endElevMeters',
+	'wayname',
 	'waycategory',
 	'surface',
 	'waytype', 

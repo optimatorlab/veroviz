@@ -2746,7 +2746,7 @@ def valClosestPointLoc2Path(loc, path):
 	return [valFlag, errorMsg, warningMsg]
 	
 
-def valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayIndices, missingColor, filename):
+def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID, splitOnColorChange, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayColumn, missingColor, filename):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2781,8 +2781,17 @@ def valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxis
 		if (type(separateByModelFile) is not bool):
 			valFlag = False
 			errorMsg = "Error: `separateByModelFile` must be boolean (either `True` or `False`)."
+
+	if (valFlag):
+		if (type(mergeByodID) is not bool):
+			valFlag = False
+			errorMsg = "Error: `mergeByodID` must be boolean (either `True` or `False`)."
 			
-	
+	if (valFlag):
+		if (type(splitOnColorChange) is not bool):
+			valFlag = False
+			errorMsg = "Error: `splitOnColorChange` must be boolean (either `True` or `False`)."
+
 	# title -- not checked
 	# xAxisLabel -- not checked
 	
@@ -2831,9 +2840,9 @@ def valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxis
     #     print("Warning: The time exceeds 60 minutes.  Consider using the 'HMS' format.")
 
 	if (valFlag):
-		if (type(overlayIndices) is not bool):
+		if (type(overlayColumn) not in [None, 'odID', 'index']):
 			valFlag = False
-			errorMsg = "Error: `overlayIndices` must be boolean (either `True` or `False`)."
+			errorMsg = "Error: `overlayColumn` must be either None (default), 'odID', or 'index'."
 
 	if (missingColor is not None):
 		if (valFlag):
@@ -2846,6 +2855,12 @@ def valCreateGantt(assignments, objectIDorder, separateByModelFile, title, xAxis
 			if (type(filename) is not str):
 				valFlag = False
 				errorMsg = "Error: `filename` must be either `None` or a string."
+
+	if (valFlag):
+		if (overlayColumn == 'index' and mergeByodID):
+			warningMsg += "Warning: Combining `overlayColumn='index'` with `mergeByodID=True` is not recommended."
+		if (overlayColumn == 'odID' and not mergeByodID):
+			warningMsg += "Warning: Combining `overlayColumn='odID'` with `mergeByodID=False` is not recommended."
 
 	return [valFlag, errorMsg, warningMsg]
 		
