@@ -7,6 +7,10 @@ Added validation for all Utility functions.  Now checks for existence of require
 cesium colors no longer require 'Cesium.Color' prefix.
 
 
+FIXME -- createLeaflet() -- Should be OK if neither nodes, arcs, nor boundingRegion are specified.  
+
+
+FUTURE -- Chloropeths (sp)
 
 
 .rst files
@@ -24,19 +28,27 @@ Dataframe Changes:
 
 		Added popupText column.  Defaults to None.
 		
-		??? Added `startAltMSL` and `endAltMSL` columns.  Default to None
+		Added `startElevMeters` and `endElevMeters` columns.  Default to None
 				
 	Nodes:
 		Added options to draw circle nodes
 		Added popupText column.  Defaults to None.
 
-		??? Added `altMSL` column.  Defaults to None
+		Added `elevMeters` column.  Defaults to None
 
 	Arcs:		
 		Added popupText column.  Defaults to None.
 
-		??? Added `startAltMSL` and `endAltMSL` columns.  Default to None
+		??? Added `startElevMeters` and `endElevMeters` columns.  Default to None
 		
+
+******
+Added 'wheelchair' and 'shortest' routeType options for ORS-online
+	(they had this data, we just weren't configured to capture it)
+	
+	
+
+
 
 New Utility Functions:
 	isochrones()
@@ -46,6 +58,7 @@ New Utility Functions:
 	closestNode2Loc()
 	lengthFromNodeSeq()
 	calcArea()
+	FIXME -- getWeather()
 
 	LP:  zip function(s)?
 	

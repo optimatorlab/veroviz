@@ -49,112 +49,6 @@ def orsGetSnapToRoadLatLon(loc, APIkey):
 		raise 
 
 
-def ZZZorsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None):
-	"""
-	A function to get a list of shapepoints from start coordinate to end coordinate. 
-	Parameters
-	----------
-	startLoc: list
-		Start location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
-	endLoc: list
-		End location.  The format is [lat, lon] (altitude, above sea level, set to be 0) or [lat, lon, alt]
-	travelMode: string, {fastest}
-		Optional, default as 'fastest'. Choose a travel mode as a parameter for ORS
-	Returns
-	-------
-	path: list of lists
-		A list of coordinates in sequence that shape the route from startLoc to endLoc
-	timeInSeconds: list
-		time between current shapepoint and previous shapepoint, the first element should be 0 
-	distInMeters: list
-		distance between current shapepoint and previous shapepoint, the first element should be 0
-	"""
-
-	dicStartLoc = loc2Dict(startLoc)
-	dicEndLoc = loc2Dict(endLoc)
-
-	"""
-	The following "profile" options are available in ORS:
-		'driving-car'		('fastest')	
-		'driving-hgv'		('truck' - fastest)
-		'cycling-regular'	('cycling')
-		'cycling-road'
-		'cycling-mountain'
-		'cycling-electric'
-		'foot-walking'
-		'foot-hiking'
-		'wheelchair'
-		
-		There is no "shortest" option    
-	"""
-	
-	try:
-		travelMode = travelMode.lower()
-	except:
-		pass
-	
-	if (travelMode == 'fastest'):
-		profile = 'driving-car'
-	elif (travelMode == 'pedestrian'):
-		profile = 'foot-walking'
-	elif (travelMode == 'cycling'):
-		profile = 'cycling-road'
-	elif (travelMode == 'truck'):
-		profile = 'driving-hgv'
-	else:
-		print("Error: Invalid travelMode.")
-		return    
-    
-	# ORS uses [lon, lat] order:
-	shapepointsUrl = ('https://api.openrouteservice.org/v2/directions/%s?api_key=%s&start=%s,%s&end=%s,%s' % 
-					(profile, APIkey, dicStartLoc['lon'], dicStartLoc['lat'], dicEndLoc['lon'], dicEndLoc['lat']))
-
-	try:
-		http = urllib3.PoolManager()
-		response = http.request('GET', shapepointsUrl)
-		data = json.loads(response.data.decode('utf-8'))
-
-		http_status = response.status
-
-		if (http_status == 200):
-			# OK
-			# ORS uses [lon, lat] order:
-			path = []
-			timeInSeconds = []
-			distInMeters = []
-			for i in range(len(data['features'][0]['geometry']['coordinates'])):
-				path.append([data['features'][0]['geometry']['coordinates'][i][1], 
-							 data['features'][0]['geometry']['coordinates'][i][0]])
-
-			for i in range(len(data['features'][0]['properties']['segments'])):
-				for j in range(len(data['features'][0]['properties']['segments'][i]['steps'])):
-					# Find arrival times for each shapepoint location.
-					# ORS gives times for groups of waypoints...we need more granularity.
-
-					subpathTimeSec = data['features'][0]['properties']['segments'][i]['steps'][j]['duration']
-					wpStart = data['features'][0]['properties']['segments'][i]['steps'][j]['way_points'][0]
-					wpEnd = data['features'][0]['properties']['segments'][i]['steps'][j]['way_points'][1]
-
-					[tmpTimeSec, tmpDistMeters] = distributeTimeDist(path[wpStart:wpEnd+1], subpathTimeSec)
-					if (len(timeInSeconds) == 0):
-						timeInSeconds += tmpTimeSec
-						distInMeters += tmpDistMeters
-					else:
-						timeInSeconds += tmpTimeSec[1:]
-						distInMeters += tmpDistMeters[1:]
-                    
-			return [path, timeInSeconds, distInMeters]
-		else:
-			# Error of some kind
-			http_status_description = responses[http_status]
-			print("Error Code %s: %s" % (http_status, http_status_description))
-			return
-
-	except:
-		print("Error: ", sys.exc_info()[1])
-		raise
-
-
 def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None, requestExtras=True):
 	"""
 	A function to get a list of shapepoints from start coordinate to end coordinate. 
@@ -322,6 +216,10 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 						extras[0]['tollway'] = bool(val)
 					for i in range(wpStart+1, wpEnd+1):
 						extras[i]['tollway'] = bool(val)
+			
+			# Just for fun, let's print some other info we got (but didn't save):
+			print("ascent: {}".format(data['features'][0]['properties']['ascent']))
+			print("descent: {}".format(data['features'][0]['properties']['descent']))
 			
 			return [path, extras, timeInSeconds, distInMeters]
 		else:

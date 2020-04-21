@@ -89,7 +89,8 @@ nodesColumnList = [
 	'leafletIconText', 
 	'cesiumIconType', 
 	'cesiumColor', 
-	'cesiumIconText'
+	'cesiumIconText',
+	'elevMeters'
 ]
 
 arcsColumnList = [
@@ -108,7 +109,9 @@ arcsColumnList = [
 	'cesiumWeight', 
 	'cesiumStyle', 
 	'cesiumOpacity',
-	'popupText'
+	'popupText',
+	'startElevMeters',
+	'endElevMeters',	
 ]
 
 assignmentsColumnList = [
@@ -218,6 +221,15 @@ mapBackgroundList = {
 	'open topo'
 }
 
+weatherMapList = {
+	'clouds', 
+	'precip', 
+	'pressure', 
+	'wind', 
+	'temp'
+}
+
+
 horizAlignList = {
 	'left',
 	'right',
@@ -304,13 +316,30 @@ isoDataProviderDictionary = {
 	'ors-ol': 'ors-online'
 }
 
-# NOTE: The only valid dataProvider for elevation functions is:
+# NOTE: The only valid dataProvider options for elevation functions are:
 #       ors-online
+#       usgs
+#		elevAPI
 elevDataProviderDictionary = {
 	'openrouteservice-online': 'ors-online',
 	'openrouteservice-ol': 'ors-online',
 	'ors-online': 'ors-online',
-	'ors-ol': 'ors-online'
+	'ors-ol': 'ors-online',
+	
+	'usgs': 'usgs',
+	
+	'elevapi': 'elevapi',
+	'elev-api': 'elevapi',
+	'elevation-api': 'elevapi',
+	'elevationapi': 'elevapi'
+}
+
+weatherDataProviderDictionary = {
+	'openweather': 'openweather',
+	'openweathermap': 'openweather',
+	'openweatherapi': 'openweather',
+	'ow': 'openweather',
+	'owm': 'openweather'
 }
 
 matrixTypeList = [

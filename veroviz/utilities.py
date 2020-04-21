@@ -4,7 +4,9 @@ from veroviz._geometry import *
 from veroviz._internal import *
 from veroviz._geocode import privGeocode, privReverseGeocode
 from veroviz._isochrones import privIsochrones
-from veroviz._elevation import privGetElevation
+from veroviz._elevation import privGetElevationLocs
+from veroviz._elevation import privGetElevationNodes, privGetElevationArcsAsgn
+from veroviz._weather import privGetWeather
 
 def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist=None, toUnitsTime=None):
 	"""
@@ -2683,10 +2685,10 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 		y = yTicks[i]
 		if (separateByModelFile):
 			dummy = pd.DataFrame(assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel])
-			dummy['asgnIndex'] = assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel].index.values()
+			dummy['asgnIndex'] = assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel].index
 		else:    
 			dummy = pd.DataFrame(assignments[assignments['objectID'].isin([myLabel])])
-			dummy['asgnIndex'] = assignments[assignments['objectID'].isin([myLabel])].index.values()
+			dummy['asgnIndex'] = assignments[assignments['objectID'].isin([myLabel])].index
 
 		# Replace -1 endTime:
 		dummy.loc[dummy['endTimeSec'] < 0, 'endTimeSec'] = maxEnd
@@ -2785,7 +2787,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	return fig
 	
 	
-def getElevation(locs=None, dataProvider=None, dataProviderArgs=None):    
+def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):    
 	"""
 	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  
 
@@ -2804,7 +2806,7 @@ def getElevation(locs=None, dataProvider=None, dataProviderArgs=None):
 		
 	Note
 	----
-	Currently, only 'ors-online' is supported.
+	Currently, only 'ors-online', 'usgs', and 'elevapi' are supported.
 	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for elevation.  
 
 	Examples
@@ -2815,14 +2817,79 @@ def getElevation(locs=None, dataProvider=None, dataProviderArgs=None):
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valGetElevation(locs, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valGetElevationLocs(locs, dataProvider, dataProviderArgs)
 	if (not valFlag):
 		print (errorMsg)
 		return None
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 		
-	locsWithAlt = privGetElevation(locs, dataProvider, dataProviderArgs)
+	locsWithAlt = privGetElevationLocs(locs, dataProvider, dataProviderArgs)
 	
 	return locsWithAlt
+
+
+def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None): 
+	"""
+	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL), 
+
+	Parameters
+	----------
+	dataframe: pandas.dataframe, Required
+		The dataframe to be exported.  This can be a :ref:`Nodes`, :ref:`Arcs`, or :ref:`Assignments` dataframe.
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 	
+	Return
+	------
+	A pandas dataframe.
+		
+	Note
+	----
+	Currently, only 'ors-online', 'usgs', and 'elevapi' are supported.
+	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for elevation.  
+
+	Examples
+	--------
+                     	
+	FIXME
+
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGetElevationDF(dataframe, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+		
+	# Make copy of dataframe
+	dataframe = pd.DataFrame(dataframe)
+		
+	# Find out the type of dataframe we have:
+	dfCols = list(dataframe.columns)
+	if (('lat' in dfCols) and ('lon' in dfCols) and ('elevMeters' in dfCols)):
+		dfWithAlt = privGetElevationNodes(dataframe, dataProvider, dataProviderArgs)
+	elif (('startElevMeters' in dfCols) and ('endElevMeters' in dfCols)):
+		dfWithAlt = privGetElevationArcsAsgn(dataframe, dataProvider, dataProviderArgs)	
+	else:
+		# This shouldn't happen...validation should catch issues
+		print('Error: Invalid/unknown dataframe configuration.')
+		return
+		
+	return dfWithAlt
+
+
+def getWeather(location=None, metricUnits=False, dataProvider=None, dataProviderArgs=None):  
+	"""
+	EXPERIMENTAL.  Get weather information for a specified [lat, lon] location.
+	
+	"""
+	
+	# validation
+	print('FIXME -- need validation')
+	
+	weatherDF = privGetWeather(location, metricUnits, dataProvider, dataProviderArgs)

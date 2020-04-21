@@ -92,7 +92,8 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 			'leafletIconText': leafletIconText if (leafletIconText != None) else ids[i],
 			'cesiumIconType': cesiumIconType,
 			'cesiumColor': stripCesiumColor(cesiumColor),
-			'cesiumIconText': cesiumIconText if (cesiumIconText != None) else ids[i]
+			'cesiumIconText': cesiumIconText if (cesiumIconText != None) else ids[i],
+			'elevMeters': None
 			}, ignore_index=True)
 
 	# if the user provided an initNode dataframe, add the new points after it
@@ -139,7 +140,9 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 			'cesiumStyle' : cesiumStyle,
 			'cesiumOpacity' : cesiumOpacity,
 			'useArrows': useArrows,
-			'popupText': popupText
+			'popupText': popupText, 
+			'startElevMeters': None,
+			'endElevMeters': None
 			}, ignore_index=True)
 
 	# if the user provided an initNode dataframe, add the new points after it

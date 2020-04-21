@@ -33,6 +33,7 @@ from veroviz.createLeaflet import addLeafletPolyline
 from veroviz.createLeaflet import addLeafletText
 from veroviz.createLeaflet import addLeafletIcon
 from veroviz.createLeaflet import addLeafletIsochrones
+from veroviz.createLeaflet import addLeafletWeather
 from veroviz.createCesium import createCesium
 
 # Internal shared small functions/constants/validation
@@ -74,6 +75,15 @@ from veroviz._queryMapQuest import mqGetTimeDistOne2Many
 from veroviz._queryMapQuest import mqGetTimeDistMany2One
 from veroviz._queryMapQuest import mqGeocode
 from veroviz._queryMapQuest import mqReverseGeocode
+
+# USGS related
+from veroviz._queryUSGS import usgsGetElevation
+
+# Elevation-API.io related
+from veroviz._queryElevationapiio import elevapiGetElevation
+
+# OpenWeather related
+from veroviz._queryOpenWeather import owGetWeather
 
 # 3D function related
 from veroviz._buildFlightProfile import buildNoLoiteringFlight

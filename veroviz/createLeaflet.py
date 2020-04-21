@@ -7,6 +7,7 @@ from veroviz._validation import valAddLeafletPolyline
 from veroviz._validation import valAddLeafletText
 from veroviz._validation import valAddLeafletIcon
 from veroviz._validation import valAddLeafletIsochrones
+from veroviz._validation import valAddLeafletWeather
 from veroviz._internal import replaceBackslashToSlash
 from veroviz._internal import splitLeafletCustomIconType
 
@@ -26,6 +27,35 @@ foliumMaps = [
 	'stamen toner', 
 	'stamen watercolor'
 ]
+
+weatherMaps = {
+	'clouds': {
+		'tiles': 'https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=',
+		'attr': 'openweathermap.org'
+	},
+	
+	'precip': { 	
+		'tiles': 'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=',
+		'attr': 'openweathermap.org'
+	},
+
+	'pressure': { 
+		'tiles': 'https://tile.openweathermap.org/map/pressure_new/{z}/{x}/{y}.png?appid=',
+		'attr': 'openweathermap.org'
+	},
+		
+	'wind': {
+		'tiles': 'https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=',	
+		'attr': 'openweathermap.org'
+	},
+
+	'temp': {
+		'tiles': 'https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=',
+		'attr': 'openweathermap.org'
+	}
+}
+
+
 
 customMaps = {
 	'arcgis aerial': {
@@ -1601,7 +1631,7 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject	
-	
+		
 def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, iso=None, showBoundingRegion=False, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, iconText=None, popupText=None, lineWeight=3, lineOpacity=0.8, lineStyle='solid', fillOpacity=0.3):
 	"""
 	Easily draw isochrones on a Leaflet map.  Be sure to run the `isochrones()` function first.
@@ -1755,4 +1785,103 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject	
+	
+	
+def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES):
+	"""
+	Adds map tiles showing weather conditions to a Leaflet map.  Weather tiles are obtained via openweathermap.org (an API key is required).
+
+	Parameters
+	----------
+	mapObject: Folium object, Optional, default as None
+		If you already have a map (as a Folium object), you can provide that object and overlay weather on that map.
+	mapType: string, Required, default as 'precip'
+		Specifies the type of weather map to overlay on the mapObject.  Valid options are: 'clouds', 'precip', 'pressure', 'wind', and 'temp'.
+	APIkey: string, Required, default at None
+		These weather maps are hosted by openweathermap.org.  You may register for a free API key at their website.
+	mapFilename: string, Optional, default as None
+		This is the name of the map file that will be created (e.g., "../output/map.html" or "map.html").  The filename should have a `.html` extension.  If `mapFilename` is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.
+	mapBackground: string, Optional, default as 'CartoDB positron'
+		Sets the background tiles of the map.  See :ref:`Leaflet Style` for the list of options.
+		
+	Return
+	------
+	Folium object
+		A Folium map object containing a text string (and pre-existing items previously specified in mapObject).
+		
+	Example
+	-------
+
+	>>> import veroviz as vrv
+
+	>>> myMap = vrv.addLeafletWeather(mapObject     = None, 
+	...                               mapType       = 'wind', 
+	... 						      APIkey        = 'KEY_GOES_HERE', 
+	... 						      mapFilename   = None, 
+	...   						      mapBackground = 'cartodb dark_matter')
+	>>> myMap
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valAddLeafletWeather(mapObject, mapType, APIkey, mapFilename, mapBackground)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	# Replace backslash
+	mapFilename = replaceBackslashToSlash(mapFilename)
+
+	try:
+		mapType = mapType.lower()
+	except:
+		pass
+
+	try:
+		mapBackground = mapBackground.lower()
+	except:
+		pass
+		
+
+	# If no mapObject exists, set a new mapObject
+	if (mapObject == None):
+		if (mapBackground in foliumMaps):
+			mapObject = folium.Map(
+				location   = [0, 0], 
+				zoom_start = 2, 
+				tiles      = mapBackground)
+		elif (mapBackground in customMaps):
+			mapObject = folium.Map(
+				location   = [0, 0], 
+				zoom_start = 2, 
+				tiles      = customMaps[mapBackground]['tiles'],
+				attr       = customMaps[mapBackground]['attr'])
+
+	# Add the weather map layer:
+	folium.TileLayer(
+		tiles = '%s%s' % (weatherMaps[mapType]['tiles'], APIkey),
+		attr  = weatherMaps[mapType]['attr']
+	).add_to(mapObject)
+
+	if (mapFilename is not None):		
+		mapDirectory = ""
+		strList = mapFilename.split("/")
+		for i in range(len(strList) - 1):
+			mapDirectory += strList[i] + "/"
+		if (mapDirectory != ""):
+			if (not os.path.exists(mapDirectory)):
+				os.makedirs(mapDirectory, exist_ok=True)
+
+		mapObject.save(mapFilename)
+		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+			print("Message: Map page written to %s." % (mapFilename))
+	
+	return mapObject
+
+
+
+
+	# weatherMaps	
+	
 	

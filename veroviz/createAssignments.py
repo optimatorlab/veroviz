@@ -850,6 +850,12 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
+	# if the user provided an initAssignments dataframe, add the new points after it
+	if (type(initAssignments) is pd.core.frame.DataFrame):
+		# Increase odID as necessary:
+		if (len(initAssignments) > 0):
+			odID = max(max(initAssignments['odID'])+1, odID)
+		
 	assignments = privAddStaticAssignment(
 		initAssignments = initAssignments, 
 		odID            = odID, 
@@ -1263,6 +1269,10 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
 
+		# Increase odID as necessary:
+		if (len(assignmentsDF) > 0):
+			odID = max(max(assignmentsDF['odID'])+1, odID)
+
 	startTime = startTimeSec
 
 	for i in range(0, len(nodeSeq)-1):
@@ -1511,6 +1521,10 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+
+		# Increase odID as necessary:
+		if (len(assignmentsDF) > 0):
+			odID = max(max(assignmentsDF['odID'])+1, odID)
 
 	startTime = startTimeSec
 

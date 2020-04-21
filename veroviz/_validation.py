@@ -1016,6 +1016,46 @@ def valAddLeafletText(mapObject, mapFilename, mapBackground, mapBoundary, zoomSt
 
 	return [valFlag, errorMsg, warningMsg]
 
+
+def valAddLeafletWeather(mapObject, mapType, APIkey, mapFilename, mapBackground):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (mapObject is not None):
+		if (type(mapObject) is not folium.folium.Map):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapObject`."
+			
+	if (valFlag):
+		try:
+			mapType = mapType.lower()
+		except:
+			pass
+			
+		if (mapType not in weatherMapList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapType` value.  Valid options include 'clouds', 'precip', 'pressure', 'wind', and 'temp'."	
+			
+	if (valFlag):
+		if (mapFilename is not None):
+			if (type(mapFilename) is not str):
+				valFlag = False
+				errorMsg = "Error: filename should be a string."
+
+	if (valFlag):
+		try:
+			mapBackground = mapBackground.lower()
+		except:
+			pass
+
+		if (mapBackground not in mapBackgroundList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapBackground` value. Valid options include 'CartoDB positron', 'CartoDB dark_matter', 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'arcGIS Aerial', 'arcGIS Gray', 'arcGIS Ocean', 'arcGIS Roadmap', 'arcGIS Shaded Relief', 'arcGIS Topo', 'Open Topo'"
+
+	return [valFlag, errorMsg, warningMsg]
+
+
 def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesiumDir, problemDir, cesiumIconColor, cesiumPathColor, cesiumPathWeight, cesiumPathStyle, cesiumPathOpacity):
 	valFlag = True
 	errorMsg = ""
@@ -2686,7 +2726,7 @@ def valIsochrones(location, locationType, travelMode, rangeType, rangeSize, inte
 	
 	return [valFlag, errorMsg, warningMsg]    
 
-def valGetElevation(locs, dataProvider, dataProviderArgs):
+def valGetElevationLocs(locs, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2698,6 +2738,39 @@ def valGetElevation(locs, dataProvider, dataProviderArgs):
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locs)
 		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGetElevationDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]    
+
+
+def valGetElevationDF(dataframe, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (dataframe is None):
+		valFlag = False
+		errorMsg = "Error: Must provide `dataframe` as pandas dataframe."
+
+
+	if (valFlag):
+		# dataframe must be either a nodes, arcs, or assignments dataframe
+		[tmpValFlag, tmpErrorMsg, newWarningMsg] = valNodes(dataframe)
+		warningMsg += newWarningMsg
+
+		if (not tmpValFlag):
+			[tmpValFlag, tmpErrorMsg, newWarningMsg] = valArcs(dataframe)
+			warningMsg += newWarningMsg
+
+		if (not tmpValFlag):
+			[tmpValFlag, tmpErrorMsg, newWarningMsg] = valAssignments(dataframe)
+			warningMsg += newWarningMsg
+
+		valFlag  = tmpValFlag
+		errorMsg = tmpErrorMsg
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGetElevationDataProvider(dataProvider, dataProviderArgs)
@@ -2840,7 +2913,7 @@ def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID,
     #     print("Warning: The time exceeds 60 minutes.  Consider using the 'HMS' format.")
 
 	if (valFlag):
-		if (type(overlayColumn) not in [None, 'odID', 'index']):
+		if (overlayColumn not in [None, 'odID', 'index']):
 			valFlag = False
 			errorMsg = "Error: `overlayColumn` must be either None (default), 'odID', or 'index'."
 
