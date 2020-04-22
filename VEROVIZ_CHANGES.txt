@@ -10,7 +10,7 @@ cesium colors no longer require 'Cesium.Color' prefix.
 FIXME -- createLeaflet() -- Should be OK if neither nodes, arcs, nor boundingRegion are specified.  
 
 
-FUTURE -- Chloropeths (sp)
+FUTURE -- Choropleths (sp)
 
 
 .rst files
@@ -60,7 +60,7 @@ New Utility Functions:
 	calcArea()
 	FIXME -- getWeather()
 
-	LP:  zip function(s)?
+	LP:  zipcode function(s)?
 	
 	CM:  draw elevation profile?
 	CM:  import from GTFS?
@@ -69,6 +69,7 @@ New Utility Functions:
 New Leaflet Functions:
 	addLeafletIcon()
 	addLeafletIsochrones()
+	addLeafletWeather()
 
 
 Updates / Existing Function Changes:

@@ -115,7 +115,7 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		return    
     
 	shapepointsUrl = ('https://api.openrouteservice.org/v2/directions/%s/geojson' % (profile))
-
+	
 	headers = {
 				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
 				'Authorization': APIkey,
@@ -127,19 +127,21 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		coordinates  = [[dicStartLoc['lon'],dicStartLoc['lat']], 
 						[dicEndLoc['lon'],dicEndLoc['lat']]]
 		units        = 'm'
+		radiuses     = [-1, -1]
 		if (requestExtras):
 			elevation = "true"
 			extra_info = ["steepness","surface","waycategory","waytype","tollways"]
 		else:
 			elevation = "false"
 			extra_info = []
-			
+		
 		encoded_body = json.dumps({
 			"coordinates": coordinates,
 			"elevation": elevation, 
 			"extra_info": extra_info,
 			"instructions": "true",
 			"preference": preference,
+			"radiuses": radiuses,
 			"units": units})
 
 		http = urllib3.PoolManager()
@@ -218,8 +220,8 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 						extras[i]['tollway'] = bool(val)
 			
 			# Just for fun, let's print some other info we got (but didn't save):
-			print("ascent: {}".format(data['features'][0]['properties']['ascent']))
-			print("descent: {}".format(data['features'][0]['properties']['descent']))
+			# print("ascent: {}".format(data['features'][0]['properties']['ascent']))
+			# print("descent: {}".format(data['features'][0]['properties']['descent']))
 			
 			return [path, extras, timeInSeconds, distInMeters]
 		else:

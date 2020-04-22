@@ -268,36 +268,26 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	# Replace backslash
 	mapFilename = replaceBackslashToSlash(mapFilename)
 
-	# Adjust the scope of the map to proper bounds
-	[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(nodes, arcs, boundingRegion)
 
-	try:
-		mapBackground = mapBackground.lower()
-	except:
-		pass
 
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
-		midLat = (maxLat + minLat) / 2.0
-		midLon = (maxLon + minLon) / 2.0
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		# Adjust the scope of the map to proper bounds
+		if (nodes is None and arcs is None and boundingRegion is None):
+			[midLat, midLon] = [0, 0]
+		else:
+			[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(nodes, arcs, boundingRegion)
+			midLat = (maxLat + minLat) / 2.0
+			midLon = (maxLon + minLon) / 2.0
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=[midLat,midLon], zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
 		if (mapBoundary is not None):
 			mapObject.fit_bounds(mapBoundary)
 		elif (mapBoundary is None):
-			mapObject.fit_bounds(getMapBoundary(nodes, arcs, boundingRegion))
+			if (nodes is not None or arcs is not None or boundingRegion is not None):
+				mapObject.fit_bounds(getMapBoundary(nodes, arcs, boundingRegion))
 		
 	# Plot arcs
 	if (type(arcs) is pd.core.frame.DataFrame):
@@ -323,6 +313,41 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		mapObject.save(mapFilename)
 		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
 			print("Message: Map page written to %s." % (mapFilename))
+	
+	return mapObject
+
+def _createLeafletMap(mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, center=[0,0], zoomStart=None):
+
+	try:
+		mapBackground = mapBackground.lower()
+	except:
+		pass
+
+	# Define a new mapObject
+	mapObject = folium.Map(
+		location   = center, 
+		zoom_start = zoomStart if (zoomStart != None) else 3, 
+		tiles      = None)
+	
+	# Add the chosen map background first:
+	if (mapBackground in foliumMaps):
+		folium.TileLayer(mapBackground).add_to(mapObject)
+	elif (mapBackground in customMaps):
+		folium.TileLayer(tiles=customMaps[mapBackground]['tiles'],
+						 attr=customMaps[mapBackground]['attr'],
+						 name=customMaps[mapBackground]['name']).add_to(mapObject)
+	
+	'''
+	# Now, loop over our other map background options (excluding the chosen one):
+	for (mBG in foliumMaps):
+		if (mBG != mapBackground):
+			folium.TileLayer(mBG).add_to(mapObject)
+	for (mBG in customMaps):
+		if (mBG != mapBackground):
+			folium.TileLayer(tiles=customMaps[mBG]['tiles'],
+							 attr=customMaps[mBG]['attr'],
+							 name=mBG).add_to(mapObject)
+	'''
 	
 	return mapObject
 
@@ -799,19 +824,9 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	center = [center[0], center[1]]
 
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=center, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=center, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=center, zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
@@ -982,19 +997,9 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	center = [center[0], center[1]]
 
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=center, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=center, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=center, zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
@@ -1153,9 +1158,6 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	# Adjust the scope of the map to proper
-	[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, points)
-
 	# Do we have a rectangle?
 	if (len(points) == 2):
 		if ( (len(points[0]) == 2) & (len(points[1]) == 2)):
@@ -1168,21 +1170,14 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 	except:
 		pass
 
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
+		# Adjust the scope of the map to proper bounds
+		[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, points)
+
 		midLat = (maxLat + minLat) / 2.0
 		midLon = (maxLon + minLon) / 2.0
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10,  
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=[midLat,midLon], zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
@@ -1321,29 +1316,19 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	# Adjust the scope of the map to proper bounds
-	[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, points)
-
 	try:
 		mapBackground = mapBackground.lower()
 	except:
 		pass
 
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
+		# Adjust the scope of the map to proper bounds
+		[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, points)
+
 		midLat = (maxLat + minLat) / 2.0
 		midLon = (maxLon + minLon) / 2.0
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10,  
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=[midLat,midLon], zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
@@ -1473,21 +1458,11 @@ def addLeafletText(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 		pass
 
 	anchorPoint = [anchorPoint[0], anchorPoint[1]]
-		
-	# If there is no mapObject exists, set a new mapObject
-	if (mapObject == None):
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=anchorPoint, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=anchorPoint, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
 
+	# If no mapObject exists, define a new mapObject
+	if (mapObject == None):
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=anchorPoint, zoomStart=zoomStart)
+		
 	# set the map boundary for mapObject
 	if (zoomStart is None):
 		if (mapBoundary is not None):
@@ -1604,19 +1579,9 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 
 	location = [location[0], location[1]]
 
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=location, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=location, 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=location, zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
@@ -1691,29 +1656,20 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	# Adjust the scope of the map to properly show all objects
-	[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, iso['boundingRegion'])
-
 	try:
 		mapBackground = mapBackground.lower()
 	except:
 		pass
 
-	# If no mapObject exists, set a new mapObject
+
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
+		# Adjust the scope of the map to properly show all objects
+		[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, iso['boundingRegion'])
+
 		midLat = (maxLat + minLat) / 2.0
 		midLon = (maxLon + minLon) / 2.0
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10, 
-				tiles=mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location=[midLat, midLon], 
-				zoom_start=zoomStart if (zoomStart != None) else 10,  
-				tiles=customMaps[mapBackground]['tiles'],
-				attr=customMaps[mapBackground]['attr'])
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=[midLat,midLon], zoomStart=zoomStart)
 
 	# set the map boundary for mapObject
 	if (zoomStart is None):
@@ -1843,26 +1799,16 @@ def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename
 	except:
 		pass
 		
-
-	# If no mapObject exists, set a new mapObject
+	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
-		if (mapBackground in foliumMaps):
-			mapObject = folium.Map(
-				location   = [0, 0], 
-				zoom_start = 2, 
-				tiles      = mapBackground)
-		elif (mapBackground in customMaps):
-			mapObject = folium.Map(
-				location   = [0, 0], 
-				zoom_start = 2, 
-				tiles      = customMaps[mapBackground]['tiles'],
-				attr       = customMaps[mapBackground]['attr'])
-
+		mapObject = _createLeafletMap(mapBackground=mapBackground, center=[0,0])
+	
 	# Add the weather map layer:
 	folium.TileLayer(
 		tiles = '%s%s' % (weatherMaps[mapType]['tiles'], APIkey),
 		attr  = weatherMaps[mapType]['attr']
 	).add_to(mapObject)
+
 
 	if (mapFilename is not None):		
 		mapDirectory = ""

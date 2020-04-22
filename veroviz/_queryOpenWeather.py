@@ -1,6 +1,6 @@
 from veroviz._common import *
 
-def owGetWeather(location, metricUnits, APIkey):		
+def owGetWeather(location, id, metricUnits, APIkey):		
 	if (metricUnits):
 		units = 'metric'
 	else:
@@ -17,13 +17,70 @@ def owGetWeather(location, metricUnits, APIkey):
 
 		if (http_status == 200):
 			# OK
-			print(data)
-			
-			#snapLoc = [data['features'][0]['geometry']['coordinates'][0][1], 
-			#			data['features'][0]['geometry']['coordinates'][0][0]] 
+			x = []
 
+			subDict = {}
+			subDict['id']       = id
+			subDict['lat']      = data['lat'] 
+			subDict['lon']      = data['lon'] 
+			subDict['timezone'] = data['timezone']
+			subDict['class']    = 'current'
+			for key in data['current']:
+				if (key == 'weather'):
+					for subkey in data['current']['weather'][0]:
+						subDict['weather_' + subkey] = data['current']['weather'][0][subkey]
+				else:
+					subDict[key] = data['current'][key]
+			x.append(subDict)
+
+			for i in range(0, len(data['hourly'])):
+				subDict = {}
+				subDict['id']       = id
+				subDict['lat']      = data['lat'] 
+				subDict['lon']      = data['lon'] 
+				subDict['timezone'] = data['timezone']
+				subDict['class']    = 'hourly'
+				for key in data['hourly'][i]:
+					if (key == 'weather'):
+						for subkey in data['hourly'][i]['weather'][0]:
+							subDict['weather_' + subkey] = data['hourly'][i]['weather'][0][subkey]
+
+					else:
+						subDict[key] = data['hourly'][i][key]
+				x.append(subDict)
+
+			for i in range(0, len(data['daily'])):
+				subDict = {}
+				subDict['id']       = id
+				subDict['lat']      = data['lat'] 
+				subDict['lon']      = data['lon'] 
+				subDict['timezone'] = data['timezone']
+				subDict['class']    = 'daily'
+				for key in data['daily'][i]:
+					if (key == 'weather'):
+						for subkey in data['daily'][i]['weather'][0]:
+							subDict['weather_' + subkey] = data['daily'][i]['weather'][0][subkey]
+
+					elif (key == 'temp'):
+						for subkey in data['daily'][i]['temp']:
+							subDict['temp_' + subkey] = data['daily'][i]['temp'][subkey]
+
+					elif (key == 'feels_like'):
+						for subkey in data['daily'][i]['feels_like']:
+							subDict['feels_like_' + subkey] = data['daily'][i]['feels_like'][subkey]
+
+					else:
+						subDict[key] = data['daily'][i][key]
+				x.append(subDict)
+
+
+			df = pd.DataFrame(x)
+
+			df['dt']      = pd.to_datetime(df['dt'], unit='s', errors='ignore')
+			df['sunrise'] = pd.to_datetime(df['sunrise'], unit='s', errors='ignore')
+			df['sunset']  = pd.to_datetime(df['sunset'], unit='s', errors='ignore')
             
-			return weatherDF
+			return df
 		else:
 			# Error of some kind
 			http_status_description = responses[http_status]

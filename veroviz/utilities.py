@@ -2883,13 +2883,67 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 	return dfWithAlt
 
 
-def getWeather(location=None, metricUnits=False, dataProvider=None, dataProviderArgs=None):  
+def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvider=None, dataProviderArgs=None):  
 	"""
 	EXPERIMENTAL.  Get weather information for a specified [lat, lon] location.
+
+	Parameters
+	----------
+	location: list, Required
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.
+	id: integer, Optional, default as None
+		This value may be used to link the resulting dataframe with a different dataframe.  For example, the id could match a nodeID from a nodes dataframe.  If `id=None` and `initDF` is a weather dataframe, a new unique id will be automatically chosen.
+	initDF: pandas dataframe, Optional, default as None
+		If provided, the resulting weather dataframe will be appended to this dataframe.  `initDF` should be the result of calling this function.
+	metricUnits: boolean, Optional, default as False
+		If True, metric units (e.g., Celsius) will be used.  Otherwise, imperial units (e.g., Fahrenheit) will be used.
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	A pandas weather dataframe.
+		
+	Examples
+	--------
+	>>> import veroviz as vrv
+	
+	Example 1: A simple example using the minium input arguments.
+	>>> myDF = vrv.getWeather(location     = [42, -78], 
+	...                       dataProvider = 'openweather', 
+	...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
+	
+	Example 2: Append to the dataframe created above.
+	>>>	myDF = vrv.getWeather(location=[40, -80], 
+	...                       id=2, 
+	...                       initDF = myDF, 
+	...                       metricUnits=False, 
+	...                       dataProvider = 'openweather', 
+	...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
 	
 	"""
 	
 	# validation
-	print('FIXME -- need validation')
+	[valFlag, errorMsg, warningMsg] = valGetWeather(location, id, initDF, metricUnits, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
 	
-	weatherDF = privGetWeather(location, metricUnits, dataProvider, dataProviderArgs)
+	# Get an ID:
+	if (id == None):
+		id = 1
+		if (type(initDF) is pd.core.frame.DataFrame):
+			if (len(initDF) > 0):
+				id = max(initDF['id'])+1
+			
+	weatherDF = privGetWeather(location, id, metricUnits, dataProvider, dataProviderArgs)
+
+	# Combine with init dataframe:
+	if (type(initDF) is pd.core.frame.DataFrame):
+		weatherDF = pd.concat([initDF, weatherDF], ignore_index=True, sort=False)
+
+	return weatherDF

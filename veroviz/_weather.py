@@ -2,7 +2,7 @@ from veroviz._common import *
 
 from veroviz._queryOpenWeather import owGetWeather
 
-def privGetWeather(location, metricUnits, dataProvider, dataProviderArgs):	
+def privGetWeather(location, id, metricUnits, dataProvider, dataProviderArgs):	
 
 	try:
 		dataProvider = dataProvider.lower()
@@ -10,7 +10,7 @@ def privGetWeather(location, metricUnits, dataProvider, dataProviderArgs):
 		pass
 
 	if (weatherDataProviderDictionary[dataProvider] == 'openweather'):
-		weatherDF = owGetWeather(location, metricUnits, dataProviderArgs['APIkey'])
+		weatherDF = owGetWeather(location, id, metricUnits, dataProviderArgs['APIkey'])
 		return weatherDF
 
 

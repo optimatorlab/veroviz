@@ -527,11 +527,13 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 		[valFlag, errorMsg, newWarningMsg] = _valMapBoundary(mapBoundary, zoomStart)
 		warningMsg += newWarningMsg
 
+	'''
 	if (valFlag):
 		if (nodes is None and arcs is None and boundingRegion is None):
 			valFlag = False
 			errorMsg = "Error:  Please input nodes, arcs, and/or boundingRegion.  No object can be created without at least one of these."
-
+	'''
+	
 	if (valFlag):
 		try:
 			mapBackground = mapBackground.lower()
@@ -2937,6 +2939,36 @@ def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID,
 
 	return [valFlag, errorMsg, warningMsg]
 		
+def valGetWeather(location, id, initDF, metricUnits, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	
+	[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+	warningMsg += newWarningMsg
+	
+	if (valFlag):
+		if (id is not None):
+			[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(id, "id")
+			warningMsg += newWarningMsg
+	
+	if (valFlag):
+		if (initDF is not None):
+			if (type(initDF) is not pd.core.frame.DataFrame):
+				valFlag = False
+				errorMsg = "Error: initDF should be a pandas dataframe or None."
+			
+	if (valFlag):
+		if (type(metricUnits) is not bool):
+			valFlag = False
+			errorMsg = "Error: `metricUnits` must be boolean (True or False)."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGetWeatherDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
 
 	
 def _valMapBoundary(mapBoundary, zoomStart):
@@ -3364,6 +3396,28 @@ def _valIso(iso):
 
 	return [valFlag, errorMsg, warningMsg]
 
+
+def _valGetWeatherDataProvider(dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		dataProvider = dataProvider.lower()
+	except:
+		pass
+
+	if (dataProvider not in weatherDataProviderDictionary.keys()):
+		valFlag = False
+		errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid option is 'openweather'."
+	else:
+		if (weatherDataProviderDictionary[dataProvider] == "openweather"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'openweather'`."
+
+	return [valFlag, errorMsg, warningMsg]
+	
 	
 def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 	valFlag = True
