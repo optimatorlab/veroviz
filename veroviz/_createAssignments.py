@@ -36,6 +36,8 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 		'leafletWeight': None,
 		'leafletStyle': None,
 		'leafletOpacity': None,
+		'leafletCurveType': None,
+		'leafletCurvature': None,
 		'cesiumColor': None,
 		'cesiumWeight': None,
 		'cesiumStyle': None,

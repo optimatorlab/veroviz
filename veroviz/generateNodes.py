@@ -401,10 +401,10 @@ def _genNodesNormal(numNodes=None, center=None, standardDeviation=None):
 		
 	return locs
 
-def _genNodesRoadBased(numNodes=None, boundingRegion=None, distToRoad=None, dataProvider=None, APIkey=None, databaseName=None):
+def _genNodesRoadBased(numNodes=None, boundingRegion=None, distToRoad=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	Generate randomized node using Uniform distribution within a bounding area and close to roads
-
+	
 	Note
 	----
 	This function is an approximation, the error is getting larger when the location is closer to poles
@@ -417,12 +417,10 @@ def _genNodesRoadBased(numNodes=None, boundingRegion=None, distToRoad=None, data
 		A defined polygon, nodes are generated within this area
 	distToRoad: float, Required
 		The maximun distance to road for generated nodes.
-	dataProvider: string, Conditional, See :ref:`Dataprovider`
-		Specifies the data source to be used for generating nodes on a road network.  
-	APIkey: string, Conditional, See :ref:`Dataprovider`
-		Some data providers require an API key (which you'll need to register for).
-	databaseName: string, Conditional, See :ref:`Dataprovider`
-		If you are hosting a data provider on your local machine (e.g., pgRouting), you'll need to specify the name of the local database. 
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
 	
 	Returns
 	-------
@@ -432,14 +430,29 @@ def _genNodesRoadBased(numNodes=None, boundingRegion=None, distToRoad=None, data
 
 	# Initialize
 	locs = []
+	holes = []
+	goodLocs = []
 
 	# Generate nodes, if it is not close enough, discard and regenerate
 	while (len(locs) < numNodes):
 		newLocs = _genNodesUniformBounded(numNodes - len(locs), boundingRegion)
-		snapLocs = privGetSnapLocBatch(newLocs, dataProvider, APIkey, databaseName)
-		for i in range(len(snapLocs)):
-			if (geoDistance2D(newLocs[i], snapLocs[i]) <= distToRoad):
-				locs.append(newLocs[i])
+		goodLocs = []
+		for i in range(len(newLocs)):
+			goodFlag = True
+			for j in range(len(holes)):
+				if (geoDistance2D(newLocs[i], holes[j][0]) < holes[j][1]):
+					goodFlag = False
+					break
+			if (goodFlag):
+				goodLocs.append(newLocs[i])
+		if (len(goodLocs) > 0):
+			snapLocs = privGetSnapLocBatch(goodLocs, dataProvider, dataProviderArgs)
+			for i in range(len(snapLocs)):
+				dist = geoDistance2D(goodLocs[i], snapLocs[i])
+				if (dist > distToRoad):
+					holes.append([goodLocs[i], dist - distToRoad])
+				else:
+					locs.append(goodLocs[i])
 	
 	return locs
 

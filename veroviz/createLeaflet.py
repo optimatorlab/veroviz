@@ -18,6 +18,8 @@ from veroviz.utilities import getMapBoundary
 from veroviz._geometry import geoDistancePath2D
 from veroviz._geometry import geoMileageInPath2D
 from veroviz._geometry import geoDistance2D
+from veroviz._geometry import geoGetHeading
+from veroviz._geometry import geoPointInDistance2D
 
 foliumMaps = [
 	'cartodb positron', 
@@ -94,7 +96,7 @@ customMaps = {
 	},
 }
 	
-def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, nodes=None, popupText=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None, arcs=None, arcWeight=None, arcStyle=None, arcOpacity=None, arcColor=None, useArrows=None, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR):
+def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, nodes=None, popupText=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None, arcs=None, arcWeight=None, arcStyle=None, arcOpacity=None, arcCurveType=None, arcCurvature=None, arcColor=None, useArrows=None, arrowsPerArc=1, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR):
 
 	"""
 	createLeaflet is used to generate Leaflet objects using folium. The function takes a boundingRegion polygon, `Nodes`, `Arcs`, and `Assignments` dataframes as inputs, and creates a folium/leaflet map showing boundings, nodes and/or arcs. 
@@ -133,8 +135,14 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		Overrides the `leafletOpacity` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency). 
 	arcColor: string, Optional, default as None
 		Overrides the `leafletColor` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.
+	arcCurveType: string, Optional, default as 'straight'
+		Choose the type of curve to be shown on leaflet map for :ref:`Arc` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and None. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.
+	arcCurvature: float in (-90, 90), Conditional, default as 45
+		If choose `Bezier` as `arcCurveType`, then `arcCurvature` is required; otherwise this argument will not be used. The meaning of this argument is as following: link two nodes using straight line, the degrees between this straight line and the curve at two nodes is this argument, therefore it should be greater or equal to 0 and less than 90. A degree between -45 and 45 is recommended.		
 	useArrows: boolean, Optional, default as None
 		Indicates whether arrows should be shown on all arcs on the Leaflet map.
+	arrowsPerArc: int, Optional, default as 1
+		FIXMELP -- What is this?  How is it used?  What if `useArrows` is False?
 	boundingRegion: list of lists, Conditional, `nodes`, `arcs` and `boundingRegion` can not be None at the same time
 		A sequence of lat/lon coordinates defining a boundary polygon. The format is [[lat, lon], [lat, lon], ..., [lat, lon]].
 	boundingWeight: int, Optional, default as 3
@@ -258,7 +266,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, iconPrefix, iconType, iconColor, iconText, arcs, arcWeight, arcStyle, arcOpacity, arcColor, useArrows, boundingRegion, boundingWeight, boundingOpacity, boundingStyle, boundingColor)
+	[valFlag, errorMsg, warningMsg] = valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, iconPrefix, iconType, iconColor, iconText, arcs, arcWeight, arcStyle, arcOpacity, arcColor, arcCurveType, arcCurvature, useArrows, arrowsPerArc, boundingRegion, boundingWeight, boundingOpacity, boundingStyle, boundingColor)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -291,7 +299,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		
 	# Plot arcs
 	if (type(arcs) is pd.core.frame.DataFrame):
-		mapObject = _createLeafletArcs(mapObject, arcs, arcWeight, arcOpacity, arcStyle, arcColor, useArrows, VRV_DEFAULT_LEAFLET_ARROWSIZE, 4)
+		mapObject = _createLeafletArcs(mapObject, arcs, arcWeight, arcOpacity, arcStyle, arcColor, arcCurveType, arcCurvature, useArrows, VRV_DEFAULT_LEAFLET_ARROWSIZE, arrowsPerArc)	
 	
 	# Plot bounding
 	if (type(boundingRegion) is list):
@@ -465,7 +473,7 @@ def _drawLeafletNode(mapObject, loc, popupText, iconPrefix, iconType, iconColor,
 
 	return
 
-def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=None, arcStyle=None, arcColor=None, useArrows=None, arrowSize=6, arrowsPerArc=4):
+def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=None, arcStyle=None, arcColor=None, arcCurveType=None, arcCurvature=None, useArrows=None, arrowSize=6, arrowsPerArc=4):
 	"""
 	A sub-function to create leaflet arcs
 	
@@ -483,6 +491,10 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 		The opacity of generated route when displayed in Leaflet, range from 0 (invisible) to 1. See :ref:`Leaflet Style`
 	arcColor: string, Optional
 		The color of generated route when displayed in Leaflet.  One of a collection of pre-specified colors. See :ref:`Leaflet Style`
+	arcCurveType: string, Optional
+		Options are 'bezier', 'greatcircle' or None.
+	arcCurvature: float in [-45,45], Optional
+		Only used if arcCurveType=='bezier'.  	
 	useArrows: boolean, Optional, default as None
 		Whether or not to add arrows to leaflet map.
 	arrowSize: int Optional, default as 
@@ -500,26 +512,118 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 	# For Arcs dataframe, each row is a path, i.e. each row should have different odID
 	if (not {'startTimeSec'}.issubset(arcs.columns)):
 		for i in range(0, len(arcs)):
+
+			if (arcCurveType == None):
+				newArcCurveType = arcs.iloc[i]['leafletCurveType'].lower()
+			else:
+				newArcCurveType = arcCurveType.lower()
+			if (arcCurvature == None):
+				newArcCurvature = arcs.iloc[i]['leafletCurvature']
+			else:
+				newArcCurvature = arcCurvature		
+
+
+		
 			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
-			newPath = newPath.append({
-				'odID' : arcs.iloc[i]['odID'],
-				'startLat' : arcs.iloc[i]['startLat'],
-				'startLon' : arcs.iloc[i]['startLon'],
-				'endLat' : arcs.iloc[i]['endLat'],
-				'endLon' : arcs.iloc[i]['endLon'],
-				'leafletColor' : arcs.iloc[i]['leafletColor'],
-				'leafletWeight' : arcs.iloc[i]['leafletWeight'],
-				'leafletStyle' : arcs.iloc[i]['leafletStyle'],
-				'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
-				'useArrows' : arcs.iloc[i]['useArrows'],
-				'popupText' : arcs.iloc[i]['popupText']
-				}, ignore_index=True)
+			if (newArcCurveType == 'greatcircle'):
+				curvePoints = _getCurveGreatCircle([arcs.iloc[i]['startLat'], arcs.iloc[i]['startLon']], [arcs.iloc[i]['endLat'], arcs.iloc[i]['endLon']])
+				for j in range(1, len(curvePoints)):		
+					newPath = newPath.append({
+						'odID' : arcs.iloc[i]['odID'],
+						'startLat' : curvePoints[j - 1][0],
+						'startLon' : curvePoints[j - 1][1],
+						'endLat' : curvePoints[j][0],
+						'endLon' : curvePoints[j][1],
+						'leafletColor' : arcs.iloc[i]['leafletColor'],
+						'leafletWeight' : arcs.iloc[i]['leafletWeight'],
+						'leafletStyle' : arcs.iloc[i]['leafletStyle'],
+						'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
+						'useArrows' : arcs.iloc[i]['useArrows'],
+						'popupText' : arcs.iloc[i]['popupText']
+						}, ignore_index=True)
+			elif (newArcCurveType == 'bezier'):
+				curvePoints = _getCurveBezier([arcs.iloc[i]['startLat'], arcs.iloc[i]['startLon']], [arcs.iloc[i]['endLat'], arcs.iloc[i]['endLon']], newArcCurvature)
+				for j in range(1, len(curvePoints)):		
+					newPath = newPath.append({
+						'odID' : arcs.iloc[i]['odID'],
+						'startLat' : curvePoints[j - 1][0],
+						'startLon' : curvePoints[j - 1][1],
+						'endLat' : curvePoints[j][0],
+						'endLon' : curvePoints[j][1],
+						'leafletColor' : arcs.iloc[i]['leafletColor'],
+						'leafletWeight' : arcs.iloc[i]['leafletWeight'],
+						'leafletStyle' : arcs.iloc[i]['leafletStyle'],
+						'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
+						'useArrows' : arcs.iloc[i]['useArrows'],
+						'popupText' : arcs.iloc[i]['popupText']
+						}, ignore_index=True)
+			elif (newArcCurveType == 'straight'):
+				newPath = newPath.append({
+					'odID' : arcs.iloc[i]['odID'],
+					'startLat' : arcs.iloc[i]['startLat'],
+					'startLon' : arcs.iloc[i]['startLon'],
+					'endLat' : arcs.iloc[i]['endLat'],
+					'endLon' : arcs.iloc[i]['endLon'],
+					'leafletColor' : arcs.iloc[i]['leafletColor'],
+					'leafletWeight' : arcs.iloc[i]['leafletWeight'],
+					'leafletStyle' : arcs.iloc[i]['leafletStyle'],
+					'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
+					'useArrows' : arcs.iloc[i]['useArrows'],
+					'popupText' : arcs.iloc[i]['popupText']
+					}, ignore_index=True)
 			lstPath.append(newPath.copy())
 
 	# For Assignments dataframe, use deconstructAssignments to generate a list of assignments dataframe
 	if ({'objectID'}.issubset(arcs.columns) and {'startTimeSec'}.issubset(arcs.columns)):
-		lstPath = deconstructAssignments(assignments=arcs)
+		lstOD = deconstructAssignments(assignments=arcs)
+		for i in range(len(lstOD)):
+			if (arcCurveType == None):
+				newArcCurveType = lstOD[i].iloc[0]['leafletCurveType'].lower()
+			else:
+				newArcCurveType = arcCurveType.lower()
+			if (arcCurvature == None):
+				newArcCurvature = lstOD[i].iloc[0]['leafletCurvature']
+			else:
+				newArcCurvature = arcCurvature
 
+			newOrigin = [lstOD[i].iloc[0]['startLat'], lstOD[i].iloc[0]['startLon']]
+			newDestine = [lstOD[i].iloc[len(lstOD[i]) - 1]['endLat'], lstOD[i].iloc[len(lstOD[i]) - 1]['endLon']]
+
+			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
+			if (newArcCurveType == 'greatcircle'):
+				curvePoints = _getCurveGreatCircle(newOrigin, newDestine)
+				for j in range(1, len(curvePoints)):		      
+					newPath = newPath.append({
+						'odID' : i,
+						'startLat' : curvePoints[j - 1][0],
+						'startLon' : curvePoints[j - 1][1],
+						'endLat' : curvePoints[j][0],
+						'endLon' : curvePoints[j][1],
+						'leafletColor' : lstOD[i].iloc[0]['leafletColor'],
+						'leafletWeight' : lstOD[i].iloc[0]['leafletWeight'],
+						'leafletStyle' : lstOD[i].iloc[0]['leafletStyle'],
+						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
+						'useArrows' : lstOD[i].iloc[0]['useArrows']
+						}, ignore_index=True)
+			elif (newArcCurveType == 'bezier'):
+				curvePoints = _getCurveBezier(newOrigin, newDestine, newArcCurvature)
+				for j in range(1, len(curvePoints)):		      
+					newPath = newPath.append({
+						'odID' : i,
+						'startLat' : curvePoints[j - 1][0],
+						'startLon' : curvePoints[j - 1][1],
+						'endLat' : curvePoints[j][0],
+						'endLon' : curvePoints[j][1],
+						'leafletColor' : lstOD[i].iloc[0]['leafletColor'],
+						'leafletWeight' : lstOD[i].iloc[0]['leafletWeight'],
+						'leafletStyle' : lstOD[i].iloc[0]['leafletStyle'],
+						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
+						'useArrows' : lstOD[i].iloc[0]['useArrows']
+						}, ignore_index=True)
+			elif (newArcCurveType == 'straight'):
+				newPath = lstOD[i]
+			lstPath.append(newPath.copy())
+			
 	# For each path, generate the arcs and arrows accordingly
 	for i in range(len(lstPath)):
 		lstPath[i] = lstPath[i].reset_index(drop=True)
@@ -545,6 +649,14 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			newStyle = lstPath[i]['leafletStyle'][0]
 		else:
 			newStyle = arcStyle.lower()
+		if (arcCurveType == None):
+			newArcCurveType = lstPath[i]['leafletStyle'][0]
+		else:
+			newArcCurveType = arcCurveType.lower()
+		if (arcCurvature == None):
+			newArcCurveType = lstPath[i]['leafletStyle'][0]
+		else:
+			newArcCurveType = arcCurvature.lower()
 
 		# Interpret arc style
 		if (newStyle == 'dashed'):
@@ -589,11 +701,11 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 		elif (useArrows == False):
 			arrowFlag = False			
 		if (arrowFlag):
-			mapObject = _createLeafletArrowsPath(mapObject, arcPath, newColor, arrowSize, mode='equal_division_spacing', arrowsPerArc=arrowsPerArc, arrowDistanceInMeters=1000)
+			mapObject = _createLeafletArrowsPathOnGround(mapObject, arcPath, newColor, arrowSize, mode='equal_division_spacing', arrowsPerArc=arrowsPerArc, arrowDistanceInMeters=1000)
 
 	return mapObject
 
-def _createLeafletBoundingRegion(mapObject=None, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR):
+def _createLeafletBoundingRegion(mapObject=None, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR, boundingIsFitEarthCurvature=False):
 	"""
 	A sub-function to create leaflet bounding region
 
@@ -642,6 +754,12 @@ def _createLeafletBoundingRegion(mapObject=None, boundingRegion=None, boundingWe
 	except:
 		pass
 		
+	if (boundingIsFitEarthCurvature):
+		tmpBoundings = boundings.copy()
+		boundings = []
+		for i in range(1, len(tmpBoundings)):
+			boundings.extend(_getCurveGreatCircle(tmpBoundings[i - 1], tmpBoundings[i]))
+			
 	# Draw bounding region in folium (for now is not filled)
 	folium.PolyLine(
 		boundings, 
@@ -653,10 +771,9 @@ def _createLeafletBoundingRegion(mapObject=None, boundingRegion=None, boundingWe
 
 	return mapObject
 
-def _createLeafletArrowsPath(mapObject=None, path=None, color=None, size=7, mode='equal_division_spacing', arrowsPerArc=1, arrowDistanceInMeters=None):
+def _createLeafletArrowsPathOnGround(mapObject=None, path=None, color=None, size=7, mode='equal_division_spacing', arrowsPerArc=1, arrowDistanceInMeters=None):
 	"""
-	A sub-function to generate arrows for one path (i.e. with the same odID)
-
+	A sub-function to generate arrows for one path that curved to the Earth
 	Parameters
 	----------
 	mapObject: Folium object, Required
@@ -675,12 +792,10 @@ def _createLeafletArrowsPath(mapObject=None, path=None, color=None, size=7, mode
 		If we are using 'equal_division_spacing', it defines the number of arrows in the path, otherwise it will be ignored
 	arrowDistanceInMeters: float, Optional
 		If we are using 'equal_distance_spacing', it defines the distance between arrows
-
 	Return
 	------
 	Folium object
 		A map that contains arrows above the arcs
-
 	"""
 
 	# Calculate totalDistance
@@ -709,11 +824,11 @@ def _createLeafletArrowsPath(mapObject=None, path=None, color=None, size=7, mode
 		
 	# Draw arrows
 	for i in range(len(lstMilages)):
-		[loc, inPathFlag, bearingInDegree] = geoMileageInPath2D(path, lstMilages[i])
+		arrowLoc = geoMileageInPath2D(path, lstMilages[i])
 		folium.RegularPolygonMarker(
-			location = loc,
+			location = arrowLoc['loc'],
 			number_of_sides = 3,
-			rotation = bearingInDegree-90,
+			rotation = arrowLoc['bearingInDegree']-90,
 			radius = size,
 			color = color,
 			fill_color = color,
@@ -721,6 +836,102 @@ def _createLeafletArrowsPath(mapObject=None, path=None, color=None, size=7, mode
 		).add_to(mapObject)
 	
 	return mapObject
+
+def _createLeafletArrowsPathProjected(mapObject=None, path=None, color=None, size=7, mode='equal_division_spacing', arrowsPerArc=1, arrowDistanceInMeters=None):
+	"""
+	A sub-function to generate arrows for one path that curved to the Earth
+	Parameters
+	----------
+	mapObject: Folium object, Required
+		Add content to a folium map.
+	lats: list, Required
+		A list of latitudes
+	lons: list, Required
+		A list of longitudes
+	color: string, Required
+		The color for arrow, we are not providing any default value here because it has to be consistent with the color of arcs/assignments
+	size: int, Optional, default as 7
+		The size of the arrow
+	mode: string, Optional, default as 'equal_division_spacing'
+		For 'equal_division_spacing', divide the entire path equally in to several parts and add arrows accordingly. For 'equal_distance_spacing', add arrow for every given distance.
+	arrowsPerArc: int, Optional, default as 1
+		If we are using 'equal_division_spacing', it defines the number of arrows in the path, otherwise it will be ignored
+	arrowDistanceInMeters: float, Optional
+		If we are using 'equal_distance_spacing', it defines the distance between arrows
+	Return
+	------
+	Folium object
+		A map that contains arrows above the arcs
+	"""
+
+	# Calculate totalDistance
+	totalDistance = geoDistancePath2D(path)
+
+	# Use different modes to decide how many arrows to be generated and where are them
+	lstMilages = []
+	if (mode == 'equal_division_spacing'):
+		for i in range(1, arrowsPerArc + 1):
+			lstMilages.append(totalDistance * (i / (arrowsPerArc + 1)))
+	elif (mode == 'equal_distance_spacing'):
+		accuDistance = 0
+		while accuDistance < totalDistance:
+			accuDistance += arrowDistanceInMeters
+			lstMilages.append(accuDistance)
+		remainingDistance = totalDistance - accuDistance
+		for i in range(len(lstMilages)):
+			lstMilages[i] = lstMilages[i] + remainingDistance/2
+	else:
+		return
+
+	try:
+		color = color.lower()
+	except:
+		pass
+		
+	# Draw arrows
+	for i in range(len(lstMilages)):
+		arrowLoc = geoMileageInPath2D(path, lstMilages[i])
+		folium.RegularPolygonMarker(
+			location = arrowLoc['loc'],
+			number_of_sides = 3,
+			rotation = arrowLoc['bearingInDegree']-90,
+			radius = size,
+			color = color,
+			fill_color = color,
+			fill_opacity = 1.0
+		).add_to(mapObject)
+	
+	return mapObject
+
+def _getCurveBezier(startLoc, endLoc, curvature=45, numShapepoint=50):
+	midLoc = [(startLoc[0] + endLoc[0]) / 2 + (startLoc[1] + endLoc[1]) / 2]
+	distanceAwayFromStartLoc = (geoDistance2D(startLoc, endLoc)) / math.cos(math.radians(curvature)) / 2
+	headingFromStartLocToRefLoc = geoGetHeading(startLoc, endLoc) - curvature
+	refLoc = geoPointInDistance2D(startLoc, headingFromStartLocToRefLoc, distanceAwayFromStartLoc)
+	headingFromRefLocToEndLoc = geoGetHeading(refLoc, endLoc)
+	distStartLocToRefLoc = geoDistance2D(startLoc, refLoc)
+	distRefLocToEndLoc = geoDistance2D(refLoc, endLoc) # Should be the same as distStartLocToRefLoc, in no curvature plane
+	path = []
+	for i in range(numShapepoint + 1):
+		refStart = geoPointInDistance2D(startLoc, headingFromStartLocToRefLoc, i * distStartLocToRefLoc / float(numShapepoint))
+		refEnd = geoPointInDistance2D(refLoc, headingFromRefLocToEndLoc, i * distRefLocToEndLoc / float(numShapepoint))
+		refHeading = geoGetHeading(refStart, refEnd)
+		refDist = geoDistance2D(refStart, refEnd)
+		newLoc = geoPointInDistance2D(refStart, refHeading, i * refDist / float(numShapepoint))
+		path.append(newLoc)
+	return path
+
+def _getCurveGreatCircle(startLoc, endLoc, numShapepoint=50):
+	odPath = [startLoc, endLoc]
+	direction = geoGetHeading(startLoc, endLoc)
+	path = []
+	totalDist = geoDistance2D(startLoc, endLoc)
+	accDist = 0
+	while (accDist < totalDist):
+		path.append(geoPointInDistance2D(startLoc, direction, accDist))
+		accDist = accDist + totalDist / float(numShapepoint)
+	path.append(endLoc)
+	return path
 
 def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=None, text=None, fontSize=VRV_DEFAULT_LEAFLET_FONTSIZE, fontColor=VRV_DEFAULT_LEAFLET_FONTCOLOR, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
 
@@ -1355,6 +1566,33 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 	except:
 		pass
 
+	
+	print("FIXMELP -- Your branch has some code here, but it cannot be implemented because it is missing some variables.  Please fix this appropriately.")
+
+	'''
+	# This is the code from line 1415 of your version of createLeaflet.py:
+	arcs = createArcsFromLocSeq(locs = points)
+	mapObject = _createLeafletArcs(mapObject=mapObject, arcs=arcs, arcWeight=lineWeight, arcOpacity=lineOpacity, arcStyle=lineStyle, arcColor=lineColor, arcCurveType=lineCurveType, arcCurvature=lineCurvature, useArrows=useArrows, arrowSize=VRV_DEFAULT_LEAFLET_ARROWSIZE, arrowRerArc=4)
+
+	NOTE 1:  lineCurveType and lineCurvature are not defined.
+	
+	NOTE 2: Please see my code for folium.PolyLine below...I added the `popup = popupText line. `
+	
+	# points2D = []
+	# for i in range(len(points)):
+	# 	points2D.append([points[i][0], points[i][1]])
+		
+	# folium.PolyLine(locations = points2D, 
+	# 	stroke = True, 
+	# 	weight = lineWeight, 
+	# 	color = lineColor,
+	# 	opacity = lineOpacity, 
+	# 	dash_array = dashArray,
+	# 	fill = False
+	# 	).add_to(mapObject)	
+	
+	'''
+	
 	points2D = []
 	for i in range(len(points)):
 		points2D.append([points[i][0], points[i][1]])

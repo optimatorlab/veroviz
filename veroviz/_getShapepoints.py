@@ -16,11 +16,13 @@ from veroviz._buildFlightProfile import getTimeDistFromFlight
 from veroviz._buildFlightProfile import addLoiterTimeToFlight
 
 from veroviz._geometry import geoDistance2D
+# FIXME -- WAS IN LP'S CODE -- from veroviz._geometry import geoGetHeading
+# FIXME -- WAS IN LP'S CODE -- from veroviz._geometry import geoPointInDistance2D
 
 from veroviz.utilities import convertDistance
 from veroviz.utilities import initDataframe
 
-def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
+def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
@@ -128,6 +130,8 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 				'leafletColor' : leafletColor,
 				'leafletWeight' : leafletWeight,
 				'leafletStyle' : leafletStyle,
+				'leafletCurveType' : leafletCurveType,
+				'leafletCurvature' : leafletCurvature,
 				'useArrows' : useArrows,
 				'leafletOpacity' : leafletOpacity,
 				'modelScale' : modelScale,
@@ -172,6 +176,8 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'leafletColor' : leafletColor,
 			'leafletWeight' : leafletWeight,
 			'leafletStyle' : leafletStyle,
+			'leafletCurveType' : leafletCurveType,
+			'leafletCurvature' : leafletCurvature,
 			'useArrows' : useArrows,
 			'leafletOpacity' : leafletOpacity,
 			'modelScale' : modelScale,
@@ -195,7 +201,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 	return assignments
 
 
-def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorLoiter=VRV_DEFAULT_GANTTCOLORLOITER, popupText=None):
+def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorLoiter=VRV_DEFAULT_GANTTCOLORLOITER, popupText=None):
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
@@ -240,6 +246,8 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 			'leafletWeight': leafletWeight,
 			'leafletStyle': leafletStyle,
 			'leafletOpacity': leafletOpacity,
+			'leafletCurveType' : leafletCurveType,
+			'leafletCurvature' : leafletCurvature,			
 			'useArrows': useArrows,
 			'modelScale' : modelScale,
 			'modelMinPxSize' : modelMinPxSize,
@@ -277,6 +285,8 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'leafletWeight': leafletWeight,
 				'leafletStyle': leafletStyle,
 				'leafletOpacity': leafletOpacity,
+				'leafletCurveType' : leafletCurveType,
+				'leafletCurvature' : leafletCurvature,				
 				'useArrows': useArrows,
 				'modelScale' : modelScale,
 				'modelMinPxSize' : modelMinPxSize,
@@ -310,7 +320,7 @@ def _eucGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec):
 
 
 def _manGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec, verticalFirst=True):
-	# if verticalFirst is true, it means go north/south firt then go east/west
+	# if verticalFirst is true, it means go north/south first then go east/west
 	if verticalFirst:
 		path = [startLoc, [endLoc[0], startLoc[1]], endLoc]
 		dist = [0, geoDistance2D(startLoc, [endLoc[0], startLoc[1]]), geoDistance2D([endLoc[0], startLoc[1]], endLoc)]

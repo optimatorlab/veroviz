@@ -328,7 +328,7 @@ def valGetTimeDistScalar3D(startLoc, endLoc, outputDistUnits, outputTimeUnits, t
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
+def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -400,6 +400,8 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			try:
@@ -418,7 +420,7 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorLoiter):
+def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorLoiter):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -499,6 +501,8 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
@@ -518,7 +522,7 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, useArrows, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor):
+def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, arcCurveType, arcCurvature, useArrows, arrowsPerArc, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor): 
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -562,6 +566,9 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletArcColor, leafletArcWeight, leafletArcStyle, leafletArcOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `arcCurveType` and `arcCurvature`.")
+	print("FIXMELP -- Need to validate `arrowsPerArc`.")
+	
 	if (valFlag and boundingRegion is not None):
 		if (valFlag):
 			[valFlag, errorMsg, newWarningMsg] = _valBoundingRegion(boundingRegion)
@@ -1428,7 +1435,7 @@ def valInitDataframe(dataframe):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1473,6 +1480,8 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			try:
@@ -1485,7 +1494,7 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1540,6 +1549,8 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
+
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1624,7 +1635,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	return [valFlag, errorMsg, warningMsg]
 
 
-def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1719,6 +1730,8 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			try:
@@ -1744,7 +1757,7 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 	return [valFlag, errorMsg, warningMsg]	
 
 
-def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1879,6 +1892,8 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			try:
@@ -1903,7 +1918,7 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 
 	return [valFlag, errorMsg, warningMsg]	
 
-def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -2008,6 +2023,8 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			try:
@@ -2032,8 +2049,8 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 
 	return [valFlag, errorMsg, warningMsg]	
 
+def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 
-def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2109,6 +2126,8 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
 
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			try:
@@ -2128,7 +2147,7 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 	return [valFlag, errorMsg, warningMsg]
 	
 
-def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor):
+def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2212,6 +2231,8 @@ def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec,
 		
 			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
 			warningMsg += newWarningMsg
+
+	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -3522,6 +3543,17 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 
 			if (valFlag and dataProvider is not None):
 				warningMsg += "Warning: For 'euclidean2d' and 'manhattan', it is not using data provider, therefore `dataProvider` is ignored.\n"
+
+		elif (routeType in ['greatcircle', 'curve']):
+			# FIXMELP -- Where are these new "routeType" options defined?
+			#            Also, these are not in `routeType2DList`, so they will throw an error above. 
+			if (expDurationSec is None):
+				valFlag = False
+				errorMsg = "Error: Please provide `expDurationSec` to be evenly distributed to the arc"
+
+			if (speedMPS is not None):
+				warningMsg += "Warning: `speedMPS` will not be used for calculation. \n"
+				
 		elif (routeType in ['fastest', 'shortest', 'pedestrian', 'cycling', 'truck', 'wheelchair']):
 			if (routeType == 'fastest'):
 				if (dataProvider not in dataProviderDictionary.keys()):

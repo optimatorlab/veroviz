@@ -102,7 +102,7 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 
 	return nodes
 
-def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, popupText=None):
+def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY,  leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, popupText=None):
 
 	"""
 	See createArcsFromLocSeq for docstring
@@ -135,6 +135,8 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 			'leafletWeight' : leafletWeight,
 			'leafletStyle' : leafletStyle,
 			'leafletOpacity' : leafletOpacity,
+			'leafletCurveType' : leafletCurveType,
+			'leafletCurvature' : leafletCurvature,
 			'cesiumColor' : stripCesiumColor(cesiumColor),
 			'cesiumWeight' : cesiumWeight,
 			'cesiumStyle' : cesiumStyle,

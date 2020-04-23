@@ -46,6 +46,9 @@ VRV_DEFAULT_LEAFLETBOUNDINGOPACITY = 0.6
 VRV_DEFAULT_LEAFLETBOUNDINGSTYLE = 'dashed'
 VRV_DEFAULT_LEAFLETBOUNDINGCOLOR = 'brown'
 
+VRV_DEFAULT_ARCCURVETYPE = 'straight'
+VRV_DEFAULT_ARCCURVATURE = 0
+
 # Default Setting for Cesium
 VRV_DEFAULT_CESIUMMODELSCALE = 100 # 100%
 VRV_DEFAULT_CESIUMMODELMINPXSIZE = 75 # px
@@ -104,6 +107,8 @@ arcsColumnList = [
 	'leafletWeight', 
 	'leafletStyle', 
 	'leafletOpacity', 
+	'leafletCurveType',
+	'leafletCurvature',	
 	'useArrows', 
 	'cesiumColor', 
 	'cesiumWeight', 
@@ -131,7 +136,9 @@ assignmentsColumnList = [
 	'leafletColor', 
 	'leafletWeight', 
 	'leafletStyle', 
-	'leafletOpacity', 
+	'leafletOpacity',
+	'leafletCurveType',
+	'leafletCurvature',
 	'useArrows', 
 	'cesiumColor', 
 	'cesiumWeight', 
@@ -351,9 +358,9 @@ matrixTypeList = [
 nodeDistribList = [
 	"uniformBB", 
 	"normalBB", 
-	"normal"
-	# "unifRoadBasedBB" 
-] # Removed 'unifRoadBasedBB' for v.0.2.0
+	"normal",
+	"unifRoadBasedBB" 
+] 
 
 cesiumIconTypeList = [
 	'pin'

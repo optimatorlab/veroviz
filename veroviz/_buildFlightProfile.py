@@ -162,16 +162,16 @@ def _buildFlightProfile(startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, r
 
 		# if can cruise, it means we need two locations
 		flight = flight.append({
-			'lat': takeoffMileage[0][0],
-			'lon': takeoffMileage[0][1],
+			'lat': takeoffMileage['loc'][0],
+			'lon': takeoffMileage['loc'][1],
 			'altAGL': cruiseAltMetersAGL,
 			'accuGroundDistance': idealTakeoffGroundDistance,
 			'description': "takeoffAtAlt",
 			'loiterTime': 0.0
 			}, ignore_index=True)
 		flight = flight.append({
-			'lat': landingMileage[0][0],
-			'lon': landingMileage[0][1],
+			'lat': landingMileage['loc'][0],
+			'lon': landingMileage['loc'][1],
 			'altAGL': cruiseAltMetersAGL,
 			'accuGroundDistance': totalGroundDistance - idealLandingGroundDistance,
 			'description': "arrivalAtAlt",
@@ -191,8 +191,8 @@ def _buildFlightProfile(startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, r
 		takeoffMileage = geoMileageInPath2D(markPath, takeoffGroundDistance)
 
 		flight = flight.append({
-			'lat': takeoffMileage[0][0],
-			'lon': takeoffMileage[0][1],
+			'lat': takeoffMileage['loc'][0],
+			'lon': takeoffMileage['loc'][1],
 			'altAGL': deltaAGLCruiseTakeoff + dicStartLoc['alt'],
 			'accuGroundDistance': takeoffGroundDistance,
 			'description': "takeoffAtAlt and arrivalAtAlt",

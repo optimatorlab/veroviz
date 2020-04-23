@@ -6,11 +6,56 @@ Added validation for all Utility functions.  Now checks for existence of require
 
 cesium colors no longer require 'Cesium.Color' prefix.
 
+createLeaflet() -- Should be OK if neither nodes, arcs, nor boundingRegion are specified.  
 
-FIXME -- createLeaflet() -- Should be OK if neither nodes, arcs, nor boundingRegion are specified.  
+
+FIXME -- Install ORS
+FIXME -- Install GraphHopper?
 
 
-FUTURE -- Choropleths (sp)
+https://ask.openrouteservice.org/t/getting-started-with-ors-via-docker-and-localhost/1415/11
+
+
+ORS
+	OK?   snap --> directions / GET
+	OK?  isochrones --> isochrones / POST
+		MISSING attributes=total_pop
+
+	OK? shapepoints --> directions geojson / POST
+		Wheelchair?
+	OK?  matrix --> matrix / POST
+		No wheelchair
+
+
+
+	geocode --> geocode/search / GET
+		https://ask.openrouteservice.org/t/geocoder-on-github/1000
+		WON'T BE SUPPORTED -- USE OTHER PROVIDER
+			
+	reverse --> geocode/reverse / GET
+		WON'T BE SUPPORTED -- USE OTHER PROVIDER
+
+	elevation --> elevation / POST
+		https://github.com/GIScience/openelevationservice
+		WON'T BE SUPPORTED -- USE OTHER PROVIDER
+	
+	
+	Correct, we run Vroom for optimization, 
+	Pelias for geocoding, 
+	openpoiservice for POIs and 
+	openelevationservice for elevation queries. 
+	Those are all separate from the openrouteservice repository.
+
+Install new map data
+	buffalo
+	state of NY
+	US?
+	Seattle
+	state of WA
+	
+
+
+FUTURE -- Choropleths
 
 
 .rst files
@@ -18,6 +63,20 @@ FUTURE -- Choropleths (sp)
 	
 	Update assignments to indicate we have a new column (ganttColor)
 	Update comparison page (arcs vs assignments)
+
+	Update data providers
+		FIXME -- Add ORS-local
+		
+		
+	WHAT ELSE???
+
+Website
+	- Update acknowledgements (openweather, elevation-api, matplotlib)
+
+	- Links to Jupyter notebooks
+	
+	- Link(s) to Cesium plugin
+	
 	WHAT ELSE???
 	
 	
@@ -58,7 +117,7 @@ New Utility Functions:
 	closestNode2Loc()
 	lengthFromNodeSeq()
 	calcArea()
-	FIXME -- getWeather()
+	getWeather()
 
 	LP:  zipcode function(s)?
 	
@@ -102,13 +161,26 @@ Updates / Existing Function Changes:
 	addLeafletPolyline()
 		added `popupText` option
 
+	LP addAssignment2D()
+	LP addAssignment3D()
+	LP createAssignmentsFromArcs2D()
+	LP createAssignmentsFromNodeSeq2D()
+	LP createAssignmentsFromLocSeq2D()
+	LP createArcsFromNodeSeq()
+	LP createArcsFromLocSeq()
+	LP getShapepoints2D()
+	LP getShapepoints3D()
+		Allow specification of leaflet curvature
+		Need Examples
+
+	LP generate Nodes (roadBased)
+		Need example				
+
 
 			
 New mini-tutorials:
 	- [ ] findLocsAtTime (#179)
 	- [ ] paths from arcs/assignments (#177)  ???	
-				
-				
 	
 Updated VeRoViz Cesium Viewer/Plugin
 	What's the deal with server.cjs?
@@ -117,6 +189,8 @@ Updated VeRoViz Cesium Viewer/Plugin
 	Allow hide/show nodes
 	
 	- [ ] Includes generic .gltf models for rectangles and triangles
+
+	- [ ] Demo page of 3D models
 	
 	
 

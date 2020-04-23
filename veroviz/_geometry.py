@@ -594,7 +594,8 @@ def geoClosestPointLoc2Line(loc, line):
 		cosSAB = geoFindCos(vecAS, vecAB)
 
 		if cosSAB >= 0:
-			minLoc = geoMileageInPath2D([locA, locB], dist)[0]
+			tmpLocDict = geoMileageInPath2D([locA, locB], dist)[0]
+			minLoc = tmpLocDict['loc']
 		else:
 			minLoc = locA
 
@@ -613,13 +614,12 @@ def geoMileageInPath2D(path, mileageInMeters):
 
 	Returns
 	-------
-	loc: list
-		Location at that mileage
-	inPathFlag: boolean
-		If at that mileage it still stays in the path, return true, else return false
-	bearingInDegree: float
-		Heading at that mileage
-
+	dictionary with the following 5 keys
+		'loc': List, of the form [lat, lon], indicating the location at that mileage.
+		'inPathFlag': Boolean. If at that mileage it still stays in the path, return true, else return false.
+		'bearingInDegree': float.  Heading at that mileage.
+		'preLoc': List, of the form [lat, lon], indicating the previous location on the path.
+		'nextLoc': List, of the form [lat, lon], indicating the next location on the path.
 	"""
 
 	inPathFlag = False
@@ -649,7 +649,13 @@ def geoMileageInPath2D(path, mileageInMeters):
 
 	bearingInDegree = geoGetHeading(preLoc, nextLoc)
 
-	return [loc, inPathFlag, bearingInDegree]
+	return {
+		'loc': loc,
+		'inPathFlag': inPathFlag,
+		'bearingInDegree': bearingInDegree,
+		'preLoc': preLoc,
+		'nextLoc': nextLoc
+	}
 
 def geoGetHeading(currentLoc, goalLoc):
 	"""
