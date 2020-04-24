@@ -62,6 +62,13 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			else:
 				requestExtras = True
 			[path, extras, time, dist] = orsGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey, requestExtras)
+		elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-local'):
+			port = dataProviderArgs['port']
+			if ('requestExtras' in dataProviderArgs.keys()):
+				requestExtras = dataProviderArgs['requestExtras']
+			else:
+				requestExtras = True
+			[path, extras, time, dist] = orsLocalGetShapepointsTimeDist(startLoc, endLoc, routeType, port, requestExtras)
 		else:
 			return
 
