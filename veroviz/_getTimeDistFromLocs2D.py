@@ -11,6 +11,9 @@ from veroviz._queryPgRouting import pgrGetTimeDist
 from veroviz._queryORS import orsGetTimeDistAll2All
 from veroviz._queryORS import orsGetTimeDistMany2One
 from veroviz._queryORS import orsGetTimeDistOne2Many
+from veroviz._queryORSlocal import orsLocalGetTimeDistAll2All
+from veroviz._queryORSlocal import orsLocalGetTimeDistMany2One
+from veroviz._queryORSlocal import orsLocalGetTimeDistOne2Many
 from veroviz._queryOSRM import osrmGetTimeDist
 from veroviz._queryMapQuest import mqGetTimeDistAll2All
 from veroviz._queryMapQuest import mqGetTimeDistMany2One

@@ -3209,7 +3209,10 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 		valFlag = False
 	else:
 		if (dataProviderDictionary[dataProvider] == "pgrouting"):
-			if ('databaseName' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'pgRouting'`."
+			elif ('databaseName' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'databaseName' is a required key in `dataProviderArgs` if `dataProvider = 'pgRouting'`."
 			else:
@@ -3233,17 +3236,26 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 					errorMsg = "Error: Bad request. Database '%s' doesn't exist." % (databaseName)
 
 		if (dataProviderDictionary[dataProvider] == "mapquest"):
-			if ('APIkey' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'MapQuest'`."
+			elif ('APIkey' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'MapQuest'`."
 
 		if (dataProviderDictionary[dataProvider] == "ors-online"):
-			if ('APIkey' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'ORS-online'`."
+			elif ('APIkey' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
 
 		if (dataProviderDictionary[dataProvider] == "ors-local"):
-			if ('port' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'ORS-local'`."
+			elif ('port' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'port' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-local'`."
 
