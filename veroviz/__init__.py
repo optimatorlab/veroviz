@@ -49,7 +49,7 @@ from veroviz._queryPgRouting import pgrGetNearestStreet
 from veroviz._queryPgRouting import pgrGetShapepointsTimeDist
 from veroviz._queryPgRouting import pgrGetTimeDist
 
-# ORS related
+# ORS-online related
 from veroviz._queryORS import orsGetSnapToRoadLatLon
 from veroviz._queryORS import orsGetShapepointsTimeDist
 from veroviz._queryORS import orsGetTimeDistAll2All
@@ -59,6 +59,14 @@ from veroviz._queryORS import orsGeocode
 from veroviz._queryORS import orsReverseGeocode
 from veroviz._queryORS import orsIsochrones
 from veroviz._queryORS import orsGetElevation
+
+# ORS-local related
+from veroviz._queryORSlocal import orsLocalGetSnapToRoadLatLon
+from veroviz._queryORSlocal import orsLocalGetShapepointsTimeDist
+from veroviz._queryORSlocal import orsLocalGetTimeDistAll2All
+from veroviz._queryORSlocal import orsLocalGetTimeDistOne2Many
+from veroviz._queryORSlocal import orsLocalGetTimeDistMany2One
+from veroviz._queryORSlocal import orsLocalIsochrones
 
 # OSRM related
 from veroviz._queryOSRM import osrmGetSnapToRoadLatLon

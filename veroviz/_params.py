@@ -299,7 +299,12 @@ dataProviderDictionary = {
 	'openrouteservice-online': 'ors-online',
 	'openrouteservice-ol': 'ors-online',
 	'ors-online': 'ors-online',
-	'ors-ol': 'ors-online'
+	'ors-ol': 'ors-online',
+	
+	'openrouteservice-local': 'ors-local',
+	'openrouteservice-l': 'ors-local',
+	'ors-local': 'ors-local',
+	'ors-l': 'ors-local'
 }
 
 # NOTE:  The only valid dataProviders for the geocode()/reverseGeocode() functions are:
@@ -314,13 +319,18 @@ geoDataProviderDictionary = {
 	'ors-ol': 'ors-online'
 }
 
-# NOTE: The only valid dataProvider for isochrones functions is:
-#       ors-online
+# NOTE: The only valid dataProvider options for isochrones functions are:
+#       ors-online and ors-local
 isoDataProviderDictionary = {
 	'openrouteservice-online': 'ors-online',
 	'openrouteservice-ol': 'ors-online',
 	'ors-online': 'ors-online',
-	'ors-ol': 'ors-online'
+	'ors-ol': 'ors-online',
+
+	'openrouteservice-local': 'ors-local',
+	'openrouteservice-l': 'ors-local',
+	'ors-local': 'ors-local',
+	'ors-l': 'ors-local'
 }
 
 # NOTE: The only valid dataProvider options for elevation functions are:

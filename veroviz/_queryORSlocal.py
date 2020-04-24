@@ -4,7 +4,7 @@ from veroviz._internal import loc2Dict
 from veroviz._internal import locs2Dict
 
 
-def orsGetSnapToRoadLatLon(loc, APIkey):
+def orsLocalGetSnapToRoadLatLon(loc, port):
 	"""
 	A function to get snapped latlng for one coordinate using ORS
 	Parameters
@@ -22,8 +22,7 @@ def orsGetSnapToRoadLatLon(loc, APIkey):
 	dicLoc = loc2Dict(loc)
     
 	# ORS uses [lon, lat] order:
-	snapToRoadUrl = ('https://api.openrouteservice.org/v2/directions/driving-car?api_key=%s&start=%s,%s&end=%s,%s' % 
-					(APIkey, dicLoc['lon'], dicLoc['lat'], dicLoc['lon'], dicLoc['lat']))
+	snapToRoadUrl = ('http://localhost:%s/ors/directions?profile=driving-car&geometry_format=geojson&coordinates=%s,%s|%s,%s&elevation=false' % (port, dicLoc['lon'], dicLoc['lat'], dicLoc['lon'], dicLoc['lat']))
  
 	try:
 		http = urllib3.PoolManager()
@@ -35,8 +34,9 @@ def orsGetSnapToRoadLatLon(loc, APIkey):
 		if (http_status == 200):
 			# OK
 			# ORS uses [lon, lat] order:
-			snapLoc = [data['features'][0]['geometry']['coordinates'][0][1], 
-						data['features'][0]['geometry']['coordinates'][0][0]] 
+			print(data)
+			snapLoc = [data['routes'][0]['geometry']['coordinates'][0][1], 
+					   data['routes'][0]['geometry']['coordinates'][0][0]] 
             
 			return snapLoc
 		else:
@@ -49,7 +49,7 @@ def orsGetSnapToRoadLatLon(loc, APIkey):
 		raise 
 
 
-def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=None, requestExtras=True):
+def orsLocalGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', port=8081, requestExtras=True):
 	"""
 	A function to get a list of shapepoints from start coordinate to end coordinate. 
 	Parameters
@@ -86,10 +86,9 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		'foot-walking'
 		'foot-hiking'
 		'wheelchair'
-		
-		There is no "shortest" option    
 	"""
 
+	units      = 'm'
 	preference = 'fastest'
 		
 	try:
@@ -114,38 +113,24 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		print("Error: Invalid travelMode.")
 		return    
     
-	shapepointsUrl = ('https://api.openrouteservice.org/v2/directions/%s/geojson' % (profile))
-	
-	headers = {
-				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
-
+	spUrl  = ('http://localhost:%s/ors/directions?profile=%s' % (port, profile))
+	spUrl += '&coordinates=%s,%s|%s,%s' % (dicStartLoc['lon'],dicStartLoc['lat'], dicEndLoc['lon'],dicEndLoc['lat'])
+	spUrl += '&elevation=%s' % (elevation)
+	spUrl += '&geometry_format=geojson'
+	if (requestExtras):
+		spUrl += '&extra_info=steepness|surface|waycategory|waytype|tollways'
+		elevation = "true"
+	else:
+		elevation = "false"
+	spUrl += '&radiuses=-1|-1'
+	spUrl += '&units=m'
+	spUrl += '&instructions=true'
+	spUrl += '&preference=%s' % (preference)
+		
 	try:
 
-		# ORS uses [lon, lat] order:
-		coordinates  = [[dicStartLoc['lon'],dicStartLoc['lat']], 
-						[dicEndLoc['lon'],dicEndLoc['lat']]]
-		units        = 'm'
-		radiuses     = [-1, -1]
-		if (requestExtras):
-			elevation = "true"
-			extra_info = ["steepness","surface","waycategory","waytype","tollways"]
-		else:
-			elevation = "false"
-			extra_info = []
-		
-		encoded_body = json.dumps({
-			"coordinates": coordinates,
-			"elevation": elevation, 
-			"extra_info": extra_info,
-			"instructions": "true",
-			"preference": preference,
-			"radiuses": radiuses,
-			"units": units})
-
 		http = urllib3.PoolManager()
-		response = http.request('POST', shapepointsUrl, headers=headers, body=encoded_body)
+		response = http.request('GET', spUrl)
 
 		data = json.loads(response.data.decode('utf-8'))
 		http_status = response.status
@@ -157,17 +142,17 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 			extras = {}
 			timeInSeconds = []
 			distInMeters = []
-			for i in range(len(data['features'][0]['geometry']['coordinates'])):
-				path.append([data['features'][0]['geometry']['coordinates'][i][1], 
-							 data['features'][0]['geometry']['coordinates'][i][0]])
+			for i in range(len(data['routes'][0]['geometry']['coordinates'])):
+				path.append([data['routes'][0]['geometry']['coordinates'][i][1], 
+							 data['routes'][0]['geometry']['coordinates'][i][0]])
 				if (requestExtras):
 					extras[i] = {}
-					if (len(data['features'][0]['geometry']['coordinates'][i]) >= 2):
-						extras[i]['elev'] = data['features'][0]['geometry']['coordinates'][i][2]
+					if (len(data['routes'][0]['geometry']['coordinates'][i]) >= 2):
+						extras[i]['elev'] = data['routes'][0]['geometry']['coordinates'][i][2]
 					else:
 						extras[i]['elev'] = None
 
-			segs = data['features'][0]['properties']['segments']
+			segs = data['routes'][0]['segments']
 			for i in range(len(segs)):
 				for j in range(len(segs[i]['steps'])):
 					# Find arrival times for each shapepoint location.
@@ -192,7 +177,7 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 							extras[k]['wayname'] = segs[i]['steps'][j]['name']	
 			
 			if (requestExtras):
-				ex = data['features'][0]['properties']['extras']
+				ex = data['routes'][0]['extras']
 				if ('waycategory' in ex):
 					for [wpStart, wpEnd, val] in ex['waycategory']['values']:
 						if (wpStart == 0):
@@ -243,7 +228,7 @@ def orsGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', APIkey=Non
 		print("Error: ", sys.exc_info()[1])
 		raise
 
-def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
+def orsLocalGetTimeDistAll2All(locs, travelMode='fastest', port=8081):
 	"""
 	A function to generate distance and time matrices between given coordinates.
 	Parameters
@@ -302,12 +287,9 @@ def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
 	maxBatchSize = 50   # 50 x 50
 	numBatches = int(math.ceil(len(locs) / float(maxBatchSize)))
 
-	all2AllUrl = ('https://api.openrouteservice.org/v2/matrix/%s' % (profile))
-
-	headers = {
-				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
+	all2AllUrlBase  = ('http://localhost:%s/ors/matrix?profile=%s' % (port, profile))
+	all2AllUrlBase += '&metrics=distance|duration'
+	all2AllUrlBase += '&units=m'
 
 	distMeters = {}
 	timeSecs = {}
@@ -316,33 +298,48 @@ def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
 		for rowBatch in range(0, numBatches):
 			sourceLocs = []
 			sources = []
+			sourceLocsFlat = []
 
 			# ORS uses [lon, lat] order:
+			sourceLocsFlat = []
 			for i in range(maxBatchSize * rowBatch, min(len(locs), maxBatchSize * (rowBatch + 1))):
 				sources.append(len(sourceLocs))
 				sourceLocs.append([locs[i][1],locs[i][0]])
+				sourceLocsFlat.append('%s,%s' % (locs[i][1], locs[i][0]))
 
 			for colBatch in range(0, numBatches):
 				destinations = []
 				locations = list(sourceLocs)
 				if (colBatch == rowBatch):
 					# We're on the diagonal. Sources and Destinations are the same (all-to-all).
-					encoded_body = json.dumps({
-						"locations": sourceLocs,
-						"metrics": ["distance","duration"],
-						"units": "m"})
+					all2AllUrl  = all2AllUrlBase
+					all2AllUrl += '&locations=%s' % ('|'.join(sourceLocsFlat)) 
+					
+					print('test1\n')
+					print(all2AllUrl)
 				else:
 					# We're off-diagonal.  Sources and Destinations differ.
 					for i in range(maxBatchSize * colBatch, min(len(locs), maxBatchSize * (colBatch + 1))):
 						destinations.append(len(locations))
 						locations.append([locs[i][1],locs[i][0]])
 
-					encoded_body = json.dumps({
-						"locations": locations,
-						"sources": sources,
-						"destinations": destinations,
-						"metrics": ["distance","duration"],
-						"units": "m"})
+					locationsFlat = []
+					for i in locations:
+						locationsFlat.append('%s,%s' % (i[0],i[1]))
+					sourcesFlat = []
+					for i in sources:
+						sourcesFlat.append('%s' % i)
+					destinationsFlat = []
+					for i in destinations:
+						destinationsFlat.append('%s' % i)
+
+					all2AllUrl  = all2AllUrlBase
+					all2AllUrl += '&locations=%s' % ('|'.join(locationsFlat)) 
+					all2AllUrl += '&sources=%s' % ('|'.join(sourcesFlat)) 
+					all2AllUrl += '&destinations=%s' % ('|'.join(destinationsFlat)) 
+
+					print('test2\n')
+					print(all2AllUrl)
 
 				if (len(locations) <= 1):
 					# We have a 1x1 matrix.  Nothing to do. 
@@ -352,13 +349,15 @@ def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
 					timeSecs[row, col] = 0.0
 				else:
 					http = urllib3.PoolManager()
-					response = http.request('POST', all2AllUrl, headers=headers, body=encoded_body)
+					response = http.request('GET', all2AllUrl)
 
 					data = json.loads(response.data.decode('utf-8'))
 					http_status = response.status
 
 					if (http_status == 200):
 						# OK
+						print(data)
+						
 						row = maxBatchSize * rowBatch
 						for i in range(0, len(data['durations'])):
 							col = maxBatchSize * colBatch
@@ -380,7 +379,7 @@ def orsGetTimeDistAll2All(locs, travelMode='fastest', APIkey=None):
 		raise
 
 
-def orsGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', APIkey=None):
+def orsLocalGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', port=8081):
 	"""
 	A function to generate distance and time matrices between given coordinates.
 	Parameters
@@ -441,12 +440,9 @@ def orsGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', APIkey=None):
     
 	one2ManyBatchSize = 2500 # < 2500 (50 x 50)
 	numBatches = int(math.ceil(len(toLocs) / float(one2ManyBatchSize)))
-	one2ManyUrlBase = ('https://api.openrouteservice.org/v2/matrix/%s' % (profile))
-
-	headers = {
-				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
+	one2ManyUrlBase  = ('http://localhost:%s/ors/matrix/?profile=%s' % (port, profile))
+	one2ManyUrlBase += '&metrics=distance|duration'
+	one2ManyUrlBase += '&units=m'
 
 	distMeters = {}
 	timeSecs = {}
@@ -458,27 +454,30 @@ def orsGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', APIkey=None):
 			destinations = []
     
 			# ORS uses [lon, lat] order:
-			sources.append(0)
-			locations.append([fromLoc[1], fromLoc[0]])
+			sources.append('0')
+			locations.append('%s,%s' % (fromLoc[1], fromLoc[0]))
 			for i in range(one2ManyBatchSize * batch, min(len(toLocs), one2ManyBatchSize * (batch + 1))):
-				destinations.append(len(locations))
-				locations.append([toLocs[i][1],toLocs[i][0]])
+				destinations.append(str(len(locations)))
+				locations.append('%s,%s' % (toLocs[i][1],toLocs[i][0]))
         
-			encoded_body = json.dumps({
-				"locations": locations,
-				"sources": sources,
-				"destinations": destinations,
-				"metrics": ["distance","duration"],
-				"units": "m"})
-
+			one2ManyUrl  = one2ManyUrlBase
+			one2ManyUrl += '&locations=%s' % ('|'.join(locations))
+			one2ManyUrl += '&sources=%s' % ('|'.join(sources))
+			one2ManyUrl += '&destinations=%s' % ('|'.join(destinations))
+			
+			print(one2ManyUrl)
+						
 			http = urllib3.PoolManager()
-			response = http.request('POST', one2ManyUrlBase, headers=headers, body=encoded_body)
+			response = http.request('GET', one2ManyUrl)
 
 			data = json.loads(response.data.decode('utf-8'))
 			http_status = response.status
 
 			if (http_status == 200):
 				# OK
+				
+				print(data)
+				
 				col = one2ManyBatchSize * batch
 				for i in range(0, len(data['durations'])):
 					for j in range(0, len(data['durations'][i])):
@@ -500,7 +499,7 @@ def orsGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', APIkey=None):
 		raise
 
 
-def orsGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', APIkey=None):
+def orsLocalGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', port=8081):
 	"""
 	A function to generate distance and time matrices from one set of locations to a single location.
 	Parameters
@@ -562,12 +561,9 @@ def orsGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', APIkey=None):
     
 	many2OneBatchSize = 2500 # < 2500 (50 x 50)
 	numBatches = int(math.ceil(len(fromLocs) / float(many2OneBatchSize)))
-	many2OneUrlBase = ('https://api.openrouteservice.org/v2/matrix/%s' % (profile))
-
-	headers = {
-				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
+	many2OneUrlBase  = ('https://localhost:%s/ors/matrix/?profile=%s' % (port, profile))
+	many2OneUrlBase += '&metrics=distance|duration'
+	many2OneUrlBase += '&units=m'
 
 	distMeters = {}
 	timeSecs = {}
@@ -580,26 +576,29 @@ def orsGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', APIkey=None):
     
 			# ORS uses [lon, lat] order:
 			for i in range(many2OneBatchSize * batch, min(len(fromLocs), many2OneBatchSize * (batch + 1))):
-				sources.append(len(locations))
-				locations.append([fromLocs[i][1],fromLocs[i][0]])
-			destinations.append(len(locations))
-			locations.append([toLoc[1],toLoc[0]])
+				sources.append(str(len(locations)))
+				locations.append('%s,%s' % (fromLocs[i][1],fromLocs[i][0]))
+			destinations.append(str(len(locations)))
+			locations.append('%s,%s' % (toLoc[1],toLoc[0]))
 
-			encoded_body = json.dumps({
-				"locations": locations,
-				"sources": sources,
-				"destinations": destinations,
-				"metrics": ["distance","duration"],
-				"units": "m"})
+			many2OneUrl  = many2OneBase
+			many2OneUrl += '&locations=%s' % ('|'.join(locations))
+			many2OneUrl += '&sources=%s' % ('|'.join(sources))
+			many2OneUrl += '&destinations=%s' % ('|'.join(destinations))
 
+			print(many2OneUrl)
+			
 			http = urllib3.PoolManager()
-			response = http.request('POST', many2OneUrlBase, headers=headers, body=encoded_body)
+			response = http.request('GET', many2OneUrl)
 
 			data = json.loads(response.data.decode('utf-8'))
 			http_status = response.status
 
 			if (http_status == 200):
 				# OK
+				
+				print(data)
+				
 				row = many2OneBatchSize * batch
 				for i in range(0, len(data['durations'])):
 					for j in range(0, len(data['durations'][i])):
@@ -621,95 +620,10 @@ def orsGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', APIkey=None):
 		raise
 
 
-def orsGeocode(text, APIkey):
-	"""
-	Geocode from a text string using ORS
-	
-	Parameters
-	----------
-	text: string
-		A text string describing an address, city, or landmark.
-	APIkey: string
-		Enables access to ORS server.
-			    
-	Returns
-	-------
-	loc: list
-		A geocoded location in the format of [lat, lon].
-	"""
-    
-	# ORS uses [lon, lat] order:
-	geocodeUrl = ('https://api.openrouteservice.org/geocode/search?api_key=%s&text=%s&size=1' % (APIkey, text))
-    
-	try:
-		http = urllib3.PoolManager()
-		response = http.request('GET', geocodeUrl)
-		data = json.loads(response.data.decode('utf-8'))
-
-		http_status = response.status
-
-		if (http_status == 200):
-			# OK
-			# ORS uses [lon, lat] order:
-			loc = [data['features'][0]['geometry']['coordinates'][1], 
-				   data['features'][0]['geometry']['coordinates'][0]] 
-			return loc
-		else:
-			# Error of some kind
-			http_status_description = responses[http_status]
-			print("Error Code %s: %s" % (http_status, http_status_description))
-			return
-	except:
-		print("Error: ", sys.exc_info()[1])
-		raise 
-		
-def orsReverseGeocode(loc, APIkey):
-	"""
-	Reverse Geocode from a [lat, lon] or [lat, lon, alt] location using ORS
-	
-	Parameters
-	----------
-	loc: list
-		Of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.
-	APIkey: string
-		Enables access to ORS server.
-	    
-	Returns
-	-------
-	snapLoc: list
-		Of the form [lat, lon].  This is the nearest point to the given (input) location.
-	address: dictionary
-		A dataProvider-specific dictionary containing address details.
-	"""    
-    
-	# ORS uses [lon, lat] order:
-	geocodeUrl = ('https://api.openrouteservice.org/geocode/reverse?api_key=%s&point.lon=%s&point.lat=%s&size=1' % (APIkey, loc[1], loc[0]))
-	try:
-		http = urllib3.PoolManager()
-		response = http.request('GET', geocodeUrl)
-		data = json.loads(response.data.decode('utf-8'))
-
-		http_status = response.status
-
-		if (http_status == 200):
-			# OK
-			# ORS uses [lon, lat] order:
-			snapLoc = [data['features'][0]['geometry']['coordinates'][1], 
-				       data['features'][0]['geometry']['coordinates'][0]] 
-			address = data['features'][0]['properties']
-			return (snapLoc, address)
-		else:
-			# Error of some kind
-			http_status_description = responses[http_status]
-			print("Error Code %s: %s" % (http_status, http_status_description))
-			return
-	except:
-		print("Error: ", sys.exc_info()[1])
-		raise 
 
 
 
-def orsIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoothing, APIkey):
+def orsLocalIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoothing, port):
 	"""
 	Finds isochrones to or from a given location. 
 
@@ -748,39 +662,29 @@ def orsIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoo
 	except:
 		pass
 	    
-	isoUrl = ('https://api.openrouteservice.org/v2/isochrones/%s' % (travelMode))
 
-	headers = {
-				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
+	units      = 'm'	# only applicable if rangeType == 'distance'
+	areaUnits  = 'm'
+	if (rangeType == 'time'):
+		valueUnits = 'seconds'
+	else:
+		valueUnits = 'meters'
 
+	isoUrl  = 'http://localhost:%s/ors/isochrones/?profile=%s' % (port, travelMode)
+	isoUrl += '&locations=%s,%s' % (loc[1], loc[0])	# lon/lat order
+	isoUrl += '&location_type=%s' % (locType)
+	isoUrl += '&attributes=%s|%s' % ('area', 'reachfactor')	# total_pop broken?
+	isoUrl += '&range=%s' % (rangeSize)
+	isoUrl += '&interval=%s' % (interval)
+	isoUrl += '&range_type=%s' % (rangeType)
+	isoUrl += '&smoothing=%s' % (smoothing)
+	isoUrl += '&area_units=%s' % (areaUnits)
+	isoUrl += '&units=%s' % (units)
+	
 	try:
-
-		# ORS uses [lon, lat] order:
-		locations  = [[loc[1], loc[0]]]
-		attributes = ['area', 'reachfactor', 'total_pop']
-		units      = 'm'	# only applicable if rangeType == 'distance'
-		areaUnits  = 'm'
-		if (rangeType == 'time'):
-			valueUnits = 'seconds'
-		else:
-			valueUnits = 'meters'
-		
-		encoded_body = json.dumps({
-			"locations": locations,
-			"location_type": locType,
-			"attributes": attributes,
-			"range": [rangeSize],
-			"interval": interval,
-			"range_type": rangeType,
-			"smoothing": smoothing,
-			"area_units": areaUnits,
-			"units": units})
-
+	
 		http = urllib3.PoolManager()
-		response = http.request('POST', isoUrl, headers=headers, body=encoded_body)
-
+		response = http.request('GET', isoUrl)
 		data = json.loads(response.data.decode('utf-8'))
 		http_status = response.status
 
@@ -845,85 +749,9 @@ def orsIsochrones(loc, locType, travelMode, rangeType, rangeSize, interval, smoo
 		raise
 
 
-def orsGetElevation(locs, APIkey):
-	"""
-	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  
-
-	Parameters
-	----------
-	locs: list of lists, Required, default as None
-		A list of one or more GPS coordinate of the form [[lat, lon], ...] or [[lat, lon, alt], ...].  If altitude is included in locs, the function will add the elevation to the input altitude.  Otherwise, the input altitude will be assumed to be 0.
-	APIkey: string
-		Enables access to ORS server.
-	
-	Return
-	------
-	list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], ..., [lat, lon, altMSL]].
-	"""
-	
-	if (len(locs) == 1):
-		dataType = 'point'
-		elevUrl = ('https://api.openrouteservice.org/elevation/point')
-		geometry = [locs[0][1], locs[0][0]]   # ORS uses [lon, lat] order:
-
-		encoded_body = json.dumps({
-			"format_in": "point",
-			"format_out": "point",
-			"geometry": geometry})		
-	else:
-		dataType = 'line'
-		elevUrl = ('https://api.openrouteservice.org/elevation/line')
-		geometry = []
-		for i in range(0, len(locs)):
-			geometry.append([locs[i][1], locs[i][0]])
-
-		encoded_body = json.dumps({
-			"format_in": "polyline",
-			"format_out": "polyline",
-			"geometry": geometry})
-	
-	headers = {
-				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
-
-	try:
+# def orsLocalGeocode(text, APIkey):
 		
-		http = urllib3.PoolManager()
-		response = http.request('POST', elevUrl, headers=headers, body=encoded_body)
+# def orsLocalReverseGeocode(loc, APIkey):
 
-		data = json.loads(response.data.decode('utf-8'))
-		http_status = response.status
-
-		locsWithAlt = []
-		
-		if (http_status == 200):
-			# OK
-			if (dataType == 'point'):
-				# data['geometry'][]
-				if (len(locs[0]) == 2):
-					alt = data['geometry'][2]
-				else:
-					alt = locs[0][2] + data['geometry'][2]
-				locsWithAlt.append([ data['geometry'][1], data['geometry'][0], alt ])
-			else:
-				# data['geometry'][[],[],...]
-				for i in range(0, len(data['geometry'])):
-					if (len(locs[i]) == 2):
-						alt = data['geometry'][i][2]
-					else:
-						alt = locs[i][2] + data['geometry'][i][2]
-					locsWithAlt.append([ data['geometry'][i][1], data['geometry'][i][0], alt ])
-			
-		else:
-			# Error of some kind
-			http_status_description = responses[http_status]
-			print("Error Code %s: %s" % (http_status, http_status_description))
-			return
-
-		return locsWithAlt
-
-	except:
-		print("Error: ", sys.exc_info()[1])
-		raise
+# def orsLocalGetElevation(locs, APIkey):
 		

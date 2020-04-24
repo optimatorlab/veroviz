@@ -45,7 +45,7 @@ def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, increme
 	if (valFlag and (snapToRoad or nodeDistrib == 'unifRoadBasedBB')):
 		if (dataProvider == None):
 			valFlag = False
-			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online', and 'OSRM-online'."
+			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online',  'OSRM-online', and 'ORS-local'."
 		else:
 			if (valFlag):
 				locs = []
@@ -1601,7 +1601,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	if (valFlag and snapToRoad):
 		if (dataProvider == None):
 			valFlag = False
-			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online', and 'OSRM-online'."
+			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online',  'OSRM-online', and 'ORS-local'."
 		else:
 			if (valFlag):
 				[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
@@ -3205,7 +3205,7 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 		pass
 
 	if (dataProvider not in dataProviderDictionary.keys()):
-		errorMsg = "Error: Invalid `dataProvider` value. Valid options include 'pgRouting', 'MapQuest', 'ORS-online', and 'OSRM-online'."
+		errorMsg = "Error: Invalid `dataProvider` value. Valid options include 'pgRouting', 'MapQuest', 'ORS-online', 'OSRM-online', and 'ORS-local'."
 		valFlag = False
 	else:
 		if (dataProviderDictionary[dataProvider] == "pgrouting"):
@@ -3241,6 +3241,11 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 			if ('APIkey' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+		if (dataProviderDictionary[dataProvider] == "ors-local"):
+			if ('port' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'port' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-local'`."
 
 		if (dataProviderDictionary[dataProvider] == "osrm-online"):
 			if (dataProviderArgs is not None):
@@ -3321,12 +3326,16 @@ def _valIsoDataProvider(travelMode, dataProvider, dataProviderArgs):
 
 		if (dataProvider not in isoDataProviderDictionary.keys()):
 			valFlag = False
-			errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid option is 'ORS-online'."
+			errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid options are 'ORS-online' and 'ors-local."
 		else:
 			if (isoDataProviderDictionary[dataProvider] == "ors-online"):
 				if ('APIkey' not in dataProviderArgs):
 					valFlag = False
 					errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+			elif (isoDataProviderDictionary[dataProvider] == "ors-local"):
+				if ('port' not in dataProviderArgs):
+					valFlag = False
+					errorMsg = "Error: 'port' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-local'`."
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3469,7 +3478,7 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 				errorMsg = "Error: For 'manhattan' routeType, speedMPS is required."
 		elif (routeType == 'fastest'):
 			if (dataProvider not in dataProviderDictionary.keys()):
-				errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting', and 'MapQuest'."
+				errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting', MapQuest', and 'ORS-local'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored. \n"
@@ -3480,20 +3489,20 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
 		elif (routeType == 'pedestrian'):
-			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
-				errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'pedestrian'."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest', 'ors-local']):
+				errorMsg = "Error: 'ors-online', 'MapQuest', and 'ORS-local' are currently the only dataProvider options for routeType = 'pedestrian'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
 		elif (routeType == 'cycling'):
-			if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'cycling'."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+				errorMsg = "Error: 'ORS-online' and 'ORS-local' are currently the only dataProvider options for routeType = 'cycling'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
 		elif (routeType == 'truck'):
-			if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'truck'."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+				errorMsg = "Error: 'ORS-online' and 'ORS-local' are currently the only dataProvider options for routeType = 'truck'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds used by the data provider will be ignored.\n"
@@ -3557,23 +3566,23 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 		elif (routeType in ['fastest', 'shortest', 'pedestrian', 'cycling', 'truck', 'wheelchair']):
 			if (routeType == 'fastest'):
 				if (dataProvider not in dataProviderDictionary.keys()):
-					errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting' and 'MapQuest'."
+					errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting', 'MapQuest', and 'ORS-local'."
 					valFlag = False
 			elif (routeType == 'shortest'):
 				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
 					errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'shortest'."
 					valFlag = False
 			elif (routeType == 'pedestrian'):
-				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' and 'MapQuest' are currently the only data providers supporting the 'pedestrian' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest', 'ors-local']):
+					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online',  'MapQuest', and 'ORS-local' are currently the only data providers supporting the 'pedestrian' routeType option."
 					valFlag = False
 			elif (routeType == 'cycling'):
-				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' is currently the only data provider supporting the 'cycling' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' and 'ORS-local' are currently the only data providers supporting the 'cycling' routeType option."
 					valFlag = False
 			elif (routeType == 'truck'):
-				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' is currently the only data provider supporting the 'truck' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' and 'ORS-local' are currently the only data providers supporting the 'truck' routeType option."
 					valFlag = False
 			elif (routeType == 'wheelchair'):
 				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
