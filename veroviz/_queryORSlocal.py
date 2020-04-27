@@ -34,7 +34,6 @@ def orsLocalGetSnapToRoadLatLon(loc, port):
 		if (http_status == 200):
 			# OK
 			# ORS uses [lon, lat] order:
-			print(data)
 			snapLoc = [data['routes'][0]['geometry']['coordinates'][0][1], 
 					   data['routes'][0]['geometry']['coordinates'][0][0]] 
             
@@ -107,21 +106,21 @@ def orsLocalGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', port=
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
-	elif (travelMode == 'wheelchair'):
-		profile = 'wheelchair'
+	# elif (travelMode == 'wheelchair'):
+	#	profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return    
     
 	spUrl  = ('http://localhost:%s/ors/directions?profile=%s' % (port, profile))
 	spUrl += '&coordinates=%s,%s|%s,%s' % (dicStartLoc['lon'],dicStartLoc['lat'], dicEndLoc['lon'],dicEndLoc['lat'])
-	spUrl += '&elevation=%s' % (elevation)
 	spUrl += '&geometry_format=geojson'
 	if (requestExtras):
 		spUrl += '&extra_info=steepness|surface|waycategory|waytype|tollways'
 		elevation = "true"
 	else:
 		elevation = "false"
+	spUrl += '&elevation=%s' % (elevation)
 	spUrl += '&radiuses=-1|-1'
 	spUrl += '&units=m'
 	spUrl += '&instructions=true'
@@ -278,8 +277,8 @@ def orsLocalGetTimeDistAll2All(locs, travelMode='fastest', port=8081):
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
-	elif (travelMode == 'wheelchair'):
-		profile = 'wheelchair'
+	# elif (travelMode == 'wheelchair'):
+	# 	profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return    
@@ -315,8 +314,6 @@ def orsLocalGetTimeDistAll2All(locs, travelMode='fastest', port=8081):
 					all2AllUrl  = all2AllUrlBase
 					all2AllUrl += '&locations=%s' % ('|'.join(sourceLocsFlat)) 
 					
-					print('test1\n')
-					print(all2AllUrl)
 				else:
 					# We're off-diagonal.  Sources and Destinations differ.
 					for i in range(maxBatchSize * colBatch, min(len(locs), maxBatchSize * (colBatch + 1))):
@@ -338,9 +335,6 @@ def orsLocalGetTimeDistAll2All(locs, travelMode='fastest', port=8081):
 					all2AllUrl += '&sources=%s' % ('|'.join(sourcesFlat)) 
 					all2AllUrl += '&destinations=%s' % ('|'.join(destinationsFlat)) 
 
-					print('test2\n')
-					print(all2AllUrl)
-
 				if (len(locations) <= 1):
 					# We have a 1x1 matrix.  Nothing to do. 
 					row = maxBatchSize * rowBatch
@@ -356,8 +350,6 @@ def orsLocalGetTimeDistAll2All(locs, travelMode='fastest', port=8081):
 
 					if (http_status == 200):
 						# OK
-						print(data)
-						
 						row = maxBatchSize * rowBatch
 						for i in range(0, len(data['durations'])):
 							col = maxBatchSize * colBatch
@@ -432,8 +424,8 @@ def orsLocalGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', port=8081
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
-	elif (travelMode == 'wheelchair'):
-		profile = 'wheelchair'
+	# elif (travelMode == 'wheelchair'):
+	# 	profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return    
@@ -464,9 +456,7 @@ def orsLocalGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', port=8081
 			one2ManyUrl += '&locations=%s' % ('|'.join(locations))
 			one2ManyUrl += '&sources=%s' % ('|'.join(sources))
 			one2ManyUrl += '&destinations=%s' % ('|'.join(destinations))
-			
-			print(one2ManyUrl)
-						
+									
 			http = urllib3.PoolManager()
 			response = http.request('GET', one2ManyUrl)
 
@@ -474,10 +464,7 @@ def orsLocalGetTimeDistOne2Many(fromLoc, toLocs, travelMode='fastest', port=8081
 			http_status = response.status
 
 			if (http_status == 200):
-				# OK
-				
-				print(data)
-				
+				# OK				
 				col = one2ManyBatchSize * batch
 				for i in range(0, len(data['durations'])):
 					for j in range(0, len(data['durations'][i])):
@@ -552,8 +539,8 @@ def orsLocalGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', port=8081
 		profile = 'cycling-road'
 	elif (travelMode == 'truck'):
 		profile = 'driving-hgv'
-	elif (travelMode == 'wheelchair'):
-		profile = 'wheelchair'
+	# elif (travelMode == 'wheelchair'):
+	#	profile = 'wheelchair'
 	else:
 		print("Error: Invalid travelMode.")
 		return
@@ -586,8 +573,6 @@ def orsLocalGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', port=8081
 			many2OneUrl += '&sources=%s' % ('|'.join(sources))
 			many2OneUrl += '&destinations=%s' % ('|'.join(destinations))
 
-			print(many2OneUrl)
-			
 			http = urllib3.PoolManager()
 			response = http.request('GET', many2OneUrl)
 
@@ -595,10 +580,7 @@ def orsLocalGetTimeDistMany2One(fromLocs, toLoc, travelMode='fastest', port=8081
 			http_status = response.status
 
 			if (http_status == 200):
-				# OK
-				
-				print(data)
-				
+				# OK				
 				row = many2OneBatchSize * batch
 				for i in range(0, len(data['durations'])):
 					for j in range(0, len(data['durations'][i])):

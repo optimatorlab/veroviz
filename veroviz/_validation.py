@@ -522,7 +522,7 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, popupText, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, arcCurveType, arcCurvature, useArrows, arrowsPerArc, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor): 
+def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, arcCurveType, arcCurvature, useArrows, arrowsPerArc, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor): 
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1109,7 +1109,7 @@ def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesium
 			valFlag = False
 			errorMsg = "Error: `problemDir` is required for `createCesium()`. Please provide a relative path to the root directory of cesium, e.g., `problemDir = 'veroviz/problems/TSP'`."
 
-	if (valFlag):
+	if (valFlag and assignments is not None):
 		modelFiles = list(dict.fromkeys(assignments['modelFile'].tolist()))
 		for i in range(len(modelFiles)):
 			if (not os.path.isfile(cesiumDir + modelFiles[i])):
@@ -1119,7 +1119,7 @@ def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesium
 	if (valFlag == True):
 		if (cesiumIconColor != None):
 			if (expandCesiumColor(cesiumIconColor) not in cesiumColorList):
-				warningMsg += "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive.\n"
+				warningMsg += "Warning: cesiumColor is not recognized; it may not be displayed properly.\n"
 
 	if (valFlag):
 		if ((cesiumPathColor != None) or (cesiumPathWeight != None) or (cesiumPathStyle != None) or (cesiumPathOpacity != None)):
@@ -1775,6 +1775,11 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 	if (nodeSeq == None):
 		valFlag = False
 		errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		if (nodes is None):
+			valFlag = False
+			errorMsg = "Error: `nodes` dataframe is required."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
@@ -3871,9 +3876,14 @@ def _valLoiterPosition(loiterPosition):
 	errorMsg = ""
 	warningMsg = ""
 
+	try:
+		loiterPosition = loiterPosition.lower()
+	except:
+		pass
+
 	if (loiterPosition not in loiterPositionList):
 		valFlag = False
-		errorMsg = "Error: Invalid loiterPosition.  Note that this field is currently case-sensitive."
+		errorMsg = "Error: Invalid loiterPosition.  Valid options include 'beforeTakeoff', 'takeoffAtAlt', 'arrivalAtAlt', and 'afterLand'."
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3979,13 +3989,18 @@ def _valCesiumNodeInputs(cesiumIconType, cesiumColor):
 	errorMsg = ""
 	warningMsg = ""
 
+	try:
+		cesiumIconType = cesiumIconType.lower()
+	except:
+		pass
+
 	if (valFlag == True):
 		if (cesiumIconType not in cesiumIconTypeList):
-			warningMsg = "Warning: cesiumIconType is not recognized; it may not be displayed properly.  Note that this field is currently case sensitive."
+			warningMsg = "Warning: cesiumIconType is not recognized; it may not be displayed properly."
 
 	if (valFlag == True):
 		if (expandCesiumColor(cesiumColor) not in cesiumColorList):
-			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive."
+			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly."
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3996,7 +4011,7 @@ def _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 
 	if (valFlag == True):
 		if (expandCesiumColor(cesiumColor) not in cesiumColorList):
-			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive"
+			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly."
 
 	if (valFlag == True):
 		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(cesiumWeight, "cesiumWeight")

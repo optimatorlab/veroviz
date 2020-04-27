@@ -250,10 +250,10 @@ dataframeList = {
 }
 
 loiterPositionList = [
-	'beforeTakeoff',
-	'takeoffAtAlt',
-	'arrivalAtAlt',
-	'afterLand'
+	'beforetakeoff',
+	'takeoffatalt',
+	'arrivalatalt',
+	'afterland'
 ]
 
 routeType2DList = [

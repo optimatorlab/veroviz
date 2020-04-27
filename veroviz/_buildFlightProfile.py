@@ -365,19 +365,24 @@ def addLoiterTimeToFlight(flight, loiterPosition, loiterTime):
 
 	flightWithLoiter = flight.copy()
 
-	if (loiterPosition == "beforeDeparture"):
+	try:
+		loiterPosition = loiterPosition.lower()
+	except:
+		pass
+
+	if (loiterPosition == "beforeDeparture".lower()):
 		flightWithLoiter.loc[flightWithLoiter['description'] == "beforeDeparture", 'loiterTime'] += loiterTime
 		flightWithLoiter.loc[flightWithLoiter['description'] == "beforeTakeoff", 'loiterTime'] += loiterTime
 
-	elif (loiterPosition == "departAtAlt"):
+	elif (loiterPosition == "departAtAlt".lower()):
 		flightWithLoiter.loc[flightWithLoiter['description'] == "takeoffAtAlt", 'loiterTime'] += loiterTime
 		flightWithLoiter.loc[flightWithLoiter['description'] == "takeoffAtAlt and arrivalAtAlt", 'loiterTime'] += loiterTime
 
-	elif (loiterPosition == "arrivalAtAlt"):
+	elif (loiterPosition == "arrivalAtAlt".lower()):
 		flightWithLoiter.loc[flightWithLoiter['description'] == "arrivalAtAlt", 'loiterTime'] += loiterTime
 		flightWithLoiter.loc[flightWithLoiter['description'] == "takeoffAtAlt and arrivalAtAlt", 'loiterTime'] += loiterTime
 
-	elif (loiterPosition == "afterArrival"):
+	elif (loiterPosition == "afterArrival".lower()):
 		flightWithLoiter.loc[flightWithLoiter['description'] == "afterArrival", 'loiterTime'] += loiterTime
 		flightWithLoiter.loc[flightWithLoiter['description'] == "afterLand", 'loiterTime'] += loiterTime
 
