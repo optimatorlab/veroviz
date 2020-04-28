@@ -594,7 +594,7 @@ def geoClosestPointLoc2Line(loc, line):
 		cosSAB = geoFindCos(vecAS, vecAB)
 
 		if cosSAB >= 0:
-			tmpLocDict = geoMileageInPath2D([locA, locB], dist)[0]
+			tmpLocDict = geoMileageInPath2D([locA, locB], dist)
 			minLoc = tmpLocDict['loc']
 		else:
 			minLoc = locA

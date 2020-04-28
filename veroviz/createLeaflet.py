@@ -1765,30 +1765,29 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 		
 	Example
 	-------
-		>>> # Draw an icon/pin, centered on the Univ. at Buffalo campus.
-		>>> # Save this as "an_icon.html".
+	Import veroviz and check if the version is up-to-date:
 		>>> import veroviz as vrv
-		>>> myMap = vrv.addLeafletIcon(
-		...     location=[43.00154, -78.7871],
-		...     mapFilename="an_icon.html")
-		>>> myMap
-
-		>>> # Draw a marker, centered on the Univ. at Buffalo campus.
-		>>> # This example includes all of the available function arguments.
-		>>> import veroviz as vrv
-		>>> myMap = vrv.addLeafletIcon(
-		...     mapObject = None, 
-		...     mapFilename = None, 
-		...     mapBackground = 'CartoDB positron', 
-		...     mapBoundary = None, 
-		...     zoomStart = 11, 
-		...     location = [43.00154, -78.7871],
-		...     iconPrefix='custom',
-		...     iconType='10-white-12',
-		...     iconColor:'blue',
-		...     iconText:'UB',
-		...     popupText:'test')
-		>>> myMap
+		>>> vrv.checkVersion()
+	
+	Define a location:
+		>>> whiteHouse = [38.8977, -77.0365]
+		
+	A minimal example, using mostly default parameters:
+		>>> vrv.addLeafletIcon(location = whiteHouse)
+		
+		
+	An example showing all function parameters:
+		>>> vrv.addLeafletIcon(mapObject     = None, 
+		...                    mapFilename   = None, 
+		...                    mapBackground = 'arcgis aerial', 
+		...                    mapBoundary   = None, 
+		...                    zoomStart     = None, 
+		...                    location      = whiteHouse, 
+		...                    iconPrefix    = 'custom', 
+		...                    iconType      = '18-yellow-12', 
+		...                    iconColor     = 'purple', 
+		...                    iconText      = 'WH', 
+		...                    popupText     = '<nobr>click icon to see this single-line text</nobr>')
 	"""
 
 	# validation
@@ -1870,7 +1869,50 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 		
 	Example
 	-------
-	FIXME
+
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	The following examples assume the use of ORS as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+
+	Get isochrone data:
+		>>> iso = vrv.isochrones(location         = [43.00154, -78.7871], 
+		...                      locationType     = 'start', 
+		...                      travelMode       = 'driving-car', 
+		...                      rangeType        = 'time', 
+		...                      rangeSize        = vrv.convertTime(5, 'minutes', 'seconds'), 
+		...                      interval         = vrv.convertTime(2.5, 'minutes', 'seconds'), 
+		...                      smoothing        = 5, 
+		...                      dataProvider     ='ors-online', 
+		...                      dataProviderArgs = {'APIkey': ORS_API_KEY})
+
+	A minimal working example, using mostly default values:
+		>>> vrv.addLeafletIsochrones(iso = iso)
+		
+	An example using all of the functional parameters:
+		>>> vrv.addLeafletIsochrones(mapObject          = None, 
+		...                          mapFilename        = None, 
+		...                          mapBackground      = 'cartodb dark_matter', 
+		...                          mapBoundary        = None, 
+		...                          zoomStart          = None, 
+		...                          iso                = iso, 
+		...                          showBoundingRegion = True, 
+		...                          iconPrefix         = 'custom', 
+		...                          iconType           = '12-white-12', 
+		...                          iconColor          = 'red', 
+		...                          iconText           = '1', 
+		...                          popupText          = None, 
+		...                          lineWeight         = 3, 
+		...                          lineOpacity        = 0.8, 
+		...                          lineStyle          = 'solid', 
+		...                          fillOpacity        = 0.3)		
 	"""
 	
 
@@ -1995,14 +2037,24 @@ def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename
 	Example
 	-------
 
-	>>> import veroviz as vrv
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 
-	>>> myMap = vrv.addLeafletWeather(mapObject     = None, 
-	...                               mapType       = 'wind', 
-	... 						      APIkey        = 'KEY_GOES_HERE', 
-	... 						      mapFilename   = None, 
-	...   						      mapBackground = 'cartodb dark_matter')
-	>>> myMap
+	If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> OPENWEATHER_KEY = os.environ['OPENWEATHERKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # OPENWEATHER_KEY = 'YOUR_OPENWEATHERMAP_KEY_GOES_HERE'
+
+	Display a map showing wind conditions.  This example includes all available function arguments.
+		>>> vrv.addLeafletWeather(mapObject     = None,                          
+		...                       mapType       = 'wind', 
+		...                       APIkey        = OPENWEATHER_KEY, 
+		...                       mapFilename   = None, 
+		...                       mapBackground = 'cartodb dark_matter')
 	"""
 
 	# validation

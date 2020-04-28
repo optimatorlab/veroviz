@@ -49,9 +49,14 @@ The table below describes each of the fields/columns of a `Nodes` dataframe:
 |                  |           | nodeName is not used by VeRoViz            |
 |                  |           | explicitly.                                |
 +------------------+-----------+--------------------------------------------+
+| popupText        | string    | Text (or HTML) that will be displayed      |
+|                  |           | when a user clicks on the arc in           |
+|                  |           | Leaflet or Cesium.                         |
++------------------+-----------+--------------------------------------------+
 | leafletIconPrefix| string    | There are a large number of Leaflet icons  |
 |                  |           | available.  The IconPrefix identifies one  |
-|                  |           | of two collections: "glyphicon" or "fa".   |
+|                  |           | of three collections: "glyphicon", "fa",   |
+|                  |           | or "custom".
 |                  |           | See :ref:`Leaflet Style` for more details. |
 +------------------+-----------+--------------------------------------------+
 | leafletIconType  | string    | The specific icon depends on the           |
@@ -77,6 +82,10 @@ The table below describes each of the fields/columns of a `Nodes` dataframe:
 | cesiumIconText   | string    | The text shown in the marker when displayed|
 |                  |           | in Cesium. See :ref:`Cesium Style` for more|
 |                  |           | details.                                   |
++------------------+-----------+--------------------------------------------+
+| elevMeters       | float     | The elevation of the given [lat, lon]      |
+|                  |           | location, in units of [meters above mean   |
+|                  |           | sea level] (MSL).                          |
 +------------------+-----------+--------------------------------------------+
 
 ---------------------------------------------------------------------
@@ -109,6 +118,8 @@ In :meth:`~veroviz.snapNodesToRoad.snapNodesToRoad`
 +------------------+--------------+--------------+------------------+
 | nodeType         |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
+| popupText        |              |              | ✓                |
++------------------+--------------+--------------+------------------+
 | leafletIconPrefix|              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | leafletIconType  |              |              | ✓                |
@@ -122,6 +133,8 @@ In :meth:`~veroviz.snapNodesToRoad.snapNodesToRoad`
 | cesiumColor      |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | cesiumIconText   |              |              | ✓                |
++------------------+--------------+--------------+------------------+
+| elevMeters       |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 
 In :meth:`~veroviz.createCesium.createCesium`
@@ -141,6 +154,8 @@ In :meth:`~veroviz.createCesium.createCesium`
 +------------------+--------------+--------------+------------------+
 | nodeType         |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
+| popupText        | ✓            |              |                  |
++------------------+--------------+--------------+------------------+
 | leafletIconPrefix|              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | leafletIconType  |              |              | ✓                |
@@ -154,6 +169,8 @@ In :meth:`~veroviz.createCesium.createCesium`
 | cesiumColor      |              | ✓            |                  |
 +------------------+--------------+--------------+------------------+
 | cesiumIconText   |              | ✓            |                  |
++------------------+--------------+--------------+------------------+
+| elevMeters       |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 
 In :meth:`~veroviz.createLeaflet.createLeaflet`
@@ -173,6 +190,8 @@ In :meth:`~veroviz.createLeaflet.createLeaflet`
 +------------------+--------------+--------------+------------------+
 | nodeType         |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
+| popupText        | ✓            |              |                  |
++------------------+--------------+--------------+------------------+
 | leafletIconPrefix|              | ✓            |                  |
 +------------------+--------------+--------------+------------------+
 | leafletIconType  |              | ✓            |                  |
@@ -186,6 +205,8 @@ In :meth:`~veroviz.createLeaflet.createLeaflet`
 | cesiumColor      |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | cesiumIconText   |              |              | ✓                |
++------------------+--------------+--------------+------------------+
+| elevMeters       |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 
 In :meth:`~veroviz.getTimeDist2D.getTimeDist2D`
@@ -205,6 +226,8 @@ In :meth:`~veroviz.getTimeDist2D.getTimeDist2D`
 +------------------+--------------+--------------+------------------+
 | nodeType         |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
+| popupText        |              |              | ✓                |
++------------------+--------------+--------------+------------------+
 | leafletIconPrefix|              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | leafletIconType  |              |              | ✓                |
@@ -218,6 +241,8 @@ In :meth:`~veroviz.getTimeDist2D.getTimeDist2D`
 | cesiumColor      |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | cesiumIconText   |              |              | ✓                |
++------------------+--------------+--------------+------------------+
+| elevMeters       |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 
 In :meth:`~veroviz.getTimeDist3D.getTimeDist3D`
@@ -237,6 +262,8 @@ In :meth:`~veroviz.getTimeDist3D.getTimeDist3D`
 +------------------+--------------+--------------+------------------+
 | nodeType         |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
+| popupText        |              |              | ✓                |
++------------------+--------------+--------------+------------------+
 | leafletIconPrefix|              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | leafletIconType  |              |              | ✓                |
@@ -250,4 +277,6 @@ In :meth:`~veroviz.getTimeDist3D.getTimeDist3D`
 | cesiumColor      |              |              | ✓                |
 +------------------+--------------+--------------+------------------+
 | cesiumIconText   |              |              | ✓                |
++------------------+--------------+--------------+------------------+
+| elevMeters       |              |              | ✓                |
 +------------------+--------------+--------------+------------------+

@@ -9,6 +9,10 @@ VeRoViz leverages a number of fantastic applications, almost all of which are op
 
     - [Leaflet polylineDecorator](https://github.com/bbecquet/Leaflet.PolylineDecorator) - A Leaflet plug-in to define and draw patterns on existing Polylines or along coordinate paths.
 
+- Elevation data
+	- [Elevation-API](https://elevation-api.io)
+	- [USGS Elevation Point Query Service](https://nationalmap.gov/epqs)
+	 
 - Navigation data
     - [MapQuest](https://developer.mapquest.com/documentation/) - APIs for navigation directions and geocoding.
 
@@ -27,6 +31,8 @@ VeRoViz leverages a number of fantastic applications, almost all of which are op
 - Python libraries/packages
     - [folium](https://github.com/python-visualization/folium) - Creates leaflet.js maps from Python.
     - [geopy](https://github.com/geopy/geopy) - Python geocoding tools.
+
+    - [matplotlib](https://matplotlib.org)	- Python visualization library.
 
     - [numpy](https://numpy.org) - Python package for scientific computing.
 
@@ -49,5 +55,12 @@ VeRoViz leverages a number of fantastic applications, almost all of which are op
     - [Mapbox](https://www.mapbox.com)
 
     - [OpenTopoMap](https://opentopomap.org)
+    
+    - [OpenWeatherMap](https://openweathermap.org)
 
     - [Stamen](http://stamen.com)
+    
+- Weather data provider
+    
+    - [OpenWeatherMap](https://openweathermap.org)
+    

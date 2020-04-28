@@ -102,6 +102,8 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	|                           | ... , [lat, lon]]                                     |
 	+---------------------------+-------------------------------------------------------+
 
+	FIXMELP -- IS THERE A NEW OPTION HERE?
+
 	Examples
 	--------
 	First import veroviz and check if it is the latest version:

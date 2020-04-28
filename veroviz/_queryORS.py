@@ -21,15 +21,32 @@ def orsGetSnapToRoadLatLon(loc, APIkey):
 	# Instead, issue a driving request from a location to itself.
 	dicLoc = loc2Dict(loc)
     
-	# ORS uses [lon, lat] order:
-	snapToRoadUrl = ('https://api.openrouteservice.org/v2/directions/driving-car?api_key=%s&start=%s,%s&end=%s,%s' % 
-					(APIkey, dicLoc['lon'], dicLoc['lat'], dicLoc['lon'], dicLoc['lat']))
- 
+	snapToRoadUrl = ('https://api.openrouteservice.org/v2/directions/driving-car/geojson')
+	
+	headers = {
+				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+				'Authorization': APIkey,
+				'Content-Type': 'application/json'}
+    
 	try:
-		http = urllib3.PoolManager()
-		response = http.request('GET', snapToRoadUrl)
-		data = json.loads(response.data.decode('utf-8'))
+		# ORS uses [lon, lat] order:
+		coordinates  = [[dicLoc['lon'], dicLoc['lat']], 
+						[dicLoc['lon'], dicLoc['lat']]]
+		radiuses     = [-1, -1]
+		elevation = "false"
+		extra_info = []
+		
+		encoded_body = json.dumps({
+			"coordinates": coordinates,
+			"elevation": elevation, 
+			"extra_info": extra_info,
+			"instructions": "false",
+			"radiuses": radiuses})
 
+		http = urllib3.PoolManager()
+		response = http.request('POST', snapToRoadUrl, headers=headers, body=encoded_body)
+    
+		data = json.loads(response.data.decode('utf-8'))
 		http_status = response.status
 
 		if (http_status == 200):

@@ -338,7 +338,9 @@ def lengthFromNodeSeq(nodeSeq=None, lengthDict=None):
 
 	Example
 	-------
-	>>> import veroviz as vrv
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 
 	Define some sample locations and create a nodes dataframe:
 		>>> locs = [[42.8871085, -78.8731949],
@@ -437,7 +439,9 @@ def calcArea(poly=None):
 	
 	Example
 	-------
-	>>> import veroviz as vrv
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 	
 	Define a sequence of locations:
 		>>> locs = [[42.82, -78.80, 0], [42.86, -78.82, 0], [42.84, -78.84, 0]]
@@ -1774,7 +1778,7 @@ def minDistLoc2Path(loc=None, path=None):
 
 def closestPointLoc2Path(loc=None, path=None):
 	"""
-	Find the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.
+	Finds the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.
 
 	Parameters
 	----------
@@ -1790,11 +1794,27 @@ def closestPointLoc2Path(loc=None, path=None):
 
 	Examples
 	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
 	Prepare some data
 		>>> import veroviz
 		>>> path = [[42.50, -78.65], [42.50, -78.40]]
 		>>> loc1 = [42.50, -78.50]
 		>>> loc2 = [42.51, -78.50]
+
+	Draw the line and the 2 points on the map:
+		>>> myMap = vrv.addLeafletPolyline(points = path)
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc1, 
+		...                              radius = 14,
+		...                              text='1', fontColor='black')
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc2, 
+		...                              radius = 14,
+		...                              text='2', fontColor='black')
+		>>> myMap
 
 	Example 1 - The location is on the path:
 		>>> vrv.closestPointLoc2Path(loc1, path)
@@ -1804,7 +1824,6 @@ def closestPointLoc2Path(loc=None, path=None):
 		>>> vrv.closestPointLoc2Path(loc2, path)
 		([42.5, -78.50000397522506], 1103.5612443321572)
 
-
 	Example 3 - The location and path include altitudes (which are ignored):
 		>>> path2 = [[42.50, -78.40, 100],
 		...          [42.50, -78.60, 200],
@@ -1812,6 +1831,15 @@ def closestPointLoc2Path(loc=None, path=None):
 		>>> loc3  = [42.51, -78.3, 300]
 		>>> vrv.closestPointLoc2Path(loc3, path2)
 		([42.5, -78.6, 0], 8293.970453010768)
+		
+	Draw the line, the reference point, and the nearest point on the map:
+		>>> myMap = vrv.addLeafletPolyline(points = path2)
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc3, 
+		...                              radius = 14,
+		...                              text='3', fontColor='black')
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap, center = nearestPt, radius = 12)
+		>>> myMap		
 	"""
 
 	# validation
@@ -1842,7 +1870,7 @@ def closestPointLoc2Path(loc=None, path=None):
 	
 def closestNode2Loc(loc=None, nodes=None):
 	"""
-	Return the closest node in the dataframe to the given location.  Also return the Euclidean distance (in [meters]) from the location to the nearest node.
+	Returns the closest node in the dataframe to the given location.  Also returns the Euclidean distance (in [meters]) from the location to the nearest node.
 
 	Parameters
 	----------
@@ -1860,21 +1888,37 @@ def closestNode2Loc(loc=None, nodes=None):
 
 	Examples
 	--------
-	Prepare some data
-		>>> import veroviz
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Prepare some sample data.
+		>>> # A single location:
 		>>> loc1 = [42.885, -78.861]
+		>>> 
+		>>> # A collection of locations, which we'll
+		>>> # convert to a "nodes" dataframe:
 		>>> locs = [[42.8871085, -78.8731949],
 		...         [42.8888311, -78.8649649],
 		...         [42.8802158, -78.8660787],
 		...         [42.8845705, -78.8762794],
 		...         [42.8908031, -78.8770140]]
-		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> 
+		>>> myNodes = vrv.createNodesFromLocs(locs = locs, 
+		...                                   leafletIconPrefix = "custom", 
+		...                                   leafletIconType   = "12-white-12")
 
 	Example 1 - Closest node:
 		>>> [nearestNode, distMeters] = vrv.closestNode2Loc(loc1, myNodes)
 		>>> nearestNode, distMeters
 		(2, 534.828771310757)
+
+	Show the five nodes from the dataframe and the reference location:
+		>>> myMap = vrv.createLeaflet(nodes = myNodes)
+		>>> myMap = vrv.addLeafletIcon(mapObject = myMap, location = loc1, iconColor='red')
+		>>> myMap
 	"""
+
 	# validation
 	[valFlag, errorMsg, warningMsg] = valClosestNode2Loc(loc, nodes)
 	if (not valFlag):
@@ -2496,7 +2540,7 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 
 def isochrones(location=None, locationType='start', travelMode='driving-car', rangeType='distance', rangeSize=None, interval=None, smoothing=25, dataProvider=None, dataProviderArgs=None):    
 	"""
-	Finds isochrones (FIXME -- EXPLAIN) to or from a given location.Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
+	Finds isochrones (lines corresponding to points of equal distance or time from a given location) to or from a given location.  
 
 	Parameters
 	----------
@@ -2534,7 +2578,7 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 						'area':  # The area enclosed by the isochrone, in square meters.
 						'pop':   # The estimated population within the isochrone.
 						'reachfactor':  # FIXME -- not sure what this represents.
-						'poly': [[]]	# A list of lists describing polylines.  (FIXME).
+						'poly': [[]]	# A list of lists describing polylines.
 								A list of GPS coordinates, of the form [[[lat, lon], [lat, lon], ..., [lat, lon]], []] defining a polygon.  This polygon describes the isochrones.
 					},
 					{
@@ -2545,14 +2589,64 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 		
 	Note
 	----
-	Currently, only 'ors-online' is supported.
-	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for isochrones.  
+	Currently, only 'ors-online' and 'ors-local' are supported.  Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for isochrones.  
 
 	Examples
 	--------
                      	
-	FIXME
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The following examples assume the use of ORS as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
 
+	Example 1 - Get distance-based isochrones from a given location:
+		>>> iso = vrv.isochrones(location         = [43.00154, -78.7871],
+		...                      rangeType        = 'distance', 
+		...                      rangeSize        = 4000, 
+		...                      dataProvider     = 'ors-online', 
+		...                      dataProviderArgs = {'APIkey': os.environ['ORSKEY']})
+		>>> iso
+	
+	Draw the result on a Leaflet map:
+		>>> vrv.addLeafletIsochrones(iso=iso)
+		>>> 
+		>>> # Click on the shaded area of the map for additional info
+
+	Example 2 - This example includes all function arguments:
+		>>> iso2 = vrv.isochrones(location         = [43.00154, -78.7871], 
+		...                       locationType     = 'start', 
+		...                       travelMode       = 'driving-car', 
+		...                       rangeType        = 'time', 
+		...                       rangeSize        = vrv.convertTime(5, 'minutes', 'seconds'), 
+		...                       interval         = vrv.convertTime(1, 'minutes', 'seconds'), 
+		...                       smoothing        = 5, 
+		...                       dataProvider     ='ors-online', 
+		...                       dataProviderArgs = {'APIkey': os.environ['ORSKEY']})
+		>>>
+		>>> vrv.addLeafletIsochrones(iso=iso2)
+		
+	Customize the map by using the `addLeafletPolygon()` function:	
+		>>>	myColors = ['red', 'blue', 'green']
+		>>>	
+		>>>	myMap = vrv.addLeafletIcon(location=iso2['location'])
+		>>>	
+		>>>	for i in range(len(iso2['isochrones'])-1, -1, -1):
+		...	    lineColor = myColors[i % len(myColors)]
+		...	    fillColor = lineColor
+		...	    for j in range(0, len(iso2['isochrones'][i]['poly'])):
+		...	        myMap = vrv.addLeafletPolygon(mapObject = myMap,
+		...	                                      points    = iso2['isochrones'][i]['poly'][j],
+		...	                                      lineColor = lineColor,
+		...	                                      fillColor = fillColor)
+		>>>	
+		>>>	myMap   	
 	"""
 	
 	
@@ -2626,8 +2720,77 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	Examples
 	--------
 					
-	FIXME
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 
+	Start by defining some locations for our vehicles to visit:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Convert these locations into a `Nodes` dataframe:
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> myNodes
+
+	A car will start at node 1, visit nodes 2 and 3, and then return to node 1.  A truck will follow a route from 1->5->4->1.
+		>>> mySolution = {
+		...     'car': [[1,2], [2,3], [3,1]],
+		...     'truck': [[1,5], [5,4], [4,1]]
+		>>> }
+		mySolution
+
+	Define some properties to use when building the `Assignments` dataframe:
+		>>> vehicleProperties = {
+		...     'car':   {'model': 'veroviz/models/car_red.gltf',
+		...               'color': 'red'},
+		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...               'color': 'blue'}
+		>>> }
+
+	Build the assignments dataframe for the 2 vehicle routes.  No service times, Euclidean travel:
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments = myAssignments,
+		...             objectID        = v,
+		...             modelFile       = vehicleProperties[v]['model'],
+		...             startLoc        = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc          = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec    = endTimeSec,
+		...             routeType       = 'euclidean2D',
+		...             speedMPS        = vrv.convertSpeed(25, 'miles', 'hour', 'meters', 'second'),
+		...             leafletColor    = vehicleProperties[v]['color'],
+		...             cesiumColor     = vehicleProperties[v]['color'],
+		...             ganttColor      = vehicleProperties[v]['color'])
+		>>> myAssignments
+
+	Create a Gantt chart using the default settings:
+		>>> vrv.createGantt(assignments = myAssignments, 
+		...                 xAxisLabel  = 'time [seconds]')
+           
+	Create (and save) a Gantt chart using all of the available settings:
+		>>> vrv.createGantt(assignments         = myAssignments, 
+		...                 objectIDorder       = ['truck', 'car'], 
+		...                 separateByModelFile = False,
+		...                 mergeByodID         = True,
+		...                 splitOnColorChange  = True,
+		...                 title               = 'My Title',
+		...                 xAxisLabel          = 'time [mm:ss]',
+		...                 xGrid               = True,
+		...                 yGrid               = False,
+		...                 xMin                = 0,
+		...                 xMax                = None,
+		...                 xGridFreq           = 30,
+		...                 timeFormat          = 'MS',
+		...                 overlayColumn       = 'odID',
+		...                 missingColor        = 'lightgray',
+		...                 filename            = 'myGantt.png')
+                
 	"""
 
 	# validation
@@ -2811,9 +2974,63 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 
 	Examples
 	--------
-                     	
-	FIXME
 
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The `getElevationLocs()` function requires a data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> ELEVAPI_KEY = os.environ['ELEVAPIKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # ELEVAPI_KEY = 'YOUR_ELEVATIONAPI_KEY_GOES_HERE'                     	
+
+	Define a set of locations:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Use ORS to find the elevations of all locations:
+		>>> vrv.getElevationLocs(locs             = locs, 
+		...                      dataProvider     = 'ors-online', 
+		...                      dataProviderArgs = {'APIkey': ORS_API_KEY})
+
+		[[42.887108, -78.873195, 196.0],
+		 [42.888831, -78.864965, 185.0],
+		 [42.880216, -78.866079, 183.0],
+		 [42.884571, -78.876279, 200.0],
+		 [42.890803, -78.877014, 187.0]]		
+		
+	Use ORS to find the elevation of a single location, with a starting elevation/altitude:
+		>>> vrv.getElevationLocs(locs             = [[42.888, -78.864, 100]], 
+		...                      dataProvider     = 'ors-online', 
+		...                      dataProviderArgs = {'APIkey': ORS_API_KEY})
+		
+		[[42.888, -78.864, 284.0]]
+		
+	Use the US Geological Survey data:
+		>>> vrv.getElevationLocs(locs             = locs, 
+		...                      dataProvider     = 'usgs')		
+		
+		[[42.8871085, -78.8731949, 187.66],
+		 [42.8888311, -78.8649649, 185.15],
+		 [42.8802158, -78.8660787, 181.1],
+		 [42.8845705, -78.8762794, 185.64],
+		 [42.8908031, -78.877014, 186.25]]
+		 
+
+	Use Elevation-API:
+		>>> vrv.getElevationLocs(locs             = [[42.888, -78.864, 100]], 
+		...                      dataProvider     = 'elevapi',
+		...                      dataProviderArgs = {'APIkey': ELEVAPI_KEY})
+
+		[[42.888, -78.864, 292.0]]		 
 	"""
 
 	# validation
@@ -2831,7 +3048,7 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 
 def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None): 
 	"""
-	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL), 
+	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).
 
 	Parameters
 	----------
@@ -2854,7 +3071,87 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 	Examples
 	--------
                      	
-	FIXME
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The `getElevationDF()` function requires a data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> ELEVAPI_KEY = os.environ['ELEVAPIKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # ELEVAPI_KEY = 'YOUR_ELEVATIONAPI_KEY_GOES_HERE'                     	
+
+	Create a Nodes dataframe.  Note that, by default, there is no elevation data:
+		>>> myNodes = vrv.generateNodes(
+		...     numNodes        = 4,
+		...     nodeType        = 'depot', 
+		...     nodeDistrib     = 'normal', 
+		...     nodeDistribArgs = {
+		...         'center' : [42.30, -78.00], 
+		...         'stdDev' : 1000
+		...     })
+		>>> myNodes['elevMeters']
+
+		0    None
+		1    None
+		2    None
+		3    None
+		Name: elevMeters, dtype: object
+
+	Find missing elevation data using ORS-online:
+		>>> myNodesORS = vrv.getElevationDF(dataframe        = myNodes, 
+		...                                 dataProvider     = 'ors-online',
+		...                                 dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myNodesORS['elevMeters']
+
+		0    460
+		1    448
+		2    461
+		3    446
+		Name: elevMeters, dtype: int64
+
+	Find missing elevation data using USGS:
+		>>> myNodesUSGS = vrv.getElevationDF(dataframe    = myNodes, 
+		...                                  dataProvider = 'usgs')
+		>>> myNodesUSGS['elevMeters']
+
+		0    442.58
+		1    447.53
+		2    455.06
+		3    444.21
+		Name: elevMeters, dtype: object
+
+	Find missing elevation data using Elevation-API:
+		>>> myNodesElevAPI = vrv.getElevationDF(dataframe        = myNodes, 
+		...                                     dataProvider     = 'elevAPI',
+		...                                     dataProviderArgs = {'APIkey': ELEVAPI_KEY})
+		>>> myNodesElevAPI['elevMeters']
+
+		0    192
+		1    192
+		2    192
+		3    178
+		4    178
+		Name: elevMeters, dtype: int64
+	
+	Create an Arcs dataframe from a sequence of nodes:
+		>>> myArcs = vrv.createArcsFromNodeSeq(
+		...     nodeSeq = [1, 2, 3, 4],
+		...     nodes   = myNodes)
+
+	Find missing start/end elevations in the arcs dataframe, using USGS data:
+		>>> myArcsUSGS = vrv.getElevationDF(dataframe        = myArcs, 
+		...                                 dataProvider     = 'usgs')
+		>>> myArcsUSGS[['startElevMeters', 'endElevMeters']]
+			startElevMeters	endElevMeters
+		0	187.66	185.15
+		1	185.15	181.1
+		2	181.1	185.64
+
 
 	"""
 
@@ -2885,7 +3182,7 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 
 def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvider=None, dataProviderArgs=None):  
 	"""
-	EXPERIMENTAL.  Get weather information for a specified [lat, lon] location.
+	EXPERIMENTAL.  Get weather information (current and forecasted) for a specified [lat, lon] location.
 
 	Parameters
 	----------
@@ -2908,20 +3205,22 @@ def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvi
 		
 	Examples
 	--------
-	>>> import veroviz as vrv
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 	
 	Example 1: A simple example using the minium input arguments.
-	>>> myDF = vrv.getWeather(location     = [42, -78], 
-	...                       dataProvider = 'openweather', 
-	...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
+		>>> myDF = vrv.getWeather(location         = [42, -78], 
+		...                       dataProvider     = 'openweather', 
+		...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
 	
-	Example 2: Append to the dataframe created above.
-	>>>	myDF = vrv.getWeather(location=[40, -80], 
-	...                       id=2, 
-	...                       initDF = myDF, 
-	...                       metricUnits=False, 
-	...                       dataProvider = 'openweather', 
-	...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
+	Example 2: Append to the dataframe created above.  This example uses all of the functional arguments.
+		>>> myDF = vrv.getWeather(location         = [40, -80], 
+		...                       id               = 2, 
+		...                       initDF           = myDF, 
+		...                       metricUnits      = False, 
+		...                       dataProvider     = 'openweather', 
+		...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
 	
 	"""
 	
