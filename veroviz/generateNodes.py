@@ -101,8 +101,18 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	|                           | boundary, in the form of [[lat, lon], [lat, lon],     |
 	|                           | ... , [lat, lon]]                                     |
 	+---------------------------+-------------------------------------------------------+
-
-	FIXMELP -- IS THERE A NEW OPTION HERE?
+	| "unifRoadBasedBB":        | 'boundingRegion': A list of lat/lon coordinates       |
+	| Uniformly generate        | defining the boundary, in the form of                 |
+	| locations that are close  | [[lat, lon], [lat, lon], ... , [lat, lon]]            |
+	| to the road (within a     +-------------------------------------------------------+
+	| certain range). If a      | 'distToRoad': The maximum distance between the        |
+	| location is close to      | generated location and its nearest road.              |
+	| multiple roads (e.g.,     |                                                       |
+	| the location is at the    |                                                       |
+	| corner of two roads), the |                                                       |
+	| probability of it getting |                                                       |
+	| chosen will not increase. |                                                       |
+	+---------------------------+-------------------------------------------------------+
 
 	Examples
 	--------

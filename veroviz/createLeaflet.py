@@ -13,6 +13,8 @@ from veroviz._internal import splitLeafletCustomIconType
 
 from veroviz._deconstructAssignments import deconstructAssignments
 
+from veroviz._createEntitiesFromList import privCreateArcsFromLocSeq
+
 from veroviz.utilities import getMapBoundary
 
 from veroviz._geometry import geoDistancePath2D
@@ -134,13 +136,13 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	arcColor: string, Optional, default as None
 		Overrides the `leafletColor` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.
 	arcCurveType: string, Optional, default as 'straight'
-		Choose the type of curve to be shown on leaflet map for :ref:`Arc` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and None. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.
+		Choose the type of curve to be shown on leaflet map for :ref:`Arc` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and 'straight'. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.
 	arcCurvature: float in (-90, 90), Conditional, default as 45
 		If choose `Bezier` as `arcCurveType`, then `arcCurvature` is required; otherwise this argument will not be used. The meaning of this argument is as following: link two nodes using straight line, the degrees between this straight line and the curve at two nodes is this argument, therefore it should be greater or equal to 0 and less than 90. A degree between -45 and 45 is recommended.		
 	useArrows: boolean, Optional, default as None
 		Indicates whether arrows should be shown on all arcs on the Leaflet map.
 	arrowsPerArc: int, Optional, default as 1
-		FIXMELP -- What is this?  How is it used?  What if `useArrows` is False?
+		Number of arrows display on each arc, should be integer greater than 0. Each arc will have the same number of arrows, regardless of arc length. If useArrows is False, this parameter will be ignored (i.e., no arrows will be drawn).
 	boundingRegion: list of lists, Conditional, `nodes`, `arcs` and `boundingRegion` can not be None at the same time
 		A sequence of lat/lon coordinates defining a boundary polygon. The format is [[lat, lon], [lat, lon], ..., [lat, lon]].
 	boundingWeight: int, Optional, default as 3
@@ -621,7 +623,9 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 		for j in range(len(lstPath[i])):
 			arcPath.append([lstPath[i]['endLat'][j], lstPath[i]['endLon'][j]])
 
-		# If not overrided, use the info in arcs dataframe
+		# FIXMELP -- Some of these values below aren't used anywhere that I can see.
+		#            For example, curveType or curvature.
+		# If not overridden, use the info in arcs dataframe
 		if (arcColor == None):
 			newColor = lstPath[i]['leafletColor'][0]
 		else:
@@ -643,9 +647,9 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 		else:
 			newArcCurveType = arcCurveType.lower()
 		if (arcCurvature == None):
-			newArcCurveType = lstPath[i]['leafletStyle'][0]
+			newArcCurvature = lstPath[i]['leafletStyle'][0]
 		else:
-			newArcCurveType = arcCurvature.lower()
+			newArcCurvature = arcCurvature
 
 		# Interpret arc style
 		if (newStyle == 'dashed'):
@@ -1435,7 +1439,7 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 
 	return mapObject
 
-def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid'):
+def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid', lineCurveType='straight', lineCurvature=45, useArrows=False, arrowsPerArc=1):
 
 	"""
 	Add a polyline, as described by an ordered collection of lat/lon coordinates, to a Leaflet map.  
@@ -1468,6 +1472,15 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		Specifies the opacity of the polyline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).
 	lineStyle: string, Optional, default 'solid'
 		The style of the polyine.  See :ref:`Leaflet Style` for a list of valid options.  
+	lineCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	lineCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
+	useArrows: boolean, Optional, default as None
+		Indicates whether arrows should be shown on all arcs on the Leaflet map.
+	arrowsPerArc: int, Optional, default as 1
+		Number of arrows display on each arc, should be integer greater than 0. Each arc will have the same number of arrows, regardless of arc length. If useArrows is False, this parameter will be ignored (i.e., no arrows will be drawn).
+		
 	
 	Return
 	------
@@ -1498,18 +1511,22 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		...     mapFilename = None, 
 		...     mapBackground = 'CartoDB positron', 
 		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints),
-		...     zoomStart = 14, 
+		...     zoomStart = None, 
 		...     points = campusPoints,
 		...     popupText = 'Univ. at Buffalo',
-		...     lineWeight = 13, 
+		...     lineWeight = 3, 
 		...     lineColor = '#0055ff', 
 		...     lineOpacity = 0.8, 
-		...     lineStyle = 'solid')
-		>>> myMap
+		...     lineStyle = 'solid', 
+		...     lineCurveType = 'bezier',
+		...     lineCurvature = 30,
+		...     useArrows = True,
+		...     arrowsPerArc = 1)
+		>>> myMap	
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valAddLeafletPolyline(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, points, lineWeight, lineColor, lineOpacity, lineStyle)
+	[valFlag, errorMsg, warningMsg] = valAddLeafletPolyline(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, points, lineWeight, lineColor, lineOpacity, lineStyle, lineCurveType, lineCurvature, useArrows, arrowsPerArc)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -1556,51 +1573,11 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		pass
 
 	
-	print("FIXMELP -- Your branch has some code here, but it cannot be implemented because it is missing some variables.  Please fix this appropriately.")
+	# print("FIXMELP -- DONE?  Your branch has some code here, but it cannot be implemented because it is missing some variables.  Please fix this appropriately.")
 
-	'''
-	# This is the code from line 1415 of your version of createLeaflet.py:
-	arcs = createArcsFromLocSeq(locs = points)
-	mapObject = _createLeafletArcs(mapObject=mapObject, arcs=arcs, arcWeight=lineWeight, arcOpacity=lineOpacity, arcStyle=lineStyle, arcColor=lineColor, arcCurveType=lineCurveType, arcCurvature=lineCurvature, useArrows=useArrows, arrowSize=VRV_DEFAULT_LEAFLET_ARROWSIZE, arrowRerArc=4)
-
-	NOTE 1:  lineCurveType and lineCurvature are not defined.
+	arcs = privCreateArcsFromLocSeq(locSeq = points, popupText = popupText)	
+	mapObject = _createLeafletArcs(mapObject=mapObject, arcs=arcs, arcWeight=lineWeight, arcOpacity=lineOpacity, arcStyle=lineStyle, arcColor=lineColor, arcCurveType=lineCurveType, arcCurvature=lineCurvature, useArrows=useArrows, arrowSize=VRV_DEFAULT_LEAFLET_ARROWSIZE, arrowsPerArc=arrowsPerArc)
 	
-	NOTE 2: Please see my code for folium.PolyLine below...I added the `popup = popupText line. `
-	
-	# points2D = []
-	# for i in range(len(points)):
-	# 	points2D.append([points[i][0], points[i][1]])
-		
-	# folium.PolyLine(locations = points2D, 
-	# 	stroke = True, 
-	# 	weight = lineWeight, 
-	# 	color = lineColor,
-	# 	opacity = lineOpacity, 
-	# 	dash_array = dashArray,
-	# 	fill = False
-	# 	).add_to(mapObject)	
-	
-	'''
-	
-	points2D = []
-	for i in range(len(points)):
-		points2D.append([points[i][0], points[i][1]])
-
-	# Format popup text
-	if (popupText is not None):
-		popupText = str(popupText)
-		
-	folium.PolyLine(locations = points2D, 
-		stroke = True, 
-		weight = lineWeight, 
-		color = lineColor,
-		opacity = lineOpacity, 
-		dash_array = dashArray,
-		fill = False,
-		popup = popupText
-		).add_to(mapObject)
-
-
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
 		if (VRV_SETTING_SHOWOUTPUTMESSAGE):

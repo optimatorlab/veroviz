@@ -55,10 +55,10 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
-	leafletCurveType: string, optional, default as 'straight'
-		FIXMELP -- What are the options?  What does this do?
-	leafletCurvature: ???, optional, default as 0
-		FIXMELP -- What are the options?  What does this do?
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the route when displayed in Leaflet.
 	modelScale: int, Optional, default as 100
@@ -405,10 +405,10 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
-	leafletCurveType: string, optional, default as 'straight'
-		FIXMELP -- What are the options?  What does this do?
-	leafletCurvature: ???, optional, default as 0
-		FIXMELP -- What are the options?  What does this do?
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the route when displayed in Leaflet.
 	modelScale: int, Optional, default as 100
@@ -922,10 +922,10 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 		Overrides the `leafletStyle` column of the input :ref:`Arcs` dataframe. If provided, all arcs will be displayed with this type.  Valid options are 'solid', 'dotted', or 'dashed'.  See :ref:`Leaflet Style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as None
 		Overrides the `leafletOpacity` column of the input :ref:`Arcs` dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency).
-	leafletCurveType: string, optional, default as 'straight'
-		FIXMELP -- Overrides the `leafletCurveType` column of the input :ref:`Arcs` dataframe.  What are the options?  What does this do?
-	leafletCurvature: ???, optional, default as 0
-		FIXMELP -- Overrides the `leafletCurvature` column of the input :ref:`Arcs` dataframe.  What are the options?  What does this do?
+	leafletCurveType: string, Optional, default as None
+		Overrides the `leafletCurveType` column of the input :ref:`Arcs` dataframe, if provided. The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as None
+		Overrides the `leafletCurvature` column of the input :ref:`Arcs` dataframe, if provided.  If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: boolean, Optional, default as None
 		Overrides the `useArrows` column of the input :ref:`Arcs` dataframe. Indicates whether arrows should be shown on the route when displayed in Leaflet.
 	cesiumColor: string, Optional, default as None
@@ -1136,10 +1136,10 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
-	leafletCurveType: string, optional, default as 'straight'
-		FIXMELP -- What are the options?  What does this do?
-	leafletCurvature: ???, optional, default as 0
-		FIXMELP -- What are the options?  What does this do?
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the route when displayed in Leaflet.
 	modelScale: int, Optional, default as 100
@@ -1419,10 +1419,10 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
-	leafletCurveType: string, optional, default as 'straight'
-		FIXMELP -- What are the options?  What does this do?
-	leafletCurvature: ???, optional, default as 0
-		FIXMELP -- What are the options?  What does this do?
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the route when displayed in Leaflet.
 	modelScale: int, Optional, default as 100

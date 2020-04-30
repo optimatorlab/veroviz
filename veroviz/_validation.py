@@ -396,11 +396,11 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+									
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -498,10 +498,10 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 			except:
 				pass
 		
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -563,12 +563,16 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 			warningMsg += newWarningMsg
 
 		if (valFlag and (leafletArcWeight is not None or leafletArcStyle is not None or leafletArcColor is not None or leafletArcOpacity is not None or useArrows is not None)):
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletArcColor, leafletArcWeight, leafletArcStyle, leafletArcOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletArcColor, leafletArcWeight, leafletArcStyle, leafletArcOpacity, useArrows, arcCurveType, arcCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `arcCurveType` and `arcCurvature`.")
-	print("FIXMELP -- Need to validate `arrowsPerArc`.")
+	# print("FIXMELP -- DONE?  Need to validate `arcCurveType` and `arcCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `arrowsPerArc`.")
 	
+	if (valFlag and useArrows):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(arrowsPerArc, 'arrowsPerArc')
+		warningMsg += newWarningMsg
+		
 	if (valFlag and boundingRegion is not None):
 		if (valFlag):
 			[valFlag, errorMsg, newWarningMsg] = _valBoundingRegion(boundingRegion)
@@ -922,7 +926,7 @@ def valAddLeafletPolygon(mapObject, mapFilename, mapBackground, mapBoundary, zoo
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddLeafletPolyline(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, points, lineWeight, lineColor, lineOpacity, lineStyle):
+def valAddLeafletPolyline(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, points, lineWeight, lineColor, lineOpacity, lineStyle, lineCurveType, lineCurvature, useArrows, arrowsPerArc):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1477,10 +1481,10 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 			except:
 				pass
 
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE? Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1547,10 +1551,10 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 			except:
 				pass
 
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1727,10 +1731,10 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1894,10 +1898,10 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -2025,10 +2029,10 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -2128,10 +2132,10 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -2234,10 +2238,10 @@ def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec,
 			except:
 				pass
 		
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
 
-	print("FIXMELP -- Need to validate `leafletCurveType` and `leafletCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -3929,7 +3933,7 @@ def _valLeafletNodeInputs(leafletIconPrefix, leafletIconType, leafletColor):
 			
 	return [valFlag, errorMsg, warningMsg]
 
-def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows):
+def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -3957,6 +3961,15 @@ def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpaci
 			valFlag = False
 			errorMsg = "Error: `useArrows` must be boolean (True or False)."
 
+	if (valFlag and leafletCurveType is not None):
+		if (leafletCurveType.lower() not in ['bezier', 'greatcircle', 'straight']):
+			valFlag = False
+			errorMsg = "Error: curveType must be either 'bezier', 'greatcircle', or 'straight'."
+
+	if (valFlag and leafletCurvature is not None):
+		[valFlag, errorMsg, newWarningMsg] = _valBetweenFloat(-90, 90, leafletCurvature, 'leafletCurvature')
+		warningMsg += newWarningMsg
+			
 	return [valFlag, errorMsg, warningMsg]
 
 def _valLeafletBoundingInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity):
