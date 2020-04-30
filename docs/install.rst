@@ -30,7 +30,7 @@ See https://veroviz.org/documentation.html for Cesium installation instructions.
 Apply for ORS API key
 ---------------------
 
-OpenRouteService (ORS) is currently the suggested data provider for VeRoViz. It uses data from OpenStreetMaps. ORS offers a free API key with a generous daily query limit. ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in April, 2020).
+OpenRouteService (ORS) is currently the suggested data provider for VeRoViz. It uses data from OpenStreetMaps. ORS offers a free API key with a generous daily query limit. ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in May, 2020).
 
 Register for a free ORS API key here: https://openrouteservice.org/dev/#/signup.
 

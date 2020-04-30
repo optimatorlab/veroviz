@@ -91,7 +91,7 @@ See the `OSRM documentation`_ for more details.
 ORS
 ---
 
-OpenRouteService is currently the suggested data provider for VeRoViz.  Like OSRM, it uses data from OpenStreetMaps.  ORS offers a free API key with a generous daily query limit.  ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in April, 2020).
+OpenRouteService is currently the suggested data provider for VeRoViz.  Like OSRM, it uses data from OpenStreetMaps.  ORS offers a free API key with a generous daily query limit.  ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in May, 2020).
 
 See the `ORS documentation`_ for more information.
 

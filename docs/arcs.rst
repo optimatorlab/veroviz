@@ -57,10 +57,26 @@ The table below describes each of the fields/columns of an `Arcs` dataframe:
 +------------------+-----------+----------------------------------------+
 | leafletWeight    | int       | Pixel width of the line/arc.           |
 +------------------+-----------+----------------------------------------+
-| leafletCurveType | string    | FIXMELP                                |
+| leafletCurveType | string    | The type of curve to be shown on a     |
+|                  |           | leaflet map for :ref:Arc dataframes    |
+|                  |           | (curves will not be applied to         |
+|                  |           | :ref:Assignments dataframes). The      |
+|                  |           | options are 'Bezier', 'greatcircle',   |
+|                  |           | and 'straight'. If Bezier is provided, |
+|                  |           | the leafletCurvature is also required. |
+|                  |           | If greatcircle is provided, the arc    |
+|                  |           | follows the curvature of the Earth.    |
 +------------------+-----------+----------------------------------------+
-| leafletCurvature | float in  | FIXMELP                                |
-|                  | [??, ??]  |                                        |
+| leafletCurvature | float in  | If leafletCurveType is 'Bezier', then  | 
+|                  | (-90, 90) | leafletCurvature is required; otherwise| 
+|                  |           | this argument will not be used. The    |
+|                  |           | curvature specifies the angle between a|
+|                  |           |  straight line connecting the two nodes|
+|                  |           |  and the curved arc emanating from     |
+|                  |           | those two nodes. Therefore, this value |
+|                  |           | should be in the open interval         |
+|                  |           | (-90, 90), although values in the      |
+|                  |           | (-45, 45) range tend to work best.     | 
 +------------------+-----------+----------------------------------------+
 | useArrows        | bool      | True if the arrows will be used when   |
 |                  |           | creating Leaflet map, false otherwise. |

@@ -594,7 +594,8 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletWeight' : lstOD[i].iloc[0]['leafletWeight'],
 						'leafletStyle' : lstOD[i].iloc[0]['leafletStyle'],
 						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
-						'useArrows' : lstOD[i].iloc[0]['useArrows']
+						'useArrows' : lstOD[i].iloc[0]['useArrows'],
+						'popupText' : lstOD[i].iloc[0]['popupText']
 						}, ignore_index=True)
 			elif (newArcCurveType == 'bezier'):
 				curvePoints = _getCurveBezier(newOrigin, newDestine, newArcCurvature)
@@ -609,7 +610,8 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletWeight' : lstOD[i].iloc[0]['leafletWeight'],
 						'leafletStyle' : lstOD[i].iloc[0]['leafletStyle'],
 						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
-						'useArrows' : lstOD[i].iloc[0]['useArrows']
+						'useArrows' : lstOD[i].iloc[0]['useArrows'],
+						'popupText' : lstOD[i].iloc[0]['popupText']
 						}, ignore_index=True)
 			elif (newArcCurveType == 'straight'):
 				newPath = lstOD[i]

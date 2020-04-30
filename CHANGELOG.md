@@ -30,7 +30,6 @@ This major release focused on adding new data (including elevation and weather),
     - `lengthFromNodeSeq()` - Calculate the total "length" (either in time or distance) along a path defined by a sequence of node IDs.
     - `calcArea()` - Calculate the area, in square meters, of a polygon.
     - `getWeather()` - Get weather information (current and forecasted) for a specified [lat, lon] location.
-    - FIXMELP - zipcode function(s)?
 
 - New Leaflet-related functions:
     - `addLeafletIcon()` - Add a single icon/pin to a Leaflet map.
@@ -70,8 +69,7 @@ This major release focused on adding new data (including elevation and weather),
 
     - `addLeafletPolyline()` - Added `popupText` option to display text when the polygon is clicked.
 
-    - FIXMELP - The following functions allow specification of curved arcs in Leaflet:
-    
+    - The following functions allow specification of curved arcs in Leaflet:
         - `addAssignment2D()`
         - `addAssignment3D()`
         - `createAssignmentsFromArcs2D()`
@@ -82,15 +80,7 @@ This major release focused on adding new data (including elevation and weather),
         - `getShapepoints2D()`
         - `getShapepoints3D()`
 
-        - FIXMELP - Need docstring examples to show these new options.
-
-    - FIXMELP `generateNodes()` now includes an option for "roadBased".
-        - FIXMELP - Need a docstring example to show how this is used.
-
-
-
-
-
+    - `generateNodes()` now includes an option for "roadBased".
 
 - New imports/libraries:
     - Added matplotlib, as required by new `createGantt()` function.
