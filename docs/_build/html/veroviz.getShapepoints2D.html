@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.getShapepoints2D module &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz.getShapepoints2D module &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,8 +38,9 @@
         <li class="right" >
           <a href="veroviz.generateNodes.html" title="veroviz.generateNodes module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -79,7 +80,7 @@
 <span id="veroviz-getshapepoints2d-module"></span><h1>veroviz.getShapepoints2D module<a class="headerlink" href="#module-veroviz.getShapepoints2D" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="veroviz.getShapepoints2D.getShapepoints2D">
-<code class="sig-name descname">getShapepoints2D</code><span class="sig-paren">(</span><em class="sig-param">odID=1</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">modelFile=None</em>, <em class="sig-param">startLoc=None</em>, <em class="sig-param">endLoc=None</em>, <em class="sig-param">startTimeSec=0.0</em>, <em class="sig-param">expDurationSec=None</em>, <em class="sig-param">routeType='euclidean2D'</em>, <em class="sig-param">speedMPS=None</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">modelScale=100</em>, <em class="sig-param">modelMinPxSize=75</em>, <em class="sig-param">cesiumColor='Cesium.Color.ORANGE'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/getShapepoints2D.html#getShapepoints2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.getShapepoints2D.getShapepoints2D" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getShapepoints2D</code><span class="sig-paren">(</span><em class="sig-param">odID=1</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">modelFile=None</em>, <em class="sig-param">startLoc=None</em>, <em class="sig-param">endLoc=None</em>, <em class="sig-param">startTimeSec=0.0</em>, <em class="sig-param">expDurationSec=None</em>, <em class="sig-param">routeType='euclidean2D'</em>, <em class="sig-param">speedMPS=None</em>, <em class="sig-param">leafletColor='orange'</em>, <em class="sig-param">leafletWeight=3</em>, <em class="sig-param">leafletStyle='solid'</em>, <em class="sig-param">leafletOpacity=0.8</em>, <em class="sig-param">leafletCurveType='straight'</em>, <em class="sig-param">leafletCurvature=0</em>, <em class="sig-param">useArrows=True</em>, <em class="sig-param">modelScale=100</em>, <em class="sig-param">modelMinPxSize=75</em>, <em class="sig-param">cesiumColor='orange'</em>, <em class="sig-param">cesiumWeight=3</em>, <em class="sig-param">cesiumStyle='solid'</em>, <em class="sig-param">cesiumOpacity=0.8</em>, <em class="sig-param">ganttColor='darkgray'</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/getShapepoints2D.html#getShapepoints2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.getShapepoints2D.getShapepoints2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function generates all of the “shapepoints” between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -101,13 +102,17 @@
 <li><p><strong>leafletWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the route when displayed in Leaflet.</p></li>
 <li><p><strong>leafletStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the route when displayed in Leaflet.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
 <li><p><strong>leafletOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+<li><p><strong>leafletCurveType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'straight'</em>) – The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are ‘Bezier’, ‘greatcircle’, and ‘straight’. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.</p></li>
+<li><p><strong>leafletCurvature</strong> (<em>float in</em><em> (</em><em>-90</em><em>, </em><em>90</em><em>)</em><em>, </em><em>Conditional</em><em>, </em><em>default as 45</em>) – If leafletCurveType is ‘Bezier’, then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.</p></li>
 <li><p><strong>useArrows</strong> (<em>bool</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Indicates whether arrows should be shown on the route when displayed in Leaflet.</p></li>
 <li><p><strong>modelScale</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 100</em>) – The scale of the 3D model (specified by the <cite>modelFile</cite> argument) when displayed in Cesium, such that 100 represents 100%.</p></li>
 <li><p><strong>modelMinPxSize</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 75</em>) – The minimum pixel size of the 3D model (specified by the <cite>modelFile</cite> argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model.</p></li>
-<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;Cesium.Color.ORANGE&quot;</em>) – The color of the route when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;orange&quot;</em>) – The color of the route when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for a list of available colors.</p></li>
 <li><p><strong>cesiumWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – The pixel width of the route when displayed in Cesium.</p></li>
 <li><p><strong>cesiumStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'solid'</em>) – The line style of the route when displayed in Cesium.  Valid options are ‘solid’, ‘dotted’, and ‘dashed’. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for more information.</p></li>
 <li><p><strong>cesiumOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 0.8</em>) – The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+<li><p><strong>ganttColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;darkgray&quot;</em>) – The color of the route elements when displayed in a Gantt chart.</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining the shapepoints. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
 <li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
 </ul>
@@ -277,10 +282,12 @@
 <span class="gp">... </span>    <span class="n">leafletStyle</span>     <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletOpacity</span>   <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">useArrows</span>        <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">cesiumColor</span>      <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLUE&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>      <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumWeight</span>     <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumStyle</span>      <span class="o">=</span> <span class="s1">&#39;solid&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumOpacity</span>    <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ganttColor</span>       <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span>        <span class="o">=</span> <span class="s1">&#39;blue car route&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;MapQuest&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MAPQUESTKEY&#39;</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">arcs</span> <span class="o">=</span> <span class="n">shapepoints2D</span><span class="p">)</span>
@@ -323,8 +330,9 @@
         <li class="right" >
           <a href="veroviz.generateNodes.html" title="veroviz.generateNodes module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

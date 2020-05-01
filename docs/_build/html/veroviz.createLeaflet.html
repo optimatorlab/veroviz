@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.createLeaflet module &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz.createLeaflet module &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,8 +38,9 @@
         <li class="right" >
           <a href="veroviz.createCesium.html" title="veroviz.createCesium module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -79,7 +80,7 @@
 <span id="veroviz-createleaflet-module"></span><h1>veroviz.createLeaflet module<a class="headerlink" href="#module-veroviz.createLeaflet" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="veroviz.createLeaflet.addLeafletCircle">
-<code class="sig-name descname">addLeafletCircle</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">center=None</em>, <em class="sig-param">radius=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor=None</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillColor='red'</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletCircle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletCircle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addLeafletCircle</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">center=None</em>, <em class="sig-param">radius=None</em>, <em class="sig-param">text=None</em>, <em class="sig-param">fontSize=24</em>, <em class="sig-param">fontColor='orange'</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor=None</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillColor='red'</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletCircle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletCircle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a circle, with a radius specified in [meters], to a Leaflet map.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -95,6 +96,10 @@
 <li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
 <li><p><strong>center</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default None</em>) – Specifies the center point of the circle.  Must be a list of the form <cite>[lat, lon]</cite> or <cite>[lat, lon, alt]</cite>.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).</p></li>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>Required</em><em>, </em><em>default None</em>) – The radius of the circle, in units of [meters].</p></li>
+<li><p><strong>text</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – Specifies the text to be displayed on the map, centered as the <cite>center</cite> location.</p></li>
+<li><p><strong>fontSize</strong> (<em>float</em><em>, </em><em>Optional</em><em>, </em><em>default 24</em>) – The size of the font, in units of [points].  The default is 24-point font.</p></li>
+<li><p><strong>fontColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'orange'</em>) – The color of the text string.  <cite>fontColor</cite> may be one of Leaflet’s pre-specified colors (see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>), or it may be a hex value, such as <cite>#ff0000</cite> (see <a class="reference external" href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>).</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The circle will include this text as a popup label (you will need to click on the circle in the map to see this label).</p></li>
 <li><p><strong>lineWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default 3</em>) – The width of the circle’s outline, in units of [pixels].  This value is ignored if <cite>lineColor = None</cite>.</p></li>
 <li><p><strong>lineColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – The color of the circle’s outline.  <cite>lineColor</cite> may be one of Leaflet’s pre-specified colors (see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>), or it may be a hex value, such as <cite>#ff0000</cite> (see <a class="reference external" href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>). No line will be drawn if <cite>lineColor = None</cite>.</p></li>
 <li><p><strong>lineOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default 0.8</em>) – Specifies the opacity of the circle’s outline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
@@ -125,7 +130,6 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Draw a circle of radius 2000 meters, centered on the Univ. at Buffalo campus.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># This example includes all of the available function arguments.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletCircle</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">mapObject</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">mapFilename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -134,6 +138,10 @@
 <span class="gp">... </span>    <span class="n">zoomStart</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mf">43.00154</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.7871</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">radius</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;UB&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fontSize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fontColor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span> <span class="o">=</span> <span class="s1">&#39;Univ. at Buffalo&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineWeight</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineColor</span> <span class="o">=</span> <span class="s1">&#39;#ff66ff&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineOpacity</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
@@ -146,8 +154,153 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="veroviz.createLeaflet.addLeafletIcon">
+<code class="sig-name descname">addLeafletIcon</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">location=None</em>, <em class="sig-param">iconPrefix='glyphicon'</em>, <em class="sig-param">iconType='info-sign'</em>, <em class="sig-param">iconColor='blue'</em>, <em class="sig-param">iconText=None</em>, <em class="sig-param">popupText=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletIcon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletIcon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single icon/pin to a Leaflet map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapObject</strong> (<em>Folium object</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – A Folium map object.  If provided, the marker will be added to an existing map.  Otherwise, a new map will be created.</p></li>
+<li><p><strong>mapFilename</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – If provided, the map will be saved to this file, which should have a <cite>.html</cite> extension.  <cite>mapFilename</cite> can contain a filepath.  If <cite>mapFilename</cite> is not provided, no file will be generated.  The returned mapObject can be viewed within a Jupyter notebook.</p></li>
+<li><p><strong>mapBackground</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'CartoDB positron'</em>) – The tiles of the map, default to be ‘CartoDB positron’, for options, see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>, also see folium documentation (<a class="reference external" href="https://python-visualization.github.io/folium/modules.html">https://python-visualization.github.io/folium/modules.html</a>) for more options</p></li>
+<li><p><strong>mapBoundary</strong> (<em>list of lists</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – If provided, the mapBoundary coordinates are used to determine a zoom level such that these coordinates are contained within view when the map is opened.  This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  <cite>mapBoundary</cite> must be in the form [[south lat, west lon], [north lat, east lon]].</p></li>
+<li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
+<li><p><strong>location</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies the GPS coordinates of the icon/pin.  Must be a list of the form <cite>[lat, lon]</cite> or <cite>[lat, lon, alt]</cite>.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).</p></li>
+<li><p><strong>iconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;glyphicon&quot;</em>) – There are a large number of Leaflet icons available. The <cite>iconPrefix</cite> identifies one of three collections: “glyphicon”, “fa”, or “custom”.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>iconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;info-sign&quot;</em>) – Specifies the particular icon to be used for the icon/pin.  The list of available options depends on the choice of <cite>iconPrefix</cite>. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for available options.</p></li>
+<li><p><strong>iconColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;blue&quot;</em>) – Defines the color of the icon/pin.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for the list of available color options.</p></li>
+<li><p><strong>iconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be displayed within the node on a Leaflet map.  This text will only be shown if <cite>iconPrefix</cite> is ‘custom’ and <cite>iconType</cite> includes a font color and font size.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>.</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Folium map object containing an icon/pin (and pre-existing items previously specified in mapObject).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Folium object</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Define a location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">whiteHouse</span> <span class="o">=</span> <span class="p">[</span><span class="mf">38.8977</span><span class="p">,</span> <span class="o">-</span><span class="mf">77.0365</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+<dt>A minimal example, using mostly default parameters:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIcon</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="n">whiteHouse</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>An example showing all function parameters:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIcon</span><span class="p">(</span><span class="n">mapObject</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">mapFilename</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">mapBackground</span> <span class="o">=</span> <span class="s1">&#39;arcgis aerial&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">mapBoundary</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">zoomStart</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">location</span>      <span class="o">=</span> <span class="n">whiteHouse</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">iconPrefix</span>    <span class="o">=</span> <span class="s1">&#39;custom&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">iconType</span>      <span class="o">=</span> <span class="s1">&#39;18-yellow-12&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">iconColor</span>     <span class="o">=</span> <span class="s1">&#39;purple&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">iconText</span>      <span class="o">=</span> <span class="s1">&#39;WH&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">popupText</span>     <span class="o">=</span> <span class="s1">&#39;&lt;nobr&gt;click icon to see this single-line text&lt;/nobr&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.createLeaflet.addLeafletIsochrones">
+<code class="sig-name descname">addLeafletIsochrones</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">iso=None</em>, <em class="sig-param">showBoundingRegion=False</em>, <em class="sig-param">iconPrefix='glyphicon'</em>, <em class="sig-param">iconType='info-sign'</em>, <em class="sig-param">iconColor='blue'</em>, <em class="sig-param">iconText=None</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletIsochrones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletIsochrones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Easily draw isochrones on a Leaflet map.  Be sure to run the <cite>isochrones()</cite> function first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapObject</strong> (<em>Folium object</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – A Folium map object.  If provided, the marker will be added to an existing map.  Otherwise, a new map will be created.</p></li>
+<li><p><strong>mapFilename</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – If provided, the map will be saved to this file, which should have a <cite>.html</cite> extension.  <cite>mapFilename</cite> can contain a filepath.  If <cite>mapFilename</cite> is not provided, no file will be generated.  The returned mapObject can be viewed within a Jupyter notebook.</p></li>
+<li><p><strong>mapBackground</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'CartoDB positron'</em>) – The tiles of the map, default to be ‘CartoDB positron’, for options, see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>, also see folium documentation (<a class="reference external" href="https://python-visualization.github.io/folium/modules.html">https://python-visualization.github.io/folium/modules.html</a>) for more options</p></li>
+<li><p><strong>mapBoundary</strong> (<em>list of lists</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – If provided, the mapBoundary coordinates are used to determine a zoom level such that these coordinates are contained within view when the map is opened.  This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  <cite>mapBoundary</cite> must be in the form [[south lat, west lon], [north lat, east lon]].</p></li>
+<li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
+<li><p><strong>iso</strong> (<em>isochrone object</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – FIXME – Include link/reference to <cite>isochrones()</cite> function.</p></li>
+<li><p><strong>showBoundingRegion</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – The isochrone object contains a bounding region, which is the smallest rectangle enclosing the isochrones.  If you wish to include this rectangle on the map, set <cite>showBoundingRegion=True</cite>.</p></li>
+<li><p><strong>iconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;glyphicon&quot;</em>) – There are a large number of Leaflet icons available. The <cite>iconPrefix</cite> identifies one of three collections: “glyphicon”, “fa”, or “custom”.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>iconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;info-sign&quot;</em>) – Specifies the particular icon to be used for the icon/pin.  The list of available options depends on the choice of <cite>iconPrefix</cite>. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for available options.</p></li>
+<li><p><strong>iconColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;blue&quot;</em>) – Defines the color of the icon/pin.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for the list of available color options.</p></li>
+<li><p><strong>iconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be displayed within the node on a Leaflet map.  This text will only be shown if <cite>iconPrefix</cite> is ‘custom’ and <cite>iconType</cite> includes a font color and font size.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>.</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The icon/pin will include this text as a popup label (you will need to click on the pin in the map to see this label).</p></li>
+<li><p><strong>lineWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default 3</em>) – The width of the polygon’s outline, in units of [pixels].  This value is ignored if <cite>lineColor = None</cite>.</p></li>
+<li><p><strong>lineOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default 0.8</em>) – Specifies the opacity of the polygon’s outline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+<li><p><strong>lineStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'solid'</em>) – The style of the polygon’s outline.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of valid options.</p></li>
+<li><p><strong>fillOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default 0.3</em>) – Specifies the opacity of the polygon’s interior.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Folium map object containing a polygon (and pre-existing items previously specified in mapObject).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Folium object</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>The following examples assume the use of ORS as the data provider.  If you have saved your API keys as environment variables, you may use <cite>os.environ</cite> to access them:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ORS_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Otherwise, you may specify your keys here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>Get isochrone data:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iso</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">isochrones</span><span class="p">(</span><span class="n">location</span>         <span class="o">=</span> <span class="p">[</span><span class="mf">43.00154</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.7871</span><span class="p">],</span>
+<span class="gp">... </span>                     <span class="n">locationType</span>     <span class="o">=</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">travelMode</span>       <span class="o">=</span> <span class="s1">&#39;driving-car&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">rangeType</span>        <span class="o">=</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">rangeSize</span>        <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertTime</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;minutes&#39;</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">),</span>
+<span class="gp">... </span>                     <span class="n">interval</span>         <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertTime</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="s1">&#39;minutes&#39;</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">),</span>
+<span class="gp">... </span>                     <span class="n">smoothing</span>        <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProvider</span>     <span class="o">=</span><span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd>
+<dt>A minimal working example, using mostly default values:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIsochrones</span><span class="p">(</span><span class="n">iso</span> <span class="o">=</span> <span class="n">iso</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>An example using all of the functional parameters:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIsochrones</span><span class="p">(</span><span class="n">mapObject</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">mapFilename</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">mapBackground</span>      <span class="o">=</span> <span class="s1">&#39;cartodb dark_matter&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">mapBoundary</span>        <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">zoomStart</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">iso</span>                <span class="o">=</span> <span class="n">iso</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">showBoundingRegion</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">iconPrefix</span>         <span class="o">=</span> <span class="s1">&#39;custom&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">iconType</span>           <span class="o">=</span> <span class="s1">&#39;12-white-12&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">iconColor</span>          <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">iconText</span>           <span class="o">=</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">popupText</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">lineWeight</span>         <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">lineOpacity</span>        <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">lineStyle</span>          <span class="o">=</span> <span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">fillOpacity</span>        <span class="o">=</span> <span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.createLeaflet.addLeafletMarker">
-<code class="sig-name descname">addLeafletMarker</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">center=None</em>, <em class="sig-param">radius=5</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor=None</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillColor='red'</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletMarker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletMarker" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addLeafletMarker</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">center=None</em>, <em class="sig-param">radius=5</em>, <em class="sig-param">text=None</em>, <em class="sig-param">fontSize=24</em>, <em class="sig-param">fontColor='orange'</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor=None</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillColor='red'</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletMarker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletMarker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a circle-shaped marker, with a radius specified in [pixels], to a Leaflet map.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -163,6 +316,10 @@
 <li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
 <li><p><strong>center</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default None</em>) – Specifies the center point of the circle marker.  Must be a list of the form <cite>[lat, lon]</cite> or <cite>[lat, lon, alt]</cite>.  If provided, the altitude component will be ignored (as all locations on Leaflet maps are assumed to be at ground level).</p></li>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>Required</em><em>, </em><em>default None</em>) – The radius of the circle marker, in units of [pixels].</p></li>
+<li><p><strong>text</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default None</em>) – Specifies the text to be displayed on the map, centered as the <cite>center</cite> location.</p></li>
+<li><p><strong>fontSize</strong> (<em>float</em><em>, </em><em>Optional</em><em>, </em><em>default 24</em>) – The size of the font, in units of [points].  The default is 24-point font.</p></li>
+<li><p><strong>fontColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'orange'</em>) – The color of the text string.  <cite>fontColor</cite> may be one of Leaflet’s pre-specified colors (see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>), or it may be a hex value, such as <cite>#ff0000</cite> (see <a class="reference external" href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>).</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The marker will include this text as a popup label (you will need to click on the marker in the map to see this label).</p></li>
 <li><p><strong>lineWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default 3</em>) – The width of the circle marker’s outline, in units of [pixels].  This value is ignored if <cite>line = False</cite>.</p></li>
 <li><p><strong>lineColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'red'</em>) – The color of the circle marker’s outline.  <cite>lineColor</cite> may be one of Leaflet’s pre-specified colors (see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>), or it may be a hex value, such as <cite>#ff0000</cite> (see <a class="reference external" href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>). The line color is ignored if <cite>line = False</cite>.</p></li>
 <li><p><strong>lineOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default 0.8</em>) – The opacity of the circle marker’s outline, where 0 is invisible and 1 represents no transparency.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a></p></li>
@@ -200,6 +357,10 @@
 <span class="gp">... </span>    <span class="n">zoomStart</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mf">43.00154</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.7871</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">radius</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;UB&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fontSize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fontColor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span> <span class="o">=</span> <span class="s1">&#39;Univ. at Buffalo&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineWeight</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineColor</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineOpacity</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span>
@@ -213,7 +374,7 @@
 
 <dl class="function">
 <dt id="veroviz.createLeaflet.addLeafletPolygon">
-<code class="sig-name descname">addLeafletPolygon</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">points=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor='red'</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillColor=None</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletPolygon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletPolygon" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addLeafletPolygon</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">points=None</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor='red'</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">fillColor=None</em>, <em class="sig-param">fillOpacity=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletPolygon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletPolygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a polygon, as defined by an ordered collection of lat/lon coordinates, to a Leaflet map.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -228,6 +389,7 @@
 <li><p><strong>mapBoundary</strong> (<em>list of lists</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</p></li>
 <li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
 <li><p><strong>points</strong> (<em>list of lists</em><em>, </em><em>Required</em><em>, </em><em>default None</em>) – Specifies the ordered collection of lat/lon coordinates comprising the polygon.  This must be a list of lists, of the form <cite>[[lat1, lon1], [lat2, lon2], …, [latn, lonn]]</cite> or <cite>[[lat1, lon1, alt1], [lat2, lon2, alt2], …, [latn, lonn, altn]]</cite>.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  It is not necessary for <cite>[lat1, lon1]</cite> and <cite>[latn, lonn]</cite> to be the same point.  In other words, the polygon will automatically connect the first and last locations specified in the <cite>points</cite> list.</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The polygon will include this text as a popup label (you will need to click on the polygon in the map to see this label).</p></li>
 <li><p><strong>lineWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default 3</em>) – The width of the polygon’s outline, in units of [pixels].  This value is ignored if <cite>lineColor = None</cite>.</p></li>
 <li><p><strong>lineColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'red'</em>) – The color of the polygon’s outline.  <cite>lineColor</cite> may be one of Leaflet’s pre-specified colors (see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>), or it may be a hex value, such as <cite>#ff0000</cite> (see <a class="reference external" href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>). No line will be drawn if <cite>lineColor = None</cite>.</p></li>
 <li><p><strong>lineOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default 0.8</em>) – Specifies the opacity of the polygon’s outline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
@@ -271,6 +433,7 @@
 <span class="gp">... </span>    <span class="n">mapBoundary</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getMapBoundary</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">campusPoints</span><span class="p">),</span>
 <span class="gp">... </span>    <span class="n">zoomStart</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">points</span> <span class="o">=</span> <span class="n">campusPoints</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span> <span class="o">=</span> <span class="s1">&#39;Univ. at Buffalo&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineWeight</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineColor</span> <span class="o">=</span> <span class="s1">&#39;#ff00ff&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineOpacity</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
@@ -284,7 +447,7 @@
 
 <dl class="function">
 <dt id="veroviz.createLeaflet.addLeafletPolyline">
-<code class="sig-name descname">addLeafletPolyline</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">points=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor='red'</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletPolyline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletPolyline" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">addLeafletPolyline</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">points=None</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">lineWeight=3</em>, <em class="sig-param">lineColor='red'</em>, <em class="sig-param">lineOpacity=0.8</em>, <em class="sig-param">lineStyle='solid'</em>, <em class="sig-param">lineCurveType='straight'</em>, <em class="sig-param">lineCurvature=45</em>, <em class="sig-param">useArrows=False</em>, <em class="sig-param">arrowsPerArc=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletPolyline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletPolyline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a polyline, as described by an ordered collection of lat/lon coordinates, to a Leaflet map.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -299,10 +462,15 @@
 <li><p><strong>mapBoundary</strong> (<em>list of lists</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</p></li>
 <li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
 <li><p><strong>points</strong> (<em>list of lists</em><em>, </em><em>Required</em><em>, </em><em>default None</em>) – Specifies the ordered collection of lat/lon coordinates comprising the polyline.   This must be a list of lists, of the form <cite>[[lat1, lon1], [lat2, lon2], …, [latn, lonn]]</cite> or <cite>[[lat1, lon1, alt1], [lat2, lon2, alt2], …, [latn, lonn, altn]]</cite>.  If an altitude is provided with each coordinate, this component will be ignored (as all Leaflet maps assume that objects are at ground level).  Note that the polyline will not automatically connect the first and last locations specified in the <cite>points</cite> list.  (By contrast the “polygon” function does connect those locatons.)</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The polyline will include this text as a popup label (you will need to click on the polyline in the map to see this label).</p></li>
 <li><p><strong>lineWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default 3</em>) – The width of the polyline’s outline, in units of [pixels].  This value is ignored if <cite>lineColor = None</cite>.</p></li>
 <li><p><strong>lineColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'red'</em>) – The color of the polyline’s outline.  <cite>lineColor</cite> may be one of Leaflet’s pre-specified colors (see <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>), or it may be a hex value, such as <cite>#ff0000</cite> (see <a class="reference external" href="https://www.w3schools.com/colors/colors_picker.asp">https://www.w3schools.com/colors/colors_picker.asp</a>). No line will be drawn if <cite>lineColor = None</cite>.</p></li>
 <li><p><strong>lineOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default 0.8</em>) – Specifies the opacity of the polyline.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
 <li><p><strong>lineStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default 'solid'</em>) – The style of the polyine.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of valid options.</p></li>
+<li><p><strong>lineCurveType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'straight'</em>) – The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are ‘Bezier’, ‘greatcircle’, and ‘straight’. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.</p></li>
+<li><p><strong>lineCurvature</strong> (<em>float in</em><em> (</em><em>-90</em><em>, </em><em>90</em><em>)</em><em>, </em><em>Conditional</em><em>, </em><em>default as 45</em>) – If leafletCurveType is ‘Bezier’, then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.</p></li>
+<li><p><strong>useArrows</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Indicates whether arrows should be shown on all arcs on the Leaflet map.</p></li>
+<li><p><strong>arrowsPerArc</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – Number of arrows display on each arc, should be integer greater than 0. Each arc will have the same number of arrows, regardless of arc length. If useArrows is False, this parameter will be ignored (i.e., no arrows will be drawn).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -336,12 +504,17 @@
 <span class="gp">... </span>    <span class="n">mapFilename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">mapBackground</span> <span class="o">=</span> <span class="s1">&#39;CartoDB positron&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">mapBoundary</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getMapBoundary</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">campusPoints</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">zoomStart</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">zoomStart</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">points</span> <span class="o">=</span> <span class="n">campusPoints</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">lineWeight</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span> <span class="o">=</span> <span class="s1">&#39;Univ. at Buffalo&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">lineWeight</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineColor</span> <span class="o">=</span> <span class="s1">&#39;#0055ff&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">lineOpacity</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">lineStyle</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">lineStyle</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">lineCurveType</span> <span class="o">=</span> <span class="s1">&#39;bezier&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">lineCurvature</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">useArrows</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">arrowsPerArc</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
 </pre></div>
 </div>
@@ -408,8 +581,56 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="veroviz.createLeaflet.addLeafletWeather">
+<code class="sig-name descname">addLeafletWeather</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapType='precip'</em>, <em class="sig-param">APIkey=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#addLeafletWeather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.addLeafletWeather" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds map tiles showing weather conditions to a Leaflet map.  Weather tiles are obtained via openweathermap.org (an API key is required).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapObject</strong> (<em>Folium object</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – If you already have a map (as a Folium object), you can provide that object and overlay weather on that map.</p></li>
+<li><p><strong>mapType</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as 'precip'</em>) – Specifies the type of weather map to overlay on the mapObject.  Valid options are: ‘clouds’, ‘precip’, ‘pressure’, ‘wind’, and ‘temp’.</p></li>
+<li><p><strong>APIkey</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default at None</em>) – These weather maps are hosted by openweathermap.org.  You may register for a free API key at their website.</p></li>
+<li><p><strong>mapFilename</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – This is the name of the map file that will be created (e.g., “../output/map.html” or “map.html”).  The filename should have a <cite>.html</cite> extension.  If <cite>mapFilename</cite> is not provided, no map file will be generated.  The returned map object can be viewed within a Jupyter notebook.</p></li>
+<li><p><strong>mapBackground</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'CartoDB positron'</em>) – Sets the background tiles of the map.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for the list of options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Folium map object containing a text string (and pre-existing items previously specified in mapObject).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Folium object</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>If you have saved your API keys as environment variables, you may use <cite>os.environ</cite> to access them:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">OPENWEATHER_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OPENWEATHERKEY&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Otherwise, you may specify your keys here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># OPENWEATHER_KEY = &#39;YOUR_OPENWEATHERMAP_KEY_GOES_HERE&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>Display a map showing wind conditions.  This example includes all available function arguments.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletWeather</span><span class="p">(</span><span class="n">mapObject</span>     <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">mapType</span>       <span class="o">=</span> <span class="s1">&#39;wind&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">APIkey</span>        <span class="o">=</span> <span class="n">OPENWEATHER_KEY</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">mapFilename</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">mapBackground</span> <span class="o">=</span> <span class="s1">&#39;cartodb dark_matter&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.createLeaflet.createLeaflet">
-<code class="sig-name descname">createLeaflet</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">nodes=None</em>, <em class="sig-param">iconPrefix=None</em>, <em class="sig-param">iconType=None</em>, <em class="sig-param">iconColor=None</em>, <em class="sig-param">iconText=None</em>, <em class="sig-param">arcs=None</em>, <em class="sig-param">arcWeight=None</em>, <em class="sig-param">arcStyle=None</em>, <em class="sig-param">arcOpacity=None</em>, <em class="sig-param">arcColor=None</em>, <em class="sig-param">useArrows=None</em>, <em class="sig-param">boundingRegion=None</em>, <em class="sig-param">boundingWeight=3</em>, <em class="sig-param">boundingOpacity=0.6</em>, <em class="sig-param">boundingStyle='dashed'</em>, <em class="sig-param">boundingColor='brown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#createLeaflet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.createLeaflet" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">createLeaflet</code><span class="sig-paren">(</span><em class="sig-param">mapObject=None</em>, <em class="sig-param">mapFilename=None</em>, <em class="sig-param">mapBackground='CartoDB positron'</em>, <em class="sig-param">mapBoundary=None</em>, <em class="sig-param">zoomStart=None</em>, <em class="sig-param">nodes=None</em>, <em class="sig-param">iconPrefix=None</em>, <em class="sig-param">iconType=None</em>, <em class="sig-param">iconColor=None</em>, <em class="sig-param">iconText=None</em>, <em class="sig-param">arcs=None</em>, <em class="sig-param">arcWeight=None</em>, <em class="sig-param">arcStyle=None</em>, <em class="sig-param">arcOpacity=None</em>, <em class="sig-param">arcCurveType=None</em>, <em class="sig-param">arcCurvature=None</em>, <em class="sig-param">arcColor=None</em>, <em class="sig-param">useArrows=None</em>, <em class="sig-param">arrowsPerArc=1</em>, <em class="sig-param">boundingRegion=None</em>, <em class="sig-param">boundingWeight=3</em>, <em class="sig-param">boundingOpacity=0.6</em>, <em class="sig-param">boundingStyle='dashed'</em>, <em class="sig-param">boundingColor='brown'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/createLeaflet.html#createLeaflet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.createLeaflet.createLeaflet" title="Permalink to this definition">¶</a></dt>
 <dd><p>createLeaflet is used to generate Leaflet objects using folium. The function takes a boundingRegion polygon, <cite>Nodes</cite>, <cite>Arcs</cite>, and <cite>Assignments</cite> dataframes as inputs, and creates a folium/leaflet map showing boundings, nodes and/or arcs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -420,16 +641,19 @@
 <li><p><strong>mapBoundary</strong> (<em>list of lists</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Allows customization of the zoom level.  If a map boundary is provided, the zoom level will correspond to the rectangle defined by the two map boundary points. This feature is useful if you want to create multiple comparison maps, each with the same zoom level and centering.  Must be in the form [[south lat, west lon], [north lat, east lon]].</p></li>
 <li><p><strong>zoomStart</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the default zoom level.  1 –&gt; global view;  18 –&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The <cite>zoomStart</cite> will be overridden by a <cite>mapBoundary</cite> (if one is provided).</p></li>
 <li><p><strong>nodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Conditional, <cite>nodes</cite>, <cite>arcs</cite>, and <cite>boundingRegion</cite> can not be None at the same time) – A Nodes dataframe describing the collection of nodes to be displayed on the Leaflet map.  See <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> for documentation on this type of dataframe.</p></li>
-<li><p><strong>iconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletIconPrefix</cite> column of an input <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.  If provided, all nodes will use this icon prefix.  Valid options are “glyphicon” or “fa”. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for details.</p></li>
+<li><p><strong>iconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletIconPrefix</cite> column of an input <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.  If provided, all nodes will use this icon prefix.  Valid options are “glyphicon”, “fa”, or “custom”. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for details.</p></li>
 <li><p><strong>iconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletIconType</cite> column of an input <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.  If provided, all nodes will use this icon type.  The valid <cite>iconType</cite> options depend on the choice of <cite>iconPrefix</cite>.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for the collection of valid icon prefix/type combinations.</p></li>
 <li><p><strong>iconColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletColor</cite> column of an input <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.  If provided, all icons will use this color when displayed on this Leaflet map.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for the list of available color options.</p></li>
-<li><p><strong>iconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletIconText</cite> column of an input <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.  If provided, all node markers in this Leaflet map will include this text as a label (you will need to click on the marker in the map to see this label).</p></li>
+<li><p><strong>iconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletIconText</cite> column of an input <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe.  If provided, this text will be displayed within the node on a Leaflet map.  This text will only be shown if <cite>leafletIconPrefix</cite> is ‘custom’ and <cite>leafletIconType</cite> includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>.</p></li>
 <li><p><strong>arcs</strong> (<a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a>, Conditional, <cite>nodes</cite>, <cite>arcs</cite> and <cite>boundingRegion</cite> can not be None at the same time) – An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe describing vehicle routes.  Each row of this dataframe will be shown as a line on the Leaflet map.  See the documentation on <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> and <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> for more information.</p></li>
 <li><p><strong>arcWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletWeight</cite> column of an input <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.  If provided, all arcs will be displayed with this line thickness (in pixels).</p></li>
 <li><p><strong>arcStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletStyle</cite> column of an input <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe. If provided, all arcs will be displayed with this type.  Valid options are ‘solid’, ‘dotted’, or ‘dashed’.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
 <li><p><strong>arcOpacity</strong> (<em>float in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletOpacity</cite> column of an input <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.  If provided, each arc will be displayed with this opacity.  Valid values are in the range from 0 (invisible) to 1 (no transparency).</p></li>
 <li><p><strong>arcColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Overrides the <cite>leafletColor</cite> column of an input <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.  If provided, all arcs will be displayed with this color.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
+<li><p><strong>arcCurveType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'straight'</em>) – Choose the type of curve to be shown on leaflet map for <span class="xref std std-ref">Arc</span> dataframe (curves will not be applied to <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframes). The options are <cite>Bezier</cite>, <cite>greatcircle</cite>, and ‘straight’. If <cite>Bezier</cite> is provided, the <cite>arcCurvature</cite> should not be None, leaflet will draw a Bezier curve between given nodes. If <cite>greatcircle</cite> is provided, the curve will go along with the surface of the Earth.</p></li>
+<li><p><strong>arcCurvature</strong> (<em>float in</em><em> (</em><em>-90</em><em>, </em><em>90</em><em>)</em><em>, </em><em>Conditional</em><em>, </em><em>default as 45</em>) – If choose <cite>Bezier</cite> as <cite>arcCurveType</cite>, then <cite>arcCurvature</cite> is required; otherwise this argument will not be used. The meaning of this argument is as following: link two nodes using straight line, the degrees between this straight line and the curve at two nodes is this argument, therefore it should be greater or equal to 0 and less than 90. A degree between -45 and 45 is recommended.</p></li>
 <li><p><strong>useArrows</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Indicates whether arrows should be shown on all arcs on the Leaflet map.</p></li>
+<li><p><strong>arrowsPerArc</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 1</em>) – Number of arrows display on each arc, should be integer greater than 0. Each arc will have the same number of arrows, regardless of arc length. If useArrows is False, this parameter will be ignored (i.e., no arrows will be drawn).</p></li>
 <li><p><strong>boundingRegion</strong> (list of lists, Conditional, <cite>nodes</cite>, <cite>arcs</cite> and <cite>boundingRegion</cite> can not be None at the same time) – A sequence of lat/lon coordinates defining a boundary polygon. The format is [[lat, lon], [lat, lon], …, [lat, lon]].</p></li>
 <li><p><strong>boundingWeight</strong> (<em>int</em><em>, </em><em>Optional</em><em>, </em><em>default as 3</em>) – Specifies the weight (in pixels) of the line defining the <cite>boundingRegion</cite> (if provided) when displayed in Leaflet.</p></li>
 <li><p><strong>boundingStyle</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'dashed'</em>) – Specifies the line style of the <cite>boundingRegion</cite> (if provided).  Valid options are ‘solid’, ‘dotted’, ‘dashed’.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
@@ -589,8 +813,9 @@ Notice that the addition of new entities will not change the style of previous e
         <li class="right" >
           <a href="veroviz.createCesium.html" title="veroviz.createCesium module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

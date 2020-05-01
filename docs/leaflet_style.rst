@@ -142,7 +142,7 @@ for both of the icon prefixes are shown below:
 |                      | 'shopping-cart', 'star', 'subway', 'taxi',   |
 |                      | 'truck', 'university', 'user', 'users', etc. |
 +----------------------+----------------------------------------------+
-| 'custom'             | Specify a string with three fields separated |     
+| 'custom'             | Specify a string with three fields separated |
 |                      | by a dash:  <circle radius in pixels>-<font  |
 |                      | color>-<font size>.                          |
 |                      | For example, '10-white-12' will produce a    |
@@ -150,7 +150,7 @@ for both of the icon prefixes are shown below:
 |                      | font of size 12 point.  The background color |
 |                      | of the circle icon is specified by the       |
 |                      | `iconColor` argument.                        |
-+----------------------+---------------------------------------------+
++----------------------+----------------------------------------------+
 
 Additional options may be available (but have not been tested):
 - For 'glyphicon', see 

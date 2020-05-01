@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.utilities module &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz.utilities module &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="veroviz.snapNodesToRoad.html" title="veroviz.snapNodesToRoad module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
       </ul>
     </div>
@@ -71,15 +71,229 @@
   <div class="section" id="module-veroviz.utilities">
 <span id="veroviz-utilities-module"></span><h1>veroviz.utilities module<a class="headerlink" href="#module-veroviz.utilities" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="veroviz.utilities.calcArea">
+<code class="sig-name descname">calcArea</code><span class="sig-paren">(</span><em class="sig-param">poly=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#calcArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.calcArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the area, in square meters, of a polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>poly</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>float</em></p></li>
+<li><p><em>Area, in meters, of the polygon.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Define a sequence of locations:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.82</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.86</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.82</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.84</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.84</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Calculate the area of the polygon formed by these locations:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">area</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">calcArea</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">area</span>
+<span class="go">5449365.537915299</span>
+</pre></div>
+</div>
+</dd>
+<dt>Draw the polygon:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">locs</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="n">myMap</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">myNodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.calcPerimeter2D">
+<code class="sig-name descname">calcPerimeter2D</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">closeLoop=False</em>, <em class="sig-param">distUnits='meters'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#calcPerimeter2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.calcPerimeter2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – </p></li>
+<li><p><strong>list of coordinates that form a path</strong><strong>, </strong><strong>in the format of</strong><strong> [</strong><strong>[</strong><strong>lat</strong><strong>, </strong><strong>lon</strong><strong>]</strong><strong>, </strong><strong>[</strong><strong>lat</strong><strong>, </strong><strong>lon</strong><strong>]</strong><strong>, </strong><strong>..</strong><strong>] or </strong><strong>[</strong><strong>[</strong><strong>lat</strong><strong>, </strong><strong>lon</strong><strong>, </strong><strong>alt</strong><strong>]</strong><strong>, </strong><strong>[</strong><strong>lat</strong><strong>, </strong><strong>lon</strong><strong>, </strong><strong>alt</strong><strong>]</strong><strong>, </strong><strong>..</strong><strong>]</strong><strong>  If provided</strong><strong>, </strong><strong>altitude will be ignored.</strong> (<em>A</em>) – </p></li>
+<li><p><strong>closeLoop</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – </p></li>
+<li><p><strong>whether the path should be closed</strong><strong> (</strong><strong>i.e.</strong><strong>, </strong><strong>connecting the last location to the first</strong><strong>)</strong><strong></strong> (<em>Indicates</em>) – </p></li>
+<li><p><strong>distUnits</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'meters'</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p>:param Specifies the desired distance units for the output. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>float</em></p></li>
+<li><p><em>Total length of the path.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.82</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.92</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.84</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.94</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">perimDist</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">calcPerimeter2D</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">locs</span><span class="p">,</span> <span class="n">closeLoop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">distUnits</span><span class="o">=</span><span class="s1">&#39;mi&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">perimDist</span>
+<span class="go">6.857172388864359</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.closestNode2Loc">
+<code class="sig-name descname">closestNode2Loc</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">nodes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#closestNode2Loc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.closestNode2Loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the closest node in the dataframe to the given location.  Also returns the Euclidean distance (in [meters]) from the location to the nearest node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of given location, in [lat, lon, alt] format.</p></li>
+<li><p><strong>nodes</strong> (A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe, Required) – Dataframe containing an existing set of nodes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>minNodeID</strong> (<em>int</em>) – A node id of the closest node</p></li>
+<li><p><strong>distMeters</strong> (<em>float</em>) – The minimum distance is returned</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Prepare some sample data.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># A single location:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.885</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.861</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># A collection of locations, which we&#39;ll</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># convert to a &quot;nodes&quot; dataframe:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.8871085</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8731949</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8888311</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8649649</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8802158</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8660787</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8845705</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8762794</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8908031</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8770140</span><span class="p">]]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="p">,</span>
+<span class="gp">... </span>                                  <span class="n">leafletIconPrefix</span> <span class="o">=</span> <span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                  <span class="n">leafletIconType</span>   <span class="o">=</span> <span class="s2">&quot;12-white-12&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Closest node:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">nearestNode</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">closestNode2Loc</span><span class="p">(</span><span class="n">loc1</span><span class="p">,</span> <span class="n">myNodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nearestNode</span><span class="p">,</span> <span class="n">distMeters</span>
+<span class="go">(2, 534.828771310757)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Show the five nodes from the dataframe and the reference location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">myNodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIcon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">location</span> <span class="o">=</span> <span class="n">loc1</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.closestPointLoc2Path">
+<code class="sig-name descname">closestPointLoc2Path</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#closestPointLoc2Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.closestPointLoc2Path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the current coordinate, in [lat, lon, alt] format</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – Specifies the ordered collection of lat/lon coordinates comprising a path.   This must be a list of lists, of the form <cite>[[lat1, lon1], [lat2, lon2], …, [latn, lonn]]</cite> or <cite>[[lat1, lon1, alt1], [lat2, lon2, alt2], …, [latn, lonn, altn]]</cite>.  If an altitude is provided with each coordinate, this component will be ignored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>minLoc</strong> (<em>list specifying a location, in [lat, lon] format.</em>)</p></li>
+<li><p><strong>distMeters</strong> (<em>The distance from the given location to minLoc.</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Prepare some data</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.65</span><span class="p">],</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.40</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.50</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Draw the line and the 2 points on the map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">center</span> <span class="o">=</span> <span class="n">loc1</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">radius</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">text</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">fontColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">center</span> <span class="o">=</span> <span class="n">loc2</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">radius</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">text</span><span class="o">=</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="n">fontColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - The location is on the path:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">closestPointLoc2Path</span><span class="p">(</span><span class="n">loc1</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">([42.5, -78.5], 0.0)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - The minimum distance is between points on the path:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">closestPointLoc2Path</span><span class="p">(</span><span class="n">loc2</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+<span class="go">([42.5, -78.50000397522506], 1103.5612443321572)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 3 - The location and path include altitudes (which are ignored):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path2</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.40</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="p">[</span><span class="mf">42.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.60</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+<span class="gp">... </span>         <span class="p">[</span><span class="mf">42.40</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.70</span><span class="p">,</span> <span class="mi">100</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loc3</span>  <span class="o">=</span> <span class="p">[</span><span class="mf">42.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.3</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">closestPointLoc2Path</span><span class="p">(</span><span class="n">loc3</span><span class="p">,</span> <span class="n">path2</span><span class="p">)</span>
+<span class="go">([42.5, -78.6, 0], 8293.970453010768)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Draw the line, the reference point, and the nearest point on the map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolyline</span><span class="p">(</span><span class="n">points</span> <span class="o">=</span> <span class="n">path2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">center</span> <span class="o">=</span> <span class="n">loc3</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">radius</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">text</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="n">fontColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span> <span class="n">center</span> <span class="o">=</span> <span class="n">nearestPt</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.utilities.convertArea">
-<code class="sig-name descname">convertArea</code><span class="sig-paren">(</span><em class="sig-param">area</em>, <em class="sig-param">fromUnits</em>, <em class="sig-param">toUnits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertArea" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convertArea</code><span class="sig-paren">(</span><em class="sig-param">area=None</em>, <em class="sig-param">fromUnits=None</em>, <em class="sig-param">toUnits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert an area from <cite>fromUnits</cite> to <cite>toUnits</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>area</strong> (<em>float</em>) – The numeric value describing an area to be converted.</p></li>
-<li><p><strong>fromUnits</strong> (<em>string</em>) – Area units, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
-<li><p><strong>toUnits</strong> (<em>string</em>) – Desired units of area after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>area</strong> (<em>float</em><em>, </em><em>Required</em>) – The numeric value describing an area to be converted.</p></li>
+<li><p><strong>fromUnits</strong> (<em>string</em><em>, </em><em>Required</em>) – Area units, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnits</strong> (<em>string</em><em>, </em><em>Required</em>) – Desired units of area after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -101,14 +315,14 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.convertDistance">
-<code class="sig-name descname">convertDistance</code><span class="sig-paren">(</span><em class="sig-param">distance</em>, <em class="sig-param">fromUnits</em>, <em class="sig-param">toUnits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertDistance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convertDistance</code><span class="sig-paren">(</span><em class="sig-param">distance=None</em>, <em class="sig-param">fromUnits=None</em>, <em class="sig-param">toUnits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a distance to different units.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distance</strong> (<em>float</em>) – The numeric value describing a distance to be converted.</p></li>
-<li><p><strong>fromUnits</strong> (<em>string</em>) – Distance units before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
-<li><p><strong>toUnits</strong> (<em>string</em>) – Distance units after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>distance</strong> (<em>float</em><em>, </em><em>Required</em>) – The numeric value describing a distance to be converted.</p></li>
+<li><p><strong>fromUnits</strong> (<em>string</em><em>, </em><em>Required</em>) – Distance units before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnits</strong> (<em>string</em><em>, </em><em>Required</em>) – Distance units after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -130,11 +344,11 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.convertMatricesDataframeToDictionary">
-<code class="sig-name descname">convertMatricesDataframeToDictionary</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertMatricesDataframeToDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertMatricesDataframeToDictionary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convertMatricesDataframeToDictionary</code><span class="sig-paren">(</span><em class="sig-param">dataframe=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertMatricesDataframeToDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertMatricesDataframeToDictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dataframe into  a dictionary, such that the indices of columns and rows become a tuple key for the dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataframe</strong> (<em>pandas.dataframe</em>) – The rows and columns are both integers. There should not be duplicated origin/destination pairs.</p>
+<dd class="field-odd"><p><strong>dataframe</strong> (<em>pandas.dataframe</em><em>, </em><em>Required</em>) – The rows and columns are both integers. There should not be duplicated origin/destination pairs.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The keys are tuples of (originIndex, destinationIndex)</p>
@@ -213,7 +427,7 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.convertMatricesDictionaryToDataframe">
-<code class="sig-name descname">convertMatricesDictionaryToDataframe</code><span class="sig-paren">(</span><em class="sig-param">dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertMatricesDictionaryToDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertMatricesDictionaryToDataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convertMatricesDictionaryToDataframe</code><span class="sig-paren">(</span><em class="sig-param">dictionary=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertMatricesDictionaryToDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertMatricesDictionaryToDataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dictionary into a pandas dataframe.  The dictionary is assumed to have 2-tuple indices (the first index represents the ID of the “from” location, the second index is the ID of the “to” location).  In the resulting pandas dataframe, the row indices will represent the “from” location, the column indices the “to” location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -296,16 +510,16 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.convertSpeed">
-<code class="sig-name descname">convertSpeed</code><span class="sig-paren">(</span><em class="sig-param">speed</em>, <em class="sig-param">fromUnitsDist</em>, <em class="sig-param">fromUnitsTime</em>, <em class="sig-param">toUnitsDist</em>, <em class="sig-param">toUnitsTime</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertSpeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertSpeed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convertSpeed</code><span class="sig-paren">(</span><em class="sig-param">speed=None</em>, <em class="sig-param">fromUnitsDist=None</em>, <em class="sig-param">fromUnitsTime=None</em>, <em class="sig-param">toUnitsDist=None</em>, <em class="sig-param">toUnitsTime=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertSpeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertSpeed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a speed to different units.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>speed</strong> (<em>float</em>) – The numeric value describing a speed to be converted.</p></li>
-<li><p><strong>fromUnitsDist</strong> (<em>string</em>) – Distance units for the given speed, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
-<li><p><strong>fromUnitsTime</strong> (<em>string</em>) – Time units for the given speed, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
-<li><p><strong>toUnitsDist</strong> (<em>string</em>) – Distance units for the speed after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
-<li><p><strong>toUnitTime</strong> (<em>string</em>) – Time units for the speed after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>speed</strong> (<em>float</em><em>, </em><em>Required</em>) – The numeric value describing a speed to be converted.</p></li>
+<li><p><strong>fromUnitsDist</strong> (<em>string</em><em>, </em><em>Required</em>) – Distance units for the given speed, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>fromUnitsTime</strong> (<em>string</em><em>, </em><em>Required</em>) – Time units for the given speed, before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnitsDist</strong> (<em>string</em><em>, </em><em>Required</em>) – Distance units for the speed after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnitTime</strong> (<em>string</em><em>, </em><em>Required</em>) – Time units for the speed after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -327,14 +541,14 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.convertTime">
-<code class="sig-name descname">convertTime</code><span class="sig-paren">(</span><em class="sig-param">time</em>, <em class="sig-param">fromUnits</em>, <em class="sig-param">toUnits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertTime" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convertTime</code><span class="sig-paren">(</span><em class="sig-param">time=None</em>, <em class="sig-param">fromUnits=None</em>, <em class="sig-param">toUnits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#convertTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.convertTime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a time to different units.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>time</strong> (<em>float</em>) – The numeric value describing a time to be converted.</p></li>
-<li><p><strong>fromUnits</strong> (<em>string</em>) – Time units before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
-<li><p><strong>toUnits</strong> (<em>string</em>) – Time units after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>time</strong> (<em>float</em><em>, </em><em>Required</em>) – The numeric value describing a time to be converted.</p></li>
+<li><p><strong>fromUnits</strong> (<em>string</em><em>, </em><em>Required</em>) – Time units before conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
+<li><p><strong>toUnits</strong> (<em>string</em><em>, </em><em>Required</em>) – Time units after conversion. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -355,18 +569,134 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="veroviz.utilities.distance2D">
-<code class="sig-name descname">distance2D</code><span class="sig-paren">(</span><em class="sig-param">loc1</em>, <em class="sig-param">loc2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distance2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distance2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the geodesic distance between two locations, using the geopy library.  Altitude is ignored.</p>
+<dt id="veroviz.utilities.createGantt">
+<code class="sig-name descname">createGantt</code><span class="sig-paren">(</span><em class="sig-param">assignments=None</em>, <em class="sig-param">objectIDorder=None</em>, <em class="sig-param">separateByModelFile=False</em>, <em class="sig-param">mergeByodID=True</em>, <em class="sig-param">splitOnColorChange=True</em>, <em class="sig-param">title=None</em>, <em class="sig-param">xAxisLabel='time'</em>, <em class="sig-param">xGrid=False</em>, <em class="sig-param">yGrid=False</em>, <em class="sig-param">xMin=0</em>, <em class="sig-param">xMax=None</em>, <em class="sig-param">xGridFreq=60</em>, <em class="sig-param">timeFormat='s'</em>, <em class="sig-param">overlayColumn=None</em>, <em class="sig-param">missingColor='lightgray'</em>, <em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#createGantt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.createGantt" title="Permalink to this definition">¶</a></dt>
+<dd><p>EXPERIMENTAL.  Draws a Gantt chart from an <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.  This has the appearance of a horizontal bar chart.  The x-axis indicates the elapsed time.  Each <cite>objectID</cite> forms a horizontal bar.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc1</strong> (<em>list</em>) – First location, in [lat, lon] format.</p></li>
-<li><p><strong>loc2</strong> (<em>list</em>) – Second location, in [lat, lon] format.</p></li>
+<li><p><strong>assignments</strong> (<a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe, Required, default as None) – The activities and event times are drawn from the <cite>Assignments</cite> dataframe.  Bar colors are specified by the <cite>leafletColor</cite> column of the dataframe.</p></li>
+<li><p><strong>objectIDorder</strong> (<em>list</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A list containing values from the <cite>objectID</cite> column of the <cite>assignments</cite> dataframe.  If provided, this list will be used to determine the order in which <a href="#id1"><span class="problematic" id="id2">`</span></a>objectID`s are displayed on the y-axis of the Gantt chart, where the first item in the list will be on the bottom and the last item will be on top.</p></li>
+<li><p><strong>separateByModelFile</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – If <cite>True</cite>, Gantt chart bars will be formed by the unique combination of the <cite>objectID</cite> and <cite>modelFile</cite> columns of the <cite>assignments</cite> dataframe.  By default, only the <cite>objectID</cite> column will be used to specify the bars.  Note: This field affects the y-axis groupings.</p></li>
+<li><p><strong>mergeByodID</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – If <cite>True</cite>, consecutive assignments that have the same <cite>odID</cite> value (for a particular row of the Gantt chart) and do not have a gap in timing (i.e., the end time of the preceding assignment row equals the start time of the next assignment) will be combined into a single cell.  If <cite>False</cite>, each row of the assignments dataframe will result in a separate Gantt chart cell.  This can lead to a very cluttered figure.</p></li>
+<li><p><strong>splitOnColorChange</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – If <cite>True</cite>, a cell will be split if the <cite>ganttColor</cite> value in the preceding assignment is different (even if the odID is the same and there are no timing gaps).  This case typically would occur if a static assignment (such as a service activity) was appended to a route, and the static assignment has the same odID, and the static assignment did have a <cite>ganttColor</cite> value in the <cite>assignments</cite> dataframe, and <cite>missingColor</cite> is not None.  This defaults to True to help flag these cases; in which case you probably want to fix your assignments dataframe.</p></li>
+<li><p><strong>title</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A title to appear above the Gantt chart.</p></li>
+<li><p><strong>xAxisLabel</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'time'</em>) – A label to appear below the x-axis.</p></li>
+<li><p><strong>xGrid</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – If <cite>True</cite>, vertical lines will be displayed on the Gantt chart.</p></li>
+<li><p><strong>yGrid</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – If <cite>True</cite>, horizontal lines will be displayed on the Gantt chart.</p></li>
+<li><p><strong>xMin</strong> (<em>non-negative float</em><em>, </em><em>Optional</em><em>, </em><em>default as 0</em>) – Specifies the minimum value to display on the x-axis, in units of [seconds].</p></li>
+<li><p><strong>xMax</strong> (<em>positive float</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the maximum value to display on the x-axis, in units of [seconds].  If None (default), xMax will be automatically determined from the <cite>endTimeSeconds</cite> column of the <cite>assignments</cite> dataframe.</p></li>
+<li><p><strong>xGridFreq</strong> (<em>positive float</em><em>, </em><em>Optional</em><em>, </em><em>default as 60</em>) – Specifies the spacing between tick labels on the x-axis, in units of [seconds].</p></li>
+<li><p><strong>timeFormat</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 's'</em>) – Specifies the formatting of the x-axis tick marks.  Valid options are: ‘DHMS’ (days:hours:minutes:seconds), ‘HMS’ (hours:minutes:seconds), ‘MS’ (minutes:seconds), ‘D’ (fractional number of days), ‘H’ (fractional number of hours), ‘M’ (fractional number of minutes), or ‘S’ (integer number of seconds).</p></li>
+<li><p><strong>overlayColumn</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – There are three options: None, ‘odID’, or ‘index’.  If None (default), no labels will be shown within each bar cell of the Gantt chart.  If ‘odID’, each bar cell will display the corresponding odID value.  This only makes sense if <cite>mergeByodID</cite> is True.  If ‘index’, each bar cell will display the index column value of the <cite>assignments</cite> dataframe.  This can be cluttered, but may be useful for debugging (allowing a mapping from the Gantt chart elements to the particular rows of the assignments dataframe).</p></li>
+<li><p><strong>missingColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as 'lightgray'</em>) – Specifies the default color to use if the assignments dataframe is missing a color for a particular row.  Use <cite>None</cite> if you do not want to use a default color.</p></li>
+<li><p><strong>filename</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – If provided, the Gant chart will be saved to this file.  The image format will be automatically determined by the file extension (e.g., <cite>.jpg</cite>, <cite>.png</cite>, or <cite>.pdf</cite>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Geodesic distance between the two locations.</p>
+<dd class="field-even"><p>A matplotlib figure object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Start by defining some locations for our vehicles to visit:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.8871085</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8731949</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8888311</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8649649</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8802158</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8660787</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8845705</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8762794</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8908031</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8770140</span><span class="p">]]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Convert these locations into a <cite>Nodes</cite> dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span>
+</pre></div>
+</div>
+</dd>
+<dt>A car will start at node 1, visit nodes 2 and 3, and then return to node 1.  A truck will follow a route from 1-&gt;5-&gt;4-&gt;1.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mySolution</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;car&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="s1">&#39;truck&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="go">mySolution</span>
+</pre></div>
+</div>
+</dd>
+<dt>Define some properties to use when building the <cite>Assignments</cite> dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vehicleProperties</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;car&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;veroviz/models/car_red.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>              <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="s1">&#39;truck&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>              <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+<dt>Build the assignments dataframe for the 2 vehicle routes.  No service times, Euclidean travel:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">initDataframe</span><span class="p">(</span><span class="s1">&#39;assignments&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mySolution</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">endTimeSec</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">arc</span> <span class="ow">in</span> <span class="n">mySolution</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="n">myAssignments</span><span class="p">,</span> <span class="n">endTimeSec</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addAssignment2D</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">objectID</span>        <span class="o">=</span> <span class="n">v</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">modelFile</span>       <span class="o">=</span> <span class="n">vehicleProperties</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;model&#39;</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="n">startLoc</span>        <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myNodes</span><span class="p">[</span><span class="n">myNodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">arc</span><span class="p">[</span><span class="mi">0</span><span class="p">]][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>            <span class="n">endLoc</span>          <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">myNodes</span><span class="p">[</span><span class="n">myNodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">arc</span><span class="p">[</span><span class="mi">1</span><span class="p">]][[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+<span class="gp">... </span>            <span class="n">startTimeSec</span>    <span class="o">=</span> <span class="n">endTimeSec</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">routeType</span>       <span class="o">=</span> <span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">speedMPS</span>        <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertSpeed</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;miles&#39;</span><span class="p">,</span> <span class="s1">&#39;hour&#39;</span><span class="p">,</span> <span class="s1">&#39;meters&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">leafletColor</span>    <span class="o">=</span> <span class="n">vehicleProperties</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="n">cesiumColor</span>     <span class="o">=</span> <span class="n">vehicleProperties</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+<span class="gp">... </span>            <span class="n">ganttColor</span>      <span class="o">=</span> <span class="n">vehicleProperties</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myAssignments</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a Gantt chart using the default settings:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createGantt</span><span class="p">(</span><span class="n">assignments</span> <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">xAxisLabel</span>  <span class="o">=</span> <span class="s1">&#39;time [seconds]&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create (and save) a Gantt chart using all of the available settings:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createGantt</span><span class="p">(</span><span class="n">assignments</span>         <span class="o">=</span> <span class="n">myAssignments</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">objectIDorder</span>       <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;truck&#39;</span><span class="p">,</span> <span class="s1">&#39;car&#39;</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">separateByModelFile</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">mergeByodID</span>         <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">splitOnColorChange</span>  <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">title</span>               <span class="o">=</span> <span class="s1">&#39;My Title&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">xAxisLabel</span>          <span class="o">=</span> <span class="s1">&#39;time [mm:ss]&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">xGrid</span>               <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">yGrid</span>               <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">xMin</span>                <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">xMax</span>                <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">xGridFreq</span>           <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">timeFormat</span>          <span class="o">=</span> <span class="s1">&#39;MS&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">overlayColumn</span>       <span class="o">=</span> <span class="s1">&#39;odID&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">missingColor</span>        <span class="o">=</span> <span class="s1">&#39;lightgray&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">filename</span>            <span class="o">=</span> <span class="s1">&#39;myGantt.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.distance2D">
+<code class="sig-name descname">distance2D</code><span class="sig-paren">(</span><em class="sig-param">loc1=None</em>, <em class="sig-param">loc2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distance2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distance2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the geodesic distance, in meters, between two locations, using the geopy library.  Altitude is ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc1</strong> (<em>list</em><em>, </em><em>Required</em>) – First location, in [lat, lon] format.</p></li>
+<li><p><strong>loc2</strong> (<em>list</em><em>, </em><em>Required</em>) – Second location, in [lat, lon] format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Geodesic distance, in meters, between the two locations.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
@@ -385,17 +715,17 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.distance3D">
-<code class="sig-name descname">distance3D</code><span class="sig-paren">(</span><em class="sig-param">loc1</em>, <em class="sig-param">loc2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distance3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distance3D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Estimates the distance between two point, including changes in altitude.  The calculation combines geopy’s geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.</p>
+<code class="sig-name descname">distance3D</code><span class="sig-paren">(</span><em class="sig-param">loc1=None</em>, <em class="sig-param">loc2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distance3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distance3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the distance, in meters, between two point, including changes in altitude.  The calculation combines geopy’s geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc1</strong> (<em>list</em>) – First location, in [lat, lon, alt] format.</p></li>
-<li><p><strong>loc2</strong> (<em>list</em>) – Second location, in [lat, lon, alt] format.</p></li>
+<li><p><strong>loc1</strong> (<em>list</em><em>, </em><em>Required</em>) – First location, in [lat, lon, alt] format.</p></li>
+<li><p><strong>loc2</strong> (<em>list</em><em>, </em><em>Required</em>) – Second location, in [lat, lon, alt] format.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Distance between the two locations.</p>
+<dd class="field-even"><p>Distance, in meters, between the two locations.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
@@ -414,14 +744,14 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.distancePath2D">
-<code class="sig-name descname">distancePath2D</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distancePath2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distancePath2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.</p>
+<code class="sig-name descname">distancePath2D</code><span class="sig-paren">(</span><em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#distancePath2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.distancePath2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the total geodesic distance, in meters, along a path defined by [lat, lon] coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], …].</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], …].</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Total length of the path.</p>
+<dd class="field-even"><p>Total length of the path, in meters.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
@@ -439,7 +769,7 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.exportDataToCSV">
-<code class="sig-name descname">exportDataToCSV</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#exportDataToCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.exportDataToCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exportDataToCSV</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#exportDataToCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.exportDataToCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a dataframe or python time/distance matrix dictionary to a <cite>.csv</cite> file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -529,7 +859,7 @@
 
 <dl class="function">
 <dt id="veroviz.utilities.exportDataframe">
-<code class="sig-name descname">exportDataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#exportDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.exportDataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exportDataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframe=None</em>, <em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#exportDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.exportDataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports a nodes, arcs, or assignments dataframe to a <cite>.csv</cite> file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -613,10 +943,10 @@
 <dt>Define some information about our 2 vehicles, for use below:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vehicleProperties</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">... </span>    <span class="s1">&#39;drone&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;veroviz/models/drone.gltf&#39;</span><span class="p">,</span>
 <span class="gp">... </span>              <span class="s1">&#39;leafletColor&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
-<span class="gp">... </span>              <span class="s1">&#39;cesiumColor&#39;</span><span class="p">:</span> <span class="s1">&#39;Cesium.Color.RED&#39;</span><span class="p">},</span>
+<span class="gp">... </span>              <span class="s1">&#39;cesiumColor&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">},</span>
 <span class="gp">... </span>    <span class="s1">&#39;truck&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;veroviz/models/ub_truck.gltf&#39;</span><span class="p">,</span>
 <span class="gp">... </span>              <span class="s1">&#39;leafletColor&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
-<span class="gp">... </span>              <span class="s1">&#39;cesiumColor&#39;</span><span class="p">:</span> <span class="s1">&#39;Cesium.Color.BLUE&#39;</span><span class="p">}</span>
+<span class="gp">... </span>              <span class="s1">&#39;cesiumColor&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">}</span>
 <span class="gp">... </span><span class="p">}</span>
 </pre></div>
 </div>
@@ -797,7 +1127,7 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.getConvexHull">
-<code class="sig-name descname">getConvexHull</code><span class="sig-paren">(</span><em class="sig-param">locs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getConvexHull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getConvexHull" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getConvexHull</code><span class="sig-paren">(</span><em class="sig-param">locs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getConvexHull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getConvexHull" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the convex hull of a set of points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -834,14 +1164,220 @@ OSRM doesn’t have a geocode function.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="veroviz.utilities.getElevationDF">
+<code class="sig-name descname">getElevationDF</code><span class="sig-paren">(</span><em class="sig-param">dataframe=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getElevationDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getElevationDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>EXPERIMENTAL.  Replaces missing (<cite>None</cite>) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.dataframe</em><em>, </em><em>Required</em>) – The dataframe to be exported.  This can be a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining elevation data. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A pandas dataframe.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, only ‘ors-online’, ‘usgs’, and ‘elevapi’ are supported.
+Neither mapQuest, pgRouting, nor OSRM are supported, as they don’t appear to have native support for elevation.</p>
+</div>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>The <cite>getElevationDF()</cite> function requires a data provider.  If you have saved your API keys as environment variables, you may use <cite>os.environ</cite> to access them:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ORS_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ELEVAPI_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ELEVAPIKEY&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Otherwise, you may specify your keys here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ELEVAPI_KEY = &#39;YOUR_ELEVATIONAPI_KEY_GOES_HERE&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>Create a Nodes dataframe.  Note that, by default, there is no elevation data:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">numNodes</span>        <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeType</span>        <span class="o">=</span> <span class="s1">&#39;depot&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeDistrib</span>     <span class="o">=</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeDistribArgs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;center&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">42.30</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;stdDev&#39;</span> <span class="p">:</span> <span class="mi">1000</span>
+<span class="gp">... </span>    <span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>0    None
+1    None
+2    None
+3    None
+Name: elevMeters, dtype: object</p>
+</dd>
+<dt>Find missing elevation data using ORS-online:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesORS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesORS</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>0    460
+1    448
+2    461
+3    446
+Name: elevMeters, dtype: int64</p>
+</dd>
+<dt>Find missing elevation data using USGS:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesUSGS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>    <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                                 <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesUSGS</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>0    442.58
+1    447.53
+2    455.06
+3    444.21
+Name: elevMeters, dtype: object</p>
+</dd>
+<dt>Find missing elevation data using Elevation-API:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesElevAPI</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                                    <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;elevAPI&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                                    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ELEVAPI_KEY</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesElevAPI</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>0    192
+1    192
+2    192
+3    178
+4    178
+Name: elevMeters, dtype: int64</p>
+</dd>
+<dt>Create an Arcs dataframe from a sequence of nodes:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromNodeSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodeSeq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">nodes</span>   <span class="o">=</span> <span class="n">myNodes</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Find missing start/end elevations in the arcs dataframe, using USGS data:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myArcsUSGS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myArcs</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myArcsUSGS</span><span class="p">[[</span><span class="s1">&#39;startElevMeters&#39;</span><span class="p">,</span> <span class="s1">&#39;endElevMeters&#39;</span><span class="p">]]</span>
+<span class="go">        startElevMeters endElevMeters</span>
+<span class="go">0       187.66  185.15</span>
+<span class="go">1       185.15  181.1</span>
+<span class="go">2       181.1   185.64</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.getElevationLocs">
+<code class="sig-name descname">getElevationLocs</code><span class="sig-paren">(</span><em class="sig-param">locs=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getElevationLocs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getElevationLocs" title="Permalink to this definition">¶</a></dt>
+<dd><p>EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>locs</strong> (<em>list of lists</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – A list of one or more GPS coordinate of the form [[lat, lon], …] or [[lat, lon, alt], …].  If altitude is included in locs, the function will add the elevation to the input altitude.  Otherwise, the input altitude will be assumed to be 0.</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining elevation data. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], .., [lat, lon, altMSL]]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, only ‘ors-online’, ‘usgs’, and ‘elevapi’ are supported.
+Neither mapQuest, pgRouting, nor OSRM are supported, as they don’t appear to have native support for elevation.</p>
+</div>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>The <cite>getElevationLocs()</cite> function requires a data provider.  If you have saved your API keys as environment variables, you may use <cite>os.environ</cite> to access them:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ORS_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ELEVAPI_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ELEVAPIKEY&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Otherwise, you may specify your keys here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ELEVAPI_KEY = &#39;YOUR_ELEVATIONAPI_KEY_GOES_HERE&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>Define a set of locations:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.8871085</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8731949</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8888311</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8649649</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8802158</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8660787</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8845705</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8762794</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8908031</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8770140</span><span class="p">]]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Use ORS to find the elevations of all locations:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationLocs</span><span class="p">(</span><span class="n">locs</span>             <span class="o">=</span> <span class="n">locs</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>[[42.887108, -78.873195, 196.0],</dt><dd><p>[42.888831, -78.864965, 185.0],
+[42.880216, -78.866079, 183.0],
+[42.884571, -78.876279, 200.0],
+[42.890803, -78.877014, 187.0]]</p>
+</dd>
+</dl>
+</dd>
+<dt>Use ORS to find the elevation of a single location, with a starting elevation/altitude:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationLocs</span><span class="p">(</span><span class="n">locs</span>             <span class="o">=</span> <span class="p">[[</span><span class="mf">42.888</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.864</span><span class="p">,</span> <span class="mi">100</span><span class="p">]],</span>
+<span class="gp">... </span>                     <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>[[42.888, -78.864, 284.0]]</p>
+</dd>
+<dt>Use the US Geological Survey data:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationLocs</span><span class="p">(</span><span class="n">locs</span>             <span class="o">=</span> <span class="n">locs</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>[[42.8871085, -78.8731949, 187.66],</dt><dd><p>[42.8888311, -78.8649649, 185.15],
+[42.8802158, -78.8660787, 181.1],
+[42.8845705, -78.8762794, 185.64],
+[42.8908031, -78.877014, 186.25]]</p>
+</dd>
+</dl>
+</dd>
+<dt>Use Elevation-API:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationLocs</span><span class="p">(</span><span class="n">locs</span>             <span class="o">=</span> <span class="p">[[</span><span class="mf">42.888</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.864</span><span class="p">,</span> <span class="mi">100</span><span class="p">]],</span>
+<span class="gp">... </span>                     <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;elevapi&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ELEVAPI_KEY</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>[[42.888, -78.864, 292.0]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.utilities.getHeading">
-<code class="sig-name descname">getHeading</code><span class="sig-paren">(</span><em class="sig-param">currentLoc</em>, <em class="sig-param">goalLoc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getHeading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getHeading" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getHeading</code><span class="sig-paren">(</span><em class="sig-param">currentLoc=None</em>, <em class="sig-param">goalLoc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getHeading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getHeading" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the heading required to travel from a current location to a goal location.  North is 0-degrees, east is 90-degrees, south is 180-degrees, west is 270-degrees.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>currentLoc</strong> (<em>list</em>) – The [lat, lon] of current location</p></li>
-<li><p><strong>goalLoc</strong> (<em>list</em>) – The [lat, lon] of goal location</p></li>
+<li><p><strong>currentLoc</strong> (<em>list</em><em>, </em><em>Required</em>) – The [lat, lon] of current location</p></li>
+<li><p><strong>goalLoc</strong> (<em>list</em><em>, </em><em>Required</em>) – The [lat, lon] of goal location</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -935,8 +1471,55 @@ OSRM doesn’t have a geocode function.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="veroviz.utilities.getWeather">
+<code class="sig-name descname">getWeather</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">id=None</em>, <em class="sig-param">initDF=None</em>, <em class="sig-param">metricUnits=False</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getWeather"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getWeather" title="Permalink to this definition">¶</a></dt>
+<dd><p>EXPERIMENTAL.  Get weather information (current and forecasted) for a specified [lat, lon] location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<em>list</em><em>, </em><em>Required</em>) – A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.</p></li>
+<li><p><strong>id</strong> (<em>integer</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – This value may be used to link the resulting dataframe with a different dataframe.  For example, the id could match a nodeID from a nodes dataframe.  If <cite>id=None</cite> and <cite>initDF</cite> is a weather dataframe, a new unique id will be automatically chosen.</p></li>
+<li><p><strong>initDF</strong> (<em>pandas dataframe</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – If provided, the resulting weather dataframe will be appended to this dataframe.  <cite>initDF</cite> should be the result of calling this function.</p></li>
+<li><p><strong>metricUnits</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – If True, metric units (e.g., Celsius) will be used.  Otherwise, imperial units (e.g., Fahrenheit) will be used.</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining elevation data. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A pandas weather dataframe.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1: A simple example using the minium input arguments.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getWeather</span><span class="p">(</span><span class="n">location</span>         <span class="o">=</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="o">-</span><span class="mi">78</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;openweather&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="s1">&#39;ENTER KEY HERE&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2: Append to the dataframe created above.  This example uses all of the functional arguments.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myDF</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getWeather</span><span class="p">(</span><span class="n">location</span>         <span class="o">=</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">80</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="nb">id</span>               <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">initDF</span>           <span class="o">=</span> <span class="n">myDF</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">metricUnits</span>      <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;openweather&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="s1">&#39;ENTER KEY HERE&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.utilities.importDataFromCSV">
-<code class="sig-name descname">importDataFromCSV</code><span class="sig-paren">(</span><em class="sig-param">dataType</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#importDataFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.importDataFromCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">importDataFromCSV</code><span class="sig-paren">(</span><em class="sig-param">dataType=None</em>, <em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#importDataFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.importDataFromCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import from a <cite>.csv</cite> file into a dataframe or python time/distance matrix dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1032,7 +1615,7 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.importDataframe">
-<code class="sig-name descname">importDataframe</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">intCols=False</em>, <em class="sig-param">useIndex=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#importDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.importDataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">importDataframe</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">intCols=False</em>, <em class="sig-param">useIndex=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#importDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.importDataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imports a VeRoViz nodes, arcs, or assignments dataframe from a .csv file.  This function returns a pandas dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1094,11 +1677,11 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.initDataframe">
-<code class="sig-name descname">initDataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframeType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#initDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.initDataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initDataframe</code><span class="sig-paren">(</span><em class="sig-param">dataframeType=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#initDataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.initDataframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an empty dataframe of a given type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataframeType</strong> (<em>string</em>) – The options are ‘Nodes’, ‘Arcs’, and ‘Assignments’.  These options are case insensitive.</p>
+<dd class="field-odd"><p><strong>dataframeType</strong> (<em>string</em><em>, </em><em>Required</em>) – The options are ‘Nodes’, ‘Arcs’, and ‘Assignments’.  These options are case insensitive.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dataframe of the given type.  See <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, and <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> for details on each dataframe type.</p>
@@ -1117,15 +1700,14 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.isPassPath">
-<code class="sig-name descname">isPassPath</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">path</em>, <em class="sig-param">tolerance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPassPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPassPath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine if any point along a path is within tolerance meters of a stationary point.
-(did our path pass by the target?)</p>
+<code class="sig-name descname">isPassPath</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">path=None</em>, <em class="sig-param">tolerance=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPassPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPassPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if any point along a path is within tolerance meters of a stationary point (i.e., did our path pass by the target?).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>list</em>) – The stationary point to be tested if it has been passed, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
-<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
-<li><p><strong>tolerance</strong> (<em>float</em>) – How close must the path be to the stationary location to be considered as “passed”.  The units are in meters.</p></li>
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The stationary point to be tested if it has been passed, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em><em>, </em><em>Required</em>) – How close must the path be to the stationary location to be considered as “passed”.  The units are in meters.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1187,13 +1769,13 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.isPathCrossPoly">
-<code class="sig-name descname">isPathCrossPoly</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPathCrossPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPathCrossPoly" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isPathCrossPoly</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">poly=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPathCrossPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPathCrossPoly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if a given path crosses the boundary of a polygon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
-<li><p><strong>poly</strong> (<em>list of lists</em>) – A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
+<li><p><strong>poly</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1272,13 +1854,13 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.isPathInPoly">
-<code class="sig-name descname">isPathInPoly</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPathInPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPathInPoly" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isPathInPoly</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">poly=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPathInPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPathInPoly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if a given path is completely within the boundary of a polygon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
-<li><p><strong>poly</strong> (<em>list of lists</em>) – A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.  This is considered as an open polyline.</p></li>
+<li><p><strong>poly</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1363,13 +1945,13 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.isPointInPoly">
-<code class="sig-name descname">isPointInPoly</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">poly</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPointInPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPointInPoly" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isPointInPoly</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">poly=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isPointInPoly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isPointInPoly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be “inside”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>list</em>) – The coordinate of the point, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
-<li><p><strong>poly</strong> (<em>list of lists</em>) – A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the point, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
+<li><p><strong>poly</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1460,14 +2042,192 @@ OSRM doesn’t have a geocode function.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="veroviz.utilities.isochrones">
+<code class="sig-name descname">isochrones</code><span class="sig-paren">(</span><em class="sig-param">location=None</em>, <em class="sig-param">locationType='start'</em>, <em class="sig-param">travelMode='driving-car'</em>, <em class="sig-param">rangeType='distance'</em>, <em class="sig-param">rangeSize=None</em>, <em class="sig-param">interval=None</em>, <em class="sig-param">smoothing=25</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#isochrones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.isochrones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds isochrones (lines corresponding to points of equal distance or time from a given location) to or from a given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<em>list</em><em>, </em><em>Required</em>) – A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored (i.e., assumed to be 0).</p></li>
+<li><p><strong>locationType</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as 'start'</em>) – Specifies whether <cite>location</cite> is the start or the destination.  Valid options are ‘start’ or ‘destination’</p></li>
+<li><p><strong>travelMode</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as 'driving-car'</em>) – Specifies the mode of travel.  Valid options are: ‘driving-car’, ‘driving-hgv’, ‘cycling-regular’, ‘cycling-road’, ‘cycling-mountain’, ‘cycling-electric’, ‘foot-walking’, ‘foot-hiking’, or ‘wheelchair’.</p></li>
+<li><p><strong>rangeType</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as 'distance'</em>) – Indicates whether the isochrones are based on distance or time.  Valid options are ‘distance’ or ‘time’.</p></li>
+<li><p><strong>rangeSize</strong> (<em>positive float</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – The isochrones will indicate the area accessible from the given location within the rangeSize.  rangeSize is in units of [meters] if rangeType equals ‘distance’; rangeSize is in units of [seconds] if rangeType equals ‘time’.</p></li>
+<li><p><strong>interval</strong> (<em>float</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – If provided, this parameter can be used to generate multiple concentric isochrones.  For example, if rangeSize = 90, and interval = 30, isochrones will be identified for ranges of 30, 60, and 90 units.  If interval is not provided (as is the default), only one isochrone will be determined.</p></li>
+<li><p><strong>smoothing</strong> (<em>float in range</em><em> [</em><em>0</em><em>, </em><em>100</em><em>]</em><em>, </em><em>Optional</em><em>, </em><em>default as 25</em>) – Indicates the granularity of the isochrones.  Smoothing values close to 0 will produce jagged isochrones; values close to 100 will generally result in smooth isochrones.</p></li>
+<li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining isochrone data. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
+<li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Check the note for the structure of dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary with nested dictionaries and lists</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl>
+<dt>This dictionary has the following structure:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">],</span>         <span class="c1"># Matches the user&#39;s &#39;location&#39; input value</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;boundingRegion&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">],</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">],</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">],</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">]],</span>  <span class="c1"># The smallest rectangle that encloses all isochrones.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;isochrones&#39;</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s1">&#39;value&#39;</span><span class="p">:</span>  <span class="c1"># Either the time or distance assoc. with this isochrone.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s1">&#39;valueUnits&#39;</span><span class="p">:</span> <span class="c1"># either &#39;seconds&#39; or &#39;meters&#39;.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s1">&#39;area&#39;</span><span class="p">:</span>  <span class="c1"># The area enclosed by the isochrone, in square meters.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s1">&#39;pop&#39;</span><span class="p">:</span>   <span class="c1"># The estimated population within the isochrone.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s1">&#39;reachfactor&#39;</span><span class="p">:</span>  <span class="c1"># FIXME -- not sure what this represents.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s1">&#39;poly&#39;</span><span class="p">:</span> <span class="p">[[]]</span>    <span class="c1"># A list of lists describing polylines.</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="c1"># A list of GPS coordinates, of the form [[[lat, lon], [lat, lon], ..., [lat, lon]], []] defining a polygon.  This polygon describes the isochrones.</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, only ‘ors-online’ and ‘ors-local’ are supported.  Neither mapQuest, pgRouting, nor OSRM are supported, as they don’t appear to have native support for isochrones.</p>
+</div>
+<p class="rubric">Examples</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>The following examples assume the use of ORS as the data provider.  If you have saved your API keys as environment variables, you may use <cite>os.environ</cite> to access them:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ORS_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Otherwise, you may specify your keys here:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 1 - Get distance-based isochrones from a given location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iso</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">isochrones</span><span class="p">(</span><span class="n">location</span>         <span class="o">=</span> <span class="p">[</span><span class="mf">43.00154</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.7871</span><span class="p">],</span>
+<span class="gp">... </span>                     <span class="n">rangeType</span>        <span class="o">=</span> <span class="s1">&#39;distance&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">rangeSize</span>        <span class="o">=</span> <span class="mi">4000</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iso</span>
+</pre></div>
+</div>
+</dd>
+<dt>Draw the result on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIsochrones</span><span class="p">(</span><span class="n">iso</span><span class="o">=</span><span class="n">iso</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Click on the shaded area of the map for additional info</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example 2 - This example includes all function arguments:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iso2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">isochrones</span><span class="p">(</span><span class="n">location</span>         <span class="o">=</span> <span class="p">[</span><span class="mf">43.00154</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.7871</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="n">locationType</span>     <span class="o">=</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">travelMode</span>       <span class="o">=</span> <span class="s1">&#39;driving-car&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">rangeType</span>        <span class="o">=</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">rangeSize</span>        <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertTime</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;minutes&#39;</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">),</span>
+<span class="gp">... </span>                      <span class="n">interval</span>         <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">convertTime</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;minutes&#39;</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">),</span>
+<span class="gp">... </span>                      <span class="n">smoothing</span>        <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">dataProvider</span>     <span class="o">=</span><span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ORSKEY&#39;</span><span class="p">]})</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIsochrones</span><span class="p">(</span><span class="n">iso</span><span class="o">=</span><span class="n">iso2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Customize the map by using the <cite>addLeafletPolygon()</cite> function:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span>    <span class="n">myColors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletIcon</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">iso2</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iso2</span><span class="p">[</span><span class="s1">&#39;isochrones&#39;</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">lineColor</span> <span class="o">=</span> <span class="n">myColors</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">myColors</span><span class="p">)]</span>
+<span class="gp">... </span>    <span class="n">fillColor</span> <span class="o">=</span> <span class="n">lineColor</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iso2</span><span class="p">[</span><span class="s1">&#39;isochrones&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;poly&#39;</span><span class="p">])):</span>
+<span class="gp">... </span>        <span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                                      <span class="n">points</span>    <span class="o">=</span> <span class="n">iso2</span><span class="p">[</span><span class="s1">&#39;isochrones&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;poly&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">],</span>
+<span class="gp">... </span>                                      <span class="n">lineColor</span> <span class="o">=</span> <span class="n">lineColor</span><span class="p">,</span>
+<span class="gp">... </span>                                      <span class="n">fillColor</span> <span class="o">=</span> <span class="n">fillColor</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.lengthFromNodeSeq">
+<code class="sig-name descname">lengthFromNodeSeq</code><span class="sig-paren">(</span><em class="sig-param">nodeSeq=None</em>, <em class="sig-param">lengthDict=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#lengthFromNodeSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.lengthFromNodeSeq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the total “length” (either in time or distance) along a path defined by a sequence of node IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodeSeq</strong> (<em>list</em><em>, </em><em>Required</em>) – An ordered list of node IDs.  These IDs must be included in the <cite>id</cite> column of the <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe specified in the <cite>nodes</cite> input argument to this function. The format for <cite>nodeSeq</cite> is [node_id_1, node_id_2, …].</p></li>
+<li><p><strong>lengthDict</strong> (<em>dictionary</em><em>, </em><em>Required</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Total length of the path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Define some sample locations and create a nodes dataframe:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.8871085</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8731949</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8888311</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8649649</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8802158</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8660787</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8845705</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8762794</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.8908031</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.8770140</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="n">locs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Calculate time and distance matrices:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeSecDict</span><span class="p">,</span> <span class="n">distMetersDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDist2D</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span> <span class="n">routeType</span> <span class="o">=</span> <span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Define a sequence of nodes to visit:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodeSeq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Find the total travel time to visit the nodes:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">totalTimeSec</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">lengthFromNodeSeq</span><span class="p">(</span><span class="n">nodeSeq</span><span class="p">,</span> <span class="n">timeSecDict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">totalTimeSec</span>
+<span class="go">128.18625959871764</span>
+</pre></div>
+</div>
+</dd>
+<dt>Find the total length of the node sequence:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">totalDistMeters</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">lengthFromNodeSeq</span><span class="p">(</span><span class="n">nodeSeq</span><span class="p">,</span> <span class="n">distMetersDict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">totalDistMeters</span>
+<span class="go">1922.793893980765</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.utilities.minDistLoc2Path">
-<code class="sig-name descname">minDistLoc2Path</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#minDistLoc2Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.minDistLoc2Path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">minDistLoc2Path</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#minDistLoc2Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.minDistLoc2Path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the minimum distance, in [meters], from a single stationary location (target) to any point along a path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>list</em>) – The coordinate of the stationary location, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
-<li><p><strong>path</strong> (<em>list of lists</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the stationary location, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.</p></li>
+<li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], …] or [[lat1, lon1], [lat2, lon2], …].  If provided, altitudes will be ignored.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1523,14 +2283,14 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.pointInDistance2D">
-<code class="sig-name descname">pointInDistance2D</code><span class="sig-paren">(</span><em class="sig-param">loc</em>, <em class="sig-param">direction</em>, <em class="sig-param">distMeters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#pointInDistance2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.pointInDistance2D" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pointInDistance2D</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">direction=None</em>, <em class="sig-param">distMeters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#pointInDistance2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.pointInDistance2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the [lat, lon, alt] coordinate of a point that is a given distance away from a current location at a given heading. This can be useful for determining where a vehicle may be in the future (assuming constant velocity and straight-line travel).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>list</em>) – The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</p></li>
-<li><p><strong>direction</strong> (<em>float</em>) – The direction of travel from the current location, in units of degrees.  The range is [0, 360], where north is 0 degrees, east is 90 degrees, south is 180 degrees, and west is 270 degrees.</p></li>
-<li><p><strong>distMeters</strong> (<em>float</em>) – The straight-line distance to be traveled, in meters, from the current location in the given direction.</p></li>
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.</p></li>
+<li><p><strong>direction</strong> (<em>float</em><em>, </em><em>Required</em>) – The direction of travel from the current location, in units of degrees.  The range is [0, 360], where north is 0 degrees, east is 90 degrees, south is 180 degrees, and west is 270 degrees.</p></li>
+<li><p><strong>distMeters</strong> (<em>float</em><em>, </em><em>Required</em>) – The straight-line distance to be traveled, in meters, from the current location in the given direction.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1728,7 +2488,7 @@ OSRM doesn’t have a geocode function.</p>
         <li class="right" >
           <a href="veroviz.snapNodesToRoad.html" title="veroviz.snapNodesToRoad module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
       </ul>
     </div>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.generateNodes module &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz.generateNodes module &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,8 +38,9 @@
         <li class="right" >
           <a href="veroviz.generateArcs.html" title="veroviz.generateArcs module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">modules</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -79,7 +80,7 @@
 <span id="veroviz-generatenodes-module"></span><h1>veroviz.generateNodes module<a class="headerlink" href="#module-veroviz.generateNodes" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="veroviz.generateNodes.createNodesFromLocs">
-<code class="sig-name descname">createNodesFromLocs</code><span class="sig-paren">(</span><em class="sig-param">locs=None</em>, <em class="sig-param">initNodes=None</em>, <em class="sig-param">nodeType=None</em>, <em class="sig-param">nodeName=None</em>, <em class="sig-param">startNode=1</em>, <em class="sig-param">incrementName=False</em>, <em class="sig-param">incrementStart=1</em>, <em class="sig-param">snapToRoad=False</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em>, <em class="sig-param">leafletIconPrefix='glyphicon'</em>, <em class="sig-param">leafletIconType='info-sign'</em>, <em class="sig-param">leafletColor='blue'</em>, <em class="sig-param">leafletIconText=None</em>, <em class="sig-param">cesiumIconType='pin'</em>, <em class="sig-param">cesiumColor='Cesium.Color.BLUE'</em>, <em class="sig-param">cesiumIconText=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#createNodesFromLocs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateNodes.createNodesFromLocs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">createNodesFromLocs</code><span class="sig-paren">(</span><em class="sig-param">locs=None</em>, <em class="sig-param">initNodes=None</em>, <em class="sig-param">nodeType=None</em>, <em class="sig-param">nodeName=None</em>, <em class="sig-param">startNode=1</em>, <em class="sig-param">incrementName=False</em>, <em class="sig-param">incrementStart=1</em>, <em class="sig-param">snapToRoad=False</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">leafletIconPrefix='glyphicon'</em>, <em class="sig-param">leafletIconType='info-sign'</em>, <em class="sig-param">leafletColor='blue'</em>, <em class="sig-param">leafletIconText=None</em>, <em class="sig-param">cesiumIconType='pin'</em>, <em class="sig-param">cesiumColor='blue'</em>, <em class="sig-param">cesiumIconText=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#createNodesFromLocs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateNodes.createNodesFromLocs" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function generates a “nodes” dataframe from a given collection of [lat, lon], or [lat, lon, alt], coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -94,12 +95,13 @@
 <li><p><strong>snapToRoad</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em><em>,</em>) – If True, nodes will be positioned at locations on the road network. This requires the use of a data provider. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for a list of data providers that support this option.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for generating nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
 <li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
-<li><p><strong>leafletIconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;glyphicon&quot;</em>) – There are a large number of Leaflet icons available. The <cite>leafletIconPrefix</cite> identifies one of two collections: “glyphicon” or “fa”.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the <cite>popupText</cite> column of the nodes dataframe.</p></li>
+<li><p><strong>leafletIconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;glyphicon&quot;</em>) – There are a large number of Leaflet icons available. The <cite>leafletIconPrefix</cite> identifies one of three collections: “glyphicon”, “fa”, or “custom”.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
 <li><p><strong>leafletIconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;info-sign&quot;</em>) – Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of <cite>leafletIconType</cite>. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for available options.</p></li>
 <li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;blue&quot;</em>) – Specifies the icon color of the generated nodes when displayed in Leaflet. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
-<li><p><strong>leafletIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the text in label that will be displayed when the node is clicked on a Leaflet map.  This parameter allows for including more information if the node name itself is not sufficiently descriptive.</p></li>
+<li><p><strong>leafletIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be displayed within the node on a Leaflet map.  This text will only be shown if <cite>leafletIconPrefix</cite> is ‘custom’ and <cite>leafletIconType</cite> includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>.</p></li>
 <li><p><strong>cesiumIconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;pin&quot;</em>) – ‘pin’ is current the only option. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a>.</p></li>
-<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;Cesium.Color.BLUE&quot;</em>) – The color of the generated nodes when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for all available color options.</p></li>
+<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;blue&quot;</em>) – The color of the generated nodes when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for all available color options.</p></li>
 <li><p><strong>cesiumIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the <cite>id</cite> value.</p></li>
 </ul>
 </dd>
@@ -149,12 +151,13 @@
 <span class="gp">... </span>    <span class="n">snapToRoad</span>        <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">dataProvider</span>      <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">dataProviderArgs</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletIconPrefix</span> <span class="o">=</span> <span class="s1">&#39;fa&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletIconType</span>   <span class="o">=</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletColor</span>      <span class="o">=</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletIconText</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumIconType</span>    <span class="o">=</span> <span class="s1">&#39;pin&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">cesiumColor</span>       <span class="o">=</span> <span class="s1">&#39;Cesium.Color.LIGHTGREEN&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>       <span class="o">=</span> <span class="s1">&#39;lightgreen&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumIconText</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span>
 </pre></div>
@@ -169,7 +172,7 @@
 
 <dl class="function">
 <dt id="veroviz.generateNodes.generateNodes">
-<code class="sig-name descname">generateNodes</code><span class="sig-paren">(</span><em class="sig-param">initNodes=None</em>, <em class="sig-param">nodeType=None</em>, <em class="sig-param">nodeName=None</em>, <em class="sig-param">numNodes=None</em>, <em class="sig-param">startNode=1</em>, <em class="sig-param">incrementName=False</em>, <em class="sig-param">incrementStart=1</em>, <em class="sig-param">nodeDistrib=None</em>, <em class="sig-param">nodeDistribArgs=None</em>, <em class="sig-param">snapToRoad=False</em>, <em class="sig-param">leafletIconPrefix='glyphicon'</em>, <em class="sig-param">leafletIconType='info-sign'</em>, <em class="sig-param">leafletColor='blue'</em>, <em class="sig-param">leafletIconText=None</em>, <em class="sig-param">cesiumIconType='pin'</em>, <em class="sig-param">cesiumColor='Cesium.Color.BLUE'</em>, <em class="sig-param">cesiumIconText=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#generateNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateNodes.generateNodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generateNodes</code><span class="sig-paren">(</span><em class="sig-param">initNodes=None</em>, <em class="sig-param">nodeType=None</em>, <em class="sig-param">nodeName=None</em>, <em class="sig-param">numNodes=None</em>, <em class="sig-param">startNode=1</em>, <em class="sig-param">incrementName=False</em>, <em class="sig-param">incrementStart=1</em>, <em class="sig-param">nodeDistrib=None</em>, <em class="sig-param">nodeDistribArgs=None</em>, <em class="sig-param">snapToRoad=False</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">leafletIconPrefix='glyphicon'</em>, <em class="sig-param">leafletIconType='info-sign'</em>, <em class="sig-param">leafletColor='blue'</em>, <em class="sig-param">leafletIconText=None</em>, <em class="sig-param">cesiumIconType='pin'</em>, <em class="sig-param">cesiumColor='blue'</em>, <em class="sig-param">cesiumIconText=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#generateNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateNodes.generateNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function generates a collection of nodes (locations).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -184,12 +187,13 @@
 <li><p><strong>nodeDistrib</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies a distribution by which the nodes will be generated.  See the table in the notes below for more information.</p></li>
 <li><p><strong>nodeDistribArgs</strong> (<em>dictionary</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – A dictionary of arguments for the distribution. See the table in the notes below for more information.</p></li>
 <li><p><strong>snapToRoad</strong> (<em>boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em><em>,</em>) – If True, nodes will be positioned at locations on the road network. This requires the use of a data provider. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for a list of data providers that support this option.</p></li>
-<li><p><strong>leafletIconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;glyphicon&quot;</em>) – There are a large number of Leaflet icons available. The <cite>leafletIconPrefix</cite> identifies one of two collections: “glyphicon” or “fa”.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
-<li><p><strong>leafletIconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;info-sign&quot;</em>) – Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of <cite>leafletIconType</cite>. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for available options.</p></li>
+<li><p><strong>popupText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the <cite>popupText</cite> column of the nodes dataframe.</p></li>
+<li><p><strong>leafletIconPrefix</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;glyphicon&quot;</em>) – There are a large number of Leaflet icons available. The <cite>leafletIconPrefix</cite> identifies one of three collections: “glyphicon”, “fa”, or “custom”.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for more information.</p></li>
+<li><p><strong>leafletIconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;info-sign&quot;</em>) – Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of <cite>leafletIconPrefix</cite>. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for available options.</p></li>
 <li><p><strong>leafletColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;blue&quot;</em>) – Specifies the icon color of the generated nodes when displayed in Leaflet. See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a> for a list of available colors.</p></li>
-<li><p><strong>leafletIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Specifies the text in label that will be displayed when the node is clicked on a Leaflet map.  This parameter allows for including more information if the node name itself is not sufficiently descriptive.</p></li>
+<li><p><strong>leafletIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be displayed within the node on a Leaflet map.  This text will only be shown if <cite>leafletIconPrefix</cite> is ‘custom’ and <cite>leafletIconType</cite> includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See <a class="reference internal" href="leaflet_style.html#leaflet-style"><span class="std std-ref">Leaflet Style</span></a>.</p></li>
 <li><p><strong>cesiumIconType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;pin&quot;</em>) – ‘pin’ is current the only option. See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a>.</p></li>
-<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;Cesium.Color.BLUE&quot;</em>) – The color of the generated nodes when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for all available color options.</p></li>
+<li><p><strong>cesiumColor</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as &quot;blue&quot;</em>) – The color of the generated nodes when displayed in Cesium.  See <a class="reference internal" href="cesium_style.html#cesium-style"><span class="std std-ref">Cesium Style</span></a> for all available color options.</p></li>
 <li><p><strong>cesiumIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the <cite>id</cite> value.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for generating nodes on a road network. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
 <li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
@@ -256,6 +260,24 @@ and standard deviation.</p></td>
 <tr class="row-odd"><td><p>‘boundingRegion’ : A list of lat/lon defines the
 boundary, in the form of [[lat, lon], [lat, lon],
 … , [lat, lon]]</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>“unifRoadBasedBB”:
+Uniformly generate
+locations that are close
+to the road (within a
+certain range). If a
+location is close to
+multiple roads (e.g.,
+the location is at the
+corner of two roads), the
+probability of it getting
+chosen will not increase.</p></td>
+<td><p>‘boundingRegion’: A list of lat/lon coordinates
+defining the boundary, in the form of
+[[lat, lon], [lat, lon], … , [lat, lon]]</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘distToRoad’: The maximum distance between the
+generated location and its nearest road.</p></td>
 </tr>
 </tbody>
 </table>
@@ -364,12 +386,13 @@ boundary, in the form of [[lat, lon], [lat, lon],
 <span class="gp">... </span>        <span class="s1">&#39;boundingRegion&#39;</span> <span class="p">:</span> <span class="n">bounding</span>
 <span class="gp">... </span>    <span class="p">},</span>
 <span class="gp">... </span>    <span class="n">snapToRoad</span>        <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">popupText</span>         <span class="o">=</span> <span class="s1">&#39;These nodes are used for demo&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletIconPrefix</span> <span class="o">=</span> <span class="s1">&#39;fa&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletIconType</span>   <span class="o">=</span> <span class="s1">&#39;star&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">leafletColor</span>      <span class="o">=</span> <span class="s1">&#39;darkred&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">leafletIconText</span>   <span class="o">=</span> <span class="s1">&#39;These nodes are used for demo&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletIconText</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumIconType</span>    <span class="o">=</span> <span class="s1">&#39;pin&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">cesiumColor</span>       <span class="o">=</span> <span class="s1">&#39;Cesium.Color.DARKRED&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cesiumColor</span>       <span class="o">=</span> <span class="s1">&#39;darkred&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cesiumIconText</span>    <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">dataProvider</span>      <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">dataProviderArgs</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
@@ -409,8 +432,9 @@ boundary, in the form of [[lat, lon], [lat, lon],
         <li class="right" >
           <a href="veroviz.generateArcs.html" title="veroviz.generateArcs module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >modules</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

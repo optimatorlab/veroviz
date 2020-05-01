@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Data Providers &#8212; veroviz 0.3.1 documentation</title>
+    <title>Data Providers &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="install.html" title="Install Dependencies"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -47,10 +47,12 @@
   <ul>
 <li><a class="reference internal" href="#">Data Providers</a><ul>
 <li><a class="reference internal" href="#none">None</a></li>
-<li><a class="reference internal" href="#pgrouting">pgRouting</a></li>
-<li><a class="reference internal" href="#mapquest">MapQuest</a></li>
+<li><a class="reference internal" href="#pgrouting-pgr">pgRouting (pgr)</a></li>
+<li><a class="reference internal" href="#mapquest-mq">MapQuest (mq)</a></li>
 <li><a class="reference internal" href="#osrm">OSRM</a></li>
 <li><a class="reference internal" href="#ors">ORS</a></li>
+<li><a class="reference internal" href="#openweathermap-owm">OpenWeatherMap (OWM)</a></li>
+<li><a class="reference internal" href="#elevation-api">Elevation-API</a></li>
 </ul>
 </li>
 </ul>
@@ -96,31 +98,34 @@
 <col style="width: 20%" />
 <col style="width: 18%" />
 <col style="width: 6%" />
-<col style="width: 13%" />
-<col style="width: 12%" />
-<col style="width: 16%" />
+<col style="width: 6%" />
+<col style="width: 5%" />
+<col style="width: 0%" />
 <col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head" colspan="2"></th>
-<th class="head" colspan="5"><p><cite>dataProvider</cite> field options</p></th>
+<tr class="row-odd"><th class="head" colspan="9"><p><cite>dataProvider</cite> field options</p></th>
 </tr>
 <tr class="row-even"><th class="head" colspan="2"></th>
 <th class="head"><p>None</p></th>
-<th class="head"><p>‘pgRouting’</p></th>
-<th class="head"><p>‘MapQuest’</p></th>
-<th class="head"><p>‘OSRM-online’</p></th>
+<th class="head"><p>‘pgr’</p></th>
+<th class="head"><p>‘mq’</p></th>
+<th class="head" colspan="2"><p>‘OSRM-online’</p></th>
 <th class="head"><p>‘ORS-online’</p></th>
+<th class="head"><p>‘ORS-local’</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-odd"><td rowspan="2"><p>required key
+<tr class="row-odd"><td rowspan="3"><p>required key
 in
 <cite>dataProviderArgs</cite></p></td>
 <td><p>“databaseName”</p></td>
 <td></td>
 <td><p>✓</p></td>
 <td></td>
+<td colspan="2"></td>
 <td></td>
 <td></td>
 </tr>
@@ -128,73 +133,115 @@ in
 <td></td>
 <td></td>
 <td><p>✓</p></td>
+<td colspan="2"></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>“port”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
 <td></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="3"><p>allowed?</p></td>
+<tr class="row-even"><td rowspan="5"><p>allowed?</p></td>
 <td><p>snapNodesToRoad</p></td>
 <td></td>
 <td><p>✓</p></td>
 <td><p>✓</p></td>
+<td colspan="2"><p>✓</p></td>
 <td><p>✓</p></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-even"><td><p>geocode</p></td>
-<td><p>✓</p></td>
+<tr class="row-odd"><td><p>isochrones</p></td>
 <td></td>
-<td><p>✓</p></td>
 <td></td>
+<td></td>
+<td colspan="2"></td>
+<td><p>✓</p></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-odd"><td><p>reverseGeocode</p></td>
+<tr class="row-even"><td><p>elevation</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
 <td><p>✓</p></td>
 <td></td>
-<td><p>✓</p></td>
-<td></td>
-<td><p>✓</p></td>
 </tr>
-<tr class="row-even"><td rowspan="7"><p><cite>routetype</cite>
+<tr class="row-odd"><td><p>geocode</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td colspan="2"></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>reverseGeocode</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td colspan="2"></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="8"><p><cite>routetype</cite>
 field
 options</p></td>
 <td><p>“fastest”</p></td>
 <td></td>
 <td><p>✓</p></td>
 <td><p>✓</p></td>
+<td colspan="2"><p>✓</p></td>
 <td><p>✓</p></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-odd"><td><p>“shortest”</p></td>
+<tr class="row-even"><td><p>“shortest”</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
+<td colspan="2"></td>
 <td></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p>“pedestrian”</p></td>
+<tr class="row-odd"><td><p>“pedestrian”</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
-<td></td>
+<td colspan="2"></td>
 <td><p>✓</p></td>
-</tr>
-<tr class="row-odd"><td><p>“cycling”</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td><p>✓</p></td>
 </tr>
-<tr class="row-even"><td><p>“truck”</p></td>
+<tr class="row-even"><td><p>“cycling”</p></td>
 <td></td>
 <td></td>
 <td></td>
-<td></td>
+<td colspan="2"></td>
 <td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>“truck”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>“wheelchair”</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
+<td><p>✓</p></td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><p>“euclidean2d”</p></td>
 <td><p>✓</p></td>
 <td></td>
 <td></td>
+<td colspan="2"></td>
 <td></td>
 <td></td>
 </tr>
@@ -202,17 +249,19 @@ options</p></td>
 <td><p>✓</p></td>
 <td></td>
 <td></td>
+<td colspan="2"></td>
 <td></td>
 <td></td>
 </tr>
 </tbody>
 </table>
+<p>Additionally, starting in version 0.4.0, VeRoViz supports integration with OpenWeatherMap and Elevation-API.  See the bottom of this page for more information on these two data providers.</p>
 <div class="section" id="none">
 <h2>None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h2>
 <p>No data provider is chosen. Nodes and arcs are generated without consideration of any underlying road networks. Only simple types of node distributions or route types can be applied without a data provider.</p>
 </div>
-<div class="section" id="pgrouting">
-<h2>pgRouting<a class="headerlink" href="#pgrouting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pgrouting-pgr">
+<h2>pgRouting (pgr)<a class="headerlink" href="#pgrouting-pgr" title="Permalink to this headline">¶</a></h2>
 <p>pgRouting is an open-source database application that must be installed locally on the user’s computer.  You will need to <a class="reference internal" href="install.html#install-pgrouting"><span class="std std-ref">Install pgRouting</span></a> before
 using related functions.</p>
 <p>We recommend that users update their local pgRouting database frequently, as the source data (from OpenStreetMap) changes over time.</p>
@@ -222,8 +271,8 @@ to cover the region of interest. VeRoViz can not calculate the coordinates outsi
 the boundary of pgRouting data.</p>
 <p>See the <a class="reference external" href="http://docs.pgrouting.org/latest/en/index.html">pgRouting documentation</a> for more details.</p>
 </div>
-<div class="section" id="mapquest">
-<h2>MapQuest<a class="headerlink" href="#mapquest" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mapquest-mq">
+<h2>MapQuest (mq)<a class="headerlink" href="#mapquest-mq" title="Permalink to this headline">¶</a></h2>
 <p>MapQuest is a commercial data source, but users may issue a limited number of requests for free.  You will need to <a class="reference internal" href="install.html#apply-for-mapquest-apikey"><span class="std std-ref">Apply for MapQuest API key</span></a>
 before using related functions.  MapQuest provides perhaps the most detailed results of the data providers.  However, keep in mind that the free API key has a monthly limit on the number of queries.</p>
 <p>See the <a class="reference external" href="https://developer.mapquest.com/documentation/">MapQuest documentation</a> for more details.</p>
@@ -237,8 +286,18 @@ before using related functions.  MapQuest provides perhaps the most detailed res
 </div>
 <div class="section" id="ors">
 <h2>ORS<a class="headerlink" href="#ors" title="Permalink to this headline">¶</a></h2>
-<p>OpenRouteService is currently the suggested data provider for VeRoViz.  Like OSRM, it uses data from OpenStreetMaps.  ORS offers a free API key with a generous daily query limit.  Although ORS also provides an open-source engine that can be installed locally, this option is not currently enabled in VeRoViz.</p>
+<p>OpenRouteService is currently the suggested data provider for VeRoViz.  Like OSRM, it uses data from OpenStreetMaps.  ORS offers a free API key with a generous daily query limit.  ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in May, 2020).</p>
 <p>See the <a class="reference external" href="https://openrouteservice.org">ORS documentation</a> for more information.</p>
+</div>
+<div class="section" id="openweathermap-owm">
+<h2>OpenWeatherMap (OWM)<a class="headerlink" href="#openweathermap-owm" title="Permalink to this headline">¶</a></h2>
+<p>OWM provides current, forecast, and historical weather data, as well as map overlays for Leaflet.  Support for OWM integration is available in VeRoViz version 0.4.0.</p>
+<p>See the <a class="reference external" href="https://openweathermap.org/api.">OWM documentation</a> for more information.</p>
+</div>
+<div class="section" id="elevation-api">
+<h2>Elevation-API<a class="headerlink" href="#elevation-api" title="Permalink to this headline">¶</a></h2>
+<p>Elevation-API provides elevation data for practically any location on the globe.  Elevations at 5km resolutions are available for free; higher-resolution data may be obtained for a nominal fee. Support for Elevation-API integration is available in VeRoViz version 0.4.0.</p>
+<p>See the <a class="reference external" href="https://elevation-api.io.">Elevation-API documentation</a> for more information.</p>
 </div>
 </div>
 
@@ -263,7 +322,7 @@ before using related functions.  MapQuest provides perhaps the most detailed res
         <li class="right" >
           <a href="install.html" title="Install Dependencies"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

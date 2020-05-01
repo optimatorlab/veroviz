@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>
@@ -55,7 +55,7 @@
           <div class="body" role="main">
             
   <h1>Source code for veroviz</h1><div class="highlight"><pre>
-<span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.3.1&#39;</span>
+<span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.4.0&#39;</span>
 
 <span class="c1"># Generate Objects</span>
 <span class="kn">from</span> <span class="nn">veroviz.generateNodes</span> <span class="k">import</span> <span class="n">generateNodes</span>
@@ -88,6 +88,9 @@
 <span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletPolygon</span>
 <span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletPolyline</span>
 <span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletText</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletIcon</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletIsochrones</span>
+<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletWeather</span>
 <span class="kn">from</span> <span class="nn">veroviz.createCesium</span> <span class="k">import</span> <span class="n">createCesium</span>
 
 <span class="c1"># Internal shared small functions/constants/validation</span>
@@ -103,7 +106,7 @@
 <span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetShapepointsTimeDist</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetTimeDist</span>
 
-<span class="c1"># ORS related</span>
+<span class="c1"># ORS-online related</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetSnapToRoadLatLon</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetShapepointsTimeDist</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistAll2All</span>
@@ -111,6 +114,16 @@
 <span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistMany2One</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGeocode</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsReverseGeocode</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsIsochrones</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetElevation</span>
+
+<span class="c1"># ORS-local related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetSnapToRoadLatLon</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetShapepointsTimeDist</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetTimeDistAll2All</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetTimeDistOne2Many</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetTimeDistMany2One</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalIsochrones</span>
 
 <span class="c1"># OSRM related</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetSnapToRoadLatLon</span>
@@ -127,6 +140,15 @@
 <span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistMany2One</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGeocode</span>
 <span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqReverseGeocode</span>
+
+<span class="c1"># USGS related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryUSGS</span> <span class="k">import</span> <span class="n">usgsGetElevation</span>
+
+<span class="c1"># Elevation-API.io related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryElevationapiio</span> <span class="k">import</span> <span class="n">elevapiGetElevation</span>
+
+<span class="c1"># OpenWeather related</span>
+<span class="kn">from</span> <span class="nn">veroviz._queryOpenWeather</span> <span class="k">import</span> <span class="n">owGetWeather</span>
 
 <span class="c1"># 3D function related</span>
 <span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">buildNoLoiteringFlight</span>
@@ -171,13 +193,6 @@
 
 	<span class="k">return</span> <span class="n">versionStatus</span></div>
 
-<span class="c1"># def disableWarningMessages():</span>
-<span class="c1"># 	os.environ[&#39;VEROVIZ_SHOWWARNINGMESSAGE&#39;] = &#39;False&#39;</span>
-<span class="c1"># 	return</span>
-
-<span class="c1"># def enableWarningMessages():</span>
-<span class="c1"># 	os.environ[&#39;VEROVIZ_SHOWWARNINGMESSAGE&#39;] = &#39;True&#39;</span>
-<span class="c1"># 	return</span>
 </pre></div>
 
           </div>
@@ -194,7 +209,7 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

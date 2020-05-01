@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Arcs &#8212; veroviz 0.3.1 documentation</title>
+    <title>Arcs &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="nodes.html" title="Nodes"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -83,9 +83,9 @@ and <a class="reference internal" href="veroviz.generateArcs.html#veroviz.genera
 <p>The table below describes each of the fields/columns of an <cite>Arcs</cite> dataframe:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 25%" />
+<col style="width: 26%" />
 <col style="width: 16%" />
-<col style="width: 59%" />
+<col style="width: 58%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Field Name</p></th>
@@ -158,6 +158,35 @@ A value of 1 indicates no transparency;
 <td><p>int</p></td>
 <td><p>Pixel width of the line/arc.</p></td>
 </tr>
+<tr class="row-even"><td><p>leafletCurveType</p></td>
+<td><p>string</p></td>
+<td><p>The type of curve to be shown on a
+leaflet map for :ref:Arc dataframes
+(curves will not be applied to
+:ref:Assignments dataframes). The
+options are ‘Bezier’, ‘greatcircle’,
+and ‘straight’. If Bezier is provided,
+the leafletCurvature is also required.
+If greatcircle is provided, the arc
+follows the curvature of the Earth.</p></td>
+</tr>
+<tr class="row-odd"><td><p>leafletCurvature</p></td>
+<td><p>float in
+(-90, 90)</p></td>
+<td><p>If leafletCurveType is ‘Bezier’, then
+leafletCurvature is required; otherwise
+this argument will not be used. The
+curvature specifies the angle between a</p>
+<blockquote>
+<div><p>straight line connecting the two nodes
+and the curved arc emanating from</p>
+</div></blockquote>
+<p>those two nodes. Therefore, this value
+should be in the open interval
+(-90, 90), although values in the
+(-45, 45) range tend to work best.</p>
+</td>
+</tr>
 <tr class="row-even"><td><p>useArrows</p></td>
 <td><p>bool</p></td>
 <td><p>True if the arrows will be used when
@@ -187,6 +216,22 @@ A value of 1 indicates no transparency;
 <tr class="row-even"><td><p>cesiumWeight</p></td>
 <td><p>int</p></td>
 <td><p>Pixel width of the line/arc.</p></td>
+</tr>
+<tr class="row-odd"><td><p>popupText</p></td>
+<td><p>string</p></td>
+<td><p>Text (or HTML) that will be displayed
+when a user clicks on the arc in
+Leaflet.</p></td>
+</tr>
+<tr class="row-even"><td><p>startElevMeters</p></td>
+<td><p>float</p></td>
+<td><p>Elevation of the start point, in units
+of meters above ground level.</p></td>
+</tr>
+<tr class="row-odd"><td><p>endElevMeters</p></td>
+<td><p>float</p></td>
+<td><p>Elevation of the end point, in units
+of meters above ground level.</p></td>
 </tr>
 </tbody>
 </table>
@@ -268,6 +313,16 @@ see <a class="reference internal" href="dataframes.html#dataframes-comparison"><
 <td><p>✓</p></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><p>leafletCurveType</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>leafletCurvature</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
 <tr class="row-even"><td><p>useArrows</p></td>
 <td></td>
 <td><p>✓</p></td>
@@ -289,6 +344,21 @@ see <a class="reference internal" href="dataframes.html#dataframes-comparison"><
 <td><p>✓</p></td>
 </tr>
 <tr class="row-even"><td><p>cesiumWeight</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>popupText</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>startElevMeters</p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>endElevMeters</p></td>
 <td></td>
 <td></td>
 <td><p>✓</p></td>
@@ -318,7 +388,7 @@ see <a class="reference internal" href="dataframes.html#dataframes-comparison"><
         <li class="right" >
           <a href="nodes.html" title="Nodes"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

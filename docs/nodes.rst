@@ -45,7 +45,7 @@ The table below describes each of the fields/columns of a `Nodes` dataframe:
 |                  |           | "depots" or "customers".                   |
 +------------------+-----------+--------------------------------------------+
 | nodeName         | string    | A unique name for a particular node, such  |
-|                  |           | as "depot 1" or "customer 32". The         | 
+|                  |           | as "depot 1" or "customer 32". The         |
 |                  |           | nodeName is not used by VeRoViz            |
 |                  |           | explicitly.                                |
 +------------------+-----------+--------------------------------------------+
@@ -56,7 +56,7 @@ The table below describes each of the fields/columns of a `Nodes` dataframe:
 | leafletIconPrefix| string    | There are a large number of Leaflet icons  |
 |                  |           | available.  The IconPrefix identifies one  |
 |                  |           | of three collections: "glyphicon", "fa",   |
-|                  |           | or "custom".
+|                  |           | or "custom".                               |
 |                  |           | See :ref:`Leaflet Style` for more details. |
 +------------------+-----------+--------------------------------------------+
 | leafletIconType  | string    | The specific icon depends on the           |

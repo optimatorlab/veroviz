@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.createCesium &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz.createCesium &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -64,6 +64,7 @@
 <span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">delHeadSlash</span>
 <span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">addHeadSlash</span>
 <span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">replaceBackslashToSlash</span>
+<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">expandCesiumColor</span>
 
 <span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">getMapBoundary</span>
 <span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">exportDataframe</span>
@@ -182,17 +183,23 @@
 
 	<span class="c1"># Mission duration, from time zero to endtime+postBuffer</span>
 	<span class="n">availStart</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-	<span class="n">availEnd</span>   <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">assignments</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">postBuffer</span><span class="p">))</span>
-
+	<span class="k">if</span> <span class="p">(</span><span class="n">assignments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="n">availEnd</span>   <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">assignments</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">postBuffer</span><span class="p">))</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">availEnd</span>   <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">postBuffer</span><span class="p">)</span>
+		
 	<span class="c1"># Decode Assignments dataframe to a Path dataframe (with details of a path) and a list of Assignments dataframes, and generate .js and .czml files</span>
-	<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">lstSubAssignments</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getPathsDetails</span><span class="p">(</span><span class="n">assignments</span><span class="p">)</span>
-	<span class="n">lstNonStationarySubAssignments</span> <span class="o">=</span> <span class="n">deconstructAssignments</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="n">assignments</span><span class="p">,</span> <span class="n">includeVerticalFlag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">assignments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">lstSubAssignments</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getPathsDetails</span><span class="p">(</span><span class="n">assignments</span><span class="p">)</span>
+		<span class="n">lstNonStationarySubAssignments</span> <span class="o">=</span> <span class="n">deconstructAssignments</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="n">assignments</span><span class="p">,</span> <span class="n">includeVerticalFlag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-	<span class="c1"># Update &#39;intervalStart&#39; and &#39;intervalEnd&#39; to cesiumTime</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-		<span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;intervalStart&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;startTimeSec&#39;</span><span class="p">])</span>
-		<span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;intervalEnd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="n">availEnd</span>
-	<span class="n">path</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>
+		<span class="c1"># Update &#39;intervalStart&#39; and &#39;intervalEnd&#39; to cesiumTime</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+			<span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;intervalStart&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;startTimeSec&#39;</span><span class="p">])</span>
+			<span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;intervalEnd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getCesiumTime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="n">availEnd</span>
+		<span class="n">path</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;startTimeSec&#39;</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">path</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">,</span> <span class="s1">&#39;czmlID&#39;</span><span class="p">,</span> <span class="s1">&#39;action&#39;</span><span class="p">])</span>
 
 	<span class="c1"># Write problem selector</span>
 	<span class="n">_writeSelector</span><span class="p">(</span><span class="n">fullDir</span><span class="p">,</span> <span class="n">problemDir</span><span class="p">)</span>
@@ -202,13 +209,14 @@
 	<span class="n">_writeConfigs</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">,</span> <span class="n">availStart</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">,</span> <span class="n">problemDir</span><span class="p">)</span>
 
 	<span class="c1"># Write Nodes</span>
-	<span class="k">if</span> <span class="p">(</span><span class="n">nodes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-		<span class="n">_writeNodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">nodeColor</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">)</span>
+	<span class="n">_writeNodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">nodeColor</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">)</span>
 
 	<span class="c1"># Write Assignments</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
 		<span class="n">_writeAssignmentsJS</span><span class="p">(</span><span class="n">lstNonStationarySubAssignments</span><span class="p">,</span> <span class="n">pathColor</span><span class="p">,</span> <span class="n">pathWeight</span><span class="p">,</span> <span class="n">pathStyle</span><span class="p">,</span> <span class="n">pathOpacity</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">)</span>
 		<span class="n">_writeAssignmentsCZML</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">lstSubAssignments</span><span class="p">,</span> <span class="n">availStart</span><span class="p">,</span> <span class="n">availEnd</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">_writeEmptyAssignments</span><span class="p">(</span><span class="n">fullDir</span><span class="p">)</span>
 
 	<span class="k">return</span></div>
 
@@ -369,22 +377,30 @@
 	<span class="c1"># Head description</span>
 	<span class="n">jsStr</span>  <span class="o">=</span>     <span class="s2">&quot;// This .js file is auto-generated by `createCesium()` from VeRoViz</span><span class="se">\n</span><span class="s2">&quot;</span>
 	<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;// Display nodes for cesium application</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-
-	<span class="c1"># In case some there is skipped index</span>
-	<span class="n">indNodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
+	
 	<span class="c1"># Display the nodes</span>
 	<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;function displayNodes() {</span><span class="se">\n</span><span class="s2">&quot;</span>
 	<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;    var pin = new Array;</span><span class="se">\n</span><span class="s2">&quot;</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indNodes</span><span class="p">)):</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;    pin[</span><span class="si">%s</span><span class="s2">] = viewer.entities.add({</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        name : &#39;</span><span class="si">%s</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;cesiumIconText&#39;</span><span class="p">])</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        position : Cesium.Cartesian3.fromDegrees(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">),</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">])</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        billboard : {</span><span class="se">\n</span><span class="s2">&quot;</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;            image : pinBuilder.fromText(&#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="si">%s</span><span class="s2">, 40).toDataURL(),</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">cesiumIconColor</span> <span class="k">if</span> <span class="p">(</span><span class="n">cesiumIconColor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;cesiumColor&#39;</span><span class="p">])</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;            verticalOrigin : Cesium.VerticalOrigin.BOTTOM</span><span class="se">\n</span><span class="s2">&quot;</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        }</span><span class="se">\n</span><span class="s2">&quot;</span>
-		<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;    });</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">nodes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="c1"># In case there are any skipped indices</span>
+		<span class="n">indNodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>	
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indNodes</span><span class="p">)):</span>
+			<span class="n">popupText</span> <span class="o">=</span> <span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
+
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;    pin[</span><span class="si">%s</span><span class="s2">] = viewer.entities.add({</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        name : &#39;</span><span class="si">%s</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;cesiumIconText&#39;</span><span class="p">])</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        parent : nodePins,&quot;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">popupText</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+				<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        description : &#39;</span><span class="si">%s</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">popupText</span><span class="p">)</span>	
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        position : Cesium.Cartesian3.fromDegrees(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">),</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">])</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        billboard : {</span><span class="se">\n</span><span class="s2">&quot;</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;            image : pinBuilder.fromText(&#39;</span><span class="si">%s</span><span class="s2">&#39;, </span><span class="si">%s</span><span class="s2">, 40).toDataURL(),</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">expandCesiumColor</span><span class="p">(</span><span class="n">cesiumIconColor</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">cesiumIconColor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">expandCesiumColor</span><span class="p">(</span><span class="n">indNodes</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;cesiumColor&#39;</span><span class="p">]))</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;            verticalOrigin : Cesium.VerticalOrigin.BOTTOM</span><span class="se">\n</span><span class="s2">&quot;</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;        }</span><span class="se">\n</span><span class="s2">&quot;</span>
+			<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;    });</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
 	<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;}&quot;</span>
 
 	<span class="c1"># Write contents and close file stream</span>
@@ -395,6 +411,48 @@
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Nodes were written to </span><span class="si">%s</span><span class="s2"> ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsFilePath</span><span class="p">))</span>
 
 	<span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">_writeEmptyAssignments</span><span class="p">(</span><span class="n">fullDir</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This script generates &quot;empty&quot; routes.czml and displayPaths.js files</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	fullDir: string</span>
+<span class="sd">		The directory of cesium, including the name of the instance.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="c1"># .czml file path</span>
+	<span class="n">czmlFilePath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/routes.czml&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fullDir</span><span class="p">)</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">czmlFilePath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+	<span class="n">czmlStr</span>  <span class="o">=</span> <span class="s1">&#39;[ </span><span class="se">\n</span><span class="s1">&#39;</span>
+	<span class="n">czmlStr</span> <span class="o">+=</span> <span class="s1">&#39;{ </span><span class="se">\n</span><span class="s1">&#39;</span>
+	<span class="n">czmlStr</span> <span class="o">+=</span> <span class="s1">&#39;    &quot;id&quot;: &quot;document&quot;, </span><span class="se">\n</span><span class="s1">&#39;</span>
+	<span class="n">czmlStr</span> <span class="o">+=</span> <span class="s1">&#39;    &quot;version&quot;: &quot;1.0&quot; </span><span class="se">\n</span><span class="s1">&#39;</span>
+	<span class="n">czmlStr</span> <span class="o">+=</span> <span class="s1">&#39;}</span><span class="se">\n</span><span class="s1">&#39;</span>
+	<span class="n">czmlStr</span> <span class="o">+=</span> <span class="s1">&#39;]&#39;</span>
+
+	<span class="c1"># Write contents and close file stream</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">czmlStr</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+	<span class="c1"># .js file path</span>
+	<span class="n">jsFilePath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/displayPaths.js&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fullDir</span><span class="p">)</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">jsFilePath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+	<span class="n">jsStr</span>  <span class="o">=</span> <span class="s2">&quot;// This .js file is auto-generated by `createCesium` from VeRoViz</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;// Display paths for cesium application</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+	<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;function displayPaths() {</span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;    // pass </span><span class="se">\n</span><span class="s2">&quot;</span>
+	<span class="n">jsStr</span> <span class="o">+=</span> <span class="s2">&quot;}&quot;</span>
+
+	<span class="c1"># Write contents and close file stream</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsStr</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+	
 
 <span class="k">def</span> <span class="nf">_writeAssignmentsCZML</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">lstSubAssignments</span><span class="p">,</span> <span class="n">availStart</span><span class="p">,</span> <span class="n">availEnd</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">):</span>
 
@@ -582,11 +640,11 @@
 		<span class="k">else</span><span class="p">:</span>
 			<span class="n">assignmentDimension</span> <span class="o">=</span> <span class="mi">3</span>
 
-		<span class="c1"># Check if cesium styles have been overrided, if not, assume that for entire path the style is the same</span>
+		<span class="c1"># Check if cesium styles have been overridden, if not, assume that for entire path the style is the same</span>
 		<span class="k">if</span> <span class="p">(</span><span class="n">cesiumColor</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-			<span class="n">color</span> <span class="o">=</span> <span class="n">cesiumColor</span>
+			<span class="n">color</span> <span class="o">=</span> <span class="n">expandCesiumColor</span><span class="p">(</span><span class="n">cesiumColor</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">color</span> <span class="o">=</span> <span class="n">lstSubAssignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;cesiumColor&#39;</span><span class="p">]</span>
+			<span class="n">color</span> <span class="o">=</span> <span class="n">expandCesiumColor</span><span class="p">(</span><span class="n">lstSubAssignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;cesiumColor&#39;</span><span class="p">])</span>
 		<span class="k">if</span> <span class="p">(</span><span class="n">cesiumWeight</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
 			<span class="n">weight</span> <span class="o">=</span> <span class="n">cesiumWeight</span>
 		<span class="k">else</span><span class="p">:</span>
@@ -612,11 +670,15 @@
 		<span class="k">elif</span> <span class="p">(</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;solid&#39;</span><span class="p">):</span>
 			<span class="n">dashLength</span> <span class="o">=</span> <span class="mi">0</span>
 
+		<span class="n">popupText</span> <span class="o">=</span> <span class="n">lstSubAssignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
+		
 		<span class="k">if</span> <span class="p">(</span><span class="n">assignmentDimension</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
 			<span class="c1"># For each path, generate one polyline entity</span>
 			<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;    paths[</span><span class="si">%d</span><span class="s2">] = viewer.entities.add({</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
 			<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;        parent: vehiclePolylines[&#39;</span><span class="si">%s</span><span class="s2">&#39;],</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lstSubAssignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;objectID&#39;</span><span class="p">])</span>
 			<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;        name: &#39;Objects </span><span class="si">%s</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lstSubAssignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;objectID&#39;</span><span class="p">])</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">popupText</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+				<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;        description: &#39;</span><span class="si">%s</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lstSubAssignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">])</span>
 			<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;        polyline: {</span><span class="se">\n</span><span class="s2">&quot;</span>
 			<span class="n">jsStr</span> <span class="o">+=</span>     <span class="s2">&quot;            positions: Cesium.Cartesian3.fromDegreesArrayHeights([</span><span class="se">\n</span><span class="s2">&quot;</span>
 			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">assignmentLats</span><span class="p">)):</span>
@@ -694,7 +756,7 @@
 <span class="k">def</span> <span class="nf">_getAction</span><span class="p">(</span><span class="n">subAssignments</span><span class="p">):</span>
 
 	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Give a group of assignments with same odID, find if this group is stationary/vertical/move, each will be treated differently in cesium and folium.</span>
+<span class="sd">	Given a group of assignments with same odID, find if this group is stationary/vertical/move.  Each will be treated differently in cesium and folium.</span>
 
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
@@ -786,7 +848,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>

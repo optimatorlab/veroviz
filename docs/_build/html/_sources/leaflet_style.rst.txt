@@ -77,6 +77,43 @@ Leaflet Map Background (Map Tiles)
 | 'Open Topo'               | |Open_Topo|                                  |
 +---------------------------+----------------------------------------------+
 
+
+Leaflet Weather Map Overlays
+----------------------------
+
+Starting with version 0.4.0, *VeRoViz* also provides several weather condition "overlays" for Leaflet maps.  These options are enabled via the `mapType` field of the `addLeafletWeather()` function.
+
+.. |clouds| image:: /_images/weather_clouds.png
+    :height: 200px
+
+.. |precip| image:: /_images/weather_precip.png
+    :height: 200px
+
+.. |pressure| image:: /_images/weather_pressure.png
+    :height: 200px
+
+.. |temp| image:: /_images/weather_temp.png
+    :height: 200px
+
+.. |wind| image:: /_images/weather_wind.png
+    :height: 200px
+
+
++---------------------+------------------------------------+
+| `mapType` options   | Preview                            |
++=====================+====================================+
+| 'clouds'            | |clouds|                           |
++---------------------+------------------------------------+
+| 'precip'            | |precip|                           |
++---------------------+------------------------------------+
+| 'pressure'          | |pressure|                         |
++---------------------+------------------------------------+
+| 'temp'              | |temp|                             |
++---------------------+------------------------------------+
+| 'wind'              | |wind|                             |
++---------------------+------------------------------------+
+
+
 Leaflet Colors
 --------------
 
@@ -92,19 +129,28 @@ Leaflet provides numerous icons.  Both an `iconPrefix` and an
 `iconType` are required to specify a particular icon.  Some of the available options 
 for both of the icon prefixes are shown below:
 
-+----------------------+---------------------------------------------+
-| `iconPrefix` options | `iconType` options                          |
-+======================+=============================================+
-| 'glyphicon'          | 'info-sign', 'home', 'glass', 'flag',       |
-|                      | 'star', 'user', 'cloud', 'bookmark', etc.   |
-+----------------------+---------------------------------------------+
-| 'fa'                 | 'ambulance', 'bicycle', 'bus', 'car',       |
-|                      | 'flag', 'home', 'heartbeat', 'plane',       |
-|                      | 'motorcycle', 'question', 'ship',           |
-|                      | 'shopping-bag', 'shopping-basket',          |
-|                      | 'shopping-cart', 'star', 'subway', 'taxi',  |
-|                      | 'truck', 'university', 'user', 'users', etc.|
-+----------------------+---------------------------------------------+
++----------------------+----------------------------------------------+
+| `iconPrefix` options | `iconType` options                           |
++======================+==============================================+
+| 'glyphicon'          | 'info-sign', 'home', 'glass', 'flag',        |
+|                      | 'star', 'user', 'cloud', 'bookmark', etc.    |
++----------------------+----------------------------------------------+
+| 'fa'                 | 'ambulance', 'bicycle', 'bus', 'car',        |
+|                      | 'flag', 'home', 'heartbeat', 'plane',        |
+|                      | 'motorcycle', 'question', 'ship',            |
+|                      | 'shopping-bag', 'shopping-basket',           |
+|                      | 'shopping-cart', 'star', 'subway', 'taxi',   |
+|                      | 'truck', 'university', 'user', 'users', etc. |
++----------------------+----------------------------------------------+
+| 'custom'             | Specify a string with three fields separated |
+|                      | by a dash:  <circle radius in pixels>-<font  |
+|                      | color>-<font size>.                          |
+|                      | For example, '10-white-12' will produce a    |
+|                      | circle icon of radius 10 pixels, with white  |
+|                      | font of size 12 point.  The background color |
+|                      | of the circle icon is specified by the       |
+|                      | `iconColor` argument.                        |
++----------------------+----------------------------------------------+
 
 Additional options may be available (but have not been tested):
 - For 'glyphicon', see 

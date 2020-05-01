@@ -133,11 +133,11 @@ def convertDistance(distance=None, fromUnits=None, toUnits=None):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> distanceMiles = 1.0
-	    >>> distanceKilometers = vrv.convertDistance(distanceMiles, 'miles', 'km')
-	    >>> distanceKilometers
-	    1.60934
+		>>> import veroviz as vrv
+		>>> distanceMiles = 1.0
+		>>> distanceKilometers = vrv.convertDistance(distanceMiles, 'miles', 'km')
+		>>> distanceKilometers
+		1.60934
 
 	"""
 
@@ -209,11 +209,11 @@ def convertTime(time=None, fromUnits=None, toUnits=None):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> timeHours = 1.5
-	    >>> timeMinutes = vrv.convertTime(timeHours, 'h', 'min')
-	    >>> timeMinutes
-	    90.0
+		>>> import veroviz as vrv
+		>>> timeHours = 1.5
+		>>> timeMinutes = vrv.convertTime(timeHours, 'h', 'min')
+		>>> timeMinutes
+		90.0
 
 	"""
 
@@ -273,11 +273,11 @@ def convertArea(area=None, fromUnits=None, toUnits=None):
 		
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> areaSQKM = 1.0
-	    >>> areaSqMiles = vrv.convertArea(50, 'sqkm', 'sqmi')	
-	    >>> areaSqMiles
-	    >>> 19.305
+		>>> import veroviz as vrv
+		>>> areaSQKM = 1.0
+		>>> areaSqMiles = vrv.convertArea(50, 'sqkm', 'sqmi')	
+		>>> areaSqMiles
+		>>> 19.305
 	"""
 
 	[valFlag, errorMsg, warningMsg] = valConvertArea(area, fromUnits, toUnits)
@@ -468,7 +468,6 @@ def calcArea(poly=None):
 	area = geoAreaOfPolygon(poly)
 	
 	return area		
-	
 
 def initDataframe(dataframeType=None):
 	"""
@@ -486,9 +485,9 @@ def initDataframe(dataframeType=None):
 
 	Example
 	-------
-	    >>> import veroviz as vrv
-	    >>> newNodes = vrv.initDataframe('Nodes')
-	    >>> newNodes
+		>>> import veroviz as vrv
+		>>> newNodes = vrv.initDataframe('Nodes')
+		>>> newNodes
 	"""
 
 	# validation
@@ -1315,7 +1314,7 @@ def isPointInPoly(loc=None, poly=None):
 	Examples
 	--------
 	Import veroviz:
-	    >>> import veroviz as vrv
+		>>> import veroviz as vrv
 
 	Example 1 - Location is inside polygon:
 		>>> loc = [42.03, -78.05]
@@ -1415,7 +1414,7 @@ def isPathInPoly(path=None, poly=None):
 	Examples
 	--------
 	Import veroviz:
-	    >>> import veroviz as vrv
+		>>> import veroviz as vrv
 
 	Example 1 - Entire path is inside polygon:
 		>>> path = [[42.50, -78.10], [42.50, -78.50], [42.50, -78.90]]
@@ -1511,7 +1510,7 @@ def isPathCrossPoly(path=None, poly=None):
 	Examples
 	--------
 	First import veroviz
-	    >>> import veroviz
+		>>> import veroviz
 
 	Example 1 - Entire path is inside poly
 		>>> path = [[42.50, -78.10], [42.50, -78.50], [42.50, -78.90]]
@@ -1774,7 +1773,6 @@ def minDistLoc2Path(loc=None, path=None):
 	distMeters = geoMinDistLoc2Path(loc, path)
 
 	return distMeters
-
 
 def closestPointLoc2Path(loc=None, path=None):
 	"""
@@ -2095,8 +2093,6 @@ def getHeading(currentLoc=None, goalLoc=None):
 
 	return bearingInDegree
 
-
-
 def findLocsAtTime(assignments=None, timeSec=0.0):
 	"""
 	Finds the estimated location of each unique `objectID` in an input `assignments` dataframe at the given time.  The output is a dictionary, where the keys are unique objectIDs.  The corresponding value for each `objectID` key will be `None` if the object is not defined at the given value of `timeSec`, the value will be a list of the form [lat, lon, alt] if a single match is found, or the value will be a list of lists of the form [[lat1, lon1, alt1], ..., [latn, lonn, altn]] if n matches are found.  In the latter case, this is typically indicative of duplicate entries in the assignments dataframe (as each object should not appear in multiple locations simultaneously).
@@ -2386,7 +2382,6 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 	
 	return loc
 	
-	
 def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):    
 	"""
 	Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.
@@ -2566,26 +2561,30 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 	Return
 	------
 	dictionary with nested dictionaries and lists
-		This dictionary has the following structure:
-			{
-				'location': [lat, lon],		# Matches the user's 'location' input value
-				'boundingRegion': [[lat, lon], [lat, lon], [lat, lon], [lat, lon]],  # The smallest rectangle that encloses all isochrones.
-				'isochrones':
-				[
-					{
-						'value':  # Either the time or distance assoc. with this isochrone.
-						'valueUnits': # either 'seconds' or 'meters'.
-						'area':  # The area enclosed by the isochrone, in square meters.
-						'pop':   # The estimated population within the isochrone.
-						'reachfactor':  # FIXME -- not sure what this represents.
-						'poly': [[]]	# A list of lists describing polylines.
-								A list of GPS coordinates, of the form [[[lat, lon], [lat, lon], ..., [lat, lon]], []] defining a polygon.  This polygon describes the isochrones.
-					},
-					{
-						...
-					}
-				]
-			}    						
+		Check the note for the structure of dictionary.
+
+	Note
+	----
+	This dictionary has the following structure:
+		>>> {
+		>>>     'location': [lat, lon],		# Matches the user's 'location' input value
+		>>>     'boundingRegion': [[lat, lon], [lat, lon], [lat, lon], [lat, lon]],  # The smallest rectangle that encloses all isochrones.
+		>>>     'isochrones':
+		>>>     [
+		>>>         {
+		>>>             'value':  # Either the time or distance assoc. with this isochrone.
+		>>>             'valueUnits': # either 'seconds' or 'meters'.
+		>>>             'area':  # The area enclosed by the isochrone, in square meters.
+		>>>             'pop':   # The estimated population within the isochrone.
+		>>>             'reachfactor':  # FIXME -- not sure what this represents.
+		>>>             'poly': [[]]	# A list of lists describing polylines.
+		>>>                 # A list of GPS coordinates, of the form [[[lat, lon], [lat, lon], ..., [lat, lon]], []] defining a polygon.  This polygon describes the isochrones.
+		>>>         },
+		>>>         {
+		>>>             ...
+		>>>         }
+		>>>     ]
+		>>> }    						
 		
 	Note
 	----
@@ -2638,13 +2637,13 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 		>>>	myMap = vrv.addLeafletIcon(location=iso2['location'])
 		>>>	
 		>>>	for i in range(len(iso2['isochrones'])-1, -1, -1):
-		...	    lineColor = myColors[i % len(myColors)]
-		...	    fillColor = lineColor
-		...	    for j in range(0, len(iso2['isochrones'][i]['poly'])):
-		...	        myMap = vrv.addLeafletPolygon(mapObject = myMap,
-		...	                                      points    = iso2['isochrones'][i]['poly'][j],
-		...	                                      lineColor = lineColor,
-		...	                                      fillColor = fillColor)
+		...     lineColor = myColors[i % len(myColors)]
+		...     fillColor = lineColor
+		...     for j in range(0, len(iso2['isochrones'][i]['poly'])):
+		...         myMap = vrv.addLeafletPolygon(mapObject = myMap,
+		...                                       points    = iso2['isochrones'][i]['poly'][j],
+		...                                       lineColor = lineColor,
+		...                                       fillColor = fillColor)
 		>>>	
 		>>>	myMap   	
 	"""
@@ -2668,13 +2667,7 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 	
 	return iso
 
-
-def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False, 
-				mergeByodID=True, splitOnColorChange=True, 
-                title=None, xAxisLabel='time', 
-                xGrid=False, yGrid=False, xMin=0, xMax=None, xGridFreq=60, timeFormat='s', 
-                overlayColumn=None, missingColor='lightgray', 
-                filename=None):
+def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False, mergeByodID=True, splitOnColorChange=True, title=None, xAxisLabel='time', xGrid=False, yGrid=False, xMin=0, xMax=None, xGridFreq=60, timeFormat='s', overlayColumn=None, missingColor='lightgray', filename=None):
 	"""
 	EXPERIMENTAL.  Draws a Gantt chart from an :ref:`Assignments` dataframe.  This has the appearance of a horizontal bar chart.  The x-axis indicates the elapsed time.  Each `objectID` forms a horizontal bar.
 
@@ -2715,11 +2708,11 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 
 	Return
 	------
-	A matplotlib figure object.
+	object
+		A matplotlib figure object.
 
 	Examples
-	--------
-					
+	--------					
 	Import veroviz and check if the version is up-to-date:
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
@@ -2949,7 +2942,6 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 
 	return fig
 	
-	
 def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):    
 	"""
 	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  
@@ -3044,7 +3036,6 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 	locsWithAlt = privGetElevationLocs(locs, dataProvider, dataProviderArgs)
 	
 	return locsWithAlt
-
 
 def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None): 
 	"""
@@ -3178,7 +3169,6 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 		return
 		
 	return dfWithAlt
-
 
 def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvider=None, dataProviderArgs=None):  
 	"""

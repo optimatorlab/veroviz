@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.generateNodes &#8212; veroviz 0.3.1 documentation</title>
+    <title>veroviz.generateNodes &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -73,7 +73,7 @@
 <span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">getMapBoundary</span>
 
 
-<div class="viewcode-block" id="generateNodes"><a class="viewcode-back" href="../../veroviz.generateNodes.html#veroviz.generateNodes.generateNodes">[docs]</a><span class="k">def</span> <span class="nf">generateNodes</span><span class="p">(</span><span class="n">initNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startNode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incrementName</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">incrementStart</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nodeDistrib</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeDistribArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONPREFIX</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONTYPE</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONCOLOR</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONTYPE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONCOLOR</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="generateNodes"><a class="viewcode-back" href="../../veroviz.generateNodes.html#veroviz.generateNodes.generateNodes">[docs]</a><span class="k">def</span> <span class="nf">generateNodes</span><span class="p">(</span><span class="n">initNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startNode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incrementName</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">incrementStart</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nodeDistrib</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeDistribArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONPREFIX</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONTYPE</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONCOLOR</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONTYPE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONCOLOR</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function generates a collection of nodes (locations).</span>
@@ -100,17 +100,19 @@
 <span class="sd">		A dictionary of arguments for the distribution. See the table in the notes below for more information.</span>
 <span class="sd">	snapToRoad: boolean, Optional, default as False, </span>
 <span class="sd">		If True, nodes will be positioned at locations on the road network. This requires the use of a data provider. See :ref:`Data Providers` for a list of data providers that support this option.</span>
+<span class="sd">	popupText: string, Optional, default as None</span>
+<span class="sd">		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the `popupText` column of the nodes dataframe.</span>
 <span class="sd">	leafletIconPrefix: string, Optional, default as &quot;glyphicon&quot;</span>
-<span class="sd">		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: &quot;glyphicon&quot; or &quot;fa&quot;.  See :ref:`Leaflet Style` for more information.</span>
+<span class="sd">		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of three collections: &quot;glyphicon&quot;, &quot;fa&quot;, or &quot;custom&quot;.  See :ref:`Leaflet Style` for more information.</span>
 <span class="sd">	leafletIconType: string, Optional, default as &quot;info-sign&quot;</span>
-<span class="sd">		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconType`. See :ref:`Leaflet Style` for available options.</span>
+<span class="sd">		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconPrefix`. See :ref:`Leaflet Style` for available options.</span>
 <span class="sd">	leafletColor: string, Optional, default as &quot;blue&quot;</span>
 <span class="sd">		Specifies the icon color of the generated nodes when displayed in Leaflet. See :ref:`Leaflet Style` for a list of available colors.</span>
 <span class="sd">	leafletIconText: string, Optional, default as None</span>
-<span class="sd">		Specifies the text in label that will be displayed when the node is clicked on a Leaflet map.  This parameter allows for including more information if the node name itself is not sufficiently descriptive.</span>
+<span class="sd">		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `leafletIconPrefix` is &#39;custom&#39; and `leafletIconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.</span>
 <span class="sd">	cesiumIconType: string, Optional, default as &quot;pin&quot;</span>
 <span class="sd">		&#39;pin&#39; is current the only option. See :ref:`Cesium Style`.</span>
-<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.BLUE&quot;</span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;blue&quot;</span>
 <span class="sd">		The color of the generated nodes when displayed in Cesium.  See :ref:`Cesium Style` for all available color options.</span>
 <span class="sd">	cesiumIconText: string, Optional, default as None</span>
 <span class="sd">		Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the `id` value. </span>
@@ -157,60 +159,72 @@
 <span class="sd">	|                           | boundary, in the form of [[lat, lon], [lat, lon],     |</span>
 <span class="sd">	|                           | ... , [lat, lon]]                                     |</span>
 <span class="sd">	+---------------------------+-------------------------------------------------------+</span>
+<span class="sd">	| &quot;unifRoadBasedBB&quot;:        | &#39;boundingRegion&#39;: A list of lat/lon coordinates       |</span>
+<span class="sd">	| Uniformly generate        | defining the boundary, in the form of                 |</span>
+<span class="sd">	| locations that are close  | [[lat, lon], [lat, lon], ... , [lat, lon]]            |</span>
+<span class="sd">	| to the road (within a     +-------------------------------------------------------+</span>
+<span class="sd">	| certain range). If a      | &#39;distToRoad&#39;: The maximum distance between the        |</span>
+<span class="sd">	| location is close to      | generated location and its nearest road.              |</span>
+<span class="sd">	| multiple roads (e.g.,     |                                                       |</span>
+<span class="sd">	| the location is at the    |                                                       |</span>
+<span class="sd">	| corner of two roads), the |                                                       |</span>
+<span class="sd">	| probability of it getting |                                                       |</span>
+<span class="sd">	| chosen will not increase. |                                                       |</span>
+<span class="sd">	+---------------------------+-------------------------------------------------------+</span>
 
 <span class="sd">	Examples</span>
 <span class="sd">	--------</span>
 <span class="sd">	First import veroviz and check if it is the latest version:</span>
-<span class="sd">	    &gt;&gt;&gt; import veroviz as vrv</span>
-<span class="sd">	    &gt;&gt;&gt; vrv.checkVersion()</span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
 
 <span class="sd">	This first example will generate 20 nodes, normally distributed. The distribution is centered at lat 42.30, lon 78.00. The distribution has a standard deviation of 1000 meters.</span>
-<span class="sd">	    &gt;&gt;&gt; myNodes = vrv.generateNodes(</span>
-<span class="sd">	    ...     numNodes        = 20,</span>
-<span class="sd">	    ...     nodeType        = &#39;depot&#39;, </span>
-<span class="sd">	    ...     nodeDistrib     = &#39;normal&#39;, </span>
-<span class="sd">	    ...     nodeDistribArgs = {</span>
-<span class="sd">	    ...         &#39;center&#39; : [42.30, -78.00], </span>
-<span class="sd">	    ...         &#39;stdDev&#39; : 1000</span>
-<span class="sd">	    ...     })</span>
-<span class="sd">	    &gt;&gt;&gt; myNodes</span>
+<span class="sd">		&gt;&gt;&gt; myNodes = vrv.generateNodes(</span>
+<span class="sd">		...     numNodes        = 20,</span>
+<span class="sd">		...     nodeType        = &#39;depot&#39;, </span>
+<span class="sd">		...     nodeDistrib     = &#39;normal&#39;, </span>
+<span class="sd">		...     nodeDistribArgs = {</span>
+<span class="sd">		...         &#39;center&#39; : [42.30, -78.00], </span>
+<span class="sd">		...         &#39;stdDev&#39; : 1000</span>
+<span class="sd">		...     })</span>
+<span class="sd">		&gt;&gt;&gt; myNodes</span>
 
 <span class="sd">	View the center point, 1 std dev, 3 std devs, and resulting nodes on a Leaflet map:</span>
-<span class="sd">	    &gt;&gt;&gt; myMap = vrv.addLeafletMarker(center      = [42.30, -78.00], </span>
-<span class="sd">	    ...                              fillOpacity = 1)</span>
-<span class="sd">	    &gt;&gt;&gt; myMap = vrv.addLeafletCircle(mapObject = myMap, </span>
-<span class="sd">	    ...                              center    = [42.30, -78.00], </span>
-<span class="sd">	    ...                              radius    = 1000, </span>
-<span class="sd">	    ...                              fillColor = &#39;green&#39;)</span>
-<span class="sd">	    &gt;&gt;&gt; myMap = vrv.addLeafletCircle(mapObject = myMap, </span>
-<span class="sd">	    ...                              center    = [42.30, -78.00], </span>
-<span class="sd">	    ...                              radius    = 3*1000)</span>
-<span class="sd">	    &gt;&gt;&gt; myMap = vrv.createLeaflet(mapObject = myMap, </span>
-<span class="sd">	    ...                           nodes     = myNodes)</span>
-<span class="sd">	    &gt;&gt;&gt; myMap</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletMarker(center      = [42.30, -78.00], </span>
+<span class="sd">		...                              fillOpacity = 1)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletCircle(mapObject = myMap, </span>
+<span class="sd">		...                              center    = [42.30, -78.00], </span>
+<span class="sd">		...                              radius    = 1000, </span>
+<span class="sd">		...                              fillColor = &#39;green&#39;)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.addLeafletCircle(mapObject = myMap, </span>
+<span class="sd">		...                              center    = [42.30, -78.00], </span>
+<span class="sd">		...                              radius    = 3*1000)</span>
+<span class="sd">		&gt;&gt;&gt; myMap = vrv.createLeaflet(mapObject = myMap, </span>
+<span class="sd">		...                           nodes     = myNodes)</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
 
 <span class="sd">	The following examples require a bounding region. For example:</span>
-<span class="sd">	    &gt;&gt;&gt; bounding = [</span>
-<span class="sd">	    ...     [42.98355351219673, -78.90518188476564], </span>
-<span class="sd">	    ...     [43.04731443361136, -78.83857727050783], </span>
-<span class="sd">	    ...     [43.02221961002041, -78.7108612060547], </span>
-<span class="sd">	    ...     [42.92777124914475, -78.68957519531251], </span>
-<span class="sd">	    ...     [42.866402688514626, -78.75343322753908], </span>
-<span class="sd">	    ...     [42.874957707517865, -78.82415771484375], </span>
-<span class="sd">	    ...     [42.90111863978987, -78.86878967285158], </span>
-<span class="sd">	    ...     [42.92224052343343, -78.8921356201172]]</span>
+<span class="sd">		&gt;&gt;&gt; bounding = [</span>
+<span class="sd">		...     [42.98355351219673, -78.90518188476564], </span>
+<span class="sd">		...     [43.04731443361136, -78.83857727050783], </span>
+<span class="sd">		...     [43.02221961002041, -78.7108612060547], </span>
+<span class="sd">		...     [42.92777124914475, -78.68957519531251], </span>
+<span class="sd">		...     [42.866402688514626, -78.75343322753908], </span>
+<span class="sd">		...     [42.874957707517865, -78.82415771484375], </span>
+<span class="sd">		...     [42.90111863978987, -78.86878967285158], </span>
+<span class="sd">		...     [42.92224052343343, -78.8921356201172]]</span>
 
 <span class="sd">	The second example will give us 20 nodes, normally-distributed, centered at [42.30, 78.00], with a standard deviation of 2000 meters about the center.  However, the nodes must also fall within the bounding region.</span>
-<span class="sd">	    &gt;&gt;&gt; myNodes2 = vrv.generateNodes(</span>
-<span class="sd">	    ...     numNodes        = 20,</span>
-<span class="sd">	    ...     nodeType        = &#39;depot&#39;, </span>
-<span class="sd">	    ...     nodeDistrib     = &#39;normal&#39;, </span>
-<span class="sd">	    ...     nodeDistribArgs = {</span>
-<span class="sd">	    ...         &#39;center&#39; : [42.90, -78.80], </span>
-<span class="sd">	    ...         &#39;stdDev&#39; : 2000,</span>
-<span class="sd">	    ...         &#39;boundingRegion&#39; : bounding</span>
-<span class="sd">	    ...     })</span>
-<span class="sd">	    &gt;&gt;&gt; myNodes2</span>
+<span class="sd">		&gt;&gt;&gt; myNodes2 = vrv.generateNodes(</span>
+<span class="sd">		...     numNodes        = 20,</span>
+<span class="sd">		...     nodeType        = &#39;depot&#39;, </span>
+<span class="sd">		...     nodeDistrib     = &#39;normal&#39;, </span>
+<span class="sd">		...     nodeDistribArgs = {</span>
+<span class="sd">		...         &#39;center&#39; : [42.90, -78.80], </span>
+<span class="sd">		...         &#39;stdDev&#39; : 2000,</span>
+<span class="sd">		...         &#39;boundingRegion&#39; : bounding</span>
+<span class="sd">		...     })</span>
+<span class="sd">		&gt;&gt;&gt; myNodes2</span>
 
 <span class="sd">	View the center point, 1 std dev, 3 std devs, bounding region, and resulting nodes on a Leaflet map:</span>
 <span class="sd">		&gt;&gt;&gt; myMap2 = vrv.addLeafletMarker(center      = [42.90, -78.80], </span>
@@ -228,13 +242,13 @@
 <span class="sd">		&gt;&gt;&gt; myMap2</span>
 
 <span class="sd">	The third example will generate 20 nodes uniformly distributed in a given bounding region:</span>
-<span class="sd">	    &gt;&gt;&gt; myNodes3 = vrv.generateNodes(</span>
-<span class="sd">	    ...     numNodes        = 20, </span>
-<span class="sd">	    ...     nodeDistrib     = &#39;uniformBB&#39;, </span>
-<span class="sd">	    ...     nodeDistribArgs = {</span>
-<span class="sd">	    ...         &#39;boundingRegion&#39; : bounding</span>
-<span class="sd">	    ...     })</span>
-<span class="sd">	    &gt;&gt;&gt; myNodes3</span>
+<span class="sd">		&gt;&gt;&gt; myNodes3 = vrv.generateNodes(</span>
+<span class="sd">		...     numNodes        = 20, </span>
+<span class="sd">		...     nodeDistrib     = &#39;uniformBB&#39;, </span>
+<span class="sd">		...     nodeDistribArgs = {</span>
+<span class="sd">		...         &#39;boundingRegion&#39; : bounding</span>
+<span class="sd">		...     })</span>
+<span class="sd">		&gt;&gt;&gt; myNodes3</span>
 
 <span class="sd">	View the bounding region and generated nodes on a Leaflet map:</span>
 <span class="sd">		&gt;&gt;&gt; myMap3 = vrv.createLeaflet(nodes          = myNodes3,</span>
@@ -255,16 +269,17 @@
 <span class="sd">		...         &#39;boundingRegion&#39; : bounding</span>
 <span class="sd">		...     },</span>
 <span class="sd">		...     snapToRoad        = True,</span>
+<span class="sd">		...     popupText         = &#39;These nodes are used for demo&#39;,</span>
 <span class="sd">		...     leafletIconPrefix = &#39;fa&#39;,</span>
 <span class="sd">		...     leafletIconType   = &#39;star&#39;,</span>
 <span class="sd">		...     leafletColor      = &#39;darkred&#39;,</span>
-<span class="sd">		...     leafletIconText   = &#39;These nodes are used for demo&#39;,</span>
+<span class="sd">		...     leafletIconText   = None,</span>
 <span class="sd">		...     cesiumIconType    = &#39;pin&#39;,</span>
-<span class="sd">		...     cesiumColor       = &#39;Cesium.Color.DARKRED&#39;,</span>
+<span class="sd">		...     cesiumColor       = &#39;darkred&#39;,</span>
 <span class="sd">		...     cesiumIconText    = None,</span>
 <span class="sd">		...     dataProvider      = &#39;OSRM-online&#39;,</span>
 <span class="sd">		...     dataProviderArgs  = None)</span>
-<span class="sd">		&gt;&gt;&gt; myNodes4	    </span>
+<span class="sd">		&gt;&gt;&gt; myNodes4		</span>
 
 <span class="sd">	View the bounding region and generated nodes on a Leaflet map:</span>
 <span class="sd">		&gt;&gt;&gt; myMap4 = vrv.createLeaflet(nodes          = myNodes4,</span>
@@ -273,7 +288,7 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="c1"># validation</span>
-	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGenerateNodes</span><span class="p">(</span><span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">numNodes</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">nodeDistrib</span><span class="p">,</span> <span class="n">nodeDistribArgs</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valGenerateNodes</span><span class="p">(</span><span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">numNodes</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">nodeDistrib</span><span class="p">,</span> <span class="n">nodeDistribArgs</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">popupText</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
 	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
 		<span class="k">return</span>
@@ -305,7 +320,7 @@
 		<span class="n">locs</span> <span class="o">=</span> <span class="n">_genNodesRoadBased</span><span class="p">(</span><span class="n">numNodes</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="p">,</span> <span class="n">distToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
 
 	<span class="c1"># create nodes from given lats/lons</span>
-	<span class="n">nodes</span> <span class="o">=</span> <span class="n">privCreateNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">)</span>
+	<span class="n">nodes</span> <span class="o">=</span> <span class="n">privCreateNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">,</span> <span class="n">popupText</span><span class="p">,</span>  <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">nodes</span></div>
 
 <span class="k">def</span> <span class="nf">_genNodesUniformBounded</span><span class="p">(</span><span class="n">numNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -456,10 +471,10 @@
 		
 	<span class="k">return</span> <span class="n">locs</span>
 
-<span class="k">def</span> <span class="nf">_genNodesRoadBased</span><span class="p">(</span><span class="n">numNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distToRoad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">APIkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">databaseName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_genNodesRoadBased</span><span class="p">(</span><span class="n">numNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distToRoad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Generate randomized node using Uniform distribution within a bounding area and close to roads</span>
-
+<span class="sd">	</span>
 <span class="sd">	Note</span>
 <span class="sd">	----</span>
 <span class="sd">	This function is an approximation, the error is getting larger when the location is closer to poles</span>
@@ -472,12 +487,10 @@
 <span class="sd">		A defined polygon, nodes are generated within this area</span>
 <span class="sd">	distToRoad: float, Required</span>
 <span class="sd">		The maximun distance to road for generated nodes.</span>
-<span class="sd">	dataProvider: string, Conditional, See :ref:`Dataprovider`</span>
-<span class="sd">		Specifies the data source to be used for generating nodes on a road network.  </span>
-<span class="sd">	APIkey: string, Conditional, See :ref:`Dataprovider`</span>
-<span class="sd">		Some data providers require an API key (which you&#39;ll need to register for).</span>
-<span class="sd">	databaseName: string, Conditional, See :ref:`Dataprovider`</span>
-<span class="sd">		If you are hosting a data provider on your local machine (e.g., pgRouting), you&#39;ll need to specify the name of the local database. </span>
+<span class="sd">	dataProvider: string, Conditional, default as None</span>
+<span class="sd">		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.</span>
+<span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
+<span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
 <span class="sd">	</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
@@ -487,18 +500,33 @@
 
 	<span class="c1"># Initialize</span>
 	<span class="n">locs</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">holes</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">goodLocs</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="c1"># Generate nodes, if it is not close enough, discard and regenerate</span>
 	<span class="k">while</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">numNodes</span><span class="p">):</span>
 		<span class="n">newLocs</span> <span class="o">=</span> <span class="n">_genNodesUniformBounded</span><span class="p">(</span><span class="n">numNodes</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">),</span> <span class="n">boundingRegion</span><span class="p">)</span>
-		<span class="n">snapLocs</span> <span class="o">=</span> <span class="n">privGetSnapLocBatch</span><span class="p">(</span><span class="n">newLocs</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">APIkey</span><span class="p">,</span> <span class="n">databaseName</span><span class="p">)</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snapLocs</span><span class="p">)):</span>
-			<span class="k">if</span> <span class="p">(</span><span class="n">geoDistance2D</span><span class="p">(</span><span class="n">newLocs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">snapLocs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">distToRoad</span><span class="p">):</span>
-				<span class="n">locs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newLocs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+		<span class="n">goodLocs</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">newLocs</span><span class="p">)):</span>
+			<span class="n">goodFlag</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">holes</span><span class="p">)):</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">geoDistance2D</span><span class="p">(</span><span class="n">newLocs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">holes</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">holes</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]):</span>
+					<span class="n">goodFlag</span> <span class="o">=</span> <span class="kc">False</span>
+					<span class="k">break</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">goodFlag</span><span class="p">):</span>
+				<span class="n">goodLocs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newLocs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">goodLocs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="n">snapLocs</span> <span class="o">=</span> <span class="n">privGetSnapLocBatch</span><span class="p">(</span><span class="n">goodLocs</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snapLocs</span><span class="p">)):</span>
+				<span class="n">dist</span> <span class="o">=</span> <span class="n">geoDistance2D</span><span class="p">(</span><span class="n">goodLocs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">snapLocs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">dist</span> <span class="o">&gt;</span> <span class="n">distToRoad</span><span class="p">):</span>
+					<span class="n">holes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">goodLocs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dist</span> <span class="o">-</span> <span class="n">distToRoad</span><span class="p">])</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">locs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">goodLocs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 	
 	<span class="k">return</span> <span class="n">locs</span>
 
-<div class="viewcode-block" id="createNodesFromLocs"><a class="viewcode-back" href="../../veroviz.generateNodes.html#veroviz.generateNodes.createNodesFromLocs">[docs]</a><span class="k">def</span> <span class="nf">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startNode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incrementName</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">incrementStart</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONPREFIX</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONTYPE</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONCOLOR</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONTYPE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONCOLOR</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="createNodesFromLocs"><a class="viewcode-back" href="../../veroviz.generateNodes.html#veroviz.generateNodes.createNodesFromLocs">[docs]</a><span class="k">def</span> <span class="nf">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initNodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startNode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incrementName</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">incrementStart</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONPREFIX</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONTYPE</span><span class="p">,</span> <span class="n">leafletColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_LEAFLETICONCOLOR</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONTYPE</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="o">=</span><span class="n">VRV_DEFAULT_CESIUMICONCOLOR</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function generates a &quot;nodes&quot; dataframe from a given collection of [lat, lon], or [lat, lon, alt], coordinates.</span>
@@ -525,17 +553,19 @@
 <span class="sd">		Specifies the data source to be used for generating nodes on a road network. See :ref:`Data Providers` for options and requirements.</span>
 <span class="sd">	dataProviderArgs: dictionary, Conditional, default as None</span>
 <span class="sd">		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.</span>
+<span class="sd">	popupText: string, Optional, default as None</span>
+<span class="sd">		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the `popupText` column of the nodes dataframe.</span>
 <span class="sd">	leafletIconPrefix: string, Optional, default as &quot;glyphicon&quot;</span>
-<span class="sd">		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of two collections: &quot;glyphicon&quot; or &quot;fa&quot;.  See :ref:`Leaflet Style` for more information.</span>
+<span class="sd">		There are a large number of Leaflet icons available. The `leafletIconPrefix` identifies one of three collections: &quot;glyphicon&quot;, &quot;fa&quot;, or &quot;custom&quot;.  See :ref:`Leaflet Style` for more information.</span>
 <span class="sd">	leafletIconType: string, Optional, default as &quot;info-sign&quot;</span>
 <span class="sd">		Specifies the particular icon to be used for all generated nodes.  The list of available options depends on the choice of `leafletIconType`. See :ref:`Leaflet Style` for available options.</span>
 <span class="sd">	leafletColor: string, Optional, default as &quot;blue&quot;</span>
 <span class="sd">		Specifies the icon color of the generated nodes when displayed in Leaflet. See :ref:`Leaflet Style` for a list of available colors.</span>
 <span class="sd">	leafletIconText: string, Optional, default as None</span>
-<span class="sd">		Specifies the text in label that will be displayed when the node is clicked on a Leaflet map.  This parameter allows for including more information if the node name itself is not sufficiently descriptive.</span>
+<span class="sd">		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `leafletIconPrefix` is &#39;custom&#39; and `leafletIconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.</span>
 <span class="sd">	cesiumIconType: string, Optional, default as &quot;pin&quot;</span>
 <span class="sd">		&#39;pin&#39; is current the only option. See :ref:`Cesium Style`.</span>
-<span class="sd">	cesiumColor: string, Optional, default as &quot;Cesium.Color.BLUE&quot;</span>
+<span class="sd">	cesiumColor: string, Optional, default as &quot;blue&quot;</span>
 <span class="sd">		The color of the generated nodes when displayed in Cesium.  See :ref:`Cesium Style` for all available color options.</span>
 <span class="sd">	cesiumIconText: string, Optional, default as None</span>
 <span class="sd">		Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the `id` value. </span>
@@ -551,10 +581,10 @@
 <span class="sd">	--------</span>
 
 <span class="sd">	Import veroviz and check if it is the latest version:</span>
-<span class="sd">	    &gt;&gt;&gt; import veroviz as vrv</span>
-<span class="sd">	    &gt;&gt;&gt; vrv.checkVersion()</span>
-<span class="sd">	    </span>
-<span class="sd">	    </span>
+<span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
+<span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
+<span class="sd">		</span>
+<span class="sd">		</span>
 <span class="sd">	Generate nodes from a list of [lat, lon] pairs (no altitude specified):</span>
 <span class="sd">		&gt;&gt;&gt; nodes2D = vrv.createNodesFromLocs(</span>
 <span class="sd">		...     locs=[</span>
@@ -586,12 +616,13 @@
 <span class="sd">		...     snapToRoad        = False, </span>
 <span class="sd">		...     dataProvider      = None, </span>
 <span class="sd">		...     dataProviderArgs  = None,</span>
+<span class="sd">		...     popupText         = None,</span>
 <span class="sd">		...     leafletIconPrefix = &#39;fa&#39;, </span>
 <span class="sd">		...     leafletIconType   = &#39;user&#39;, </span>
 <span class="sd">		...     leafletColor      = &#39;lightgreen&#39;, </span>
 <span class="sd">		...     leafletIconText   = None, </span>
 <span class="sd">		...     cesiumIconType    = &#39;pin&#39;, </span>
-<span class="sd">		...     cesiumColor       = &#39;Cesium.Color.LIGHTGREEN&#39;, </span>
+<span class="sd">		...     cesiumColor       = &#39;lightgreen&#39;, </span>
 <span class="sd">		...     cesiumIconText    = None)</span>
 <span class="sd">		&gt;&gt;&gt; myNodes</span>
 
@@ -600,14 +631,14 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="c1"># validation</span>
-	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valCreateNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">)</span>
+	<span class="p">[</span><span class="n">valFlag</span><span class="p">,</span> <span class="n">errorMsg</span><span class="p">,</span> <span class="n">warningMsg</span><span class="p">]</span> <span class="o">=</span> <span class="n">valCreateNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">,</span> <span class="n">popupText</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">)</span>
 	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
 		<span class="k">return</span>
 	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
-	<span class="n">nodes</span> <span class="o">=</span> <span class="n">privCreateNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">)</span>
+	<span class="n">nodes</span> <span class="o">=</span> <span class="n">privCreateNodesFromLocs</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">initNodes</span><span class="p">,</span> <span class="n">nodeType</span><span class="p">,</span> <span class="n">nodeName</span><span class="p">,</span> <span class="n">startNode</span><span class="p">,</span> <span class="n">incrementName</span><span class="p">,</span> <span class="n">incrementStart</span><span class="p">,</span> <span class="n">snapToRoad</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">,</span> <span class="n">popupText</span><span class="p">,</span> <span class="n">leafletIconPrefix</span><span class="p">,</span> <span class="n">leafletIconType</span><span class="p">,</span> <span class="n">leafletColor</span><span class="p">,</span> <span class="n">leafletIconText</span><span class="p">,</span> <span class="n">cesiumIconType</span><span class="p">,</span> <span class="n">cesiumColor</span><span class="p">,</span> <span class="n">cesiumIconText</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">nodes</span></div>
 </pre></div>
@@ -626,7 +657,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.3.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>

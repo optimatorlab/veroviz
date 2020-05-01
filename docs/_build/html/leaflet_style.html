@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Leaflet Style &#8212; veroviz 0.3.1 documentation</title>
+    <title>Leaflet Style &#8212; veroviz 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -47,6 +47,7 @@
   <ul>
 <li><a class="reference internal" href="#">Leaflet Style</a><ul>
 <li><a class="reference internal" href="#leaflet-map-background-map-tiles">Leaflet Map Background (Map Tiles)</a></li>
+<li><a class="reference internal" href="#leaflet-weather-map-overlays">Leaflet Weather Map Overlays</a></li>
 <li><a class="reference internal" href="#leaflet-colors">Leaflet Colors</a></li>
 <li><a class="reference internal" href="#leaflet-prefix-and-leaflet-type">Leaflet Prefix and Leaflet Type</a></li>
 <li><a class="reference internal" href="#leaflet-line-styles">Leaflet Line Styles</a></li>
@@ -144,6 +145,38 @@
 </tbody>
 </table>
 </div>
+<div class="section" id="leaflet-weather-map-overlays">
+<h2>Leaflet Weather Map Overlays<a class="headerlink" href="#leaflet-weather-map-overlays" title="Permalink to this headline">¶</a></h2>
+<p>Starting with version 0.4.0, <em>VeRoViz</em> also provides several weather condition “overlays” for Leaflet maps.  These options are enabled via the <cite>mapType</cite> field of the <cite>addLeafletWeather()</cite> function.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><cite>mapType</cite> options</p></th>
+<th class="head"><p>Preview</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>‘clouds’</p></td>
+<td><p><a class="reference internal" href="_images/weather_clouds.png"><img alt="clouds" src="_images/weather_clouds.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘precip’</p></td>
+<td><p><a class="reference internal" href="_images/weather_precip.png"><img alt="precip" src="_images/weather_precip.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘pressure’</p></td>
+<td><p><a class="reference internal" href="_images/weather_pressure.png"><img alt="pressure" src="_images/weather_pressure.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>‘temp’</p></td>
+<td><p><a class="reference internal" href="_images/weather_temp.png"><img alt="temp" src="_images/weather_temp.png" style="height: 200px;" /></a></p></td>
+</tr>
+<tr class="row-even"><td><p>‘wind’</p></td>
+<td><p><a class="reference internal" href="_images/weather_wind.png"><img alt="wind" src="_images/weather_wind.png" style="height: 200px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="leaflet-colors">
 <h2>Leaflet Colors<a class="headerlink" href="#leaflet-colors" title="Permalink to this headline">¶</a></h2>
 <p>Leaflet supports the following colors: ‘beige’, ‘black’, ‘blue’, ‘cadetblue’, ‘darkblue’, ‘darkgreen’, ‘gray’,
@@ -157,8 +190,8 @@
 for both of the icon prefixes are shown below:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 67%" />
+<col style="width: 32%" />
+<col style="width: 68%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><cite>iconPrefix</cite> options</p></th>
@@ -177,6 +210,16 @@ for both of the icon prefixes are shown below:</p>
 ‘shopping-bag’, ‘shopping-basket’,
 ‘shopping-cart’, ‘star’, ‘subway’, ‘taxi’,
 ‘truck’, ‘university’, ‘user’, ‘users’, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p>‘custom’</p></td>
+<td><p>Specify a string with three fields separated
+by a dash:  &lt;circle radius in pixels&gt;-&lt;font
+color&gt;-&lt;font size&gt;.
+For example, ‘10-white-12’ will produce a
+circle icon of radius 10 pixels, with white
+font of size 12 point.  The background color
+of the circle icon is specified by the
+<cite>iconColor</cite> argument.</p></td>
 </tr>
 </tbody>
 </table>
@@ -246,7 +289,7 @@ for both of the icon prefixes are shown below:</p>
         <li class="right" >
           <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.3.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -162,45 +162,45 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	Examples
 	--------
 	First, import veroviz and check the latest version
-	    >>> import veroviz as vrv
-	    >>> vrv.checkVersion()
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 
 	Now, generate some example nodes inside a bounding region
-	    >>> bounding = [
-	    ...     [42.98355351219673, -78.90518188476564], 
-	    ...     [43.04731443361136, -78.83857727050783], 
-	    ...     [43.02221961002041, -78.7108612060547], 
-	    ...     [42.92777124914475, -78.68957519531251], 
-	    ...     [42.866402688514626, -78.75343322753908], 
-	    ...     [42.874957707517865, -78.82415771484375], 
-	    ...     [42.90111863978987, -78.86878967285158], 
-	    ...     [42.92224052343343, -78.8921356201172]]
+		>>> bounding = [
+		...     [42.98355351219673, -78.90518188476564], 
+		...     [43.04731443361136, -78.83857727050783], 
+		...     [43.02221961002041, -78.7108612060547], 
+		...     [42.92777124914475, -78.68957519531251], 
+		...     [42.866402688514626, -78.75343322753908], 
+		...     [42.874957707517865, -78.82415771484375], 
+		...     [42.90111863978987, -78.86878967285158], 
+		...     [42.92224052343343, -78.8921356201172]]
 
-	    >>> exampleNodes = vrv.generateNodes(
-	    ...     nodeType         = 'customer', 
-	    ...     nodeDistrib      = 'normalBB', 
-	    ...     nodeDistribArgs  = {
-	    ...         'center'         : [42.90, -78.80], 
-	    ...         'stdDev'         : 10000,
-	    ...         'boundingRegion' : bounding
-	    ...     },
-	    ...     numNodes         = 3,
-	    ...     leafletColor     = 'orange')
+		>>> exampleNodes = vrv.generateNodes(
+		...     nodeType         = 'customer', 
+		...     nodeDistrib      = 'normalBB', 
+		...     nodeDistribArgs  = {
+		...         'center'         : [42.90, -78.80], 
+		...         'stdDev'         : 10000,
+		...         'boundingRegion' : bounding
+		...     },
+		...     numNodes         = 3,
+		...     leafletColor     = 'orange')
 
 	The first example is using all default setting for generating a set of given nodes in Nodes dataframe.
-	    >>> vrv.createLeaflet(nodes=exampleNodes)
+		>>> vrv.createLeaflet(nodes=exampleNodes)
 
 	Define some arcs based on the nodes we just generated:
-	    >>> exampleArcs = vrv.createArcsFromNodeSeq(
-	    ...     nodes   = exampleNodes,
-	    ...     nodeSeq = [1, 2, 3])
-	    >>> exampleArcs
+		>>> exampleArcs = vrv.createArcsFromNodeSeq(
+		...     nodes   = exampleNodes,
+		...     nodeSeq = [1, 2, 3])
+		>>> exampleArcs
 
 	Display the nodes, arcs, and bounding region simultaneously:
-	    >>> vrv.createLeaflet(
-	    ...     nodes          = exampleNodes,
-	    ...     arcs           = exampleArcs,
-	    ...     boundingRegion = bounding)
+		>>> vrv.createLeaflet(
+		...     nodes          = exampleNodes,
+		...     arcs           = exampleArcs,
+		...     boundingRegion = bounding)
 
 	The createLeaflet function provides options to override styles that were defined in the input nodes and/or arcs dataframes.  Note:  These overrides will not change the contents in the dataframes.
 		>>> nodesAndArcsMap = vrv.createLeaflet(
@@ -583,7 +583,7 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
 			if (newArcCurveType == 'greatcircle'):
 				curvePoints = _getCurveGreatCircle(newOrigin, newDestine)
-				for j in range(1, len(curvePoints)):		      
+				for j in range(1, len(curvePoints)):			  
 					newPath = newPath.append({
 						'odID' : i,
 						'startLat' : curvePoints[j - 1][0],
@@ -599,7 +599,7 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						}, ignore_index=True)
 			elif (newArcCurveType == 'bezier'):
 				curvePoints = _getCurveBezier(newOrigin, newDestine, newArcCurvature)
-				for j in range(1, len(curvePoints)):		      
+				for j in range(1, len(curvePoints)):			  
 					newPath = newPath.append({
 						'odID' : i,
 						'startLat' : curvePoints[j - 1][0],

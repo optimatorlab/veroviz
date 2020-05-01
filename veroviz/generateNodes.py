@@ -117,56 +117,56 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	Examples
 	--------
 	First import veroviz and check if it is the latest version:
-	    >>> import veroviz as vrv
-	    >>> vrv.checkVersion()
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
 
 	This first example will generate 20 nodes, normally distributed. The distribution is centered at lat 42.30, lon 78.00. The distribution has a standard deviation of 1000 meters.
-	    >>> myNodes = vrv.generateNodes(
-	    ...     numNodes        = 20,
-	    ...     nodeType        = 'depot', 
-	    ...     nodeDistrib     = 'normal', 
-	    ...     nodeDistribArgs = {
-	    ...         'center' : [42.30, -78.00], 
-	    ...         'stdDev' : 1000
-	    ...     })
-	    >>> myNodes
+		>>> myNodes = vrv.generateNodes(
+		...     numNodes        = 20,
+		...     nodeType        = 'depot', 
+		...     nodeDistrib     = 'normal', 
+		...     nodeDistribArgs = {
+		...         'center' : [42.30, -78.00], 
+		...         'stdDev' : 1000
+		...     })
+		>>> myNodes
 
 	View the center point, 1 std dev, 3 std devs, and resulting nodes on a Leaflet map:
-	    >>> myMap = vrv.addLeafletMarker(center      = [42.30, -78.00], 
-	    ...                              fillOpacity = 1)
-	    >>> myMap = vrv.addLeafletCircle(mapObject = myMap, 
-	    ...                              center    = [42.30, -78.00], 
-	    ...                              radius    = 1000, 
-	    ...                              fillColor = 'green')
-	    >>> myMap = vrv.addLeafletCircle(mapObject = myMap, 
-	    ...                              center    = [42.30, -78.00], 
-	    ...                              radius    = 3*1000)
-	    >>> myMap = vrv.createLeaflet(mapObject = myMap, 
-	    ...                           nodes     = myNodes)
-	    >>> myMap
+		>>> myMap = vrv.addLeafletMarker(center      = [42.30, -78.00], 
+		...                              fillOpacity = 1)
+		>>> myMap = vrv.addLeafletCircle(mapObject = myMap, 
+		...                              center    = [42.30, -78.00], 
+		...                              radius    = 1000, 
+		...                              fillColor = 'green')
+		>>> myMap = vrv.addLeafletCircle(mapObject = myMap, 
+		...                              center    = [42.30, -78.00], 
+		...                              radius    = 3*1000)
+		>>> myMap = vrv.createLeaflet(mapObject = myMap, 
+		...                           nodes     = myNodes)
+		>>> myMap
 
 	The following examples require a bounding region. For example:
-	    >>> bounding = [
-	    ...     [42.98355351219673, -78.90518188476564], 
-	    ...     [43.04731443361136, -78.83857727050783], 
-	    ...     [43.02221961002041, -78.7108612060547], 
-	    ...     [42.92777124914475, -78.68957519531251], 
-	    ...     [42.866402688514626, -78.75343322753908], 
-	    ...     [42.874957707517865, -78.82415771484375], 
-	    ...     [42.90111863978987, -78.86878967285158], 
-	    ...     [42.92224052343343, -78.8921356201172]]
+		>>> bounding = [
+		...     [42.98355351219673, -78.90518188476564], 
+		...     [43.04731443361136, -78.83857727050783], 
+		...     [43.02221961002041, -78.7108612060547], 
+		...     [42.92777124914475, -78.68957519531251], 
+		...     [42.866402688514626, -78.75343322753908], 
+		...     [42.874957707517865, -78.82415771484375], 
+		...     [42.90111863978987, -78.86878967285158], 
+		...     [42.92224052343343, -78.8921356201172]]
 
 	The second example will give us 20 nodes, normally-distributed, centered at [42.30, 78.00], with a standard deviation of 2000 meters about the center.  However, the nodes must also fall within the bounding region.
-	    >>> myNodes2 = vrv.generateNodes(
-	    ...     numNodes        = 20,
-	    ...     nodeType        = 'depot', 
-	    ...     nodeDistrib     = 'normal', 
-	    ...     nodeDistribArgs = {
-	    ...         'center' : [42.90, -78.80], 
-	    ...         'stdDev' : 2000,
-	    ...         'boundingRegion' : bounding
-	    ...     })
-	    >>> myNodes2
+		>>> myNodes2 = vrv.generateNodes(
+		...     numNodes        = 20,
+		...     nodeType        = 'depot', 
+		...     nodeDistrib     = 'normal', 
+		...     nodeDistribArgs = {
+		...         'center' : [42.90, -78.80], 
+		...         'stdDev' : 2000,
+		...         'boundingRegion' : bounding
+		...     })
+		>>> myNodes2
 
 	View the center point, 1 std dev, 3 std devs, bounding region, and resulting nodes on a Leaflet map:
 		>>> myMap2 = vrv.addLeafletMarker(center      = [42.90, -78.80], 
@@ -184,13 +184,13 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		>>> myMap2
 
 	The third example will generate 20 nodes uniformly distributed in a given bounding region:
-	    >>> myNodes3 = vrv.generateNodes(
-	    ...     numNodes        = 20, 
-	    ...     nodeDistrib     = 'uniformBB', 
-	    ...     nodeDistribArgs = {
-	    ...         'boundingRegion' : bounding
-	    ...     })
-	    >>> myNodes3
+		>>> myNodes3 = vrv.generateNodes(
+		...     numNodes        = 20, 
+		...     nodeDistrib     = 'uniformBB', 
+		...     nodeDistribArgs = {
+		...         'boundingRegion' : bounding
+		...     })
+		>>> myNodes3
 
 	View the bounding region and generated nodes on a Leaflet map:
 		>>> myMap3 = vrv.createLeaflet(nodes          = myNodes3,
@@ -221,7 +221,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 		...     cesiumIconText    = None,
 		...     dataProvider      = 'OSRM-online',
 		...     dataProviderArgs  = None)
-		>>> myNodes4	    
+		>>> myNodes4		
 
 	View the bounding region and generated nodes on a Leaflet map:
 		>>> myMap4 = vrv.createLeaflet(nodes          = myNodes4,
@@ -523,10 +523,10 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 	--------
 
 	Import veroviz and check if it is the latest version:
-	    >>> import veroviz as vrv
-	    >>> vrv.checkVersion()
-	    
-	    
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+		
+		
 	Generate nodes from a list of [lat, lon] pairs (no altitude specified):
 		>>> nodes2D = vrv.createNodesFromLocs(
 		...     locs=[
