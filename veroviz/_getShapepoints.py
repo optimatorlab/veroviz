@@ -4,25 +4,32 @@ from veroviz._queryPgRouting import pgrGetShapepointsTimeDist
 from veroviz._queryMapQuest import mqGetShapepointsTimeDist
 from veroviz._queryOSRM import osrmGetShapepointsTimeDist
 from veroviz._queryORS import orsGetShapepointsTimeDist
+from veroviz._queryORSlocal import orsLocalGetShapepointsTimeDist
 
 from veroviz._internal import distributeTimeDist
 from veroviz._internal import locs2Dict
 from veroviz._internal import loc2Dict
-from veroviz._internal import replaceBackslashToSlash
+from veroviz._internal import replaceBackslashToSlash, addHeadSlash
+from veroviz._internal import stripCesiumColor
 
 from veroviz._buildFlightProfile import buildNoLoiteringFlight
 from veroviz._buildFlightProfile import getTimeDistFromFlight
 from veroviz._buildFlightProfile import addLoiterTimeToFlight
 
 from veroviz._geometry import geoDistance2D
+# FIXME -- WAS IN LP'S CODE -- from veroviz._geometry import geoGetHeading
+# FIXME -- WAS IN LP'S CODE -- from veroviz._geometry import geoPointInDistance2D
 
 from veroviz.utilities import convertDistance
 from veroviz.utilities import initDataframe
 
-def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, dataProvider=None, dataProviderArgs=None):
+def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
+
+	# Ensure leading slash
+	modelFile = addHeadSlash(modelFile)
 
 	try:
 		dataProvider = dataProvider.lower()
@@ -35,6 +42,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 		pass
 			
 	if (startLoc != endLoc):
+		extras = {}
 		if (routeType == 'euclidean2d'):
 			[path, time, dist] = _eucGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec)
 		elif (routeType == 'manhattan'):
@@ -49,7 +57,18 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			[path, time, dist] = mqGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey)
 		elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-online'):
 			APIkey = dataProviderArgs['APIkey']
-			[path, time, dist] = orsGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey)
+			if ('requestExtras' in dataProviderArgs.keys()):
+				requestExtras = dataProviderArgs['requestExtras']
+			else:
+				requestExtras = True
+			[path, extras, time, dist] = orsGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey, requestExtras)
+		elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-local'):
+			port = dataProviderArgs['port']
+			if ('requestExtras' in dataProviderArgs.keys()):
+				requestExtras = dataProviderArgs['requestExtras']
+			else:
+				requestExtras = True
+			[path, extras, time, dist] = orsLocalGetShapepointsTimeDist(startLoc, endLoc, routeType, port, requestExtras)
 		else:
 			return
 
@@ -94,6 +113,16 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 
 		# generate assignments
 		for i in range(1, len(path)):
+			startElev   = extras[i-1]['elev'] if (i-1) in extras else None
+			endElev     = extras[i]['elev'] if i in extras else None
+			wayname     = extras[i]['wayname'] if (i-1) in extras else None
+			
+			waycategory = extras[i]['waycategory'] if (i-1) in extras else None
+			surface     = extras[i]['surface'] if (i-1) in extras else None
+			waytype     = extras[i]['waytype'] if (i-1) in extras else None
+			steepness   = extras[i]['steepness'] if (i-1) in extras else None
+			tollway     = extras[i]['tollway'] if (i-1) in extras else None
+			
 			assignments = assignments.append({
 				'odID' : odID,
 				'objectID' : objectID, 
@@ -109,19 +138,36 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 				'leafletColor' : leafletColor,
 				'leafletWeight' : leafletWeight,
 				'leafletStyle' : leafletStyle,
+				'leafletCurveType' : leafletCurveType,
+				'leafletCurvature' : leafletCurvature,
 				'useArrows' : useArrows,
 				'leafletOpacity' : leafletOpacity,
 				'modelScale' : modelScale,
 				'modelMinPxSize' : modelMinPxSize,
-				'cesiumColor' : cesiumColor,
+				'cesiumColor' : stripCesiumColor(cesiumColor),
 				'cesiumWeight' : cesiumWeight,
 				'cesiumStyle' : cesiumStyle,
-				'cesiumOpacity' : cesiumOpacity
+				'cesiumOpacity' : cesiumOpacity,
+				'ganttColor' : ganttColor, 
+				'popupText' : popupText,
+				'startElevMeters' : startElev,
+				'endElevMeters' : endElev,
+				'wayname' : wayname,
+				'waycategory' : waycategory,
+				'surface' : surface,
+				'waytype' : waytype, 
+				'steepness' : steepness,
+				'tollway' : tollway
 				}, ignore_index=True)
 	else:
 		# For maintainability, convert locs into dictionary
 		dicStartLoc = loc2Dict(startLoc)
 
+		if (dataProviderDictionary[dataProvider] == 'ors-online'):
+			[[lat, lon, elev]] = orsGetElevation([startLoc], dataProviderArgs['APIkey'])
+		else:
+			elev = None
+			
 		assignments = initDataframe('Assignments')
 		assignments = assignments.append({
 			'odID' : odID,
@@ -138,23 +184,38 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'leafletColor' : leafletColor,
 			'leafletWeight' : leafletWeight,
 			'leafletStyle' : leafletStyle,
+			'leafletCurveType' : leafletCurveType,
+			'leafletCurvature' : leafletCurvature,
 			'useArrows' : useArrows,
 			'leafletOpacity' : leafletOpacity,
 			'modelScale' : modelScale,
 			'modelMinPxSize' : modelMinPxSize,
-			'cesiumColor' : cesiumColor,
+			'cesiumColor' : stripCesiumColor(cesiumColor),
 			'cesiumWeight' : cesiumWeight,
 			'cesiumStyle' : cesiumStyle,
-			'cesiumOpacity' : cesiumOpacity
+			'cesiumOpacity' : cesiumOpacity,
+			'ganttColor' : ganttColor, 
+			'popupText' : popupText,
+			'startElevMeters' : elev,
+			'endElevMeters' : elev,
+			'wayname' : None,
+			'waycategory' : None,
+			'surface' : None,
+			'waytype' : None, 
+			'steepness' : None,
+			'tollway' : None
 			}, ignore_index=True)
 
 	return assignments
 
 
-def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorLoiter=VRV_DEFAULT_GANTTCOLORLOITER, popupText=None):
 
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
+	
+	# Ensure leading slash
+	modelFile = addHeadSlash(modelFile)
 
 	# Generate flight profile without loitering
 	flight = buildNoLoiteringFlight(routeType, startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
@@ -193,13 +254,25 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 			'leafletWeight': leafletWeight,
 			'leafletStyle': leafletStyle,
 			'leafletOpacity': leafletOpacity,
+			'leafletCurveType' : leafletCurveType,
+			'leafletCurvature' : leafletCurvature,			
 			'useArrows': useArrows,
 			'modelScale' : modelScale,
 			'modelMinPxSize' : modelMinPxSize,
-			'cesiumColor': cesiumColor,
+			'cesiumColor': stripCesiumColor(cesiumColor),
 			'cesiumWeight': cesiumWeight,
 			'cesiumStyle': cesiumStyle,
-			'cesiumOpacity': cesiumOpacity			
+			'cesiumOpacity': cesiumOpacity,
+			'ganttColor': ganttColor, 
+			'popupText': popupText,
+			'startElevMeters' : None,
+			'endElevMeters' : None,
+			'wayname' : None,
+			'waycategory' : None,
+			'surface' : None,
+			'waytype' : None, 
+			'steepness' : None,
+			'tollway' : None
 			}, ignore_index=True)
 
 		# If they need loitering, add the line of loitering
@@ -220,13 +293,25 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'leafletWeight': leafletWeight,
 				'leafletStyle': leafletStyle,
 				'leafletOpacity': leafletOpacity,
+				'leafletCurveType' : leafletCurveType,
+				'leafletCurvature' : leafletCurvature,				
 				'useArrows': useArrows,
 				'modelScale' : modelScale,
 				'modelMinPxSize' : modelMinPxSize,
-				'cesiumColor': cesiumColor,
+				'cesiumColor': stripCesiumColor(cesiumColor),
 				'cesiumWeight': cesiumWeight,
 				'cesiumStyle': cesiumStyle,
-				'cesiumOpacity': cesiumOpacity
+				'cesiumOpacity': cesiumOpacity,
+				'ganttColor': ganttColorLoiter, 
+				'popupText': popupText,
+				'startElevMeters' : None,
+				'endElevMeters' : None,
+				'wayname' : None,
+				'waycategory' : None,
+				'surface' : None,
+				'waytype' : None, 
+				'steepness' : None,
+				'tollway' : None
 				}, ignore_index=True)
 
 	return assignments
@@ -243,7 +328,7 @@ def _eucGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec):
 
 
 def _manGetShapepointsTimeDist(startLoc, endLoc, speedMPS, expDurationSec, verticalFirst=True):
-	# if verticalFirst is true, it means go north/south firt then go east/west
+	# if verticalFirst is true, it means go north/south first then go east/west
 	if verticalFirst:
 		path = [startLoc, [endLoc[0], startLoc[1]], endLoc]
 		dist = [0, geoDistance2D(startLoc, [endLoc[0], startLoc[1]]), geoDistance2D([endLoc[0], startLoc[1]], endLoc)]

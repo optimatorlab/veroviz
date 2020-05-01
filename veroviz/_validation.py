@@ -2,7 +2,7 @@ from veroviz._common import *
 from veroviz._geometry import *
 from veroviz._internal import *
 
-def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, incrementName, incrementStart, nodeDistrib, nodeDistribArgs, snapToRoad, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText, dataProvider, dataProviderArgs):
+def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, incrementName, incrementStart, nodeDistrib, nodeDistribArgs, snapToRoad, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -45,7 +45,7 @@ def valGenerateNodes(initNodes, nodeType, nodeName, numNodes, startNode, increme
 	if (valFlag and (snapToRoad or nodeDistrib == 'unifRoadBasedBB')):
 		if (dataProvider == None):
 			valFlag = False
-			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online', and 'OSRM-online'."
+			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online',  'OSRM-online', and 'ORS-local'."
 		else:
 			if (valFlag):
 				locs = []
@@ -328,7 +328,7 @@ def valGetTimeDistScalar3D(startLoc, endLoc, outputDistUnits, outputTimeUnits, t
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -396,9 +396,11 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 				leafletStyle = leafletStyle.lower()
 			except:
 				pass
-				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+									
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -410,9 +412,15 @@ def valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSe
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 
-def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorLoiter):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -490,17 +498,31 @@ def valGetShapepoints3D(odID, objectID, modelFile, startTimeSec, startLoc, endLo
 			except:
 				pass
 		
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorLoiter is not None):
+			if (ganttColorLoiter.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorLoiter)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, useArrows, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor):
+def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, nodes, leafletIconPrefix, leafletIconType, leafletIconColor, leafletIconText, arcs, leafletArcWeight, leafletArcStyle, leafletArcOpacity, leafletArcColor, arcCurveType, arcCurvature, useArrows, arrowsPerArc, boundingRegion, leafletBoundingWeight, leafletBoundingOpacity, leafletBoundingStyle, leafletBoundingColor): 
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -509,11 +531,13 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 		[valFlag, errorMsg, newWarningMsg] = _valMapBoundary(mapBoundary, zoomStart)
 		warningMsg += newWarningMsg
 
+	'''
 	if (valFlag):
 		if (nodes is None and arcs is None and boundingRegion is None):
 			valFlag = False
 			errorMsg = "Error:  Please input nodes, arcs, and/or boundingRegion.  No object can be created without at least one of these."
-
+	'''
+	
 	if (valFlag):
 		try:
 			mapBackground = mapBackground.lower()
@@ -539,9 +563,16 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 			warningMsg += newWarningMsg
 
 		if (valFlag and (leafletArcWeight is not None or leafletArcStyle is not None or leafletArcColor is not None or leafletArcOpacity is not None or useArrows is not None)):
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletArcColor, leafletArcWeight, leafletArcStyle, leafletArcOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletArcColor, leafletArcWeight, leafletArcStyle, leafletArcOpacity, useArrows, arcCurveType, arcCurvature)
 			warningMsg += newWarningMsg
 
+	# print("FIXMELP -- DONE?  Need to validate `arcCurveType` and `arcCurvature`.")
+	# print("FIXMELP -- DONE?  Need to validate `arrowsPerArc`.")
+	
+	if (valFlag and useArrows):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(arrowsPerArc, 'arrowsPerArc')
+		warningMsg += newWarningMsg
+		
 	if (valFlag and boundingRegion is not None):
 		if (valFlag):
 			[valFlag, errorMsg, newWarningMsg] = _valBoundingRegion(boundingRegion)
@@ -553,7 +584,7 @@ def valCreateLeaflet(mapObject, mapFilename, mapBackground, mapBoundary, zoomSta
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
+def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, text, fontSize, fontColor, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -580,6 +611,21 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(radius, 'radius')
 		warningMsg += newWarningMsg
 
+	if (text is not None):
+		if (valFlag):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(fontSize, 'fontSize')
+			warningMsg += newWarningMsg
+
+		if (valFlag):
+			try:
+				fontColor = fontColor.lower()
+			except:
+				pass
+
+			if (fontColor not in leafletColorList):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(fontColor)
+				warningMsg += newWarningMsg
+	
 	if (valFlag and lineWeight is not None):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(lineWeight, 'lineWeight')
 		warningMsg += newWarningMsg
@@ -624,7 +670,110 @@ def valAddLeafletCircle(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
+def valAddLeafletIcon(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, location, iconPrefix, iconType, iconColor, popupText):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valMapBoundary(mapBoundary, zoomStart)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		try:
+			mapBackground = mapBackground.lower()
+		except:
+			pass
+
+		if (mapBackground not in mapBackgroundList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapBackground` value. Valid options include 'CartoDB positron', 'CartoDB dark_matter', 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'arcGIS Aerial', 'arcGIS Gray', 'arcGIS Ocean', 'arcGIS Roadmap', 'arcGIS Shaded Relief', 'arcGIS Topo', 'Open Topo'"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] =_valLeafletNodeInputs(iconPrefix, iconType, iconColor) 
+		warningMsg += newWarningMsg
+		
+	if (valFlag):
+		if (iconColor is None):
+			valFlag = False
+			errorMsg = "Error: A valid `iconColor` is required."
+
+	return [valFlag, errorMsg, warningMsg]
+	
+def valAddLeafletIsochrones(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, iso, showBoundingRegion, iconPrefix, iconType, iconColor, popupText, lineWeight, lineOpacity, lineStyle, fillOpacity):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valMapBoundary(mapBoundary, zoomStart)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		try:
+			mapBackground = mapBackground.lower()
+		except:
+			pass
+
+		if (mapBackground not in mapBackgroundList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapBackground` value. Valid options include 'CartoDB positron', 'CartoDB dark_matter', 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'arcGIS Aerial', 'arcGIS Gray', 'arcGIS Ocean', 'arcGIS Roadmap', 'arcGIS Shaded Relief', 'arcGIS Topo', 'Open Topo'"
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valIso(iso)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(showBoundingRegion) is not bool):
+			valFlag = False
+			errorMsg = "Error: `showBoundingRegion` must be a boolean value (True or False)."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] =_valLeafletNodeInputs(iconPrefix, iconType, iconColor) 
+		warningMsg += newWarningMsg
+		
+	if (valFlag):
+		if (iconColor is None):
+			valFlag = False
+			errorMsg = "Error: A valid `iconColor` is required."
+
+	if (valFlag):
+		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(lineWeight, "lineWeight")
+		warningMsg += newWarningMsg
+		
+	if (valFlag):
+		if (lineStyle is None):
+			valFlag = False
+			errorMsg = "Error: A valid `lineStyle` is required."
+		elif (lineStyle.lower() not in leafletStyleList):
+			valFlag = False
+			errorMsg = "Error: Choose `lineStyle` from 'solid', 'dashed', and 'dotted'."
+
+	if (valFlag):
+		if (lineOpacity is None):
+			valFlag = False
+			errorMsg = "Error: A valid `lineOpacity` is required."		
+		else:
+			[valFlag, errorMsg, newWarningMsg] = _valBetweenOrEqualToFloat(0, 1, lineOpacity, 'lineOpacity')
+			warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (fillOpacity is None):
+			valFlag = False
+			errorMsg = "Error: A valid `fillOpacity` is required."		
+		else:
+			[valFlag, errorMsg, newWarningMsg] = _valBetweenOrEqualToFloat(0, 1, fillOpacity, 'fillOpacity')
+			warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]
+
+
+	
+def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, center, radius, text, fontSize, fontColor, lineWeight, lineColor, lineOpacity, lineStyle, fillColor, fillOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -650,6 +799,21 @@ def valAddLeafletMarker(mapObject, mapFilename, mapBackground, mapBoundary, zoom
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(radius, 'radius')
 		warningMsg += newWarningMsg
+
+	if (text is not None):
+		if (valFlag):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(fontSize, 'fontSize')
+			warningMsg += newWarningMsg
+
+		if (valFlag):
+			try:
+				fontColor = fontColor.lower()
+			except:
+				pass
+
+			if (fontColor not in leafletColorList):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(fontColor)
+				warningMsg += newWarningMsg
 
 	if (valFlag and lineWeight is not None):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(lineWeight, 'lineWeight')
@@ -762,7 +926,7 @@ def valAddLeafletPolygon(mapObject, mapFilename, mapBackground, mapBoundary, zoo
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddLeafletPolyline(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, points, lineWeight, lineColor, lineOpacity, lineStyle):
+def valAddLeafletPolyline(mapObject, mapFilename, mapBackground, mapBoundary, zoomStart, points, lineWeight, lineColor, lineOpacity, lineStyle, lineCurveType, lineCurvature, useArrows, arrowsPerArc):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -865,6 +1029,46 @@ def valAddLeafletText(mapObject, mapFilename, mapBackground, mapBoundary, zoomSt
 
 	return [valFlag, errorMsg, warningMsg]
 
+
+def valAddLeafletWeather(mapObject, mapType, APIkey, mapFilename, mapBackground):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (mapObject is not None):
+		if (type(mapObject) is not folium.folium.Map):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapObject`."
+			
+	if (valFlag):
+		try:
+			mapType = mapType.lower()
+		except:
+			pass
+			
+		if (mapType not in weatherMapList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapType` value.  Valid options include 'clouds', 'precip', 'pressure', 'wind', and 'temp'."	
+			
+	if (valFlag):
+		if (mapFilename is not None):
+			if (type(mapFilename) is not str):
+				valFlag = False
+				errorMsg = "Error: filename should be a string."
+
+	if (valFlag):
+		try:
+			mapBackground = mapBackground.lower()
+		except:
+			pass
+
+		if (mapBackground not in mapBackgroundList):
+			valFlag = False
+			errorMsg = "Error: Invalid `mapBackground` value. Valid options include 'CartoDB positron', 'CartoDB dark_matter', 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'arcGIS Aerial', 'arcGIS Gray', 'arcGIS Ocean', 'arcGIS Roadmap', 'arcGIS Shaded Relief', 'arcGIS Topo', 'Open Topo'"
+
+	return [valFlag, errorMsg, warningMsg]
+
+
 def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesiumDir, problemDir, cesiumIconColor, cesiumPathColor, cesiumPathWeight, cesiumPathStyle, cesiumPathOpacity):
 	valFlag = True
 	errorMsg = ""
@@ -909,7 +1113,7 @@ def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesium
 			valFlag = False
 			errorMsg = "Error: `problemDir` is required for `createCesium()`. Please provide a relative path to the root directory of cesium, e.g., `problemDir = 'veroviz/problems/TSP'`."
 
-	if (valFlag):
+	if (valFlag and assignments is not None):
 		modelFiles = list(dict.fromkeys(assignments['modelFile'].tolist()))
 		for i in range(len(modelFiles)):
 			if (not os.path.isfile(cesiumDir + modelFiles[i])):
@@ -918,8 +1122,8 @@ def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesium
 
 	if (valFlag == True):
 		if (cesiumIconColor != None):
-			if (cesiumIconColor not in cesiumColorList):
-				warningMsg += "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive.\n"
+			if (expandCesiumColor(cesiumIconColor) not in cesiumColorList):
+				warningMsg += "Warning: cesiumColor is not recognized; it may not be displayed properly.\n"
 
 	if (valFlag):
 		if ((cesiumPathColor != None) or (cesiumPathWeight != None) or (cesiumPathStyle != None) or (cesiumPathOpacity != None)):
@@ -958,10 +1162,99 @@ def valGetSnapLocBatch(locs, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 
+def valCalcPerimeter2D(path, closeLoop, distUnits):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(closeLoop) is not bool):
+			valFlag = False
+			errorMsg = "Error: `closeLoop` must be boolean (True or False)."
+
+	if (valFlag):
+		try:
+			distUnits = distUnits.lower()
+		except:
+			pass
+
+		[valFlag, errorMsg, newWarningMsg] = _valDistanceUnits(distUnits, "distUnits")
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+def valCalcArea(poly):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (poly is None):
+		valFlag = False
+		errorMsg = "Error: Function `calcArea()` requires a polygon as an input."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(poly)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+
+def valLengthFromNodeSeq(nodeSeq, lengthDict):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (nodeSeq == None):
+		valFlag = False
+		errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		if (lengthDict == None):
+			valFlag = False
+			errorMsg = "Error: `lengthDict` is required.  Please provide either a distance or time matrix, in the form of a dictionary."
+
+	if (valFlag):
+		if (type(nodeSeq) is not list):
+			valFlag = False
+			errorMsg = "Error: `nodeSeq` must be a sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		if (len(nodeSeq) <= 1):
+			valFlag = False
+			errorMsg = "Error: `nodeSeq` must be a sequence of locations, in the format of [nodeID1, nodeID2, ...], with at least 2 nodes."
+
+	if (valFlag):
+		if (type(lengthDict) is not dict):
+			valFlag = False
+			errorMsg = "Error: `lengthDict` must be a distance or time matrix, in the form of a dictionary."
+
+	if (valFlag):
+		for i in range(0, len(nodeSeq)-1):
+			if (not valFlag):
+				break
+			if (valFlag):
+				[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(nodeSeq[i], 'nodeSeq')
+			if (valFlag):
+				if ((nodeSeq[i], nodeSeq[i+1]) not in lengthDict):
+					valFlag = False
+					errorMsg = "Error: (%d, %d) is not a key in the `lengthDict` dictionary." % (nodeSeq[i], nodeSeq[i+1])
+
+	return [valFlag, errorMsg, warningMsg]
+
 def valConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	
+	if ((speed is None) or (fromUnitsDist is None) or (fromUnitsTime is None) or (toUnitsDist is None) or (toUnitsTime is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 5 required input parameters to function `convertSpeed()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(speed, 'speed')
@@ -1010,6 +1303,10 @@ def valConvertDistance(distance, fromUnitsDist, toUnitsDist):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((distance is None) or (fromUnitsDist is None) or (toUnitsDist is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `convertDistance()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(distance, 'distance')
 		warningMsg += newWarningMsg
@@ -1039,6 +1336,10 @@ def valConvertArea(area, fromUnits, toUnits):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((area is None) or (fromUnits is None) or (toUnits is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `convertArea()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(area, 'area')
 		warningMsg += newWarningMsg
@@ -1067,6 +1368,10 @@ def valConvertTime(time, fromUnitsTime, toUnitsTime):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((time is None) or (fromUnitsTime is None) or (toUnitsTime is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `convertTime()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(time, 'time')
@@ -1134,7 +1439,7 @@ def valInitDataframe(dataframe):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1176,8 +1481,10 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 			except:
 				pass
 
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE? Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1191,7 +1498,7 @@ def valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, 
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1244,8 +1551,10 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 			except:
 				pass
 
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1259,7 +1568,7 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 
 	return [valFlag, errorMsg, warningMsg]
 
-def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText):
+def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1296,7 +1605,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	if (valFlag and snapToRoad):
 		if (dataProvider == None):
 			valFlag = False
-			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online', and 'OSRM-online'."
+			errorMsg = "Error: A `dataProvider` is required if `snapToRoad = True`. Valid `dataProvider` options are 'pgRouting', 'MapQuest', 'ORS-online',  'OSRM-online', and 'ORS-local'."
 		else:
 			if (valFlag):
 				[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
@@ -1330,7 +1639,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 	return [valFlag, errorMsg, warningMsg]
 
 
-def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1374,7 +1683,7 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
 					else:
-						dummyExpDurationSec = None		# won't use exp duration			
+						dummyExpDurationSec = None		# won't use exp duration
 			else:
 				valFlag = False
 				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
@@ -1422,8 +1731,10 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1435,10 +1746,22 @@ def valCreateAssignmentsFromArcs2D(initAssignments, arcs, serviceTimeSec, modelS
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorService is not None):
+			if (ganttColorService.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorService)
+				warningMsg += newWarningMsg
+			
 	return [valFlag, errorMsg, warningMsg]	
 
 
-def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1456,6 +1779,11 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 	if (nodeSeq == None):
 		valFlag = False
 		errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
+
+	if (valFlag):
+		if (nodes is None):
+			valFlag = False
+			errorMsg = "Error: `nodes` dataframe is required."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
@@ -1509,8 +1837,7 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 					if (expDurationArgs['getTravelTimes']):
 						dummyExpDurationSec = 1.23		# dummy positive value
 					else:
-						dummyExpDurationSec = None		# won't use exp duration			
-	
+						dummyExpDurationSec = None		# won't use exp duration
 			else:
 				valFlag = False
 				errorMsg = "Error: Invalid `expDurationArgs` value provided.  See the documentation for allowable options."
@@ -1571,8 +1898,10 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1584,9 +1913,21 @@ def valCreateAssignmentsFromNodeSeq2D(initAssignments, nodeSeq, nodes, serviceTi
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorService is not None):
+			if (ganttColorService.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorService)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]	
 
-def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
+def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, modelScale, modelMinPxSize, expDurationArgs, odID, objectID, modelFile, startTimeSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, ganttColorService, dataProvider, dataProviderArgs):
 
 	valFlag = True
 	errorMsg = ""
@@ -1688,8 +2029,10 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1701,10 +2044,22 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (ganttColorService is not None):
+			if (ganttColorService.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColorService)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]	
 
+def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs):
 
-def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1777,8 +2132,10 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 			except:
 				pass
 				
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
@@ -1790,10 +2147,16 @@ def valAddAssignment2D(initAssignments, odID, objectID, modelFile, startLoc, end
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 	
 
-def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
+def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec, startLoc, endLoc, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS, earliestLandTime, loiterPosition, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1875,17 +2238,25 @@ def valAddAssignment3D(initAssignments, odID, objectID, modelFile, startTimeSec,
 			except:
 				pass
 		
-			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows)
+			[valFlag, errorMsg, newWarningMsg] = _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature)
 			warningMsg += newWarningMsg
+
+	# print("FIXMELP -- DONE?  Need to validate `leafletCurveType` and `leafletCurvature`.")
 
 	if (valFlag):
 		if ((cesiumColor != None) or (cesiumWeight != None) or (cesiumStyle != None) or (cesiumOpacity != None)):
 			[valFlag, errorMsg, newWarningMsg] = _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 			warningMsg += newWarningMsg
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 
-def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScale, modelMinPxSize, loc, startTimeSec, endTimeSec):
+def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScale, modelMinPxSize, loc, startTimeSec, endTimeSec, ganttColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -1943,6 +2314,12 @@ def valAddStaticAssignment(initAssignments, odID, objectID, modelFile, modelScal
 			valFlag = False
 			errorMsg = "Error: 'startTimeSec' cannot be greater than 'endTimeSec'."
 
+	if (valFlag):
+		if (ganttColor is not None):
+			if (ganttColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(ganttColor)
+				warningMsg += newWarningMsg
+
 	return [valFlag, errorMsg, warningMsg]
 
 def valNodes(nodes):
@@ -1964,8 +2341,9 @@ def valNodes(nodes):
 					break
 
 	if (valFlag and nodes is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(nodes.lat, nodes.lon)))
-		warningMsg += newWarningMsg
+		if (len(nodes) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(nodes.lat, nodes.lon))))
+			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -1988,12 +2366,14 @@ def valAssignments(assignments):
 					break
 
 	if (valFlag and assignments is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(assignments.startLat, assignments.startLon)))
-		warningMsg += newWarningMsg
+		if (len(assignments) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.startLat, assignments.startLon))))
+			warningMsg += newWarningMsg
 
 	if (valFlag and assignments is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(assignments.endLat, assignments.endLon)))
-		warningMsg += newWarningMsg
+		if (len(assignments) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(assignments.endLat, assignments.endLon))))
+			warningMsg += newWarningMsg
 
 	if (valFlag):
 		for i in assignments.index:
@@ -2020,12 +2400,14 @@ def valArcs(arcs):
 					break
 
 	if (valFlag and arcs is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(arcs.startLat, arcs.startLon)))
-		warningMsg += newWarningMsg
+		if (len(arcs) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.startLat, arcs.startLon))))
+			warningMsg += newWarningMsg
 
 	if (valFlag and arcs is not None):
-		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(zip(arcs.endLat, arcs.endLon)))
-		warningMsg += newWarningMsg
+		if (len(arcs) > 0):
+			[valFlag, errorMsg, newWarningMsg] = _valLatLonList(list(map(list, zip(arcs.endLat, arcs.endLon))))
+			warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2034,12 +2416,16 @@ def valGetConvexHull(locs):
 	errorMsg = ""
 	warningMsg = ""
 
+	if (locs is None):
+		valFlag = False
+		errorMsg = "Error: Missing required input for function `getConvexHull()`."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locs)
 		warningMsg += newWarningMsg
 
 	if (valFlag):
-		if (len(locs) <= 4):
+		if (len(locs) < 4):
 			valFlag = False
 			errorMsg = "Error: Need at least 4 locations to find convex hull."
 
@@ -2049,6 +2435,10 @@ def valIsPointInPoly(loc, poly):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((loc is None) or (poly is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `isPointInPoly()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
@@ -2069,6 +2459,10 @@ def valIsPathInPoly(path, poly):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((path is None) or (poly is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `isPathInPoly()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
 		warningMsg += newWarningMsg
@@ -2087,6 +2481,10 @@ def valIsPathCrossPoly(path, poly):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((path is None) or (poly is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `isPathCrossPoly()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
@@ -2107,6 +2505,10 @@ def valIsPassPath(loc, path, tolerance):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((loc is None) or (path is None) or (tolerance is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `isPassPath()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
 		warningMsg += newWarningMsg
@@ -2126,6 +2528,10 @@ def valMinDistLoc2Path(loc, path):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((loc is None) or (path is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `minDistLoc2Path()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
 		warningMsg += newWarningMsg
@@ -2140,6 +2546,10 @@ def valDistance2D(loc1, loc2):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((loc1 is None) or (loc2 is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `distance2D()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc1)
@@ -2156,6 +2566,10 @@ def valDistance3D(loc1, loc2):
 	errorMsg = ""
 	warningMsg = ""
 
+	if ((loc1 is None) or (loc2 is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `distance3D()` are missing."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc1)
 		warningMsg += newWarningMsg
@@ -2171,6 +2585,10 @@ def valDistancePath2D(path):
 	errorMsg = ""
 	warningMsg = ""
 
+	if (path is None):
+		valFlag = False
+		errorMsg = "Error: Missing required input parameter to function `distancePath2D()`."
+
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
 		warningMsg += newWarningMsg
@@ -2181,6 +2599,10 @@ def valPointInDistance2D(loc, direction, distMeters):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((loc is None) or (direction is None) or (distMeters is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 3 required input parameters to function `pointInDistance2D()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
@@ -2200,6 +2622,10 @@ def valGetHeading(currentLoc, goalLoc):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
+
+	if ((currentLoc is None) or (goalLoc is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `getHeading()` are missing."
 
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = _valLatLon(currentLoc)
@@ -2270,7 +2696,7 @@ def valGeocode(location, dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]    
 	
-def valReverseGeocode(location, dataProvider, dataProviderArgs):    
+def valReverseGeocode(location, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2283,6 +2709,296 @@ def valReverseGeocode(location, dataProvider, dataProviderArgs):
 		warningMsg += newWarningMsg
 
 	return [valFlag, errorMsg, warningMsg]    
+
+def valIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+	warningMsg += newWarningMsg
+
+	if (valFlag):
+		try:
+			locationType = locationType.lower()
+		except:
+			pass
+
+		if (locationType not in ['start', 'destination']):
+			valFlag = False
+			errorMsg = "Error: `locationType` must be either 'start' or 'destination'."
+						
+	if (valFlag):
+		try:
+			rangeType = rangeType.lower()
+		except:
+			pass
+
+		if (rangeType not in ['distance', 'time']):
+			valFlag = False
+			errorMsg = "Error: `rangeType` must be either 'distance' or 'time'."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(rangeSize, 'rangeSize')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (interval is not None):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(interval, 'interval')
+			warningMsg += newWarningMsg
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valBetweenOrEqualToFloat(0, 100, smoothing, 'smoothing')
+		warningMsg += newWarningMsg
+
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valIsoDataProvider(travelMode, dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]    
+
+def valGetElevationLocs(locs, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (locs is None):
+		valFlag = False
+		errorMsg = "Error: Must provide `locs`, as a list of lists."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(locs)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGetElevationDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]    
+
+
+def valGetElevationDF(dataframe, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (dataframe is None):
+		valFlag = False
+		errorMsg = "Error: Must provide `dataframe` as pandas dataframe."
+
+
+	if (valFlag):
+		# dataframe must be either a nodes, arcs, or assignments dataframe
+		[tmpValFlag, tmpErrorMsg, newWarningMsg] = valNodes(dataframe)
+		warningMsg += newWarningMsg
+
+		if (not tmpValFlag):
+			[tmpValFlag, tmpErrorMsg, newWarningMsg] = valArcs(dataframe)
+			warningMsg += newWarningMsg
+
+		if (not tmpValFlag):
+			[tmpValFlag, tmpErrorMsg, newWarningMsg] = valAssignments(dataframe)
+			warningMsg += newWarningMsg
+
+		valFlag  = tmpValFlag
+		errorMsg = tmpErrorMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGetElevationDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+	
+	return [valFlag, errorMsg, warningMsg]    
+
+
+def valClosestNode2Loc(loc, nodes):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if ((loc is None) or (nodes is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `closestNode2Loc()` are missing."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+
+def valClosestPointLoc2Path(loc, path):
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if ((loc is None) or (path is None)):
+		valFlag = False
+		errorMsg = "Error: 1 or more of the 2 required input parameters to function `closestPointLoc2Path()` are missing."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLonList(path)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
+	
+
+def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID, splitOnColorChange, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayColumn, missingColor, filename):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+
+	if (assignments is None):
+		valFlag = False
+		errorMsg = "Error: An assignments dataframe is required."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(assignments)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (len(assignments) == 0):
+			valFlag = False
+			errorMsg = "Error: The assignments dataframe is empty."
+	
+	if (objectIDorder is not None):
+		if (valFlag):
+			if (type(objectIDorder) is not list):
+				valFlag = False
+				errorMsg = "Error: `objectIDorder` must be either `None` or a list."
+		if (valFlag):
+			for objectID in objectIDorder:
+				if (objectID not in list(assignments['objectID'])):
+					valFlag = False
+					errorMsg = "Error: `objectIDorder` contains a value ({}) that is not found in the `objectID` column of the assignements dataframe.".format(objectID)
+					break
+	
+	if (valFlag):
+		if (type(separateByModelFile) is not bool):
+			valFlag = False
+			errorMsg = "Error: `separateByModelFile` must be boolean (either `True` or `False`)."
+
+	if (valFlag):
+		if (type(mergeByodID) is not bool):
+			valFlag = False
+			errorMsg = "Error: `mergeByodID` must be boolean (either `True` or `False`)."
+			
+	if (valFlag):
+		if (type(splitOnColorChange) is not bool):
+			valFlag = False
+			errorMsg = "Error: `splitOnColorChange` must be boolean (either `True` or `False`)."
+
+	# title -- not checked
+	# xAxisLabel -- not checked
+	
+	if (valFlag):
+		if (type(xGrid) is not bool):
+			valFlag = False
+			errorMsg = "Error: `xGrid` must be boolean (either `True` or `False`)."
+
+	if (valFlag):
+		if (type(yGrid) is not bool):
+			valFlag = False
+			errorMsg = "Error: `yGrid` must be boolean (either `True` or `False`)."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(xMin, 'xMin')
+		warningMsg += newWarningMsg
+		
+	if (xMax is not None):
+		if (valFlag):
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(xMax, 'xMax')
+			warningMsg += newWarningMsg
+		if (valFlag):
+			if (xMax <= xMin):
+				valFlag = False
+				errorMsg = "Error: `xMax` must be greater than or equal to `xMin` (or `xMax` may be left at its default value of `None`)."
+		
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroFloat(xGridFreq, 'xGridFreq')
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(timeFormat) is not str):
+			valFlag = False
+			errorMsg = "Error: `timeFormat` must be a string.  Valid options are 'dhms', 'hms', 'ms', 'd', 'h', 'm', or 's'."
+	
+	if (valFlag):		
+		if (timeFormat.lower() not in ['dhms', 'hms', 'ms', 'd', 'h', 'm', 's']):
+			valFlag = False
+			errorMsg = "Error: `timeFormat` must be either 'dhms', 'hms', 'ms', 'd', 'h', 'm', or 's'."
+
+	# Not sure if we want to add these warnings...
+    # [d, h, m, s] = getDHMS(max(assignments['endTimeSec']))
+    # if ((d > 0) and timeFormat.lower() in ['hms', 'ms']):
+    #    print("Warning: The time exceeds 24 hours.  Consider using the 'DHMS' format.")
+    # elif((h > 0) and timeFormat.lower() in ['ms']):
+    #     print("Warning: The time exceeds 60 minutes.  Consider using the 'HMS' format.")
+
+	if (valFlag):
+		if (overlayColumn not in [None, 'odID', 'index']):
+			valFlag = False
+			errorMsg = "Error: `overlayColumn` must be either None (default), 'odID', or 'index'."
+
+	if (missingColor is not None):
+		if (valFlag):
+			if (missingColor.lower() not in matplotlibColorDict.keys()):
+				[valFlag, errorMsg, newWarningMsg] = _valHexColor(missingColor)
+				warningMsg += newWarningMsg
+	
+	if (filename is not None):	
+		if (valFlag):	
+			if (type(filename) is not str):
+				valFlag = False
+				errorMsg = "Error: `filename` must be either `None` or a string."
+
+	if (valFlag):
+		if (overlayColumn == 'index' and mergeByodID):
+			warningMsg += "Warning: Combining `overlayColumn='index'` with `mergeByodID=True` is not recommended."
+		if (overlayColumn == 'odID' and not mergeByodID):
+			warningMsg += "Warning: Combining `overlayColumn='odID'` with `mergeByodID=False` is not recommended."
+
+	return [valFlag, errorMsg, warningMsg]
+		
+def valGetWeather(location, id, initDF, metricUnits, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	
+	[valFlag, errorMsg, newWarningMsg] = _valLatLon(location)
+	warningMsg += newWarningMsg
+	
+	if (valFlag):
+		if (id is not None):
+			[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(id, "id")
+			warningMsg += newWarningMsg
+	
+	if (valFlag):
+		if (initDF is not None):
+			if (type(initDF) is not pd.core.frame.DataFrame):
+				valFlag = False
+				errorMsg = "Error: initDF should be a pandas dataframe or None."
+			
+	if (valFlag):
+		if (type(metricUnits) is not bool):
+			valFlag = False
+			errorMsg = "Error: `metricUnits` must be boolean (True or False)."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valGetWeatherDataProvider(dataProvider, dataProviderArgs)
+		warningMsg += newWarningMsg
+
+	return [valFlag, errorMsg, warningMsg]
 
 	
 def _valMapBoundary(mapBoundary, zoomStart):
@@ -2439,12 +3155,21 @@ def _valLatLonList(locs):
 		valFlag = False
 		errorMsg = "Error: `locs` should not be None."
 	else:
-		for i in range(len(locs)):
-			if (valFlag):
-				[valFlag, errorMsg, newWarningMsg] = _valLatLon(locs[i])
-				warningMsg += newWarningMsg
-			else:
-				break
+		if (type(locs) is not list):
+			valFlag = False
+			errorMsg = "Error: A list of lists was expected to describe a sequence of locations, in the format of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...]."
+		if (valFlag):
+			if (len(locs) == 0):
+				valFlag = False
+				errorMsg = "Error: A list of lists was expected to describe a sequence of locations, in the format of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...]."
+	
+		if (valFlag):
+			for i in range(len(locs)):
+				if (valFlag):
+					[valFlag, errorMsg, newWarningMsg] = _valLatLon(locs[i])
+					warningMsg += newWarningMsg
+				else:
+					break
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2456,6 +3181,9 @@ def _valLatLon(loc):
 	if (loc is None):
 		valFlag = False
 		errorMsg = "Error: `loc` should not be None."
+	elif (type(loc) is not list):
+		valFlag = False
+		errorMsg = "Error: `loc` should be a list, of the form [lat, lon] or [lat, lon, alt]."	
 	else:
 		if (len(loc) == 2 or len(loc) == 3):
 			if (valFlag):
@@ -2486,11 +3214,14 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 		pass
 
 	if (dataProvider not in dataProviderDictionary.keys()):
-		errorMsg = "Error: Invalid `dataProvider` value. Valid options include 'pgRouting', 'MapQuest', 'ORS-online', and 'OSRM-online'."
+		errorMsg = "Error: Invalid `dataProvider` value. Valid options include 'pgRouting', 'MapQuest', 'ORS-online', 'OSRM-online', and 'ORS-local'."
 		valFlag = False
 	else:
 		if (dataProviderDictionary[dataProvider] == "pgrouting"):
-			if ('databaseName' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'pgRouting'`."
+			elif ('databaseName' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'databaseName' is a required key in `dataProviderArgs` if `dataProvider = 'pgRouting'`."
 			else:
@@ -2514,14 +3245,28 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 					errorMsg = "Error: Bad request. Database '%s' doesn't exist." % (databaseName)
 
 		if (dataProviderDictionary[dataProvider] == "mapquest"):
-			if ('APIkey' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'MapQuest'`."
+			elif ('APIkey' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'MapQuest'`."
 
 		if (dataProviderDictionary[dataProvider] == "ors-online"):
-			if ('APIkey' not in dataProviderArgs):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'ORS-online'`."
+			elif ('APIkey' not in dataProviderArgs):
 				valFlag = False
 				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+		if (dataProviderDictionary[dataProvider] == "ors-local"):
+			if (dataProviderArgs is None):
+				valFlag = False
+				errorMsg = "Error: `dataProviderArgs` is a required parameter if `dataprovider = 'ORS-local'`."
+			elif ('port' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'port' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-local'`."
 
 		if (dataProviderDictionary[dataProvider] == "osrm-online"):
 			if (dataProviderArgs is not None):
@@ -2558,6 +3303,172 @@ def _valGeoDataProvider(dataProvider, dataProviderArgs):
 
 	return [valFlag, errorMsg, warningMsg]
 	
+def _valGetElevationDataProvider(dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		dataProvider = dataProvider.lower()
+	except:
+		pass
+
+	if (dataProvider not in elevDataProviderDictionary.keys()):
+		valFlag = False
+		errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid option is 'ORS-online'."
+	else:
+		if (elevDataProviderDictionary[dataProvider] == "ors-online"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+
+	return [valFlag, errorMsg, warningMsg]
+
+	
+def _valIsoDataProvider(travelMode, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		travelMode = travelMode.lower()
+	except:
+		pass
+
+	if (travelMode not in isoTravelModeList):
+		valFlag = False
+		errorMsg = "Error: Invalid `travelMode` value."
+	
+	if (valFlag):
+		try:
+			dataProvider = dataProvider.lower()
+		except:
+			pass
+
+		if (dataProvider not in isoDataProviderDictionary.keys()):
+			valFlag = False
+			errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid options are 'ORS-online' and 'ors-local."
+		else:
+			if (isoDataProviderDictionary[dataProvider] == "ors-online"):
+				if ('APIkey' not in dataProviderArgs):
+					valFlag = False
+					errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-online'`."
+			elif (isoDataProviderDictionary[dataProvider] == "ors-local"):
+				if ('port' not in dataProviderArgs):
+					valFlag = False
+					errorMsg = "Error: 'port' is a required key in `dataProviderArgs` if `dataProvider = 'ORS-local'`."
+
+	return [valFlag, errorMsg, warningMsg]
+
+def _valIso(iso):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (type(iso) is not dict):
+		valFlag = False
+		errorMsg = "Error: `iso` must be a dictionary."
+
+	if (valFlag):
+		if ('location' not in iso):
+			valFlag = False
+			errorMsg = "Error: `iso` dictionary must include `location` key."
+
+	if (valFlag):
+		if ('boundingRegion' not in iso):
+			valFlag = False
+			errorMsg = "Error: `iso` dictionary must include `boundingRegion` key."
+
+	if (valFlag):
+		if (type(iso['boundingRegion']) is not list):
+			valFlag = False
+			errorMsg = "Error: `iso['boundingRegion]` must be a list."
+
+	if (valFlag):
+		if (len(iso['boundingRegion']) != 5):
+			valFlag = False
+			errorMsg = "Error: `iso['boundingRegion]` must be a list with 5 [lat, lon] pairs."
+						
+	if (valFlag):
+		if ('isochrones' not in iso):
+			valFlag = False
+			errorMsg = "Error: `iso` dictionary must include `isochrones` key."
+			
+	if (valFlag):
+		if (type(iso['isochrones']) is not list):
+			valFlag = False
+			errorMsg = "Error: `iso['isochrones]` must be a list."
+			
+	if (valFlag):
+		for i in range(0, len(iso['isochrones'])):
+			if (type(iso['isochrones'][i]) is not dict):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must be a dictionary."
+				break
+	
+			if ('value' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'value' key."
+				break
+
+			if ('valueUnits' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'valueUnits' key."
+				break
+
+			if ('area' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include an 'area' key."
+				break
+				
+			if ('pop' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'pop' key."
+				break
+
+			if ('reachfactor' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'reachfactor' key."
+				break
+				
+			if ('poly' not in iso['isochrones'][i]):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'poly' key."
+				break
+		
+			if (type(iso['isochrones'][i]['poly']) is not list):
+				valFlag = False
+				errorMsg = "Error: Each element of `iso['isochrones]` must include a 'poly' key with a list structure."
+				break
+
+			# FIXME -- Could continue to drill down into poly structure,
+			#          but this already seems like overkill at this point.
+
+
+	return [valFlag, errorMsg, warningMsg]
+
+
+def _valGetWeatherDataProvider(dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	try:
+		dataProvider = dataProvider.lower()
+	except:
+		pass
+
+	if (dataProvider not in weatherDataProviderDictionary.keys()):
+		valFlag = False
+		errorMsg = "Error: Invalid `dataProvider` value. Currently, the only valid option is 'openweather'."
+	else:
+		if (weatherDataProviderDictionary[dataProvider] == "openweather"):
+			if ('APIkey' not in dataProviderArgs):
+				valFlag = False
+				errorMsg = "Error: 'APIkey' is a required key in `dataProviderArgs` if `dataProvider = 'openweather'`."
+
+	return [valFlag, errorMsg, warningMsg]
+	
 	
 def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 	valFlag = True
@@ -2575,7 +3486,7 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 		pass
 		
 	if (routeType not in routeType2DList):
-		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'."
+		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', 'truck', and 'wheelchair'."
 		valFlag = False
 	else:
 		if (routeType == 'euclidean2d'):
@@ -2588,31 +3499,37 @@ def _valRouteType2DForScalar(routeType, speedMPS, dataProvider):
 				errorMsg = "Error: For 'manhattan' routeType, speedMPS is required."
 		elif (routeType == 'fastest'):
 			if (dataProvider not in dataProviderDictionary.keys()):
-				errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting' and 'MapQuest'."
+				errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting', MapQuest', and 'ORS-local'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored. \n"
 		elif (routeType == 'shortest'):
-			if (dataProviderDictionary[dataProvider] not in ['mapquest']):
-				errorMsg = "Error: MapQuest is the only option for routeType = 'shortest' for now."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
+				errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'shortest'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
 		elif (routeType == 'pedestrian'):
-			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
-				errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'pedestrian'."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest', 'ors-local']):
+				errorMsg = "Error: 'ors-online', 'MapQuest', and 'ORS-local' are currently the only dataProvider options for routeType = 'pedestrian'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
 		elif (routeType == 'cycling'):
-			if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'cycling'."
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+				errorMsg = "Error: 'ORS-online' and 'ORS-local' are currently the only dataProvider options for routeType = 'cycling'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds from the data provider will be ignored.\n"
 		elif (routeType == 'truck'):
+			if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+				errorMsg = "Error: 'ORS-online' and 'ORS-local' are currently the only dataProvider options for routeType = 'truck'."
+				valFlag = False
+			elif (speedMPS is not None):
+				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds used by the data provider will be ignored.\n"
+		elif (routeType == 'wheelchair'):
 			if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'truck'."
+				errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'wheelchair'."
 				valFlag = False
 			elif (speedMPS is not None):
 				warningMsg += "Warning:  An explicit constant vehicle speed was specified by speedMPS.  Speeds used by the data provider will be ignored.\n"
@@ -2635,7 +3552,7 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 		pass
 		
 	if (routeType not in routeType2DList):
-		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'."
+		errorMsg = "Error: Invalid `routeType` value. Valid options include 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', 'truck', and 'wheelchair'."
 		valFlag = False
 	else:
 		if (valFlag and speedMPS is not None):
@@ -2656,26 +3573,41 @@ def _valRouteType2DForShapepoints(routeType, speedMPS, expDurationSec, dataProvi
 
 			if (valFlag and dataProvider is not None):
 				warningMsg += "Warning: For 'euclidean2d' and 'manhattan', it is not using data provider, therefore `dataProvider` is ignored.\n"
-		elif (routeType in ['fastest', 'shortest', 'pedestrian', 'cycling', 'truck']):
+
+		elif (routeType in ['greatcircle', 'curve']):
+			# FIXMELP -- Where are these new "routeType" options defined?
+			#            Also, these are not in `routeType2DList`, so they will throw an error above. 
+			if (expDurationSec is None):
+				valFlag = False
+				errorMsg = "Error: Please provide `expDurationSec` to be evenly distributed to the arc"
+
+			if (speedMPS is not None):
+				warningMsg += "Warning: `speedMPS` will not be used for calculation. \n"
+				
+		elif (routeType in ['fastest', 'shortest', 'pedestrian', 'cycling', 'truck', 'wheelchair']):
 			if (routeType == 'fastest'):
 				if (dataProvider not in dataProviderDictionary.keys()):
-					errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting' and 'MapQuest'."
+					errorMsg = "Error: A valid dataProvider is required if routeType = 'fastest'. Valid data providers supporting the 'fastest' routeType are 'ORS-online', 'OSRM-online', 'pgRouting', 'MapQuest', and 'ORS-local'."
 					valFlag = False
 			elif (routeType == 'shortest'):
-				if (dataProviderDictionary[dataProvider] not in ['mapquest']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'MapQuest' is currently the only data provider supporting the 'shortest' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
+					errorMsg = "Error: 'ors-online' and 'MapQuest' are currently the only dataProvider options for routeType = 'shortest'."
 					valFlag = False
 			elif (routeType == 'pedestrian'):
-				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' and 'MapQuest' are currently the only data providers supporting the 'pedestrian' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'mapquest', 'ors-local']):
+					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online',  'MapQuest', and 'ORS-local' are currently the only data providers supporting the 'pedestrian' routeType option."
 					valFlag = False
 			elif (routeType == 'cycling'):
-				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' is currently the only data provider supporting the 'cycling' routeType option."
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' and 'ORS-local' are currently the only data providers supporting the 'cycling' routeType option."
 					valFlag = False
 			elif (routeType == 'truck'):
+				if (dataProviderDictionary[dataProvider] not in ['ors-online', 'ors-local']):
+					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' and 'ORS-local' are currently the only data providers supporting the 'truck' routeType option."
+					valFlag = False
+			elif (routeType == 'wheelchair'):
 				if (dataProviderDictionary[dataProvider] not in ['ors-online']):
-					errorMsg = "Error: Invalid `dataProvider` value.  'ORS-online' is currently the only data provider supporting the 'truck' routeType option."
+					errorMsg = "Error: 'ORS-online' is currently the only dataProvider option for routeType = 'wheelchair'."
 					valFlag = False
 
 			if (valFlag):
@@ -2948,9 +3880,14 @@ def _valLoiterPosition(loiterPosition):
 	errorMsg = ""
 	warningMsg = ""
 
+	try:
+		loiterPosition = loiterPosition.lower()
+	except:
+		pass
+
 	if (loiterPosition not in loiterPositionList):
 		valFlag = False
-		errorMsg = "Error: Invalid loiterPosition.  Note that this field is currently case-sensitive."
+		errorMsg = "Error: Invalid loiterPosition.  Valid options include 'beforeTakeoff', 'takeoffAtAlt', 'arrivalAtAlt', and 'afterLand'."
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -2958,28 +3895,45 @@ def _valLeafletNodeInputs(leafletIconPrefix, leafletIconType, leafletColor):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
-	
+
+	try:
+		leafletIconPrefix = leafletIconPrefix.lower()
+	except:
+		pass
+			
+	try:
+		leafletIconType = leafletIconType.lower()
+	except:
+		pass
+				
 	if (valFlag == True):
 		if (leafletIconPrefix is not None and leafletIconType is not None):
-			if (leafletIconPrefix.lower() not in leafletIconPrefixList):
+			if (leafletIconPrefix not in leafletIconPrefixList):
 				valFlag = False
-				errorMsg = "Error: Choose leafletIconPrefix from 'glyphyicon' and 'fa'."
-			elif (leafletIconPrefix.lower() == 'glyphicon'):
-				if (leafletIconType.lower() not in leafletIconGlyphicon):
+				errorMsg = "Error: Choose leafletIconPrefix from 'glyphyicon', 'fa', or 'custom'."
+			elif (leafletIconPrefix == 'glyphicon'):
+				if (leafletIconType not in leafletIconGlyphicon):
 					warningMsg += "Warning: leafletIconType value (%s) is not recognized.  It may not be displayed properly.\n" % (leafletIconType)
-			elif (leafletIconPrefix.lower() == 'fa'):
-				if (leafletIconType.lower() not in leafletIconFa):
+			elif (leafletIconPrefix == 'fa'):
+				if (leafletIconType not in leafletIconFa):
 					warningMsg += "Warning: leafletIconType value (%s) is not recognized.  It may not be displayed properly.\n" % (leafletIconType)
+			elif (leafletIconPrefix == 'custom'):
+				[valFlag, errorMsg, newWarningMsg] = _valLeafletCustomIconType(leafletIconType)
+				warningMsg += newWarningMsg
 		elif ((leafletIconPrefix is None and leafletIconType is not None) or (leafletIconPrefix is not None and leafletIconType is None)):
 			warningMsg += "Warning: Both leafletIconPrefix and leafletIconType must be valid.\n"
 
 	if (valFlag == True and leafletColor is not None):
-		if (leafletColor.lower() not in leafletColorList):
-			warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (leafletColor)
-
+		if (leafletIconPrefix in ['fa', 'glyphicon']):
+			if (leafletColor.lower() not in leafletColorList):
+				warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (leafletColor)
+		elif (leafletIconPrefix == 'custom'):
+			if (leafletColor.lower() not in matplotlibColorDict.keys()):
+				warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (leafletColor)
+			
 	return [valFlag, errorMsg, warningMsg]
 
-def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows):
+def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, leafletCurveType, leafletCurvature):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -3007,6 +3961,15 @@ def _valLeafletArcInputs(leafletColor, leafletWeight, leafletStyle, leafletOpaci
 			valFlag = False
 			errorMsg = "Error: `useArrows` must be boolean (True or False)."
 
+	if (valFlag and leafletCurveType is not None):
+		if (leafletCurveType.lower() not in ['bezier', 'greatcircle', 'straight']):
+			valFlag = False
+			errorMsg = "Error: curveType must be either 'bezier', 'greatcircle', or 'straight'."
+
+	if (valFlag and leafletCurvature is not None):
+		[valFlag, errorMsg, newWarningMsg] = _valBetweenFloat(-90, 90, leafletCurvature, 'leafletCurvature')
+		warningMsg += newWarningMsg
+			
 	return [valFlag, errorMsg, warningMsg]
 
 def _valLeafletBoundingInputs(leafletColor, leafletWeight, leafletStyle, leafletOpacity):
@@ -3039,13 +4002,18 @@ def _valCesiumNodeInputs(cesiumIconType, cesiumColor):
 	errorMsg = ""
 	warningMsg = ""
 
-	if (valFlag == True):
-		if (cesiumIconType not in cesiumIconTypeList):
-			warningMsg = "Warning: cesiumIconType is not recognized; it may not be displayed properly.  Note that this field is currently case sensitive."
+	try:
+		cesiumIconType = cesiumIconType.lower()
+	except:
+		pass
 
 	if (valFlag == True):
-		if (cesiumColor not in cesiumColorList):
-			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive."
+		if (cesiumIconType not in cesiumIconTypeList):
+			warningMsg = "Warning: cesiumIconType is not recognized; it may not be displayed properly."
+
+	if (valFlag == True):
+		if (expandCesiumColor(cesiumColor) not in cesiumColorList):
+			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly."
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3055,8 +4023,8 @@ def _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 	warningMsg = ""
 
 	if (valFlag == True):
-		if (cesiumColor not in cesiumColorList):
-			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly.  Note that this field is case sensitive"
+		if (expandCesiumColor(cesiumColor) not in cesiumColorList):
+			warningMsg = "Warning: cesiumColor is not recognized; it may not be displayed properly."
 
 	if (valFlag == True):
 		[valFlag, warningMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(cesiumWeight, "cesiumWeight")
@@ -3076,6 +4044,28 @@ def _valCesiumArcInputs(cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity):
 		if not (cesiumOpacity > 0 and cesiumOpacity <=1):
 			valFlag = False
 			errorMsg = "Error: cesiumOpacity should between 0 and 1."
+
+	return [valFlag, errorMsg, warningMsg]
+
+def _valLeafletCustomIconType(leafletIconType):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	parts = splitLeafletCustomIconType(leafletIconType)
+
+	# first element describes marker size
+	[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(parts[0], "iconType first element")
+
+	# second element should be either None or a valid matplotlib color
+	if (parts[1] is not None):
+		if (valFlag):
+			if (parts[1] not in matplotlibColorDict.keys()):
+				warningMsg += "Warning: Leaflet color value (%s) is not recognized; it may not be displayed properly.\n" % (parts[1])
+
+			# last element should be a non-negative number
+			# only checked if second element is not None
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroFloat(parts[2], "iconType third element")
 
 	return [valFlag, errorMsg, warningMsg]
 
@@ -3292,3 +4282,4 @@ def _valBetweenFloat(lower, upper, number, parameterName):
 			errorMsg = "Error: %s should be a float number and less than %s." % (parameterName, upper)		
 
 	return [valFlag, errorMsg, warningMsg]
+	

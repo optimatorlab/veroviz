@@ -40,7 +40,8 @@ setuptools.setup(
 		'urllib3', 
 		'folium',
 		'tripy',
-		'scipy'
+		'scipy',
+		'matplotlib'
 	],
 	classifiers=[
 		"Development Status :: 2 - Pre-Alpha",

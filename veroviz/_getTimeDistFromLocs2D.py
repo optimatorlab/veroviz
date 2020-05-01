@@ -11,6 +11,9 @@ from veroviz._queryPgRouting import pgrGetTimeDist
 from veroviz._queryORS import orsGetTimeDistAll2All
 from veroviz._queryORS import orsGetTimeDistMany2One
 from veroviz._queryORS import orsGetTimeDistOne2Many
+from veroviz._queryORSlocal import orsLocalGetTimeDistAll2All
+from veroviz._queryORSlocal import orsLocalGetTimeDistMany2One
+from veroviz._queryORSlocal import orsLocalGetTimeDistOne2Many
 from veroviz._queryOSRM import osrmGetTimeDist
 from veroviz._queryMapQuest import mqGetTimeDistAll2All
 from veroviz._queryMapQuest import mqGetTimeDistMany2One
@@ -43,9 +46,12 @@ def getTimeDistFromLocs2D(fromLocs=None, fromRows=None, toLocs=None, toCols=None
 	elif (routeType in ['fastest', 'shortest', 'pedestrian'] and dataProviderDictionary[dataProvider] == 'mapquest'):
 		APIkey = dataProviderArgs['APIkey']
 		[timeSecs, distMeters] = _getTimeDistMapQuest(fromLocs, toLocs, routeType, APIkey, speedMPS)
-	elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-online'):
+	elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck', 'wheelchair'] and dataProviderDictionary[dataProvider] == 'ors-online'):
 		APIkey = dataProviderArgs['APIkey']
 		[timeSecs, distMeters] = _getTimeDistORS(fromLocs, toLocs, routeType, APIkey, speedMPS)
+	elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-local'):
+		port = dataProviderArgs['port']
+		[timeSecs, distMeters] = _getTimeDistORSlocal(fromLocs, toLocs, routeType, port, speedMPS)
 	else:
 		return
 
@@ -238,7 +244,7 @@ def _getTimeDistMapQuest(fromLocs, toLocs, travelMode, APIkey, speedMPS):
 
 def _getTimeDistORS(fromLocs, toLocs, travelMode, APIkey, speedMPS):
 	"""
-	Generate two dictionaries, one for time, another for distance, using ORS
+	Generate two dictionaries, one for time, another for distance, using ORS-online
 
 	Parameters
 	----------
@@ -284,3 +290,52 @@ def _getTimeDistORS(fromLocs, toLocs, travelMode, APIkey, speedMPS):
 				timeSecs[i, j] = distMeters[i, j] / speedMPS
 
 	return [timeSecs, distMeters]	
+	
+def _getTimeDistORSlocal(fromLocs, toLocs, travelMode, port, speedMPS):
+	"""
+	Generate two dictionaries, one for time, another for distance, using ORS-local
+
+	Parameters
+	----------
+	fromLocs: list, Required
+		The start node coordinates in format of [[lat, lon], [lat, lon], ... ]
+	toLocs: list, Required
+		The End node coordinates in format of [[lat, lon], [lat, lon], ... ]
+	travelMode: string, Required
+		The travel mode for ORS, options are 'fastest', 'pedestrian', 'cycling', 'truck'
+	port: string, Required
+		localhost connection port
+	speedMPS: float, Required
+		A constant speed for calculation
+
+	returns
+	-------
+	timeSecs: dictionary
+		A dictionary for time from nodes to nodes, unit is in [seconds]
+	distMeters: dictionary
+		A dictionary for distance from nodes to nodes, unit is in [meters]
+	
+	"""
+
+	if (fromLocs == toLocs):
+		locs = fromLocs.copy()
+		[timeSecs, distMeters] = orsLocalGetTimeDistAll2All(locs, travelMode, port)
+	elif (len(fromLocs) == 1):
+		fromLoc = fromLocs[0]
+		[timeSecs, distMeters] = orsLocalGetTimeDistOne2Many(fromLoc, toLocs, travelMode, port)
+	elif (len(toLocs) == 1):
+		toLoc = toLocs[0]
+		[timeSecs, distMeters] = orsLocalGetTimeDistMany2One(fromLocs, toLoc, travelMode, port)
+	else:
+		for i in range(len(fromLocs)):
+			[timeRow, distRow] = orsLocalGetTimeDistOne2Many(fromLocs[i], toLocs, routeType, port)
+			for j in range(len(toLocs)):
+				distMeters[i, j] = distRow[0, j]
+				timeSecs[i, j] = timeRow[0, j]
+
+	if (speedMPS != None):
+		for i in range(len(fromLocs)):
+			for j in range(len(toLocs)):
+				timeSecs[i, j] = distMeters[i, j] / speedMPS
+
+	return [timeSecs, distMeters]		

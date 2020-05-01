@@ -129,7 +129,7 @@ def getTimeDist3D(nodes=None, matrixType='all2all', fromNodeID=None, toNodeID=No
 	[valFlag, errorMsg, warningMsg] = valGetTimeDist3D(nodes, matrixType, fromNodeID, toNodeID, outputDistUnits, outputTimeUnits, routeType, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, cruiseAltMetersAGL, landSpeedMPS, descentRateMPS)
 	if (not valFlag):
 		print (errorMsg)
-		return
+		return [None, None, None]
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 

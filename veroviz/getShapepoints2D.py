@@ -5,9 +5,7 @@ from veroviz._getShapepoints import privGetShapepoints2D
 
 def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, 
 	routeType='euclidean2D', speedMPS=None,   
-	leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, 
-	modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, 
-	dataProvider=None, dataProviderArgs=None):
+	leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	"""
 	This function generates all of the "shapepoints" between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   
@@ -44,13 +42,17 @@ def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLo
 		The line style of the route when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the route when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the route when displayed in Leaflet.
 	modelScale: int, Optional, default as 100
 		The scale of the 3D model (specified by the `modelFile` argument) when displayed in Cesium, such that 100 represents 100%.
 	modelMinPxSize: int, Optional, default as 75
 		The minimum pixel size of the 3D model (specified by the `modelFile` argument) when displayed in Cesium.  When zooming out, the model will not be smaller than this size; zooming in can result in a larger model. 
-	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
+	cesiumColor: string, Optional, default as "orange"
 		The color of the route when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.
 	cesiumWeight: int, Optional, default as 3
 		The pixel width of the route when displayed in Cesium. 
@@ -58,6 +60,10 @@ def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLo
 		The line style of the route when displayed in Cesium.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Cesium Style` for more information.
 	cesiumOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the route when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	ganttColor: string, Optional, default as "darkgray"
+		The color of the route elements when displayed in a Gantt chart.
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium.
 	dataProvider: string, Conditional, default as None
 		Specifies the data source to be used for obtaining the shapepoints. See :ref:`Data Providers` for options and requirements.
 	dataProviderArgs: dictionary, Conditional, default as None
@@ -215,10 +221,12 @@ def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLo
 		...     leafletStyle     = 'dashed', 
 		...     leafletOpacity   = 0.8, 
 		...     useArrows        = True, 
-		...     cesiumColor      = 'Cesium.Color.BLUE', 
+		...     cesiumColor      = 'blue', 
 		...     cesiumWeight     = 3, 
 		...     cesiumStyle      = 'solid', 
 		...     cesiumOpacity    = 0.8, 
+		...     ganttColor       = 'blue',
+		...     popupText        = 'blue car route',
 		...     dataProvider     = 'MapQuest',
 		...     dataProviderArgs = {'APIkey': os.environ['MAPQUESTKEY']})
 		>>> myMap = vrv.createLeaflet(arcs = shapepoints2D)
@@ -234,13 +242,13 @@ def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLo
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valGetShapepoints2D(odID, objectID, modelFile, startLoc, endLoc, startTimeSec, expDurationSec, routeType, speedMPS, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, ganttColor, dataProvider, dataProviderArgs)
 	if (not valFlag):
 		print (errorMsg)
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	assignments = privGetShapepoints2D(odID=odID, objectID=objectID, modelFile=modelFile, startLoc=startLoc, endLoc=endLoc, startTimeSec=startTimeSec, expDurationSec=expDurationSec, routeType=routeType, speedMPS=speedMPS, leafletColor=leafletColor, leafletWeight=leafletWeight, leafletStyle=leafletStyle, leafletOpacity=leafletOpacity, useArrows=useArrows, modelScale=modelScale, modelMinPxSize=modelMinPxSize, cesiumColor=cesiumColor, cesiumWeight=cesiumWeight, cesiumStyle=cesiumStyle, cesiumOpacity=cesiumOpacity, dataProvider=dataProvider, dataProviderArgs=dataProviderArgs)
+	assignments = privGetShapepoints2D(odID=odID, objectID=objectID, modelFile=modelFile, startLoc=startLoc, endLoc=endLoc, startTimeSec=startTimeSec, expDurationSec=expDurationSec, routeType=routeType, speedMPS=speedMPS, leafletColor=leafletColor, leafletWeight=leafletWeight, leafletStyle=leafletStyle, leafletOpacity=leafletOpacity, leafletCurveType=leafletCurveType, leafletCurvature=leafletCurvature, useArrows=useArrows, modelScale=modelScale, modelMinPxSize=modelMinPxSize, cesiumColor=cesiumColor, cesiumWeight=cesiumWeight, cesiumStyle=cesiumStyle, cesiumOpacity=cesiumOpacity, ganttColor=ganttColor, popupText=popupText, dataProvider=dataProvider, dataProviderArgs=dataProviderArgs)
 		
 	return assignments

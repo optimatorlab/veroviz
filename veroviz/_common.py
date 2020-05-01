@@ -21,5 +21,6 @@ from http.client import responses
 import urllib3
 import tripy
 import scipy.spatial
+import matplotlib.pyplot as plt
 
 from veroviz._params import *

@@ -92,7 +92,7 @@ def getTimeDistScalar3D(startLoc=None, endLoc=None, outputDistUnits='meters', ou
 	[valFlag, errorMsg, warningMsg] = valGetTimeDistScalar3D(startLoc, endLoc, outputDistUnits, outputTimeUnits, takeoffSpeedMPS, cruiseSpeedMPS, landSpeedMPS, cruiseAltMetersAGL, routeType, climbRateMPS, descentRateMPS)
 	if (not valFlag):
 		print (errorMsg)
-		return
+		return [None, None, None]
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 

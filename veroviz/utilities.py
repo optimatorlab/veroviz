@@ -3,22 +3,26 @@ from veroviz._validation import *
 from veroviz._geometry import *
 from veroviz._internal import *
 from veroviz._geocode import privGeocode, privReverseGeocode
+from veroviz._isochrones import privIsochrones
+from veroviz._elevation import privGetElevationLocs
+from veroviz._elevation import privGetElevationNodes, privGetElevationArcsAsgn
+from veroviz._weather import privGetWeather
 
-def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
+def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist=None, toUnitsTime=None):
 	"""
 	Convert a speed to different units.
 
 	Parameters
 	----------
-	speed: float
+	speed: float, Required
 		The numeric value describing a speed to be converted.
-	fromUnitsDist: string
+	fromUnitsDist: string, Required
 		Distance units for the given speed, before conversion. See :ref:`Units` for options.
-	fromUnitsTime: string
+	fromUnitsTime: string, Required
 		Time units for the given speed, before conversion. See :ref:`Units` for options.
-	toUnitsDist: string
+	toUnitsDist: string, Required
 		Distance units for the speed after conversion. See :ref:`Units` for options.
-	toUnitTime: string
+	toUnitTime: string, Required
 		Time units for the speed after conversion. See :ref:`Units` for options.
 	
 	Returns
@@ -109,17 +113,17 @@ def convertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime):
 
 	return convSpeed
 
-def convertDistance(distance, fromUnits, toUnits):
+def convertDistance(distance=None, fromUnits=None, toUnits=None):
 	"""
 	Convert a distance to different units.
 
 	Parameters
 	----------
-	distance: float
+	distance: float, Required
 		The numeric value describing a distance to be converted.
-	fromUnits: string
+	fromUnits: string, Required
 		Distance units before conversion. See :ref:`Units` for options.
-	toUnits: string
+	toUnits: string, Required
 		Distance units after conversion. See :ref:`Units` for options.
 
 	Returns
@@ -185,17 +189,17 @@ def convertDistance(distance, fromUnits, toUnits):
 
 	return convDist
 
-def convertTime(time, fromUnits, toUnits):
+def convertTime(time=None, fromUnits=None, toUnits=None):
 	"""
 	Convert a time to different units.
 
 	Parameters
 	----------
-	time: float
+	time: float, Required
 		The numeric value describing a time to be converted.
-	fromUnits: string
+	fromUnits: string, Required
 		Time units before conversion. See :ref:`Units` for options.
-	toUnits: string
+	toUnits: string, Required
 		Time units after conversion. See :ref:`Units` for options.
 
 	Returns
@@ -249,17 +253,17 @@ def convertTime(time, fromUnits, toUnits):
 
 	return convTime
 
-def convertArea(area, fromUnits, toUnits):
+def convertArea(area=None, fromUnits=None, toUnits=None):
 	"""
 	Convert an area from `fromUnits` to `toUnits`.
 	
 	Parameters
 	----------
-	area: float
+	area: float, Required
 		The numeric value describing an area to be converted.
-	fromUnits: string
+	fromUnits: string, Required
 		Area units, before conversion. See :ref:`Units` for options.
-	toUnits: string
+	toUnits: string, Required
 		Desired units of area after conversion. See :ref:`Units` for options.
 
 	Returns
@@ -317,13 +321,162 @@ def convertArea(area, fromUnits, toUnits):
 	
 	return convArea
 
-def initDataframe(dataframeType):
+def lengthFromNodeSeq(nodeSeq=None, lengthDict=None):
+	"""
+	Calculate the total "length" (either in time or distance) along a path defined by a sequence of node IDs.
+
+	Parameters
+	----------
+	nodeSeq: list, Required
+		An ordered list of node IDs.  These IDs must be included in the `id` column of the :ref:`Nodes` dataframe specified in the `nodes` input argument to this function. The format for `nodeSeq` is [node_id_1, node_id_2, ...].
+	lengthDict: dictionary, Required
+
+	Return
+	------
+	float
+		Total length of the path.
+
+	Example
+	-------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Define some sample locations and create a nodes dataframe:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+
+	Calculate time and distance matrices:
+		>>> [timeSecDict, distMetersDict] = vrv.getTimeDist2D(nodes = myNodes, routeType = 'euclidean2D', speedMPS = 15)
+
+	Define a sequence of nodes to visit:
+		>>> nodeSeq = [1, 3, 2]
+
+	Find the total travel time to visit the nodes:
+		>>> totalTimeSec = vrv.lengthFromNodeSeq(nodeSeq, timeSecDict)
+		>>> totalTimeSec
+		128.18625959871764
+		
+	Find the total length of the node sequence:
+		>>> totalDistMeters = vrv.lengthFromNodeSeq(nodeSeq, distMetersDict)
+		>>> totalDistMeters
+		1922.793893980765		
+	"""
+	[valFlag, errorMsg, warningMsg] = valLengthFromNodeSeq(nodeSeq, lengthDict)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	length = 0
+	for i in range(0, len(nodeSeq)-1):
+		length += lengthDict[nodeSeq[i], nodeSeq[i+1]]
+	return length
+
+def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
+	"""
+	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.
+
+	Parameters
+	----------
+	path: list of lists, Required, default as None
+	A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...] or [[lat, lon, alt], [lat, lon, alt], ...].  If provided, altitude will be ignored.
+	closeLoop: Boolean, Optional, default as False
+	Indicates whether the path should be closed (i.e., connecting the last location to the first).
+	distUnits: string, Optional, default as 'meters'
+	Specifies the desired distance units for the output. See :ref:`Units` for options.
+
+	Returns
+	-------
+	float
+	Total length of the path.
+
+	Example
+	-------
+	>>> import veroviz as vrv
+	>>> locs = [[42.80, -78.90, 0], [42.82, -78.92, 0], [42.84, -78.94, 0]]
+	>>> perimDist = vrv.calcPerimeter2D(path=locs, closeLoop=True, distUnits='mi')
+	>>> perimDist
+	6.857172388864359
+	"""
+
+	[valFlag, errorMsg, warningMsg] = valCalcPerimeter2D(path, closeLoop, distUnits)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	dist = 0
+	for i in range(0, len(path) - 1):
+		dist += distance2D(path[i][0:2], path[i + 1][0:2])
+
+	if (closeLoop):
+		dist += distance2D(path[-1][0:2], path[0][0:2])
+
+	dist = convertDistance(dist, 'meters', distUnits)
+
+	return dist
+
+def calcArea(poly=None):
+	"""
+	Calculate the area, in square meters, of a polygon.
+	
+	Parameters
+	----------
+	poly: list of lists, Required
+		A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored. 
+		
+	Returns
+	-------
+	float
+	Area, in meters, of the polygon.
+	
+	Example
+	-------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	Define a sequence of locations:
+		>>> locs = [[42.82, -78.80, 0], [42.86, -78.82, 0], [42.84, -78.84, 0]]
+
+	Calculate the area of the polygon formed by these locations:
+		>>> area = vrv.calcArea(poly=locs)
+		>>> area	
+		5449365.537915299
+	
+	Draw the polygon:
+		>>> myNodes = vrv.createNodesFromLocs(locs)
+		>>> myMap = vrv.addLeafletPolygon(points=locs, fillColor='red')
+		>>> myMap = vrv.createLeaflet(mapObject=myMap, nodes=myNodes)
+		>>> myMap		
+	"""
+	
+	[valFlag, errorMsg, warningMsg] = valCalcArea(poly)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+			
+	area = geoAreaOfPolygon(poly)
+	
+	return area		
+	
+
+def initDataframe(dataframeType=None):
 	"""
 	Return an empty dataframe of a given type.
 
 	Parameters
 	----------
-	dataframeType: string
+	dataframeType: string, Required
 		The options are 'Nodes', 'Arcs', and 'Assignments'.  These options are case insensitive.
 
 	Returns
@@ -472,13 +625,13 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 
 	return [[minLat, maxLon], [maxLat, minLon]]
 
-def convertMatricesDataframeToDictionary(dataframe):
+def convertMatricesDataframeToDictionary(dataframe=None):
 	"""
 	This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dataframe into  a dictionary, such that the indices of columns and rows become a tuple key for the dictionary.
 
 	Parameters
 	----------
-	dataframe: pandas.dataframe
+	dataframe: pandas.dataframe, Required
 		The rows and columns are both integers. There should not be duplicated origin/destination pairs.
 
 	Return
@@ -549,6 +702,16 @@ def convertMatricesDataframeToDictionary(dataframe):
 		
 	"""
 
+	# Make sure an input argument was provided
+	if (dataframe is None):
+		print("Error: dataframe is missing as an input to function `convertMatricesDataframeToDictionary()`.")		
+		return
+
+	# Make sure the input is a dataframe
+	if (type(dataframe) is not pd.core.frame.DataFrame):
+		print("Error: The input to function `convertMatricesDataframeToDictionary()` must be a pandas dataframe.")		
+		return
+	
 	dictionary = {}
 	try:
 		(rowNum, columnNum) = dataframe.shape
@@ -560,7 +723,7 @@ def convertMatricesDataframeToDictionary(dataframe):
 
 	return dictionary
 
-def convertMatricesDictionaryToDataframe(dictionary):
+def convertMatricesDictionaryToDataframe(dictionary=None):
 	"""
 	This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dictionary into a pandas dataframe.  The dictionary is assumed to have 2-tuple indices (the first index represents the ID of the "from" location, the second index is the ID of the "to" location).  In the resulting pandas dataframe, the row indices will represent the "from" location, the column indices the "to" location.
 
@@ -636,6 +799,17 @@ def convertMatricesDictionaryToDataframe(dictionary):
 		4033.9
 	"""
 
+	# Make sure an input argument was provided
+	if (dictionary is None):
+		print("Error: dictionary is missing as an input to function `convertMatricesDictionaryToDataframe()`.")		
+		return
+
+	# Make sure the input is a dictionary
+	if (type(dictionary) is not dict):
+		print("Error: The input to function `convertMatricesDictionaryToDataframe()` must be a python dictionary.")		
+		return
+
+
 	rows = []
 	columns = []
 	keys = dictionary.keys()
@@ -663,7 +837,7 @@ def convertMatricesDictionaryToDataframe(dictionary):
 
 	return dataframe
 
-def exportDataToCSV(data, filename):
+def exportDataToCSV(data=None, filename=None):
 	"""
 	Export a dataframe or python time/distance matrix dictionary to a `.csv` file.
 
@@ -744,6 +918,11 @@ def exportDataToCSV(data, filename):
 
 	"""
 
+	# Make sure both input args are provided:
+	if ((data is None) or (filename is None)):
+		print("Error: 1 or more of the 2 required input parameters to function `exportDataToCSV()` are missing.")
+		return
+	
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -774,7 +953,7 @@ def exportDataToCSV(data, filename):
 
 	return
 
-def importDataFromCSV(dataType, filename):
+def importDataFromCSV(dataType=None, filename=None):
 	"""
 	Import from a `.csv` file into a dataframe or python time/distance matrix dictionary.
 
@@ -860,6 +1039,11 @@ def importDataFromCSV(dataType, filename):
 
 	"""
 
+	# Make sure both input args are provided:
+	if ((dataType is None) or (filename is None)):
+		print("Error: 1 or more of the 2 required input parameters to function `importDataFromCSV()` are missing.")
+		return
+
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -913,7 +1097,7 @@ def importDataFromCSV(dataType, filename):
 
 	return data
 
-def exportDataframe(dataframe, filename):
+def exportDataframe(dataframe=None, filename=None):
 	"""
 	Exports a nodes, arcs, or assignments dataframe to a `.csv` file.
 
@@ -945,6 +1129,11 @@ def exportDataframe(dataframe, filename):
 		>>> importedNodesDF
 	"""
 
+	# Make sure both input args are provided:
+	if ((dataframe is None) or (filename is None)):
+		print("Error: 1 or more of the 2 required input parameters to function `exportDataframe()` are missing.")
+		return
+
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -971,7 +1160,7 @@ def exportDataframe(dataframe, filename):
 
 	return
 
-def importDataframe(filename, intCols=False, useIndex=True):
+def importDataframe(filename=None, intCols=False, useIndex=True):
 	"""
 	Imports a VeRoViz nodes, arcs, or assignments dataframe from a .csv file.  This function returns a pandas dataframe.
 
@@ -1023,6 +1212,11 @@ def importDataframe(filename, intCols=False, useIndex=True):
 		>>> importedNodesDF
 	"""
 
+	# Make sure filename is provided
+	if (filename is None):
+		print("Error: filename is missing as an input to function `importDataframe()`.")
+		return
+
 	# Replace backslash
 	filename = replaceBackslashToSlash(filename)
 
@@ -1042,7 +1236,7 @@ def importDataframe(filename, intCols=False, useIndex=True):
 
 	return df
 
-def getConvexHull(locs):
+def getConvexHull(locs=None):
 	"""
 	Find the convex hull of a set of points.
 	
@@ -1102,15 +1296,15 @@ def getConvexHull(locs):
 
 	return ch
 
-def isPointInPoly(loc, poly):
+def isPointInPoly(loc=None, poly=None):
 	"""
 	Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be "inside".
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The coordinate of the point, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
-	poly: list of lists
+	poly: list of lists, Required
 		A polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored. 
 
 	Returns
@@ -1201,15 +1395,15 @@ def isPointInPoly(loc, poly):
 		
 	return inside
 
-def isPathInPoly(path, poly):
+def isPathInPoly(path=None, poly=None):
 	"""
 	Determine if a given path is completely within the boundary of a polygon. 
 
 	Parameters
 	----------
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
-	poly: list of lists
+	poly: list of lists, Required
 		A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 	
 	
@@ -1298,15 +1492,15 @@ def isPathInPoly(path, poly):
 
 	return inside
 
-def isPathCrossPoly(path, poly):
+def isPathCrossPoly(path=None, poly=None):
 	"""
 	Determine if a given path crosses the boundary of a polygon.
 
 	Parameters
 	----------
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
-	poly: list of lists
+	poly: list of lists, Required
 		A closed polygon defined as a list of individual locations, in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.
 
 	Returns
@@ -1389,18 +1583,17 @@ def isPathCrossPoly(path, poly):
 
 	return crossFlag
 
-def isPassPath(loc, path, tolerance):
+def isPassPath(loc=None, path=None, tolerance=None):
 	'''
-	Determine if any point along a path is within tolerance meters of a stationary point.
-	(did our path pass by the target?)
+	Determine if any point along a path is within tolerance meters of a stationary point (i.e., did our path pass by the target?).
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The stationary point to be tested if it has been passed, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  This is considered as an open polyline.
-	tolerance: float
+	tolerance: float, Required
 		How close must the path be to the stationary location to be considered as "passed".  The units are in meters.
 	
 		
@@ -1466,17 +1659,17 @@ def isPassPath(loc, path, tolerance):
 
 	return passFlag
 
-def pointInDistance2D(loc, direction, distMeters):
+def pointInDistance2D(loc=None, direction=None, distMeters=None):
 	"""
 	Find the [lat, lon, alt] coordinate of a point that is a given distance away from a current location at a given heading. This can be useful for determining where a vehicle may be in the future (assuming constant velocity and straight-line travel).
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The starting location, expressed as either [lat, lon, alt] or [lat, lon]. If no altitude is provided, it will be assumed to be 0 meters above ground level.		
-	direction: float
+	direction: float, Required
 		The direction of travel from the current location, in units of degrees.  The range is [0, 360], where north is 0 degrees, east is 90 degrees, south is 180 degrees, and west is 270 degrees.
-	distMeters: float
+	distMeters: float, Required
 		The straight-line distance to be traveled, in meters, from the current location in the given direction.
 
 	Returns
@@ -1518,15 +1711,15 @@ def pointInDistance2D(loc, direction, distMeters):
 
 	return newLoc
 
-def minDistLoc2Path(loc, path):
+def minDistLoc2Path(loc=None, path=None):
 	"""
 	Calculate the minimum distance, in [meters], from a single stationary location (target) to any point along a path.
 
 	Parameters
 	----------
-	loc: list
+	loc: list, Required
 		The coordinate of the stationary location, in either [lat, lon] or [lat, lon, alt] format.  If provided, the altitude will be ignored.
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates in the form of [[lat1, lon1, alt1], [lat2, lon2, alt2], ...] or [[lat1, lon1], [lat2, lon2], ...].  If provided, altitudes will be ignored.  
 
 	Returns
@@ -1582,21 +1775,190 @@ def minDistLoc2Path(loc, path):
 
 	return distMeters
 
-def distance2D(loc1, loc2):
+
+def closestPointLoc2Path(loc=None, path=None):
 	"""
-	Calculates the geodesic distance between two locations, using the geopy library.  Altitude is ignored.
+	Finds the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.
 
 	Parameters
 	----------
-	loc1: list
+	loc: list, Required
+		The coordinate of the current coordinate, in [lat, lon, alt] format
+	path: list of lists, Required
+		Specifies the ordered collection of lat/lon coordinates comprising a path.   This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored. 	
+
+	Returns
+	-------
+	minLoc: list specifying a location, in [lat, lon] format.
+	distMeters: The distance from the given location to minLoc.
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Prepare some data
+		>>> import veroviz
+		>>> path = [[42.50, -78.65], [42.50, -78.40]]
+		>>> loc1 = [42.50, -78.50]
+		>>> loc2 = [42.51, -78.50]
+
+	Draw the line and the 2 points on the map:
+		>>> myMap = vrv.addLeafletPolyline(points = path)
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc1, 
+		...                              radius = 14,
+		...                              text='1', fontColor='black')
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc2, 
+		...                              radius = 14,
+		...                              text='2', fontColor='black')
+		>>> myMap
+
+	Example 1 - The location is on the path:
+		>>> vrv.closestPointLoc2Path(loc1, path)
+		([42.5, -78.5], 0.0)
+
+	Example 2 - The minimum distance is between points on the path:
+		>>> vrv.closestPointLoc2Path(loc2, path)
+		([42.5, -78.50000397522506], 1103.5612443321572)
+
+	Example 3 - The location and path include altitudes (which are ignored):
+		>>> path2 = [[42.50, -78.40, 100],
+		...          [42.50, -78.60, 200],
+		...          [42.40, -78.70, 100]]
+		>>> loc3  = [42.51, -78.3, 300]
+		>>> vrv.closestPointLoc2Path(loc3, path2)
+		([42.5, -78.6, 0], 8293.970453010768)
+		
+	Draw the line, the reference point, and the nearest point on the map:
+		>>> myMap = vrv.addLeafletPolyline(points = path2)
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc3, 
+		...                              radius = 14,
+		...                              text='3', fontColor='black')
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap, center = nearestPt, radius = 12)
+		>>> myMap		
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Path(loc, path)
+	if (not valFlag):
+		print (errorMsg)
+		return (None, None)
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	lstLine = []
+	for i in range(1, len(path)):
+		lstLine.append([path[i - 1], path[i]])
+
+	distMeters = float('inf')
+
+	for i in range(len(lstLine)):
+		tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
+
+		if (tmpDistMeters < distMeters):
+			distMeters = tmpDistMeters
+			minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
+
+		if (len(minPoint)==3):
+			minPoint[2] = 0
+
+	return (minPoint, distMeters)
+	
+def closestNode2Loc(loc=None, nodes=None):
+	"""
+	Returns the closest node in the dataframe to the given location.  Also returns the Euclidean distance (in [meters]) from the location to the nearest node.
+
+	Parameters
+	----------
+	loc: list, Required
+		The coordinate of given location, in [lat, lon, alt] format.
+	nodes: A :ref:`Nodes` dataframe, Required
+		Dataframe containing an existing set of nodes.
+
+	Returns
+	-------
+	minNodeID: int
+		A node id of the closest node
+	distMeters: float
+		The minimum distance is returned
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Prepare some sample data.
+		>>> # A single location:
+		>>> loc1 = [42.885, -78.861]
+		>>> 
+		>>> # A collection of locations, which we'll
+		>>> # convert to a "nodes" dataframe:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+		>>> 
+		>>> myNodes = vrv.createNodesFromLocs(locs = locs, 
+		...                                   leafletIconPrefix = "custom", 
+		...                                   leafletIconType   = "12-white-12")
+
+	Example 1 - Closest node:
+		>>> [nearestNode, distMeters] = vrv.closestNode2Loc(loc1, myNodes)
+		>>> nearestNode, distMeters
+		(2, 534.828771310757)
+
+	Show the five nodes from the dataframe and the reference location:
+		>>> myMap = vrv.createLeaflet(nodes = myNodes)
+		>>> myMap = vrv.addLeafletIcon(mapObject = myMap, location = loc1, iconColor='red')
+		>>> myMap
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestNode2Loc(loc, nodes)
+	if (not valFlag):
+		print (errorMsg)
+		return [None, None]
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	distMeters = float('Inf')
+	minNodeID = None
+
+	for i in range(len(nodes)):
+		nodeLat=nodes.iloc[i]['lat']
+		nodeLon=nodes.iloc[i]['lon']
+		tmpDistMeters = distance2D(loc, [nodeLat, nodeLon])
+
+		if (tmpDistMeters < distMeters):
+			distMeters = tmpDistMeters
+			minNodeID = nodes.iloc[i]['id']
+
+	if (minNodeID == None):
+		return [None, None]
+
+	return [minNodeID, distMeters]	
+	
+def distance2D(loc1=None, loc2=None):
+	"""
+	Calculates the geodesic distance, in meters, between two locations, using the geopy library.  Altitude is ignored.
+
+	Parameters
+	----------
+	loc1: list, Required
 		First location, in [lat, lon] format.
-	loc2: list
+	loc2: list, Required
 		Second location, in [lat, lon] format.
 	
 	Return
 	------
 	float
-		Geodesic distance between the two locations.
+		Geodesic distance, in meters, between the two locations.
 
 	Example
 	-------
@@ -1619,21 +1981,21 @@ def distance2D(loc1, loc2):
 
 	return distMeters
 
-def distance3D(loc1, loc2):
+def distance3D(loc1=None, loc2=None):
 	"""
-	Estimates the distance between two point, including changes in altitude.  The calculation combines geopy's geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.
+	Estimates the distance, in meters, between two point, including changes in altitude.  The calculation combines geopy's geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.
 
 	Parameters
 	----------
-	loc1: list
+	loc1: list, Required
 		First location, in [lat, lon, alt] format.
-	loc2: list
+	loc2: list, Required
 		Second location, in [lat, lon, alt] format.
 	
 	Return
 	------
 	float
-		Distance between the two locations.
+		Distance, in meters, between the two locations.
 
 	Example
 	-------
@@ -1656,19 +2018,19 @@ def distance3D(loc1, loc2):
 
 	return distMeters
 
-def distancePath2D(path):
+def distancePath2D(path=None):
 	"""
-	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.  
+	Calculate the total geodesic distance, in meters, along a path defined by [lat, lon] coordinates.  
 
 	Parameters
 	----------
-	path: list of lists
+	path: list of lists, Required
 		A list of coordinates that form a path, in the format of [[lat, lon], [lat, lon], ...].
 
 	Return
 	------
 	float
-		Total length of the path.
+		Total length of the path, in meters.
 
 	Example
 	-------
@@ -1688,19 +2050,19 @@ def distancePath2D(path):
 
 	dist = 0
 	for i in range(0, len(path) - 1):
-		dist += distance2D(path[i], path[i + 1])
+		dist += geoDistance2D(path[i], path[i + 1])
 
 	return dist
 
-def getHeading(currentLoc, goalLoc):
+def getHeading(currentLoc=None, goalLoc=None):
 	"""
 	Finds the heading required to travel from a current location to a goal location.  North is 0-degrees, east is 90-degrees, south is 180-degrees, west is 270-degrees.
 
 	Parameters
 	----------
-	currentLoc: list
+	currentLoc: list, Required
 		The [lat, lon] of current location
-	goalLoc: list
+	goalLoc: list, Required
 		The [lat, lon] of goal location
 
 	Return
@@ -1777,10 +2139,10 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 		>>> vehicleProperties = {
 		...     'drone': {'model': 'veroviz/models/drone.gltf',
 		...               'leafletColor': 'red',
-		...               'cesiumColor': 'Cesium.Color.RED'},
+		...               'cesiumColor': 'red'},
 		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
 		...               'leafletColor': 'blue',
-		...               'cesiumColor': 'Cesium.Color.BLUE'}
+		...               'cesiumColor': 'blue'}
 		... }
 
 	This example assumes the use of ORS as the data provider. 
@@ -2168,10 +2530,719 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	[valFlag, errorMsg, warningMsg] = valReverseGeocode(location, dataProvider, dataProviderArgs)
 	if (not valFlag):
 		print (errorMsg)
-		return
+		return (None, None)
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
 	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
 
 	return (loc, address)	
+
+def isochrones(location=None, locationType='start', travelMode='driving-car', rangeType='distance', rangeSize=None, interval=None, smoothing=25, dataProvider=None, dataProviderArgs=None):    
+	"""
+	Finds isochrones (lines corresponding to points of equal distance or time from a given location) to or from a given location.  
+
+	Parameters
+	----------
+	location: list, Required
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored (i.e., assumed to be 0).
+	locationType: string, Required, default as 'start'
+		Specifies whether `location` is the start or the destination.  Valid options are 'start' or 'destination'
+	travelMode: string, Required, default as 'driving-car'
+		Specifies the mode of travel.  Valid options are: 'driving-car', 'driving-hgv', 'cycling-regular', 'cycling-road', 'cycling-mountain', 'cycling-electric', 'foot-walking', 'foot-hiking', or 'wheelchair'.
+	rangeType: string, Required, default as 'distance'
+		Indicates whether the isochrones are based on distance or time.  Valid options are 'distance' or 'time'.
+	rangeSize: positive float, Required, default as None
+		The isochrones will indicate the area accessible from the given location within the rangeSize.  rangeSize is in units of [meters] if rangeType equals 'distance'; rangeSize is in units of [seconds] if rangeType equals 'time'.
+	interval: float, Optional, default as None
+		If provided, this parameter can be used to generate multiple concentric isochrones.  For example, if rangeSize = 90, and interval = 30, isochrones will be identified for ranges of 30, 60, and 90 units.  If interval is not provided (as is the default), only one isochrone will be determined.
+	smoothing: float in range [0, 100], Optional, default as 25
+		Indicates the granularity of the isochrones.  Smoothing values close to 0 will produce jagged isochrones; values close to 100 will generally result in smooth isochrones.	
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining isochrone data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	dictionary with nested dictionaries and lists
+		This dictionary has the following structure:
+			{
+				'location': [lat, lon],		# Matches the user's 'location' input value
+				'boundingRegion': [[lat, lon], [lat, lon], [lat, lon], [lat, lon]],  # The smallest rectangle that encloses all isochrones.
+				'isochrones':
+				[
+					{
+						'value':  # Either the time or distance assoc. with this isochrone.
+						'valueUnits': # either 'seconds' or 'meters'.
+						'area':  # The area enclosed by the isochrone, in square meters.
+						'pop':   # The estimated population within the isochrone.
+						'reachfactor':  # FIXME -- not sure what this represents.
+						'poly': [[]]	# A list of lists describing polylines.
+								A list of GPS coordinates, of the form [[[lat, lon], [lat, lon], ..., [lat, lon]], []] defining a polygon.  This polygon describes the isochrones.
+					},
+					{
+						...
+					}
+				]
+			}    						
+		
+	Note
+	----
+	Currently, only 'ors-online' and 'ors-local' are supported.  Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for isochrones.  
+
+	Examples
+	--------
+                     	
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The following examples assume the use of ORS as the data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+
+	Example 1 - Get distance-based isochrones from a given location:
+		>>> iso = vrv.isochrones(location         = [43.00154, -78.7871],
+		...                      rangeType        = 'distance', 
+		...                      rangeSize        = 4000, 
+		...                      dataProvider     = 'ors-online', 
+		...                      dataProviderArgs = {'APIkey': os.environ['ORSKEY']})
+		>>> iso
+	
+	Draw the result on a Leaflet map:
+		>>> vrv.addLeafletIsochrones(iso=iso)
+		>>> 
+		>>> # Click on the shaded area of the map for additional info
+
+	Example 2 - This example includes all function arguments:
+		>>> iso2 = vrv.isochrones(location         = [43.00154, -78.7871], 
+		...                       locationType     = 'start', 
+		...                       travelMode       = 'driving-car', 
+		...                       rangeType        = 'time', 
+		...                       rangeSize        = vrv.convertTime(5, 'minutes', 'seconds'), 
+		...                       interval         = vrv.convertTime(1, 'minutes', 'seconds'), 
+		...                       smoothing        = 5, 
+		...                       dataProvider     ='ors-online', 
+		...                       dataProviderArgs = {'APIkey': os.environ['ORSKEY']})
+		>>>
+		>>> vrv.addLeafletIsochrones(iso=iso2)
+		
+	Customize the map by using the `addLeafletPolygon()` function:	
+		>>>	myColors = ['red', 'blue', 'green']
+		>>>	
+		>>>	myMap = vrv.addLeafletIcon(location=iso2['location'])
+		>>>	
+		>>>	for i in range(len(iso2['isochrones'])-1, -1, -1):
+		...	    lineColor = myColors[i % len(myColors)]
+		...	    fillColor = lineColor
+		...	    for j in range(0, len(iso2['isochrones'][i]['poly'])):
+		...	        myMap = vrv.addLeafletPolygon(mapObject = myMap,
+		...	                                      points    = iso2['isochrones'][i]['poly'][j],
+		...	                                      lineColor = lineColor,
+		...	                                      fillColor = fillColor)
+		>>>	
+		>>>	myMap   	
+	"""
+	
+	
+	# validation
+	[valFlag, errorMsg, warningMsg] = valIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	
+	if (interval == None):
+		interval = rangeSize
+	else:
+		interval = min(interval, rangeSize)
+		
+	iso = privIsochrones(location, locationType, travelMode, rangeType, rangeSize, interval, smoothing, dataProvider, dataProviderArgs)
+	
+	return iso
+
+
+def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False, 
+				mergeByodID=True, splitOnColorChange=True, 
+                title=None, xAxisLabel='time', 
+                xGrid=False, yGrid=False, xMin=0, xMax=None, xGridFreq=60, timeFormat='s', 
+                overlayColumn=None, missingColor='lightgray', 
+                filename=None):
+	"""
+	EXPERIMENTAL.  Draws a Gantt chart from an :ref:`Assignments` dataframe.  This has the appearance of a horizontal bar chart.  The x-axis indicates the elapsed time.  Each `objectID` forms a horizontal bar.
+
+	Parameters
+	----------
+	assignments: :ref:`Assignments` dataframe, Required, default as None
+		The activities and event times are drawn from the `Assignments` dataframe.  Bar colors are specified by the `leafletColor` column of the dataframe.
+	objectIDorder: list, Optional, default as None
+		A list containing values from the `objectID` column of the `assignments` dataframe.  If provided, this list will be used to determine the order in which `objectID`s are displayed on the y-axis of the Gantt chart, where the first item in the list will be on the bottom and the last item will be on top.
+	separateByModelFile: boolean, Optional, default as False
+		If `True`, Gantt chart bars will be formed by the unique combination of the `objectID` and `modelFile` columns of the `assignments` dataframe.  By default, only the `objectID` column will be used to specify the bars.  Note: This field affects the y-axis groupings.
+	mergeByodID: boolean, Optional, default as True
+		If `True`, consecutive assignments that have the same `odID` value (for a particular row of the Gantt chart) and do not have a gap in timing (i.e., the end time of the preceding assignment row equals the start time of the next assignment) will be combined into a single cell.  If `False`, each row of the assignments dataframe will result in a separate Gantt chart cell.  This can lead to a very cluttered figure.
+	splitOnColorChange: boolean, Optional, default as True
+		If `True`, a cell will be split if the `ganttColor` value in the preceding assignment is different (even if the odID is the same and there are no timing gaps).  This case typically would occur if a static assignment (such as a service activity) was appended to a route, and the static assignment has the same odID, and the static assignment did have a `ganttColor` value in the `assignments` dataframe, and `missingColor` is not None.  This defaults to True to help flag these cases; in which case you probably want to fix your assignments dataframe.
+	title: string, Optional, default as None
+		A title to appear above the Gantt chart.
+	xAxisLabel: string, Optional, default as 'time'
+		A label to appear below the x-axis.		  
+	xGrid: boolean, Optional, default as False
+		If `True`, vertical lines will be displayed on the Gantt chart.
+	yGrid: boolean, Optional, default as False
+		If `True`, horizontal lines will be displayed on the Gantt chart.
+	xMin: non-negative float, Optional, default as 0 
+		Specifies the minimum value to display on the x-axis, in units of [seconds].
+	xMax: positive float, Optional, default as None
+		Specifies the maximum value to display on the x-axis, in units of [seconds].  If None (default), xMax will be automatically determined from the `endTimeSeconds` column of the `assignments` dataframe.
+	xGridFreq: positive float, Optional, default as 60
+		Specifies the spacing between tick labels on the x-axis, in units of [seconds].
+	timeFormat: string, Optional, default as 's'
+		Specifies the formatting of the x-axis tick marks.  Valid options are: 'DHMS' (days:hours:minutes:seconds), 'HMS' (hours:minutes:seconds), 'MS' (minutes:seconds), 'D' (fractional number of days), 'H' (fractional number of hours), 'M' (fractional number of minutes), or 'S' (integer number of seconds).
+	overlayColumn: string, Optional, default as None
+		There are three options: None, 'odID', or 'index'.  If None (default), no labels will be shown within each bar cell of the Gantt chart.  If 'odID', each bar cell will display the corresponding odID value.  This only makes sense if `mergeByodID` is True.  If 'index', each bar cell will display the index column value of the `assignments` dataframe.  This can be cluttered, but may be useful for debugging (allowing a mapping from the Gantt chart elements to the particular rows of the assignments dataframe).
+	missingColor: string, Optional, default as 'lightgray'
+		Specifies the default color to use if the assignments dataframe is missing a color for a particular row.  Use `None` if you do not want to use a default color.
+	filename: string, Optional, default as None
+		If provided, the Gant chart will be saved to this file.  The image format will be automatically determined by the file extension (e.g., `.jpg`, `.png`, or `.pdf`).
+
+	Return
+	------
+	A matplotlib figure object.
+
+	Examples
+	--------
+					
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Start by defining some locations for our vehicles to visit:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Convert these locations into a `Nodes` dataframe:
+		>>> myNodes = vrv.createNodesFromLocs(locs=locs)
+		>>> myNodes
+
+	A car will start at node 1, visit nodes 2 and 3, and then return to node 1.  A truck will follow a route from 1->5->4->1.
+		>>> mySolution = {
+		...     'car': [[1,2], [2,3], [3,1]],
+		...     'truck': [[1,5], [5,4], [4,1]]
+		>>> }
+		mySolution
+
+	Define some properties to use when building the `Assignments` dataframe:
+		>>> vehicleProperties = {
+		...     'car':   {'model': 'veroviz/models/car_red.gltf',
+		...               'color': 'red'},
+		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...               'color': 'blue'}
+		>>> }
+
+	Build the assignments dataframe for the 2 vehicle routes.  No service times, Euclidean travel:
+		>>> myAssignments = vrv.initDataframe('assignments')
+		>>> for v in mySolution:
+		...     endTimeSec = 0.0
+		...     for arc in mySolution[v]:
+		...         [myAssignments, endTimeSec] = vrv.addAssignment2D(
+		...             initAssignments = myAssignments,
+		...             objectID        = v,
+		...             modelFile       = vehicleProperties[v]['model'],
+		...             startLoc        = list(myNodes[myNodes['id'] == arc[0]][['lat', 'lon']].values[0]),
+		...             endLoc          = list(myNodes[myNodes['id'] == arc[1]][['lat', 'lon']].values[0]),
+		...             startTimeSec    = endTimeSec,
+		...             routeType       = 'euclidean2D',
+		...             speedMPS        = vrv.convertSpeed(25, 'miles', 'hour', 'meters', 'second'),
+		...             leafletColor    = vehicleProperties[v]['color'],
+		...             cesiumColor     = vehicleProperties[v]['color'],
+		...             ganttColor      = vehicleProperties[v]['color'])
+		>>> myAssignments
+
+	Create a Gantt chart using the default settings:
+		>>> vrv.createGantt(assignments = myAssignments, 
+		...                 xAxisLabel  = 'time [seconds]')
+           
+	Create (and save) a Gantt chart using all of the available settings:
+		>>> vrv.createGantt(assignments         = myAssignments, 
+		...                 objectIDorder       = ['truck', 'car'], 
+		...                 separateByModelFile = False,
+		...                 mergeByodID         = True,
+		...                 splitOnColorChange  = True,
+		...                 title               = 'My Title',
+		...                 xAxisLabel          = 'time [mm:ss]',
+		...                 xGrid               = True,
+		...                 yGrid               = False,
+		...                 xMin                = 0,
+		...                 xMax                = None,
+		...                 xGridFreq           = 30,
+		...                 timeFormat          = 'MS',
+		...                 overlayColumn       = 'odID',
+		...                 missingColor        = 'lightgray',
+		...                 filename            = 'myGantt.png')
+                
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID, splitOnColorChange, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayColumn, missingColor, filename)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+
+	BAR_HEIGHT    = 8
+	BAR_STEP_SIZE = 10
+
+	fig, ax = plt.subplots()
+
+	if (objectIDorder is None):
+		objectIDorder = list(assignments['objectID'].unique())
+	
+	
+	if (separateByModelFile):
+		# Group y-axis labels by objectID and modelFile:
+		# yLabels = list((assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str)).unique())
+		yLabels = []
+		yTicks  = []
+		y       = 2
+		for objectID in objectIDorder:
+			modelFiles = list(assignments[assignments['objectID'] == objectID]['modelFile'].unique())
+			for i in range(0, len(modelFiles)):
+				yLabels.append(str(objectID) + ' - ' + str(modelFiles[i]))
+				yTicks.append(y + BAR_HEIGHT/2) 
+				y += BAR_HEIGHT
+			y += 2
+	else:
+		# Only group y-axis labels by objectID
+		# yGroups = list(assignments['objectID'].unique())
+		yLabels = objectIDorder
+		yTicks  = []
+		y = 2 
+		for i in range(0, len(yLabels)):
+			yTicks.append(y + BAR_HEIGHT/2)
+			y += BAR_STEP_SIZE
+
+	yTicks.append(y)
+
+	maxEnd = max(assignments['endTimeSec'])
+
+	if (xMax is None):
+		xMax = xMin + math.ceil((maxEnd - xMin)/xGridFreq) * xGridFreq
+	
+	ax.set_xlim(xMin, xMax)
+
+	for i in range(0, len(yLabels)):
+		myLabel = yLabels[i]
+		y = yTicks[i]
+		if (separateByModelFile):
+			dummy = pd.DataFrame(assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel])
+			dummy['asgnIndex'] = assignments[assignments['objectID'].map(str) + ' - ' + assignments['modelFile'].map(str) == myLabel].index
+		else:    
+			dummy = pd.DataFrame(assignments[assignments['objectID'].isin([myLabel])])
+			dummy['asgnIndex'] = assignments[assignments['objectID'].isin([myLabel])].index
+
+		# Replace -1 endTime:
+		dummy.loc[dummy['endTimeSec'] < 0, 'endTimeSec'] = maxEnd
+		
+		# If user doesn't want color change to trigger a break,
+		# and if a missing color name is specified,
+		# go ahead and replace missing colors now.
+		if (not splitOnColorChange):
+			if (missingColor is not None):
+				dummy.loc[dummy['ganttColor'].isin([None]), 'ganttColor'] = missingColor
+
+		# Sort by odID and startTime:
+		dummy = dummy.sort_values(by=['odID', 'startTimeSec'], ascending=True)
+		dummy = dummy.reset_index(drop=True)
+		
+		# Add new columns, with values from the *next* row:
+		dummy[['next_odID', 'next_startTimeSec', 'next_ganttColor']] = pd.DataFrame(dummy[1:][['odID', 'startTimeSec', 'ganttColor']].values)
+
+		start_x = None
+		for j in list(dummy.index):
+			# Set the starting x coordinate for a new cell:
+			if (start_x is None):
+				myColor = dummy.loc[j]['ganttColor']
+				if (myColor is None):
+					if (missingColor is None):
+						break
+					else:
+						myColor = missingColor
+				start_x = dummy.loc[j]['startTimeSec']
+				odID    = dummy.loc[j]['odID']	
+			
+			# Check for ending condition of the cell
+			# Break in times,
+			# mergeByodID and change in odIDs
+			# splitOnColorChange and change in colors
+			if (start_x is not None):
+				if ( (not mergeByodID) or \
+					 (dummy.loc[j]['endTimeSec'] != dummy.loc[j]['next_startTimeSec']) or \
+					 (dummy.loc[j]['odID'] != dummy.loc[j]['next_odID']) or \
+					 (splitOnColorChange and (dummy.loc[j]['ganttColor'] != dummy.loc[j]['next_ganttColor'])) ):
+
+					endTime = dummy.loc[j]['endTimeSec']
+					duration = endTime - start_x
+				
+					ax.broken_barh([(start_x, duration)], (y-BAR_HEIGHT/2, BAR_HEIGHT), fc=myColor, ec='black')
+
+					if (overlayColumn == 'index'):
+						if (xMin <= (start_x + duration/2.0) <= xMax):
+							overlayText = dummy.loc[j]['asgnIndex']
+							plt.text((start_x + duration/2.0), y, overlayText, color='black', fontsize=12, ha='center', va='center')
+					elif (overlayColumn == 'odID'):
+						if (xMin <= (start_x + duration/2.0) <= xMax):
+							overlayText = odID
+							plt.text((start_x + duration/2.0), y, overlayText, color='black', fontsize=12, ha='center', va='center')
+					
+					start_x = None		
+
+
+	if (title is not None):
+		plt.title(title)
+
+	ax.set_ylim(0, max(yTicks))
+
+	if (xAxisLabel is not None):
+		ax.set_xlabel(xAxisLabel)
+
+	ax.set_xticks(range(int(xMin), int(xMax+1), int(xGridFreq)))
+	ax.set_yticks(yTicks)
+	ax.set_yticklabels(yLabels, minor=False)
+	ax.set_yticks(yTicks, minor=False)
+
+	ax.grid(xGrid, axis='x')     
+	ax.grid(yGrid, axis='y')     
+
+	if (timeFormat.lower() == 'dhms'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtDHMS))
+	elif (timeFormat.lower() == 'hms'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtHMS))
+	elif (timeFormat.lower() == 'ms'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtMS))
+	elif (timeFormat.lower() == 'd'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtD))
+	elif (timeFormat.lower() == 'h'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtH))
+	elif (timeFormat.lower() == 'm'):
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtM))
+	else:
+		ax.xaxis.set_major_formatter(plt.FuncFormatter(fmtS))
+
+	
+	if (filename is not None):
+		fig.savefig(filename, bbox_inches='tight')
+
+	plt.close();
+
+	return fig
+	
+	
+def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):    
+	"""
+	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  
+
+	Parameters
+	----------
+	locs: list of lists, Required, default as None
+		A list of one or more GPS coordinate of the form [[lat, lon], ...] or [[lat, lon, alt], ...].  If altitude is included in locs, the function will add the elevation to the input altitude.  Otherwise, the input altitude will be assumed to be 0.
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], ..., [lat, lon, altMSL]].
+		
+	Note
+	----
+	Currently, only 'ors-online', 'usgs', and 'elevapi' are supported.
+	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for elevation.  
+
+	Examples
+	--------
+
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The `getElevationLocs()` function requires a data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> ELEVAPI_KEY = os.environ['ELEVAPIKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # ELEVAPI_KEY = 'YOUR_ELEVATIONAPI_KEY_GOES_HERE'                     	
+
+	Define a set of locations:
+		>>> locs = [[42.8871085, -78.8731949],
+		...         [42.8888311, -78.8649649],
+		...         [42.8802158, -78.8660787],
+		...         [42.8845705, -78.8762794],
+		...         [42.8908031, -78.8770140]]
+
+	Use ORS to find the elevations of all locations:
+		>>> vrv.getElevationLocs(locs             = locs, 
+		...                      dataProvider     = 'ors-online', 
+		...                      dataProviderArgs = {'APIkey': ORS_API_KEY})
+
+		[[42.887108, -78.873195, 196.0],
+		 [42.888831, -78.864965, 185.0],
+		 [42.880216, -78.866079, 183.0],
+		 [42.884571, -78.876279, 200.0],
+		 [42.890803, -78.877014, 187.0]]		
+		
+	Use ORS to find the elevation of a single location, with a starting elevation/altitude:
+		>>> vrv.getElevationLocs(locs             = [[42.888, -78.864, 100]], 
+		...                      dataProvider     = 'ors-online', 
+		...                      dataProviderArgs = {'APIkey': ORS_API_KEY})
+		
+		[[42.888, -78.864, 284.0]]
+		
+	Use the US Geological Survey data:
+		>>> vrv.getElevationLocs(locs             = locs, 
+		...                      dataProvider     = 'usgs')		
+		
+		[[42.8871085, -78.8731949, 187.66],
+		 [42.8888311, -78.8649649, 185.15],
+		 [42.8802158, -78.8660787, 181.1],
+		 [42.8845705, -78.8762794, 185.64],
+		 [42.8908031, -78.877014, 186.25]]
+		 
+
+	Use Elevation-API:
+		>>> vrv.getElevationLocs(locs             = [[42.888, -78.864, 100]], 
+		...                      dataProvider     = 'elevapi',
+		...                      dataProviderArgs = {'APIkey': ELEVAPI_KEY})
+
+		[[42.888, -78.864, 292.0]]		 
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGetElevationLocs(locs, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+		
+	locsWithAlt = privGetElevationLocs(locs, dataProvider, dataProviderArgs)
+	
+	return locsWithAlt
+
+
+def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None): 
+	"""
+	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).
+
+	Parameters
+	----------
+	dataframe: pandas.dataframe, Required
+		The dataframe to be exported.  This can be a :ref:`Nodes`, :ref:`Arcs`, or :ref:`Assignments` dataframe.
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	A pandas dataframe.
+		
+	Note
+	----
+	Currently, only 'ors-online', 'usgs', and 'elevapi' are supported.
+	Neither mapQuest, pgRouting, nor OSRM are supported, as they don't appear to have native support for elevation.  
+
+	Examples
+	--------
+                     	
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	The `getElevationDF()` function requires a data provider.  If you have saved your API keys as environment variables, you may use `os.environ` to access them:
+		>>> import os
+		>>> 
+		>>> ORS_API_KEY = os.environ['ORSKEY']
+		>>> ELEVAPI_KEY = os.environ['ELEVAPIKEY']
+		>>> 
+		>>> # Otherwise, you may specify your keys here:
+		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
+		>>> # ELEVAPI_KEY = 'YOUR_ELEVATIONAPI_KEY_GOES_HERE'                     	
+
+	Create a Nodes dataframe.  Note that, by default, there is no elevation data:
+		>>> myNodes = vrv.generateNodes(
+		...     numNodes        = 4,
+		...     nodeType        = 'depot', 
+		...     nodeDistrib     = 'normal', 
+		...     nodeDistribArgs = {
+		...         'center' : [42.30, -78.00], 
+		...         'stdDev' : 1000
+		...     })
+		>>> myNodes['elevMeters']
+
+		0    None
+		1    None
+		2    None
+		3    None
+		Name: elevMeters, dtype: object
+
+	Find missing elevation data using ORS-online:
+		>>> myNodesORS = vrv.getElevationDF(dataframe        = myNodes, 
+		...                                 dataProvider     = 'ors-online',
+		...                                 dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myNodesORS['elevMeters']
+
+		0    460
+		1    448
+		2    461
+		3    446
+		Name: elevMeters, dtype: int64
+
+	Find missing elevation data using USGS:
+		>>> myNodesUSGS = vrv.getElevationDF(dataframe    = myNodes, 
+		...                                  dataProvider = 'usgs')
+		>>> myNodesUSGS['elevMeters']
+
+		0    442.58
+		1    447.53
+		2    455.06
+		3    444.21
+		Name: elevMeters, dtype: object
+
+	Find missing elevation data using Elevation-API:
+		>>> myNodesElevAPI = vrv.getElevationDF(dataframe        = myNodes, 
+		...                                     dataProvider     = 'elevAPI',
+		...                                     dataProviderArgs = {'APIkey': ELEVAPI_KEY})
+		>>> myNodesElevAPI['elevMeters']
+
+		0    192
+		1    192
+		2    192
+		3    178
+		4    178
+		Name: elevMeters, dtype: int64
+	
+	Create an Arcs dataframe from a sequence of nodes:
+		>>> myArcs = vrv.createArcsFromNodeSeq(
+		...     nodeSeq = [1, 2, 3, 4],
+		...     nodes   = myNodes)
+
+	Find missing start/end elevations in the arcs dataframe, using USGS data:
+		>>> myArcsUSGS = vrv.getElevationDF(dataframe        = myArcs, 
+		...                                 dataProvider     = 'usgs')
+		>>> myArcsUSGS[['startElevMeters', 'endElevMeters']]
+			startElevMeters	endElevMeters
+		0	187.66	185.15
+		1	185.15	181.1
+		2	181.1	185.64
+
+
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGetElevationDF(dataframe, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+		
+	# Make copy of dataframe
+	dataframe = pd.DataFrame(dataframe)
+		
+	# Find out the type of dataframe we have:
+	dfCols = list(dataframe.columns)
+	if (('lat' in dfCols) and ('lon' in dfCols) and ('elevMeters' in dfCols)):
+		dfWithAlt = privGetElevationNodes(dataframe, dataProvider, dataProviderArgs)
+	elif (('startElevMeters' in dfCols) and ('endElevMeters' in dfCols)):
+		dfWithAlt = privGetElevationArcsAsgn(dataframe, dataProvider, dataProviderArgs)	
+	else:
+		# This shouldn't happen...validation should catch issues
+		print('Error: Invalid/unknown dataframe configuration.')
+		return
+		
+	return dfWithAlt
+
+
+def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvider=None, dataProviderArgs=None):  
+	"""
+	EXPERIMENTAL.  Get weather information (current and forecasted) for a specified [lat, lon] location.
+
+	Parameters
+	----------
+	location: list, Required
+		A GPS coordinate of the form [lat, lon] or [lat, lon, alt].  If provided, altitude will be ignored.
+	id: integer, Optional, default as None
+		This value may be used to link the resulting dataframe with a different dataframe.  For example, the id could match a nodeID from a nodes dataframe.  If `id=None` and `initDF` is a weather dataframe, a new unique id will be automatically chosen.
+	initDF: pandas dataframe, Optional, default as None
+		If provided, the resulting weather dataframe will be appended to this dataframe.  `initDF` should be the result of calling this function.
+	metricUnits: boolean, Optional, default as False
+		If True, metric units (e.g., Celsius) will be used.  Otherwise, imperial units (e.g., Fahrenheit) will be used.
+	dataProvider: string, Required, default as None
+		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Required, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+	
+	Return
+	------
+	A pandas weather dataframe.
+		
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date:
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+	
+	Example 1: A simple example using the minium input arguments.
+		>>> myDF = vrv.getWeather(location         = [42, -78], 
+		...                       dataProvider     = 'openweather', 
+		...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
+	
+	Example 2: Append to the dataframe created above.  This example uses all of the functional arguments.
+		>>> myDF = vrv.getWeather(location         = [40, -80], 
+		...                       id               = 2, 
+		...                       initDF           = myDF, 
+		...                       metricUnits      = False, 
+		...                       dataProvider     = 'openweather', 
+		...                       dataProviderArgs = {'APIkey': 'ENTER KEY HERE'})
+	
+	"""
+	
+	# validation
+	[valFlag, errorMsg, warningMsg] = valGetWeather(location, id, initDF, metricUnits, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return None
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+	
+	# Get an ID:
+	if (id == None):
+		id = 1
+		if (type(initDF) is pd.core.frame.DataFrame):
+			if (len(initDF) > 0):
+				id = max(initDF['id'])+1
+			
+	weatherDF = privGetWeather(location, id, metricUnits, dataProvider, dataProviderArgs)
+
+	# Combine with init dataframe:
+	if (type(initDF) is pd.core.frame.DataFrame):
+		weatherDF = pd.concat([initDF, weatherDF], ignore_index=True, sort=False)
+
+	return weatherDF

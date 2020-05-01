@@ -191,3 +191,152 @@ def replaceBackslashToSlash(path):
 	if (path is not None):
 		path = path.replace("\\", "/")
 	return path
+
+def getDHMS(seconds):
+    '''
+    Split a given number of seconds into integer
+    days, hours, minutes, and seconds.
+    This function is used by `fmtDHMS()`, `fmtHMS()`, ...
+    which format the time labels for createGantt().
+    '''
+    
+    seconds  = int(seconds)
+    
+    days     = int(seconds / (60*60*24))
+    seconds -= (60*60*24) * days
+    
+    hours    = int(seconds / (60*60))
+    seconds -= (60*60) * hours
+    
+    minutes  = int(seconds / 60)
+    seconds -= 60 * minutes
+    
+    return [days, hours, minutes, seconds]
+    
+def fmtDHMS(seconds, pos):
+    # Used by createGantt()
+    [days, hours, minutes, seconds] = getDHMS(seconds)
+    return "%d:%02d:%02d:%02d" % (days, hours, minutes, seconds)
+
+def fmtHMS(seconds, pos):
+    # Used by createGantt()
+    [days, hours, minutes, seconds] = getDHMS(seconds)        
+    return "%02d:%02d:%02d" % (hours, minutes, seconds)
+
+def fmtMS(seconds, pos):
+    # Used by createGantt()
+    [days, hours, minutes, seconds] = getDHMS(seconds)
+    return "%02d:%02d" % (minutes, seconds)
+
+def fmtD(seconds, pos):
+    # Used by createGantt()
+    days = seconds / (60.0 * 60.0 * 24.0)
+    return "%.1f" % (days)
+
+def fmtH(seconds, pos):
+    # Used by createGantt()
+    hours = seconds / (60.0 * 60.0)
+    return "%.1f" % (hours)
+
+def fmtM(seconds, pos):
+    # Used by createGantt()
+    minutes = seconds / 60.0
+    return "%.1f" % (minutes)
+
+def fmtS(seconds, pos):
+    # Used by createGantt()    
+    return "%d" % (seconds)
+    
+def expandCesiumColor(colorString):
+    '''
+    Returns None or Cesium.Color.COLORNAME
+    '''
+    if (colorString is None):
+        return None
+    
+    # Remove any spaces
+    colorString.replace(" ", "")
+    
+    if ('.' in colorString):
+        parts = colorString.split('.')
+        # If correct, parts should have 3 elements
+        if (len(parts) == 3):
+            return '{}.{}.{}'.format(parts[0].capitalize(), parts[1].capitalize(), parts[2].upper())
+        else:
+            return(colorString)
+    else:
+        return 'Cesium.Color.{}'.format(colorString.upper())
+        
+def stripCesiumColor(colorString):
+    '''
+    Returns None or colorname
+    '''
+    if (colorString is None):
+        return None
+    
+    # Remove any spaces
+    colorString.replace(" ", "")
+    
+    if ('.' in colorString):
+        parts = colorString.split('.')
+        # If correct, parts should have 3 elements
+        if (len(parts) == 3):
+            return '{}'.format(parts[2].lower())
+        else:
+            return(colorString)
+    else:
+        return '{}'.format(colorString.lower())
+        
+def splitLeafletCustomIconType(iconType):
+	'''
+	If iconPrefix is 'custom', iconType is expected to be a string of the form '[marker size]-[font color]-[font size]' or '[marker size]-none'.  This function returns a list of size 3, containing the 3 elements separated by '-'.  Missing elements default to be None.
+	'''	
+	if (iconType is None):
+		return [None, None, None]
+	
+	# Ensure we're working with a string
+	iconType = str(iconType)
+
+	try:
+		iconType = iconType.lower()
+	except:
+		pass
+		
+	# Remove any spaces
+	iconType.replace(" ", "")
+
+	if ('-' in iconType):
+		parts = iconType.split('-')
+
+		# First element is supposed to be a number (marker radius)
+		try:
+			parts[0] = float(parts[0])
+		except:
+			pass	
+
+		# Second element should be either a string or None
+		if (len(parts) >= 2):
+			if (parts[1] == 'none'):
+				parts[1] = None
+
+		# Last element should be either a number or None
+		if (len(parts) >= 3):
+			if (parts[2] == 'none'):
+				parts[2] = None
+			else:
+				try:
+					parts[2] = float(parts[2])
+				except:
+					pass
+		else:
+			parts.append(None)	
+
+		return parts[0:3]	
+	else:
+		try:
+			iconType = float(iconType)
+		except:
+			pass
+			
+		return [iconType, None, None]
+                    

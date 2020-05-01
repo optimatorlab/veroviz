@@ -1,12 +1,15 @@
 from veroviz._common import *
 from veroviz._internal import loc2Dict
 from veroviz.utilities import initDataframe
-from veroviz._internal import replaceBackslashToSlash
+from veroviz._internal import replaceBackslashToSlash, addHeadSlash
 
-def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None):
+def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
 				
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
+
+	# Ensure leading slash
+	modelFile = addHeadSlash(modelFile)
 
 	# assignment dataframe
 	assignments = initDataframe('Assignments')
@@ -27,15 +30,27 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 		'endLat': dicLoc['lat'],
 		'endLon': dicLoc['lon'],
 		'endAltMeters': dicLoc['alt'],
+		'ganttColor': ganttColor,
+		'popupText': popupText,
 		'leafletColor': None, 
 		'leafletWeight': None,
 		'leafletStyle': None,
 		'leafletOpacity': None,
+		'leafletCurveType': None,
+		'leafletCurvature': None,
 		'cesiumColor': None,
 		'cesiumWeight': None,
 		'cesiumStyle': None,
 		'cesiumOpacity': None, 
-		'useArrows': None
+		'useArrows': None,
+		'startElevMeters' : None,
+		'endElevMeters' : None,
+		'wayname' : None,
+		'waycategory' : None,
+		'surface' : None,
+		'waytype' : None, 
+		'steepness' : None,
+		'tollway' : None
 		}, ignore_index=True, sort=False)
 
 	if (type(initAssignments) is pd.core.frame.DataFrame):

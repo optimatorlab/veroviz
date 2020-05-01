@@ -4,10 +4,11 @@ from veroviz._getSnapLoc import privGetSnapLocBatch
 
 from veroviz._internal import locs2Dict
 from veroviz._internal import loc2Dict
+from veroviz._internal import stripCesiumColor
 
 from veroviz.utilities import initDataframe
 
-def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
+def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
 
 	"""
 	Given a set of nodes lats and lons, return a node dataframe
@@ -28,17 +29,19 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 		Toggle to choose if we add increment after nodeName, e.g. 'customer1', 'customer2',...
 	incrementStart: int, Optional, default as 1
 		The starting number of the increment.
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the node in either Leaflet or Cesium.  A value of None will result in the node ID being auto-populated in the `popupText` column of the nodes dataframe.
 	leafletIconPrefix: string, Optional, default as "glyphicon"
-		The collection of Leaflet icons.  Options are "glyphicon" or "fa". See :ref:`Leaflet style`
+		The collection of Leaflet icons.  Options are "glyphicon", "fa", or "custom". See :ref:`Leaflet style`
 	leafletIconType: string, Optional, default as "info-sign"
 		The specific icon to be used for all generated nodes.  The list of available options depends on the choice of the leafletIconType. See :ref:`Leaflet style`
 	leafletColor: string, Optional, default as "blue"
 		The icon color of the generated nodes when displayed in Leaflet. One of a collection of pre-specified colors. See :ref:`Leaflet style`
 	leafletIconText: string, Optional, default as None
-		Text that will be displayed within the node on a Leaflet map. See :ref:`Leaflet style`
+		Text that will be displayed within the node on a Leaflet map.  This text will only be shown if `leafletIconPrefix` is 'custom' and `leafletIconType` includes a font color and font size.  A value of None will result in the node ID being displayed in the node.  See :ref:`Leaflet style`.
 	cesiumIconType: string, Optional, default as "pin"
 		'pin' is the only option right now. See :ref:`Cesium style`
-	cesiumColor: string, Optional, default as "Cesium.Color.BLUE"
+	cesiumColor: string, Optional, default as "blue"
 		The color of the generated nodes when displayed in Cesium.  One of a collection of pre-specified colors. See :ref:`Cesium style`
 	cesiumIconText: string, Optional, default as None
 		Text that will be displayed within the node on a Cesium map. See :ref:`Cesium style`
@@ -82,13 +85,15 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 			'altMeters': dicLocs[i]['alt'],
 			'nodeName': nodeNames[i],
 			'nodeType': nodeType,
+			'popupText': popupText if (popupText != None) else ids[i],
 			'leafletIconPrefix': leafletIconPrefix,
 			'leafletIconType': leafletIconType,
 			'leafletColor': leafletColor,
 			'leafletIconText': leafletIconText if (leafletIconText != None) else ids[i],
 			'cesiumIconType': cesiumIconType,
-			'cesiumColor': cesiumColor,
-			'cesiumIconText': cesiumIconText if (cesiumIconText != None) else ids[i]
+			'cesiumColor': stripCesiumColor(cesiumColor),
+			'cesiumIconText': cesiumIconText if (cesiumIconText != None) else ids[i],
+			'elevMeters': None
 			}, ignore_index=True)
 
 	# if the user provided an initNode dataframe, add the new points after it
@@ -97,7 +102,7 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 
 	return nodes
 
-def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY,  leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, popupText=None):
 
 	"""
 	See createArcsFromLocSeq for docstring
@@ -130,11 +135,16 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 			'leafletWeight' : leafletWeight,
 			'leafletStyle' : leafletStyle,
 			'leafletOpacity' : leafletOpacity,
-			'cesiumColor' : cesiumColor,
+			'leafletCurveType' : leafletCurveType,
+			'leafletCurvature' : leafletCurvature,
+			'cesiumColor' : stripCesiumColor(cesiumColor),
 			'cesiumWeight' : cesiumWeight,
 			'cesiumStyle' : cesiumStyle,
 			'cesiumOpacity' : cesiumOpacity,
-			'useArrows': useArrows
+			'useArrows': useArrows,
+			'popupText': popupText, 
+			'startElevMeters': None,
+			'endElevMeters': None
 			}, ignore_index=True)
 
 	# if the user provided an initNode dataframe, add the new points after it

@@ -4,7 +4,7 @@ from veroviz._validation import valCreateArcsFromNodeSeq
 
 from veroviz._createEntitiesFromList import privCreateArcsFromLocSeq
 
-def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, popupText=None):
 
 	"""
 	Create an "arcs" dataframe from an ordered list of coordinates.
@@ -27,9 +27,13 @@ def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, 
 		The line style of the arcs when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the arcs when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the arcs when displayed in Leaflet.
-	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
+	cesiumColor: string, Optional, default as "orange"
 		The color of the arcs when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.
 	cesiumWeight: int, Optional, default as 3
 		The pixel width of the arcs when displayed in Cesium. 
@@ -37,6 +41,8 @@ def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, 
 		The line style of the arcs when displayed in Cesium.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Cesium Style` for more information.
 	cesiumOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the arcs when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium.
 
 	Return
 	------
@@ -75,27 +81,27 @@ def createArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, 
 		...     leafletStyle   = 'dashed', 
 		...     leafletOpacity = 0.6, 
 		...     useArrows      = False, 
-		...     cesiumColor    = 'Cesium.Color.ORANGE', 
+		...     cesiumColor    = 'orange', 
 		...     cesiumWeight   = 5, 
 		...     cesiumStyle    = 'dashed', 
-		...     cesiumOpacity  = 0.6)
+		...     cesiumOpacity  = 0.6,
+		...     popupText      = 'car route')
 		>>> vrv.createLeaflet(arcs=arcs)
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	[valFlag, errorMsg, warningMsg] = valCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 	if (not valFlag):
 		print (errorMsg)
 		return
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, popupText)
 
 	return arcs
 
-def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, useArrows=True,
-	cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY):
+def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, popupText=None):
 
 	"""
 	Create an "arcs" dataframe from an ordered list of node IDs.  The "nodes" dataframe from which these node IDs are drawn must also be specified.
@@ -120,9 +126,13 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, o
 		The line style of the arcs when displayed in Leaflet.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Leaflet style` for more information.
 	leafletOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the arcs when displayed in Leaflet. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	leafletCurveType: string, Optional, default as 'straight'
+		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+	leafletCurvature: float in (-90, 90), Conditional, default as 45
+		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: bool, Optional, default as True
 		Indicates whether arrows should be shown on the arcs when displayed in Leaflet.
-	cesiumColor: string, Optional, default as "Cesium.Color.ORANGE"
+	cesiumColor: string, Optional, default as "orange"
 		The color of the arcs when displayed in Cesium.  See :ref:`Cesium Style` for a list of available colors.
 	cesiumWeight: int, Optional, default as 3
 		The pixel width of the arcs when displayed in Cesium. 
@@ -130,6 +140,8 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, o
 		The line style of the arcs when displayed in Cesium.  Valid options are 'solid', 'dotted', and 'dashed'. See :ref:`Cesium Style` for more information.
 	cesiumOpacity: float in [0, 1], Optional, default as 0.8
 		The opacity of the arcs when displayed in Cesium. Valid values are in the range from 0 (invisible) to 1 (no transparency). 
+	popupText: string, Optional, default as None
+		Text (or HTML) that will be displayed when a user clicks on the arc in either Leaflet or Cesium.
 
 	Return
 	------
@@ -175,10 +187,11 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, o
 		...     leafletStyle   = 'dotted', 
 		...     leafletOpacity = 0.8, 
 		...     useArrows      = False, 
-		...     cesiumColor    = 'Cesium.Color.CADETBLUE', 
+		...     cesiumColor    = 'cadetblue', 
 		...     cesiumWeight   = 3, 
 		...     cesiumStyle    = 'dotted', 
-		...     cesiumOpacity  = 0.8)
+		...     cesiumOpacity  = 0.8,
+		...     popupText      = 'car route')
 		>>> moreArcs
 		
 	Display the nodes and arcs on a Leaflet map:
@@ -186,7 +199,7 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, o
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	[valFlag, errorMsg, warningMsg] = valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
 	if (not valFlag):
 		print (errorMsg)
 		return
@@ -200,6 +213,6 @@ def createArcsFromNodeSeq(nodeSeq=None, nodes=None, initArcs=None, startArc=1, o
 				nodes.loc[nodes['id'] == nodeSeq[i]]['lon'].values[0],
 			])
 
-	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity)
+	arcs = privCreateArcsFromLocSeq(locSeq, initArcs, startArc, objectID, leafletColor, leafletWeight, leafletStyle, leafletOpacity, leafletCurveType, leafletCurvature, useArrows, cesiumColor, cesiumWeight, cesiumStyle, cesiumOpacity, popupText)
 
 	return arcs

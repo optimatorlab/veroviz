@@ -6,6 +6,7 @@ from veroviz._queryORS import orsGetSnapToRoadLatLon
 from veroviz._queryOSRM import osrmGetSnapToRoadLatLon
 from veroviz._queryMapQuest import mqGetSnapToRoadLatLon
 from veroviz._queryMapQuest import mqGetSnapToRoadLatLonBatch
+from veroviz._queryORSlocal import orsLocalGetSnapToRoadLatLon
 
 def privGetSnapLocBatch(locs=None, dataProvider=None, dataProviderArgs=None):
 
@@ -60,6 +61,12 @@ def privGetSnapLocBatch(locs=None, dataProvider=None, dataProviderArgs=None):
 			snapLoc = orsGetSnapToRoadLatLon(locs[i], APIkey)
 			snapLocs.append(snapLoc)
 
+	elif (dataProviderDictionary[dataProvider] == 'ors-local'):
+		port = dataProviderArgs['port']
+		for i in range(len(locs)):
+			snapLoc = orsLocalGetSnapToRoadLatLon(locs[i], port)
+			snapLocs.append(snapLoc)
+
 	for i in range(len(locs)):
 		if (len(locs[i]) == 3):
 			snapLocs[i] = [snapLocs[i][0], snapLocs[i][1], locs[i][2]]
@@ -107,6 +114,11 @@ def privGetSnapLoc(loc=None, dataProvider=None, dataProviderArgs=None):
 	elif (dataProviderDictionary[dataProvider] == 'ors-online'):
 		APIkey = dataProviderArgs['APIkey']
 		snapLoc = orsGetSnapToRoadLatLon(loc, APIkey)			
+
+	elif (dataProviderDictionary[dataProvider] == 'ors-local'):
+		port = dataProviderArgs['port']
+		snapLoc = orsLocalGetSnapToRoadLatLon(loc, port)			
+	
 	
 	if (len(loc) == 3):
 		snapLoc = [snapLoc[0], snapLoc[1], loc[2]]

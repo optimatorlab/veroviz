@@ -1,4 +1,4 @@
-__version__ = '0.3.1'
+__version__ = '0.4.0'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
@@ -31,6 +31,9 @@ from veroviz.createLeaflet import addLeafletMarker
 from veroviz.createLeaflet import addLeafletPolygon
 from veroviz.createLeaflet import addLeafletPolyline
 from veroviz.createLeaflet import addLeafletText
+from veroviz.createLeaflet import addLeafletIcon
+from veroviz.createLeaflet import addLeafletIsochrones
+from veroviz.createLeaflet import addLeafletWeather
 from veroviz.createCesium import createCesium
 
 # Internal shared small functions/constants/validation
@@ -46,7 +49,7 @@ from veroviz._queryPgRouting import pgrGetNearestStreet
 from veroviz._queryPgRouting import pgrGetShapepointsTimeDist
 from veroviz._queryPgRouting import pgrGetTimeDist
 
-# ORS related
+# ORS-online related
 from veroviz._queryORS import orsGetSnapToRoadLatLon
 from veroviz._queryORS import orsGetShapepointsTimeDist
 from veroviz._queryORS import orsGetTimeDistAll2All
@@ -54,6 +57,16 @@ from veroviz._queryORS import orsGetTimeDistOne2Many
 from veroviz._queryORS import orsGetTimeDistMany2One
 from veroviz._queryORS import orsGeocode
 from veroviz._queryORS import orsReverseGeocode
+from veroviz._queryORS import orsIsochrones
+from veroviz._queryORS import orsGetElevation
+
+# ORS-local related
+from veroviz._queryORSlocal import orsLocalGetSnapToRoadLatLon
+from veroviz._queryORSlocal import orsLocalGetShapepointsTimeDist
+from veroviz._queryORSlocal import orsLocalGetTimeDistAll2All
+from veroviz._queryORSlocal import orsLocalGetTimeDistOne2Many
+from veroviz._queryORSlocal import orsLocalGetTimeDistMany2One
+from veroviz._queryORSlocal import orsLocalIsochrones
 
 # OSRM related
 from veroviz._queryOSRM import osrmGetSnapToRoadLatLon
@@ -70,6 +83,15 @@ from veroviz._queryMapQuest import mqGetTimeDistOne2Many
 from veroviz._queryMapQuest import mqGetTimeDistMany2One
 from veroviz._queryMapQuest import mqGeocode
 from veroviz._queryMapQuest import mqReverseGeocode
+
+# USGS related
+from veroviz._queryUSGS import usgsGetElevation
+
+# Elevation-API.io related
+from veroviz._queryElevationapiio import elevapiGetElevation
+
+# OpenWeather related
+from veroviz._queryOpenWeather import owGetWeather
 
 # 3D function related
 from veroviz._buildFlightProfile import buildNoLoiteringFlight
@@ -114,10 +136,3 @@ def checkVersion():
 
 	return versionStatus
 
-# def disableWarningMessages():
-# 	os.environ['VEROVIZ_SHOWWARNINGMESSAGE'] = 'False'
-# 	return
-
-# def enableWarningMessages():
-# 	os.environ['VEROVIZ_SHOWWARNINGMESSAGE'] = 'True'
-# 	return
