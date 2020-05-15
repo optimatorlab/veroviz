@@ -11,7 +11,7 @@ from veroviz._createAssignments import privAddStaticAssignment
 from veroviz._getShapepoints import privGetShapepoints2D
 from veroviz._getShapepoints import privGetShapepoints3D
 
-from veroviz.utilities import initDataframe
+from veroviz._utilities import privInitDataframe
 from veroviz._getTimeDistFromLocs2D import getTimeDistFromLocs2D
 
 from veroviz._internal import stripCesiumColor
@@ -309,7 +309,7 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = initDataframe('assignments')
+	assignmentsDF = privInitDataframe('assignments')
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
@@ -704,7 +704,7 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		print (warningMsg)
 
 	# Initialize an assignments dataframe:
-	assignmentsDF = initDataframe('assignments')
+	assignmentsDF = privInitDataframe('assignments')
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
@@ -998,7 +998,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = initDataframe('assignments')
+	assignmentsDF = privInitDataframe('assignments')
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
@@ -1287,7 +1287,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = initDataframe('assignments')
+	assignmentsDF = privInitDataframe('assignments')
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
@@ -1549,7 +1549,7 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = initDataframe('assignments')
+	assignmentsDF = privInitDataframe('assignments')
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):

@@ -1,6 +1,6 @@
 from veroviz._common import *
 from veroviz._internal import loc2Dict
-from veroviz.utilities import initDataframe
+from veroviz._utilities import privInitDataframe
 from veroviz._internal import replaceBackslashToSlash, addHeadSlash
 
 def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
@@ -12,7 +12,7 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 	modelFile = addHeadSlash(modelFile)
 
 	# assignment dataframe
-	assignments = initDataframe('Assignments')
+	assignments = privInitDataframe('Assignments')
 
 	dicLoc = loc2Dict(loc)
 	

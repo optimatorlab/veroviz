@@ -1,6 +1,6 @@
 from veroviz._common import *
 
-from veroviz.utilities import initDataframe
+from veroviz._utilities import privInitDataframe
 
 def deconstructAssignments(assignments=None, includeStationaryFlag=False, includeVerticalFlag=False):
 	"""
@@ -42,7 +42,7 @@ def deconstructAssignments(assignments=None, includeStationaryFlag=False, includ
 		collection = collection.reset_index(drop=True)
 
 		# Find consecutive routes
-		tmpSubAssignment = initDataframe('Assignments')
+		tmpSubAssignment = privInitDataframe('Assignments')
 		for i in range(len(collection)):
 			if (len(tmpSubAssignment) == 0):
 				tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
@@ -55,7 +55,7 @@ def deconstructAssignments(assignments=None, includeStationaryFlag=False, includ
 					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
 				else:
 					lstSubAssignments.append(tmpSubAssignment.copy())
-					tmpSubAssignment = initDataframe('Assignments')
+					tmpSubAssignment = privInitDataframe('Assignments')
 					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
 		lstSubAssignments.append(tmpSubAssignment.copy())
 

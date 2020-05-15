@@ -2851,6 +2851,69 @@ def valClosestPointLoc2Path(loc, path):
 	return [valFlag, errorMsg, warningMsg]
 	
 
+def valNearestNodes(origin, nodes, k, costDict, metric, routeType, speedMPS, dataProvider, dataProviderArgs):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	routeTypeReqd = False
+
+	# We'll check nodes first.  If nodes is valid, we can do some 
+	# other checks on origin later.
+	if (valFlag):
+		if (nodes is None):
+			valFlag = False
+			errorMsg = "Error: `nodes` cannot be None."
+		else:    
+			[valFlag, errorMsg, warningMsg] = valNodes(nodes)
+
+	if (valFlag):
+		if (len(nodes) == 0):
+			valFlag = False
+			errorMsg = "Error: `nodes` cannot be an empty dataframe."
+
+	if (type(origin) is list):
+		[valFlag, errorMsg, warningMsg] = _valLatLon(origin)  
+		routeTypeReqd = True
+	else:
+		# origin is assumed to be a nodeID
+		[valFlag, errorMsg, warningMsg] = _valInteger(origin, 'origin')
+		if (valFlag):
+			if (origin not in nodes['id'].tolist()):
+				valFlag = False
+				errorMsg = "Error: `origin` %d is not a value in the 'id' column of the `nodes` dataframe." % (origin)
+	
+	if (valFlag):
+		[valFlag, errorMsg, warningMsg] = _valInteger(k, 'k')
+
+	# NOTE: We're not doing any validation on the structure of costDict.
+
+	if ((costDict is None) or (routeTypeReqd)):
+		if (valFlag):
+			if (type(metric) is not str):
+				valFlag = False
+				errorMsg = "Error: `metric` must be either 'distance' or 'time'."
+			elif (metric.lower() not in ['distance', 'time']):
+				valFlag = False
+				errorMsg = "Error: `metric` must be either 'distance' or 'time'."
+
+		if (valFlag):
+			try:
+				routeType = routeType.lower()
+			except:
+				pass
+		
+			if (metric.lower() == 'distance' and routeType in ['euclidean2d', 'manhatan']):
+				if (speedMPS is None):
+					speedMPS = 1  # dummy value
+
+			[valFlag, errorMsg, warningMsg] = _valRouteType2DForScalar(routeType, speedMPS, dataProvider)
+		
+		# FIXME -- Need to check for valid dataProviderArgs
+	
+	return [valFlag, errorMsg, warningMsg]
+
+	
 def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID, splitOnColorChange, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayColumn, missingColor, filename):
 	valFlag = True
 	errorMsg = ""
@@ -4165,7 +4228,7 @@ def _valGreaterThanZeroFloat(number, parameterName):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def _valBetweenOrEqualToInterger(lower, upper, number, parameterName):
+def _valBetweenOrEqualToInteger(lower, upper, number, parameterName):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -4197,7 +4260,7 @@ def _valBetweenOrEqualToInterger(lower, upper, number, parameterName):
 
 	return [valFlag, errorMsg, warningMsg]
 
-def _valBetweenInterger(lower, upper, number, parameterName):
+def _valBetweenInteger(lower, upper, number, parameterName):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -4283,3 +4346,24 @@ def _valBetweenFloat(lower, upper, number, parameterName):
 
 	return [valFlag, errorMsg, warningMsg]
 	
+def _valInteger(number, parameterName):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (number is None):
+		valFlag = False
+		errorMsg = "Error: %s should not be None." % (parameterName)
+	else:
+		try:
+			float(number)
+		except ValueError:
+			valFlag = False
+			errorMsg = "Error: %s should be an integer number." % (parameterName)
+
+	if (valFlag):
+		if (float(number).is_integer() == False):
+			valFlag = False
+			errorMsg = "Error: %s should be an integer number." % (parameterName)
+
+	return [valFlag, errorMsg, warningMsg] 

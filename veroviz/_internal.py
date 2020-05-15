@@ -339,4 +339,44 @@ def splitLeafletCustomIconType(iconType):
 			pass
 			
 		return [iconType, None, None]
-                    
+
+def bitFieldDecomp(value, dictionary):
+    '''
+    This function decomposes a "bitField" to find all values from a dictionary's keys
+    that sum to "value".  For example:
+        orsWaycategoryDict = {0: 'No category',
+                              1: 'Highway',
+                              2: 'Steps',
+                              4: 'Ferry',
+                              8: 'Unpaved road',
+                              16: 'Track',
+                              32: 'Tunnel',
+                              64: 'Paved road',
+                              128: 'Ford'}
+        bitFieldDecomp(97, orsWaycategoryDict) returns 'Paved road, Tunnel, Highway'
+    '''
+    
+    # value must be a number
+    try:
+        val = float(value)
+    except:
+        return None
+
+    if (float(val).is_integer() == False):
+        return None
+
+    returnArray = []
+
+    if (val == 0):
+        return dictionary[val] if val in dictionary else None 
+    while val > 0:
+        x = max([k for k in orsWaycategoryDict.keys() if k <= val])
+        returnArray.append(dictionary[x]) 
+        val -= x
+
+
+    if (len(returnArray) == 0):
+        return None
+    else:
+        return ', '.join(returnArray)
+    

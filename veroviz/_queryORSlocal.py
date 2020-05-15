@@ -1,7 +1,7 @@
 from veroviz._common import *
 from veroviz._internal import distributeTimeDist
 from veroviz._internal import loc2Dict
-from veroviz._internal import locs2Dict
+from veroviz._internal import locs2Dict, bitFieldDecomp
 
 
 def orsLocalGetSnapToRoadLatLon(loc, port):
@@ -180,23 +180,23 @@ def orsLocalGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', port=
 				if ('waycategory' in ex):
 					for [wpStart, wpEnd, val] in ex['waycategory']['values']:
 						if (wpStart == 0):
-							extras[0]['waycategory'] = orsWaycategoryDict[val]
+							extras[0]['waycategory'] = bitFieldDecomp(val, orsWaycategoryDict)
 						for i in range(wpStart+1, wpEnd+1):
-							extras[i]['waycategory'] = orsWaycategoryDict[val]
+							extras[i]['waycategory'] = bitFieldDecomp(val, orsWaycategoryDict)
 	
 				if ('surface' in ex):
 					for [wpStart, wpEnd, val] in ex['surface']['values']:
 						if (wpStart == 0):
-							extras[0]['surface'] = orsSurfaceDict[val]
+							extras[0]['surface'] = orsSurfaceDict[val] if val in orsSurfaceDict else None
 						for i in range(wpStart+1, wpEnd+1):
-							extras[i]['surface'] = orsSurfaceDict[val]
+							extras[i]['surface'] = orsSurfaceDict[val] if val in orsSurfaceDict else None
 
 				if ('waytypes' in ex):
 					for [wpStart, wpEnd, val] in ex['waytypes']['values']:
 						if (wpStart == 0):
-							extras[0]['waytype'] = orsWaytypeDict[val]
+							extras[0]['waytype'] = orsWaytypeDict[val] if val in orsWaytypeDict else None
 						for i in range(wpStart+1, wpEnd+1):
-							extras[i]['waytype'] = orsWaytypeDict[val]
+							extras[i]['waytype'] = orsWaytypeDict[val] if val in orsWaytypeDict else None
 				
 				if ('steepness' in ex):
 					for [wpStart, wpEnd, val] in ex['steepness']['values']:
@@ -208,9 +208,9 @@ def orsLocalGetShapepointsTimeDist(startLoc, endLoc, travelMode='fastest', port=
 				if ('tollways' in ex):
 					for [wpStart, wpEnd, val] in ex['tollways']['values']:
 						if (wpStart == 0):
-							extras[0]['tollway'] = bool(val)
+							extras[0]['tollway'] = bool(val) if type(val) is bool else None
 						for i in range(wpStart+1, wpEnd+1):
-							extras[i]['tollway'] = bool(val)
+							extras[i]['tollway'] = bool(val) if type(val) is bool else None
 			
 			# Just for fun, let's print some other info we got (but didn't save):
 			# print("ascent: {}".format(data['features'][0]['properties']['ascent']))

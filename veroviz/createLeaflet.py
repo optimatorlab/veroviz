@@ -15,7 +15,7 @@ from veroviz._deconstructAssignments import deconstructAssignments
 
 from veroviz._createEntitiesFromList import privCreateArcsFromLocSeq
 
-from veroviz.utilities import getMapBoundary
+from veroviz._utilities import privGetMapBoundary
 
 from veroviz._geometry import geoDistancePath2D
 from veroviz._geometry import geoMileageInPath2D
@@ -283,7 +283,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		if (nodes is None and arcs is None and boundingRegion is None):
 			[midLat, midLon] = [0, 0]
 		else:
-			[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(nodes, arcs, boundingRegion)
+			[[minLat, maxLon], [maxLat, minLon]] = privGetMapBoundary(nodes, arcs, boundingRegion)
 			midLat = (maxLat + minLat) / 2.0
 			midLon = (maxLon + minLon) / 2.0
 		mapObject = _createLeafletMap(mapBackground=mapBackground, center=[midLat,midLon], zoomStart=zoomStart)
@@ -294,7 +294,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 			mapObject.fit_bounds(mapBoundary)
 		elif (mapBoundary is None):
 			if (nodes is not None or arcs is not None or boundingRegion is not None):
-				mapObject.fit_bounds(getMapBoundary(nodes, arcs, boundingRegion))
+				mapObject.fit_bounds(privGetMapBoundary(nodes, arcs, boundingRegion))
 		
 	# Plot arcs
 	if (type(arcs) is pd.core.frame.DataFrame):
@@ -1379,7 +1379,7 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
 		# Adjust the scope of the map to proper bounds
-		[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, points)
+		[[minLat, maxLon], [maxLat, minLon]] = privGetMapBoundary(None, None, points)
 
 		midLat = (maxLat + minLat) / 2.0
 		midLon = (maxLon + minLon) / 2.0
@@ -1390,7 +1390,7 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 		if (mapBoundary is not None):
 			mapObject.fit_bounds(mapBoundary)
 		elif (mapBoundary is None):
-			mapObject.fit_bounds(getMapBoundary(None, None, points))
+			mapObject.fit_bounds(privGetMapBoundary(None, None, points))
 	try:
 		lineStyle = lineStyle.lower()
 	except:
@@ -1543,7 +1543,7 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
 		# Adjust the scope of the map to proper bounds
-		[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, points)
+		[[minLat, maxLon], [maxLat, minLon]] = privGetMapBoundary(None, None, points)
 
 		midLat = (maxLat + minLat) / 2.0
 		midLon = (maxLon + minLon) / 2.0
@@ -1554,7 +1554,7 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 		if (mapBoundary is not None):
 			mapObject.fit_bounds(mapBoundary)
 		elif (mapBoundary is None):
-			mapObject.fit_bounds(getMapBoundary(None, None, points))
+			mapObject.fit_bounds(privGetMapBoundary(None, None, points))
 
 	try:
 		lineStyle = lineStyle.lower()
@@ -1913,7 +1913,7 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 	# If no mapObject exists, define a new mapObject
 	if (mapObject == None):
 		# Adjust the scope of the map to properly show all objects
-		[[minLat, maxLon], [maxLat, minLon]] = getMapBoundary(None, None, iso['boundingRegion'])
+		[[minLat, maxLon], [maxLat, minLon]] = privGetMapBoundary(None, None, iso['boundingRegion'])
 
 		midLat = (maxLat + minLat) / 2.0
 		midLon = (maxLon + minLon) / 2.0
@@ -1924,7 +1924,7 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 		if (mapBoundary is not None):
 			mapObject.fit_bounds(mapBoundary)
 		elif (mapBoundary is None):
-			mapObject.fit_bounds(getMapBoundary(None, None, iso['boundingRegion']))
+			mapObject.fit_bounds(privGetMapBoundary(None, None, iso['boundingRegion']))
 
 
 	if (showBoundingRegion):

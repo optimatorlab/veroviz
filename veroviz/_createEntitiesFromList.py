@@ -6,7 +6,7 @@ from veroviz._internal import locs2Dict
 from veroviz._internal import loc2Dict
 from veroviz._internal import stripCesiumColor
 
-from veroviz.utilities import initDataframe
+from veroviz._utilities import privInitDataframe
 
 def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
 
@@ -73,7 +73,7 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 		locs = privGetSnapLocBatch(locs=locs, dataProvider=dataProvider, dataProviderArgs=dataProviderArgs)
 
 	# node dataframe
-	nodes = initDataframe('Nodes')
+	nodes = privInitDataframe('Nodes')
 
 	# generate nodes
 	dicLocs = locs2Dict(locs)
@@ -120,7 +120,7 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 	odIDs = [n for n in range(startArc, startArc + numArcs)]
 
 	# arc dataframe
-	arcs = initDataframe('Arcs')
+	arcs = privInitDataframe('Arcs')
 
 	# generate arcs
 	for i in range(len(locSeq) - 1):

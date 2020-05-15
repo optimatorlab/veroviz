@@ -1,7 +1,7 @@
 from veroviz._common import *
 
-from veroviz.utilities import convertDistance
-from veroviz.utilities import convertTime
+from veroviz._utilities import privConvertDistance
+from veroviz._utilities import privConvertTime
 
 from veroviz._geometry import geoDistance2D
 from veroviz._internal import locs2Dict
@@ -60,8 +60,8 @@ def getTimeDistFromLocs2D(fromLocs=None, fromRows=None, toLocs=None, toCols=None
 	time = {}
 	for i in range(len(fromRows)):
 		for j in range(len(toCols)):
-			dist[fromRows[i], toCols[j]] = distMeters[i, j] * convertDistance(1.0, 'm', outputDistUnits)
-			time[fromRows[i], toCols[j]] = timeSecs[i, j] * convertTime(1.0, 's', outputTimeUnits)
+			dist[fromRows[i], toCols[j]] = distMeters[i, j] * privConvertDistance(1.0, 'm', outputDistUnits)
+			time[fromRows[i], toCols[j]] = timeSecs[i, j] * privConvertTime(1.0, 's', outputTimeUnits)
 
 	return [time, dist]
 

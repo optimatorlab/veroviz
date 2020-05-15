@@ -20,8 +20,8 @@ from veroviz._geometry import geoDistance2D
 # FIXME -- WAS IN LP'S CODE -- from veroviz._geometry import geoGetHeading
 # FIXME -- WAS IN LP'S CODE -- from veroviz._geometry import geoPointInDistance2D
 
-from veroviz.utilities import convertDistance
-from veroviz.utilities import initDataframe
+from veroviz._utilities import privConvertDistance    # FIXME -- Where is this used?
+from veroviz._utilities import privInitDataframe
 
 def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
 
@@ -109,7 +109,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 		dicPath = locs2Dict(path)
 
 		# shapepoint dataframe
-		assignments = initDataframe('Assignments')
+		assignments = privInitDataframe('Assignments')
 
 		# generate assignments
 		for i in range(1, len(path)):
@@ -168,7 +168,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 		else:
 			elev = None
 			
-		assignments = initDataframe('Assignments')
+		assignments = privInitDataframe('Assignments')
 		assignments = assignments.append({
 			'odID' : odID,
 			'objectID' : objectID, 
@@ -235,7 +235,7 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 		loiterTime=remainLoiterTime)
 
 	# Build assignments dataframe
-	assignments = initDataframe('assignments')
+	assignments = privInitDataframe('assignments')
 	for i in range(1, len(flight)):
 		# For all segments in flight profile, loitering happens AFTER arrival at that position
 		assignments = assignments.append({
