@@ -1,6 +1,6 @@
 from veroviz._common import *
 
-from veroviz.utilities import convertSpeed
+from veroviz._utilities import privConvertSpeed    # FIXME -- Where is this used?
 
 from veroviz._geometry import geoMileageInPath2D
 from veroviz._geometry import geoDistancePath2D

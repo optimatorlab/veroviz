@@ -1,8 +1,8 @@
 from veroviz._common import *
 from veroviz._validation import valGetTimeDistScalar3D
 
-from veroviz.utilities import convertDistance
-from veroviz.utilities import convertTime
+from veroviz._utilities import privConvertDistance
+from veroviz._utilities import privConvertTime
 
 from veroviz._buildFlightProfile import buildNoLoiteringFlight
 from veroviz._buildFlightProfile import getTimeDistFromFlight
@@ -99,8 +99,8 @@ def getTimeDistScalar3D(startLoc=None, endLoc=None, outputDistUnits='meters', ou
 	flight = buildNoLoiteringFlight(routeType, startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
 	[timeSec, gDistMeters, fDistMeters] = getTimeDistFromFlight(flight.copy())
 
-	time = timeSec * convertTime(1.0, "s", outputTimeUnits)
-	groundDistance = gDistMeters * convertDistance(1.0, "m", outputDistUnits)
-	flightDistance = fDistMeters * convertDistance(1.0, "m", outputDistUnits)
+	time = timeSec * privConvertTime(1.0, "s", outputTimeUnits)
+	groundDistance = gDistMeters * privConvertDistance(1.0, "m", outputDistUnits)
+	flightDistance = fDistMeters * privConvertDistance(1.0, "m", outputDistUnits)
 
 	return [time, groundDistance, flightDistance]

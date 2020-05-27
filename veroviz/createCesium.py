@@ -8,8 +8,8 @@ from veroviz._internal import addHeadSlash
 from veroviz._internal import replaceBackslashToSlash
 from veroviz._internal import expandCesiumColor
 
-from veroviz.utilities import getMapBoundary
-from veroviz.utilities import exportDataframe
+from veroviz._utilities import privGetMapBoundary
+from veroviz._utilities import privExportDataframe
 
 def createCesium(assignments=None, nodes=None, startDate=None, startTime='08:00:00', postBuffer=30, cesiumDir=None, problemDir=None, nodeColor=None, nodeStyle=None, pathColor=None, pathWeight=None, pathStyle=None, pathOpacity=None):
 	"""
@@ -147,7 +147,7 @@ def createCesium(assignments=None, nodes=None, startDate=None, startTime='08:00:
 	_writeSelector(fullDir, problemDir)
 
 	# Write Configs
-	mapBoundary = getMapBoundary(nodes=nodes, arcs=assignments, locs=None)
+	mapBoundary = privGetMapBoundary(nodes=nodes, arcs=assignments, locs=None)
 	_writeConfigs(mapBoundary, availStart, path, fullDir, problemDir)
 
 	# Write Nodes

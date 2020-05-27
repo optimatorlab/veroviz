@@ -1,5 +1,11 @@
 ### Change Log
 
+### Version 0.4.1 (2020-05-18)
+
+- Added `nearestNodes()` function to utilities.  Finds k nearest nodes (based on either time or distance) from a given node or location.
+- Fixed bug associated with gathering road information when querying ORS (both online and local) for shapepoint info.
+- Moved `initDataframe()`, `exportDataframe()`, `getMapBoundary()`, `convertDistance()`, `convertSpeed()`, and `convertTime()` to private functions within `_utilities.py`; pointed to these private functions when validation was not required.  This change was made to resolve circular references, where `utilities` imported a library that was also dependent upon `utilities`.
+
 ### Version 0.4.0 (2020-05-01)
 
 This major release focused on adding new data (including elevation and weather), and adding new functions.

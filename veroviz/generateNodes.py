@@ -11,8 +11,8 @@ from veroviz._geometry import geoDistance2D
 from veroviz._geometry import geoIsPointInPoly
 from veroviz._geometry import geoPointInDistance2D
 
-from veroviz.utilities import initDataframe
-from veroviz.utilities import getMapBoundary
+from veroviz._utilities import privInitDataframe	# FIXME -- Where is this used?
+from veroviz._utilities import privGetMapBoundary	# FIXME -- Where is this used?
 
 
 def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, startNode=1, incrementName=False, incrementStart=1, nodeDistrib=None, nodeDistribArgs=None, snapToRoad=False, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None, dataProvider=None, dataProviderArgs=None):

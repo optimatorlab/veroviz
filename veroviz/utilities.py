@@ -7,6 +7,11 @@ from veroviz._isochrones import privIsochrones
 from veroviz._elevation import privGetElevationLocs
 from veroviz._elevation import privGetElevationNodes, privGetElevationArcsAsgn
 from veroviz._weather import privGetWeather
+from veroviz._createEntitiesFromList import privCreateNodesFromLocs
+from veroviz._getTimeDistFromLocs2D import getTimeDistFromLocs2D
+from veroviz._nearestNodes import privNearestNodes
+from veroviz._utilities import privInitDataframe, privConvertDistance, privConvertTime, privConvertSpeed, privGetMapBoundary, privExportDataframe
+
 
 def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist=None, toUnitsTime=None):
 	"""
@@ -47,71 +52,8 @@ def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 	
-	try:
-		fromUnitsDist = fromUnitsDist.lower()
-	except:
-		pass
+	return privConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime)
 	
-	fromUnitsDist = distanceUnitsDictionary[fromUnitsDist]
-	if (fromUnitsDist == 'm'):
-		tmpSpeed = speed * 1.0
-	elif (fromUnitsDist == 'km'):
-		tmpSpeed = speed * VRV_CONST_METERS_PER_KILOMETER
-	elif (fromUnitsDist == 'mi'):
-		tmpSpeed = speed * VRV_CONST_METERS_PER_MILE
-	elif (fromUnitsDist == 'ft'):
-		tmpSpeed = speed * VRV_CONST_METERS_PER_FEET
-	elif (fromUnitsDist == 'yard'):
-		tmpSpeed = speed * VRV_CONST_METERS_PER_YARD
-	elif (fromUnitsDist == 'nmi'):
-		tmpSpeed = speed * VRV_CONST_METERS_PER_NAUTICAL_MILE
-
-	try:
-		fromUnitsTime = fromUnitsTime.lower()
-	except:
-		pass
-
-	fromUnitsTime = timeUnitsDictionary[fromUnitsTime]
-	if (fromUnitsTime == 's'):
-		tmpSpeed = tmpSpeed / 1.0
-	elif (fromUnitsTime == 'min'):
-		tmpSpeed = tmpSpeed / VRV_CONST_SECONDS_PER_MINUTE
-	elif (fromUnitsTime == 'h'):
-		tmpSpeed = tmpSpeed / VRV_CONST_SECONDS_PER_HOUR
-
-	try:
-		toUnitsDist = toUnitsDist.lower()
-	except:
-		pass
-
-	toUnitsDist = distanceUnitsDictionary[toUnitsDist]
-	if (toUnitsDist == 'm'):
-		tmpSpeed = tmpSpeed / 1.0
-	elif (toUnitsDist == 'km'):
-		tmpSpeed = tmpSpeed / VRV_CONST_METERS_PER_KILOMETER
-	elif (toUnitsDist == 'mi'):
-		tmpSpeed = tmpSpeed / VRV_CONST_METERS_PER_MILE
-	elif (toUnitsDist == 'ft'):
-		tmpSpeed = tmpSpeed / VRV_CONST_METERS_PER_FEET
-	elif (toUnitsDist == 'yard'):
-		tmpSpeed = tmpSpeed / VRV_CONST_METERS_PER_YARD
-	elif (toUnitsDist == 'nmi'):
-		tmpSpeed = tmpSpeed / VRV_CONST_METERS_PER_NAUTICAL_MILE
-
-	try:
-		toUnitsTime = toUnitsTime.lower()
-	except:
-		pass
-
-	toUnitsTime = timeUnitsDictionary[toUnitsTime]
-	if (toUnitsTime == 's'):
-		convSpeed = tmpSpeed * 1.0
-	elif (toUnitsTime == 'min'):
-		convSpeed = tmpSpeed * VRV_CONST_SECONDS_PER_MINUTE
-	elif (toUnitsTime == 'h'):
-		convSpeed = tmpSpeed * VRV_CONST_SECONDS_PER_HOUR
-
-	return convSpeed
 
 def convertDistance(distance=None, fromUnits=None, toUnits=None):
 	"""
@@ -149,45 +91,8 @@ def convertDistance(distance=None, fromUnits=None, toUnits=None):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	try:
-		fromUnits = fromUnits.lower()
-	except:
-		pass
-
-	fromUnits = distanceUnitsDictionary[fromUnits]
-	if (fromUnits == 'm'):
-		tmpDist = distance * 1.0
-	elif (fromUnits == 'km'):
-		tmpDist = distance * VRV_CONST_METERS_PER_KILOMETER
-	elif (fromUnits == 'mi'):
-		tmpDist = distance * VRV_CONST_METERS_PER_MILE
-	elif (fromUnits == 'ft'):
-		tmpDist = distance * VRV_CONST_METERS_PER_FEET
-	elif (fromUnits == 'yard'):
-		tmpDist = distance * VRV_CONST_METERS_PER_YARD
-	elif (fromUnits == 'nmi'):
-		tmpDist = distance * VRV_CONST_METERS_PER_NAUTICAL_MILE
-
-	try:
-		toUnits = toUnits.lower()
-	except:
-		pass
-		
-	toUnits = distanceUnitsDictionary[toUnits]
-	if (toUnits == 'm'):
-		convDist = tmpDist / 1.0
-	elif (toUnits == 'km'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_KILOMETER
-	elif (toUnits == 'mi'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_MILE
-	elif (toUnits == 'ft'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_FEET
-	elif (toUnits == 'yard'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_YARD
-	elif (toUnits == 'nmi'):
-		convDist = tmpDist / VRV_CONST_METERS_PER_NAUTICAL_MILE
-
-	return convDist
+	return privConvertDistance(distance, fromUnits, toUnits)
+	
 
 def convertTime(time=None, fromUnits=None, toUnits=None):
 	"""
@@ -225,33 +130,8 @@ def convertTime(time=None, fromUnits=None, toUnits=None):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	try:
-		fromUnits = fromUnits.lower()
-	except:
-		pass
-		
-	fromUnits = timeUnitsDictionary[fromUnits]
-	if (fromUnits == 's'):
-		tmpTime = time * 1.0
-	elif (fromUnits == 'min'):
-		tmpTime = time * VRV_CONST_SECONDS_PER_MINUTE
-	elif (fromUnits == 'h'):
-		tmpTime = time * VRV_CONST_SECONDS_PER_HOUR
+	return privConvertTime(time, fromUnits, toUnits)
 
-	try:
-		toUnits = toUnits.lower()
-	except:
-		pass
-		
-	toUnits = timeUnitsDictionary[toUnits]
-	if (toUnits == 's'):
-		convTime = tmpTime / 1.0
-	elif (toUnits == 'min'):
-		convTime = tmpTime / VRV_CONST_SECONDS_PER_MINUTE
-	elif (toUnits == 'h'):
-		convTime = tmpTime / VRV_CONST_SECONDS_PER_HOUR
-
-	return convTime
 
 def convertArea(area=None, fromUnits=None, toUnits=None):
 	"""
@@ -498,25 +378,9 @@ def initDataframe(dataframeType=None):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	try:
-		dataframeType = dataframeType.lower()
-	except:
-		pass
+	return privInitDataframe(dataframeType)
 	
-	if (dataframeType == 'nodes'):
-		dataframe = pd.DataFrame(
-			columns=nodesColumnList)
-	elif (dataframeType == 'assignments'):
-		dataframe = pd.DataFrame(
-			columns=assignmentsColumnList)
-	elif (dataframeType == 'arcs'):
-		dataframe = pd.DataFrame(
-			columns=arcsColumnList)
-	else:
-		return
-
-	return dataframe
-
+	
 def getMapBoundary(nodes=None, arcs=None, locs=None):
 	"""
 	Find the smallest rectangle that encloses a collection of nodes, arcs, assignments, and/or locations.  This function returns a list of lists, of the form [minLat, maxLon], [maxLat, minLon]].  This is equivalent to finding the southeast and northwest corners of the rectangle.
@@ -587,42 +451,8 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
 		print (warningMsg)
 
-	# Adjust the scope of the map to proper
-	allLats = []
-	allLons = []
-	if (nodes is not None):
-		allLats.extend(nodes['lat'].tolist())
-		allLons.extend(nodes['lon'].tolist())
+	return privGetMapBoundary(nodes, arcs, locs)
 
-	if (arcs is not None):
-		allLats.extend(arcs['startLat'].tolist())
-		allLats.extend(arcs['endLat'].tolist())
-		allLons.extend(arcs['startLon'].tolist())
-		allLons.extend(arcs['endLon'].tolist())
-
-	if (locs is not None):
-		for i in range(len(locs)):
-			allLats.append(locs[i][0])
-			allLons.append(locs[i][1])
-
-	maxLat = max(allLats)
-	minLat = min(allLats)
-	maxLon = max(allLons)
-	minLon = min(allLons)
-
-	if (abs(maxLat - minLat) < 0.0001):
-		maxLat = maxLat + 0.05
-		minLat = minLat - 0.05
-	if (abs(maxLon - minLon) < 0.0001):
-		maxLon = maxLon + 0.05
-		minLon = minLon - 0.05
-
-	maxLat = maxLat + 0.01
-	minLat = minLat - 0.01
-	maxLon = maxLon + 0.01
-	minLon = minLon - 0.01
-
-	return [[minLat, maxLon], [maxLat, minLon]]
 
 def convertMatricesDataframeToDictionary(dataframe=None):
 	"""
@@ -1133,31 +963,8 @@ def exportDataframe(dataframe=None, filename=None):
 		print("Error: 1 or more of the 2 required input parameters to function `exportDataframe()` are missing.")
 		return
 
-	# Replace backslash
-	filename = replaceBackslashToSlash(filename)
-
-	if (type(filename) is not str):
-		print("Error: filename should be a string, please check the inputs.")
-		return
-
-	# Get directory
-	if ("/" in filename):
-		path = ""
-		pathList = filename.split('/')
-		if (len(pathList) > 1):
-			for i in range(len(pathList) - 1):
-				path = path + pathList[i] + '/'
-			if not os.path.exists(path):
-				os.makedirs(path, exist_ok=True)
-
-	try:
-		dataframe.to_csv(path_or_buf=filename, encoding='utf-8')
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
-			print("Message: Data written to %s." % (filename))
-	except:
-		print("Error: Cannot export dataframe, please check the inputs.")
-
-	return
+	return privExportDataframe(dataframe, filename)
+	
 
 def importDataframe(filename=None, intCols=False, useIndex=True):
 	"""
@@ -1941,6 +1748,129 @@ def closestNode2Loc(loc=None, nodes=None):
 		return [None, None]
 
 	return [minNodeID, distMeters]	
+	
+def nearestNodes(origin=None, nodes=None, k=1, costDict=None, metric='distance', routeType='euclidean2D', speedMPS=None, dataProvider=None, dataProviderArgs=None):
+	"""
+	Returns a pandas dataframe with 2 columns, 'id' and 'cost'.  The 'id' column represents a nodeID, the 'cost' represents either a time or a distance (consistent with the data provided by costDict).  The dataframe is sorted according to ascending values of 'cost'.  The top k rows are returned (i.e., the nearest k nodes).
+
+	Parameters
+	----------
+	origin: list or integer, Required, default as None
+		This function finds the k nearest nodes to this starting location.  `origin` can be a location, specified as a list of the form [lat, lon] or [lat, lon, alt].  If provided, the altitude will be ignored.  Alternatively, `origin` can be a nodeID.  In this case, `origin` must be a value in the 'id' column of the `nodes` input.
+	nodes: :ref:`Nodes`, Required, default as None
+		A :ref:`Nodes` dataframe containing the nodes representing destinations from the origin.
+	k: integer, Required, default as 1
+		This function finds the k nodes nearest to the origin.  If k <= 0, the function will simply return all nodes in ascending order of "cost" (excluding the `origin`, if `origin` is a nodeID).
+	costDict: dictionary, Optional, default as None
+		If provided, this should be one of the two output dictionaries from the VeRoViz getTimeDist2D() function.  If not provided, this information will be generated according to the fields below.
+	metric: string, Conditional, default as 'distance'
+		Indicates if "nearness" is according to 'time' or 'distance' (the two valid options for this parameter).  This parameter is only required if `origin` is a location ([lat, lon]) or if `costDict` is None, as this implies that the function will need to build a valid cost dictionary.  In other words, this parameter is ignored if `origin` is a valid nodeID and if `costDict` is not None.        
+	routeType: string, Optional, default as 'euclidean2D'
+		This describes a characteristic of the travel mode.  Possible values are: 'euclidean2D', 'manhattan', 'fastest', 'shortest', 'pedestrian', 'cycling', and 'truck'.  The 'euclidean2D' and 'manhattan' options are calculated directly from GPS coordinates, without a road network.  Neither of these two options require a data provider.  However, the other options rely on road network information and require a data provider.  Furthermore, some of those other options are not supported by all data providers.  See :ref:`Data Providers` for details.
+	speedMPS: float, Conditional, default as None
+		Speed of the vehicle, in units of meters per second. For route types that are not road-network based (i.e., 'euclidean2D' and 'manhattan'), this field is required to calculate travel times. Otherwise, if a route type already incorporates travel speeds from road network data, (i.e., 'fastest', 'shortest', and 'pedestrain'), this input argument may be ignored.  If provided, `speedMPS` will override travel speed data used by the route type option.
+	dataProvider: string, Conditional, default as None
+		Specifies the data source to be used for obtaining the travel data. See :ref:`Data Providers` for options and requirements.
+	dataProviderArgs: dictionary, Conditional, default as None
+		For some data providers, additional parameters are required (e.g., API keys or database names). See :ref:`Data Providers` for the additional arguments required for each supported data provider.
+
+	Returns
+	-------
+	pandas dataframe
+
+	Examples
+	--------
+	Import veroviz and check if the version is up-to-date
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes.
+		>>> locs = [
+		...     [42.1538, -78.4253], 
+		...     [42.3465, -78.6234], 
+		...     [42.6343, -78.1146]]
+		>>> exampleNodes = vrv.createNodesFromLocs(locs=locs)
+
+	Example 1 - Find the k=1 node closest to node 3, according to Euclidean distance
+		>>> vrv.nearestNodes(nodes = exampleNodes, origin = 3, k = 1)    
+
+	Example 2 - Find the k=2 nodes closest to [42, -78], according to the travel time obtained from ORS-online.  This example includes all input parameters.
+		>>> import os
+		>>> ORS_API_KEY     = os.environ['ORSKEY']
+		>>> # ORS_API_KEY   = 'YOUR_ORS_KEY_GOES_HERE'
+
+		>>> vrv.nearestNodes(origin           = [42, -78], 
+		...                  nodes            = exampleNodes, 
+		...                  k                = 2, 
+		...                  costDict         = None, 
+		...                  metric           = 'time', 
+		...                  routeType        = 'fastest',
+		...                  speedMPS         = None, 
+		...                  dataProvider     = 'ors-online', 
+		...                  dataProviderArgs = {'APIkey': ORS_API_KEY})
+
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valNearestNodes(origin, nodes, k, costDict, metric, routeType, speedMPS, dataProvider, dataProviderArgs)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+		print (warningMsg)
+
+	
+	# If origin is a [lat, lon], we need to create a node
+	if (type(origin) is list):
+		originType = 'loc'
+		originNodeID = max(nodes['id']) + 1
+		nodes = privCreateNodesFromLocs(locs=[origin], initNodes=nodes, 
+										startNode=originNodeID, 
+										dataProvider=dataProvider, 
+										dataProviderArgs=dataProviderArgs)
+	else:
+		originType = 'node'
+		originNodeID = origin
+
+
+	if ((originType == 'loc') or (costDict is None)):
+		# Need to get time or dist matrix
+	
+		# Specify the list of rows and columns of output dataframes
+		# This is 'one2many'.
+		fromRows = [originNodeID]
+		toCols = nodes[nodes['id'] != originNodeID]['id'].tolist()
+
+		# Specify lists of coordinates, in [lat, lon] format
+		fromLocs = []
+		toLocs = []
+		for i in range(0, len(fromRows)):
+			fromLocs.append([nodes.loc[nodes['id'] == fromRows[i], 'lat'].values[0], nodes.loc[nodes['id'] == fromRows[i], 'lon'].values[0]])
+		for i in range(0, len(toCols)):
+			toLocs.append([nodes.loc[nodes['id'] == toCols[i], 'lat'].values[0], nodes.loc[nodes['id'] == toCols[i], 'lon'].values[0]])
+
+		if (routeType in ['euclidean2D', 'manhatan']):
+			if (metric == 'distance'):
+				speedMPS = 1   # dummy value
+
+		# Get time/dist
+		[timeSec, distMeters] = getTimeDistFromLocs2D(fromLocs=fromLocs, 
+											 fromRows=fromRows, 
+											 toLocs=toLocs, 
+											 toCols=toCols, 
+											 outputDistUnits='meters', 
+											 outputTimeUnits='seconds', 
+											 routeType=routeType, 
+											 speedMPS=speedMPS, 
+											 dataProvider=dataProvider, 
+											 dataProviderArgs=dataProviderArgs)
+
+		if (metric == 'distance'):
+			costDict = distMeters
+		else:
+			costDict = timeSec
+	
+	return privNearestNodes(nodes, originNodeID, k, costDict)
 	
 def distance2D(loc1=None, loc2=None):
 	"""

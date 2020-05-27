@@ -1,4 +1,4 @@
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 # Generate Objects
 from veroviz.generateNodes import generateNodes
@@ -23,6 +23,7 @@ from veroviz.createAssignments import createAssignmentsFromLocSeq2D
 
 # Utilities
 from veroviz.utilities import *
+from veroviz._utilities import *
 
 # Visualize objects
 from veroviz.createLeaflet import createLeaflet
@@ -113,6 +114,7 @@ from veroviz._createEntitiesFromList import privCreateArcsFromLocSeq
 # Functions related to assignments/shapepoints:
 from veroviz._createAssignments import privAddStaticAssignment
 from veroviz._getShapepoints import privGetShapepoints2D
+
 
 # Check the current version and latest version of veroviz
 def checkVersion():

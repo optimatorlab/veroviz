@@ -4,8 +4,8 @@ from veroviz._validation import *
 from veroviz._buildFlightProfile import buildNoLoiteringFlight
 from veroviz._buildFlightProfile import getTimeDistFromFlight
 
-from veroviz.utilities import convertDistance
-from veroviz.utilities import convertTime
+from veroviz._utilities import privConvertDistance
+from veroviz._utilities import privConvertTime
 
 def getTimeDist3D(nodes=None, matrixType='all2all', fromNodeID=None, toNodeID=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None,
 	routeType='square',	climbRateMPS=None, descentRateMPS=None, outputDistUnits='meters', outputTimeUnits='seconds'):
@@ -200,8 +200,8 @@ def getTimeDist3D(nodes=None, matrixType='all2all', fromNodeID=None, toNodeID=No
 	totalFlightDistance = {}
 	for i in range(len(fromIDs)):
 		for j in range(len(toIDs)):
-			totalTime[fromIDs[i], toIDs[j]] = totalTimeSec[i, j] * convertTime(1.0, 's', outputTimeUnits)
-			totalGroundDistance[fromIDs[i], toIDs[j]] = totalGroundDistMeters[i, j] * convertDistance(1.0, 'm', outputDistUnits)
-			totalFlightDistance[fromIDs[i], toIDs[j]] = totalFlightDistMeters[i, j] * convertDistance(1.0, 'm', outputDistUnits)
+			totalTime[fromIDs[i], toIDs[j]] = totalTimeSec[i, j] * privConvertTime(1.0, 's', outputTimeUnits)
+			totalGroundDistance[fromIDs[i], toIDs[j]] = totalGroundDistMeters[i, j] * privConvertDistance(1.0, 'm', outputDistUnits)
+			totalFlightDistance[fromIDs[i], toIDs[j]] = totalFlightDistMeters[i, j] * privConvertDistance(1.0, 'm', outputDistUnits)
 
 	return [totalTime, totalGroundDistance, totalFlightDistance]
