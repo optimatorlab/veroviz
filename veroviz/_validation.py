@@ -3290,7 +3290,7 @@ def _valDatabase(locs, dataProvider, dataProviderArgs):
 			else:
 				databaseName = dataProviderArgs['databaseName']
 				try:
-					conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (databaseName, VRV_SETTING_PGROUTING_USERNAME, VRV_SETTING_PGROUTING_HOST, VRV_SETTING_PGROUTING_PASSWORD))
+					conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (databaseName, config['VRV_SETTING_PGROUTING_USERNAME'], config['VRV_SETTING_PGROUTING_HOST'], config['VRV_SETTING_PGROUTING_PASSWORD']))
 					cur = conn.cursor()
 					sqlCommand = "select min(lat), max(lat), min(lon), max(lon) from ways_vertices_pgr;"
 					cur.execute(sqlCommand)

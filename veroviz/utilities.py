@@ -49,7 +49,7 @@ def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 	
 	return privConvertSpeed(speed, fromUnitsDist, fromUnitsTime, toUnitsDist, toUnitsTime)
@@ -88,7 +88,7 @@ def convertDistance(distance=None, fromUnits=None, toUnits=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	return privConvertDistance(distance, fromUnits, toUnits)
@@ -127,7 +127,7 @@ def convertTime(time=None, fromUnits=None, toUnits=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	return privConvertTime(time, fromUnits, toUnits)
@@ -164,7 +164,7 @@ def convertArea(area=None, fromUnits=None, toUnits=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	try:
@@ -250,7 +250,7 @@ def lengthFromNodeSeq(nodeSeq=None, lengthDict=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	length = 0
@@ -289,7 +289,7 @@ def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	dist = 0
@@ -342,7 +342,7 @@ def calcArea(poly=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 			
 	area = geoAreaOfPolygon(poly)
@@ -375,7 +375,7 @@ def initDataframe(dataframeType=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	return privInitDataframe(dataframeType)
@@ -448,7 +448,7 @@ def getMapBoundary(nodes=None, arcs=None, locs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	return privGetMapBoundary(nodes, arcs, locs)
@@ -777,7 +777,7 @@ def exportDataToCSV(data=None, filename=None):
 		dataframe = convertMatricesDictionaryToDataframe(data)
 		dataframe.to_csv(path_or_buf=filename, encoding='utf-8')
 
-	if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+	if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 		print("Message: Data written to %s." % (filename))
 
 	return
@@ -1085,7 +1085,7 @@ def getConvexHull(locs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	locs2D = []
@@ -1189,7 +1189,7 @@ def isPointInPoly(loc=None, poly=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	loc2D = [loc[0], loc[1]]
@@ -1284,7 +1284,7 @@ def isPathInPoly(path=None, poly=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	path2D = []
@@ -1375,7 +1375,7 @@ def isPathCrossPoly(path=None, poly=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	path2D = []
@@ -1453,7 +1453,7 @@ def isPassPath(loc=None, path=None, tolerance=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	loc2D = [loc[0], loc[1]]
@@ -1505,7 +1505,7 @@ def pointInDistance2D(loc=None, direction=None, distMeters=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	loc2D = [loc[0], loc[1]]
@@ -1574,7 +1574,7 @@ def minDistLoc2Path(loc=None, path=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	distMeters = geoMinDistLoc2Path(loc, path)
@@ -1652,7 +1652,7 @@ def closestPointLoc2Path(loc=None, path=None):
 	if (not valFlag):
 		print (errorMsg)
 		return (None, None)
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	lstLine = []
@@ -1729,7 +1729,7 @@ def closestNode2Loc(loc=None, nodes=None):
 	if (not valFlag):
 		print (errorMsg)
 		return [None, None]
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	distMeters = float('Inf')
@@ -1816,7 +1816,7 @@ def nearestNodes(origin=None, nodes=None, k=1, costDict=None, metric='distance',
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	
@@ -1902,7 +1902,7 @@ def distance2D(loc1=None, loc2=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 	
 	distMeters = geoDistance2D(loc1, loc2)
@@ -1939,7 +1939,7 @@ def distance3D(loc1=None, loc2=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	distMeters = geoDistance3D(loc1, loc2)
@@ -1973,7 +1973,7 @@ def distancePath2D(path=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	dist = 0
@@ -2016,7 +2016,7 @@ def getHeading(currentLoc=None, goalLoc=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	bearingInDegree = geoGetHeading(currentLoc, goalLoc)
@@ -2153,7 +2153,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 
@@ -2305,7 +2305,7 @@ def geocode(location=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	loc = privGeocode(location, dataProvider, dataProviderArgs)
@@ -2456,7 +2456,7 @@ def reverseGeocode(location=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return (None, None)
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	[loc, address] = privReverseGeocode(location, dataProvider, dataProviderArgs)
@@ -2584,7 +2584,7 @@ def isochrones(location=None, locationType='start', travelMode='driving-car', ra
 	if (not valFlag):
 		print (errorMsg)
 		return None
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	
@@ -2721,7 +2721,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	if (not valFlag):
 		print (errorMsg)
 		return None
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 
@@ -2960,7 +2960,7 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return None
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	locsWithAlt = privGetElevationLocs(locs, dataProvider, dataProviderArgs)
@@ -3081,7 +3081,7 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return None
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	# Make copy of dataframe
@@ -3149,7 +3149,7 @@ def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvi
 	if (not valFlag):
 		print (errorMsg)
 		return None
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 	
 	# Get an ID:

@@ -5,7 +5,7 @@ from veroviz._getShapepoints import privGetShapepoints2D
 
 def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, 
 	routeType='euclidean2D', speedMPS=None,   
-	leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
+	leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'], leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'], useArrows=True, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	"""
 	This function generates all of the "shapepoints" between two given GPS coordinates, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by  straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   
@@ -246,7 +246,7 @@ def getShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, endLo
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	assignments = privGetShapepoints2D(odID=odID, objectID=objectID, modelFile=modelFile, startLoc=startLoc, endLoc=endLoc, startTimeSec=startTimeSec, expDurationSec=expDurationSec, routeType=routeType, speedMPS=speedMPS, leafletColor=leafletColor, leafletWeight=leafletWeight, leafletStyle=leafletStyle, leafletOpacity=leafletOpacity, leafletCurveType=leafletCurveType, leafletCurvature=leafletCurvature, useArrows=useArrows, modelScale=modelScale, modelMinPxSize=modelMinPxSize, cesiumColor=cesiumColor, cesiumWeight=cesiumWeight, cesiumStyle=cesiumStyle, cesiumOpacity=cesiumOpacity, ganttColor=ganttColor, popupText=popupText, dataProvider=dataProvider, dataProviderArgs=dataProviderArgs)

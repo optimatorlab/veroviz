@@ -15,7 +15,7 @@ from veroviz._utilities import privInitDataframe	# FIXME -- Where is this used?
 from veroviz._utilities import privGetMapBoundary	# FIXME -- Where is this used?
 
 
-def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, startNode=1, incrementName=False, incrementStart=1, nodeDistrib=None, nodeDistribArgs=None, snapToRoad=False, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None, dataProvider=None, dataProviderArgs=None):
+def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, startNode=1, incrementName=False, incrementStart=1, nodeDistrib=None, nodeDistribArgs=None, snapToRoad=False, popupText=None, leafletIconPrefix=config['VRV_DEFAULT_LEAFLETICONPREFIX'], leafletIconType=config['VRV_DEFAULT_LEAFLETICONTYPE'], leafletColor=config['VRV_DEFAULT_LEAFLETICONCOLOR'], leafletIconText=None, cesiumIconType=config['VRV_DEFAULT_CESIUMICONTYPE'], cesiumColor=config['VRV_DEFAULT_CESIUMICONCOLOR'], cesiumIconText=None, dataProvider=None, dataProviderArgs=None):
 
 	"""
 	This function generates a collection of nodes (locations).
@@ -234,7 +234,7 @@ def generateNodes(initNodes=None, nodeType=None, nodeName=None, numNodes=None, s
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# Generate random nodes - For 2D nodes
@@ -468,7 +468,7 @@ def _genNodesRoadBased(numNodes=None, boundingRegion=None, distToRoad=None, data
 	
 	return locs
 
-def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
+def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=config['VRV_DEFAULT_LEAFLETICONPREFIX'], leafletIconType=config['VRV_DEFAULT_LEAFLETICONTYPE'], leafletColor=config['VRV_DEFAULT_LEAFLETICONCOLOR'], leafletIconText=None, cesiumIconType=config['VRV_DEFAULT_CESIUMICONTYPE'], cesiumColor=config['VRV_DEFAULT_CESIUMICONCOLOR'], cesiumIconText=None):
 
 	"""
 	This function generates a "nodes" dataframe from a given collection of [lat, lon], or [lat, lon, alt], coordinates.
@@ -577,7 +577,7 @@ def createNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None,
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	nodes = privCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incrementName, incrementStart, snapToRoad, dataProvider, dataProviderArgs, popupText, leafletIconPrefix, leafletIconType, leafletColor, leafletIconText, cesiumIconType, cesiumColor, cesiumIconText)

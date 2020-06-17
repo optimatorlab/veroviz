@@ -78,7 +78,7 @@ def getTimeDistScalar2D(startLoc=None, endLoc=None, outputDistUnits='meters', ou
 	if (not valFlag):
 		print (errorMsg)
 		return [None, None]
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	[dicTime, dicDist] = getTimeDistFromLocs2D(

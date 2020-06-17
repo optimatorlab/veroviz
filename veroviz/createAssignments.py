@@ -16,7 +16,7 @@ from veroviz._getTimeDistFromLocs2D import getTimeDistFromLocs2D
 
 from veroviz._internal import stripCesiumColor
 
-def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None, dataProvider=None, dataProviderArgs=None):
+def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None, startLoc=None, endLoc=None, startTimeSec=0.0, expDurationSec=None, routeType='euclidean2D', speedMPS=None, leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'], leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'], useArrows=True, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], popupText=None, dataProvider=None, dataProviderArgs=None):
 
 	"""
 	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the "shapepoints" between given starting and ending locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a given origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.   
@@ -305,7 +305,7 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	if (not valFlag):
 		print (errorMsg)
 		return (None, None)
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
@@ -356,7 +356,7 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	return (assignmentsDF, endTimeSec)
 	
 
-def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE,  useArrows=True, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
+def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None, startTimeSec=0.0, startLoc=None, endLoc=None, takeoffSpeedMPS=None, cruiseSpeedMPS=None, landSpeedMPS=None, cruiseAltMetersAGL=None, routeType='square', climbRateMPS=None, descentRateMPS=None, earliestLandTime=-1, loiterPosition='arrivalAtAlt', leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'], leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'],  useArrows=True, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], popupText=None):
 
 	"""
 	This function appends to an existing :ref:`Assignments` dataframe, or creates a new :ref:`Assignments` dataframe if `initAssignments` is None.  The new rows in this dataframe describe all of the vehicle movements between given starting and ending locations, including timestamps indicating the departure and arrival times for each intermediate point. 
@@ -700,7 +700,7 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# Initialize an assignments dataframe:
@@ -755,7 +755,7 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	return (assignmentsDF, endTimeSec)
 
 
-def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
+def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], loc=None, startTimeSec=None, endTimeSec=None, ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], popupText=None):
 
 	"""
 	This function adds an "object" to an assignments dataframe.  One use of this function is to add a package or other stationary 3D model to be displayed in Cesium.  This function is also useful for holding a vehicle stationary at a location (e.g., during service or loitering).  
@@ -859,7 +859,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# if the user provided an initAssignments dataframe, add the new points after it
@@ -883,7 +883,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 
 	return assignments
 	
-def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, leafletCurveType=None, leafletCurvature=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorService=VRV_DEFAULT_GANTTCOLORSERVICE, popupText=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=0.0, modelFile=None, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=None, leafletWeight=None, leafletStyle=None, leafletOpacity=None, leafletCurveType=None, leafletCurvature=None, useArrows=True, cesiumColor=None, cesiumWeight=None, cesiumStyle=None, cesiumOpacity=None, ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], ganttColorService=config['VRV_DEFAULT_GANTTCOLORSERVICE'], popupText=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive arcs, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
@@ -994,7 +994,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
@@ -1094,7 +1094,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
     			
 	return assignmentsDF
 
-def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None,   leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorService=VRV_DEFAULT_GANTTCOLORSERVICE, popupText=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None,   leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'], leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'], useArrows=True, cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], ganttColorService=config['VRV_DEFAULT_GANTTCOLORSERVICE'], popupText=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive node locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
@@ -1283,7 +1283,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
@@ -1379,7 +1379,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 	
 	
 
-def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY, leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, ganttColor=VRV_DEFAULT_GANTTCOLOR, ganttColorService=VRV_DEFAULT_GANTTCOLORSERVICE, popupText=None, dataProvider=None, dataProviderArgs=None):
+def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTimeSec=0.0, odID=1, objectID=None, modelFile=None, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], startTimeSec=0.0, expDurationArgs=None, routeType='euclidean2D', speedMPS=None, leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'], leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'], useArrows=True, cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], ganttColorService=config['VRV_DEFAULT_GANTTCOLORSERVICE'], popupText=None, dataProvider=None, dataProviderArgs=None):
 	"""
 	This function generates an "assignments" dataframe containing all of the "shapepoints" between successive locations, including timestamps indicating the departure and arrival times for each shapepoint. Shapepoints are pairs of GPS coordinates that are connected by straight lines.  For a particular origin and destination, numerous individual shapepoints can be combined to define a travel route along a road network.  
 
@@ -1545,7 +1545,7 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:

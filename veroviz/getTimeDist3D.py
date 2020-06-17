@@ -130,7 +130,7 @@ def getTimeDist3D(nodes=None, matrixType='all2all', fromNodeID=None, toNodeID=No
 	if (not valFlag):
 		print (errorMsg)
 		return [None, None, None]
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	try:

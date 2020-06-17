@@ -24,9 +24,9 @@ def pgrGetSnapToRoadLatLon(gid, loc, databaseName):
 
 	conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (
 		databaseName, 
-		VRV_SETTING_PGROUTING_USERNAME, 
-		VRV_SETTING_PGROUTING_HOST, 
-		VRV_SETTING_PGROUTING_PASSWORD))
+		config['VRV_SETTING_PGROUTING_USERNAME'], 
+		config['VRV_SETTING_PGROUTING_HOST'], 
+		config['VRV_SETTING_PGROUTING_PASSWORD']))
 	cur = conn.cursor()
 
 	# For maintainability
@@ -84,9 +84,9 @@ def pgrGetNearestStreet(loc, databaseName):
 	"""
 	conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (
 		databaseName, 
-		VRV_SETTING_PGROUTING_USERNAME, 
-		VRV_SETTING_PGROUTING_HOST, 
-		VRV_SETTING_PGROUTING_PASSWORD))
+		config['VRV_SETTING_PGROUTING_USERNAME'], 
+		config['VRV_SETTING_PGROUTING_HOST'], 
+		config['VRV_SETTING_PGROUTING_PASSWORD']))
 	cur = conn.cursor()
 
 	# For maintainability
@@ -169,9 +169,9 @@ def pgrGetShapepointsTimeDist(startLoc, endLoc, databaseName):
 
 	conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (
 		databaseName, 
-		VRV_SETTING_PGROUTING_USERNAME, 
-		VRV_SETTING_PGROUTING_HOST, 
-		VRV_SETTING_PGROUTING_PASSWORD))
+		config['VRV_SETTING_PGROUTING_USERNAME'], 
+		config['VRV_SETTING_PGROUTING_HOST'], 
+		config['VRV_SETTING_PGROUTING_PASSWORD']))
 	conn.autocommit = True
 	cur = conn.cursor()
 
@@ -327,9 +327,9 @@ def pgrGetTimeDist(fromLocs, toLocs, databaseName):
 
 	conn = psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (
 		databaseName, 
-		VRV_SETTING_PGROUTING_USERNAME, 
-		VRV_SETTING_PGROUTING_HOST, 
-		VRV_SETTING_PGROUTING_PASSWORD))
+		config['VRV_SETTING_PGROUTING_USERNAME'], 
+		config['VRV_SETTING_PGROUTING_HOST'], 
+		config['VRV_SETTING_PGROUTING_PASSWORD']))
 	conn.autocommit = True
 	cur = conn.cursor()
 

@@ -101,7 +101,7 @@ def createCesium(assignments=None, nodes=None, startDate=None, startTime='08:00:
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# Set default start date as today
@@ -187,7 +187,7 @@ def _writeSelector(fullDir, problemDir):
 
 	f.write(vrvStr)
 	f.close()
-	if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+	if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 		print ("Message: File selector was written to %s ..." % (vrvFilePath))
 
 	return
@@ -292,7 +292,7 @@ def _writeConfigs(mapBoundary, availStart, path, fullDir, problemDir):
 	f.write(jsStr)
 	f.close()
 
-	if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+	if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 		print("Message: Configs were written to %s ..." % (jsFilePath))
 
 	return
@@ -349,7 +349,7 @@ def _writeNodes(nodes, cesiumIconColor, fullDir):
 	f.write(jsStr)
 	f.close()
 
-	if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+	if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 		print("Message: Nodes were written to %s ..." % (jsFilePath))
 
 	return
@@ -510,7 +510,7 @@ def _writeAssignmentsCZML(path, lstSubAssignments, availStart, availEnd, fullDir
 	f.write(czmlStr)
 	f.close()
 
-	if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+	if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 		print("Message: Assignments (.czml) were written to %s ..." % (czmlFilePath))
 
 	return
@@ -663,7 +663,7 @@ def _writeAssignmentsJS(lstSubAssignments, cesiumColor, cesiumWeight, cesiumStyl
 	f.write(jsStr)
 	f.close()
 
-	if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+	if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 		print("Message: Assignments (.js) were written to %s ..." % (jsFilePath))
 
 	return

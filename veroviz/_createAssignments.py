@@ -3,7 +3,7 @@ from veroviz._internal import loc2Dict
 from veroviz._utilities import privInitDataframe
 from veroviz._internal import replaceBackslashToSlash, addHeadSlash
 
-def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=VRV_DEFAULT_CESIUMMODELSCALE, modelMinPxSize=VRV_DEFAULT_CESIUMMODELMINPXSIZE, loc=None, startTimeSec=None, endTimeSec=None, ganttColor=VRV_DEFAULT_GANTTCOLOR, popupText=None):
+def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=None, modelScale=config['VRV_DEFAULT_CESIUMMODELSCALE'], modelMinPxSize=config['VRV_DEFAULT_CESIUMMODELMINPXSIZE'], loc=None, startTimeSec=None, endTimeSec=None, ganttColor=config['VRV_DEFAULT_GANTTCOLOR'], popupText=None):
 				
 	# Replace backslash
 	modelFile = replaceBackslashToSlash(modelFile)
