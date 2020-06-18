@@ -1,10 +1,11 @@
 ### Change Log
 
-### Version 0.4.1 (2020-05-18)
+### Version 0.4.1 (2020-06-18)
 
 - Added `nearestNodes()` function to utilities.  Finds k nearest nodes (based on either time or distance) from a given node or location.
 - Fixed bug associated with gathering road information when querying ORS (both online and local) for shapepoint info.
 - Moved `initDataframe()`, `exportDataframe()`, `getMapBoundary()`, `convertDistance()`, `convertSpeed()`, and `convertTime()` to private functions within `_utilities.py`; pointed to these private functions when validation was not required.  This change was made to resolve circular references, where `utilities` imported a library that was also dependent upon `utilities`.
+- Added new function, `setGlobal()`, to facilitate setting of global config values.  This function accepts a dictionary as an input. The key corresponds to a global VeRoViz setting parameter. This makes it easier for users to change default values for Leaflet entities and default settings. All the settings are saved in a dictionary named config.  Changes to default config settings are temporary (i.e., lasting only for a particular session).
 
 ### Version 0.4.0 (2020-05-01)
 
