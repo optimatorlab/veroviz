@@ -98,7 +98,7 @@ customMaps = {
 	},
 }
 	
-def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, nodes=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None, arcs=None, arcWeight=None, arcStyle=None, arcOpacity=None, arcCurveType=None, arcCurvature=None, arcColor=None, useArrows=None, arrowsPerArc=1, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR):
+def createLeaflet(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, nodes=None, iconPrefix=None, iconType=None, iconColor=None, iconText=None, arcs=None, arcWeight=None, arcStyle=None, arcOpacity=None, arcCurveType=None, arcCurvature=None, arcColor=None, useArrows=None, arrowsPerArc=1, boundingRegion=None, boundingWeight=config['VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT'], boundingOpacity=config['VRV_DEFAULT_LEAFLETBOUNDINGOPACITY'], boundingStyle=config['VRV_DEFAULT_LEAFLETBOUNDINGSTYLE'], boundingColor=config['VRV_DEFAULT_LEAFLETBOUNDINGCOLOR']):
 
 	"""
 	createLeaflet is used to generate Leaflet objects using folium. The function takes a boundingRegion polygon, `Nodes`, `Arcs`, and `Assignments` dataframes as inputs, and creates a folium/leaflet map showing boundings, nodes and/or arcs. 
@@ -269,7 +269,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# Replace backslash
@@ -298,7 +298,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 		
 	# Plot arcs
 	if (type(arcs) is pd.core.frame.DataFrame):
-		mapObject = _createLeafletArcs(mapObject, arcs, arcWeight, arcOpacity, arcStyle, arcColor, arcCurveType, arcCurvature, useArrows, VRV_DEFAULT_LEAFLET_ARROWSIZE, arrowsPerArc)	
+		mapObject = _createLeafletArcs(mapObject, arcs, arcWeight, arcOpacity, arcStyle, arcColor, arcCurveType, arcCurvature, useArrows, config['VRV_DEFAULT_LEAFLET_ARROWSIZE'], arrowsPerArc)	
 	
 	# Plot bounding
 	if (type(boundingRegion) is list):
@@ -318,12 +318,12 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LE
 				os.makedirs(mapDirectory, exist_ok=True)
 
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 	
 	return mapObject
 
-def _createLeafletMap(mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, center=[0,0], zoomStart=None):
+def _createLeafletMap(mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], center=[0,0], zoomStart=None):
 
 	try:
 		mapBackground = mapBackground.lower()
@@ -700,7 +700,7 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 
 	return mapObject
 
-def _createLeafletBoundingRegion(mapObject=None, boundingRegion=None, boundingWeight=VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT, boundingOpacity=VRV_DEFAULT_LEAFLETBOUNDINGOPACITY, boundingStyle=VRV_DEFAULT_LEAFLETBOUNDINGSTYLE, boundingColor=VRV_DEFAULT_LEAFLETBOUNDINGCOLOR, boundingIsFitEarthCurvature=False):
+def _createLeafletBoundingRegion(mapObject=None, boundingRegion=None, boundingWeight=config['VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT'], boundingOpacity=config['VRV_DEFAULT_LEAFLETBOUNDINGOPACITY'], boundingStyle=config['VRV_DEFAULT_LEAFLETBOUNDINGSTYLE'], boundingColor=config['VRV_DEFAULT_LEAFLETBOUNDINGCOLOR'], boundingIsFitEarthCurvature=False):
 	"""
 	A sub-function to create leaflet bounding region
 
@@ -928,7 +928,7 @@ def _getCurveGreatCircle(startLoc, endLoc, numShapepoint=50):
 	path.append(endLoc)
 	return path
 
-def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=None, text=None, fontSize=VRV_DEFAULT_LEAFLET_FONTSIZE, fontColor=VRV_DEFAULT_LEAFLET_FONTCOLOR, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
+def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, center=None, radius=None, text=None, fontSize=config['VRV_DEFAULT_LEAFLET_FONTSIZE'], fontColor=config['VRV_DEFAULT_LEAFLET_FONTCOLOR'], popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=config['VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE'], fillOpacity=0.3):
 
 	"""
 	Add a circle, with a radius specified in [meters], to a Leaflet map.
@@ -1020,7 +1020,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 	
 	try:
@@ -1097,12 +1097,12 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject
 	
-def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, center=None, radius=5, text=None, fontSize=VRV_DEFAULT_LEAFLET_FONTSIZE, fontColor=VRV_DEFAULT_LEAFLET_FONTCOLOR, popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, fillOpacity=0.3):
+def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, center=None, radius=5, text=None, fontSize=config['VRV_DEFAULT_LEAFLET_FONTSIZE'], fontColor=config['VRV_DEFAULT_LEAFLET_FONTCOLOR'], popupText=None, lineWeight=3, lineColor=None, lineOpacity=0.8, lineStyle='solid', fillColor=config['VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE'], fillOpacity=0.3):
 
 	"""
 	Add a circle-shaped marker, with a radius specified in [pixels], to a Leaflet map.
@@ -1193,7 +1193,7 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	try:
@@ -1270,12 +1270,12 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject	
 
-def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid', fillColor=None, fillOpacity=0.3):
+def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=config['VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE'], lineOpacity=0.8, lineStyle='solid', fillColor=None, fillOpacity=0.3):
 	"""
 	Add a polygon, as defined by an ordered collection of lat/lon coordinates, to a Leaflet map.
 		
@@ -1361,14 +1361,14 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# Do we have a rectangle?
 	if (len(points) == 2):
 		if ( (len(points[0]) == 2) & (len(points[1]) == 2)):
 			points = [points[0], [points[0][0], points[1][1]], points[1], [points[1][0], points[0][1]]]
-			if (VRV_SETTING_SHOWWARNINGMESSAGE):
+			if (config['VRV_SETTING_SHOWWARNINGMESSAGE']):
 				print("NOTE: Only two pairs of coordinates were provided in 'points'.  This is being interpreted as a rectangle.")
 
 	try:
@@ -1436,12 +1436,12 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAUL
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject
 
-def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE, lineOpacity=0.8, lineStyle='solid', lineCurveType='straight', lineCurvature=45, useArrows=False, arrowsPerArc=1):
+def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, points=None, popupText=None, lineWeight=3, lineColor=config['VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE'], lineOpacity=0.8, lineStyle='solid', lineCurveType='straight', lineCurvature=45, useArrows=False, arrowsPerArc=1):
 
 	"""
 	Add a polyline, as described by an ordered collection of lat/lon coordinates, to a Leaflet map.  
@@ -1532,7 +1532,7 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	try:
@@ -1578,16 +1578,16 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAU
 	# print("FIXMELP -- DONE?  Your branch has some code here, but it cannot be implemented because it is missing some variables.  Please fix this appropriately.")
 
 	arcs = privCreateArcsFromLocSeq(locSeq = points, popupText = popupText)	
-	mapObject = _createLeafletArcs(mapObject=mapObject, arcs=arcs, arcWeight=lineWeight, arcOpacity=lineOpacity, arcStyle=lineStyle, arcColor=lineColor, arcCurveType=lineCurveType, arcCurvature=lineCurvature, useArrows=useArrows, arrowSize=VRV_DEFAULT_LEAFLET_ARROWSIZE, arrowsPerArc=arrowsPerArc)
+	mapObject = _createLeafletArcs(mapObject=mapObject, arcs=arcs, arcWeight=lineWeight, arcOpacity=lineOpacity, arcStyle=lineStyle, arcColor=lineColor, arcCurveType=lineCurveType, arcCurvature=lineCurvature, useArrows=useArrows, arrowSize=config['VRV_DEFAULT_LEAFLET_ARROWSIZE'], arrowsPerArc=arrowsPerArc)
 	
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject
 
-def addLeafletText(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, anchorPoint=None, text=None, fontSize=VRV_DEFAULT_LEAFLET_FONTSIZE, fontColor=VRV_DEFAULT_LEAFLET_FONTCOLOR, horizAlign='center'):
+def addLeafletText(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, anchorPoint=None, text=None, fontSize=config['VRV_DEFAULT_LEAFLET_FONTSIZE'], fontColor=config['VRV_DEFAULT_LEAFLET_FONTCOLOR'], horizAlign='center'):
 	"""
 	Add a text label to a Leaflet map. 
 		
@@ -1655,7 +1655,7 @@ def addLeafletText(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	try:
@@ -1701,13 +1701,13 @@ def addLeafletText(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject
 	
 	
-def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, location=None, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, iconText=None, popupText=None):
+def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, location=None, iconPrefix=config['VRV_DEFAULT_LEAFLETICONPREFIX'], iconType=config['VRV_DEFAULT_LEAFLETICONTYPE'], iconColor=config['VRV_DEFAULT_LEAFLETICONCOLOR'], iconText=None, popupText=None):
 
 	"""
 	Add a single icon/pin to a Leaflet map.
@@ -1774,7 +1774,7 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	try:
@@ -1797,12 +1797,12 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_L
 	
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject	
 		
-def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES, mapBoundary=None, zoomStart=None, iso=None, showBoundingRegion=False, iconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, iconType=VRV_DEFAULT_LEAFLETICONTYPE, iconColor=VRV_DEFAULT_LEAFLETICONCOLOR, iconText=None, popupText=None, lineWeight=3, lineOpacity=0.8, lineStyle='solid', fillOpacity=0.3):
+def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], mapBoundary=None, zoomStart=None, iso=None, showBoundingRegion=False, iconPrefix=config['VRV_DEFAULT_LEAFLETICONPREFIX'], iconType=config['VRV_DEFAULT_LEAFLETICONTYPE'], iconColor=config['VRV_DEFAULT_LEAFLETICONCOLOR'], iconText=None, popupText=None, lineWeight=3, lineOpacity=0.8, lineStyle='solid', fillOpacity=0.3):
 	"""
 	Easily draw isochrones on a Leaflet map.  Be sure to run the `isochrones()` function first.
 		
@@ -1901,7 +1901,7 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	try:
@@ -1930,9 +1930,9 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 	if (showBoundingRegion):
 		folium.PolyLine(
 			iso['boundingRegion'], 
-			color = VRV_DEFAULT_LEAFLETBOUNDINGCOLOR,
-			weight = VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT,
-			opacity = VRV_DEFAULT_LEAFLETBOUNDINGOPACITY,
+			color = config['VRV_DEFAULT_LEAFLETBOUNDINGCOLOR'],
+			weight = config['VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT'],
+			opacity = config['VRV_DEFAULT_LEAFLETBOUNDINGOPACITY'],
 			dash_array = '30 10',
 			popup = 'bounding region'
 		).add_to(mapObject)
@@ -1985,13 +1985,13 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=VRV_DEF
 
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 
 	return mapObject	
 	
 	
-def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename=None, mapBackground=VRV_DEFAULT_LEAFLET_MAPTILES):
+def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename=None, mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES']):
 	"""
 	Adds map tiles showing weather conditions to a Leaflet map.  Weather tiles are obtained via openweathermap.org (an API key is required).
 
@@ -2041,7 +2041,7 @@ def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# Replace backslash
@@ -2078,7 +2078,7 @@ def addLeafletWeather(mapObject=None, mapType='precip', APIkey=None, mapFilename
 				os.makedirs(mapDirectory, exist_ok=True)
 
 		mapObject.save(mapFilename)
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Map page written to %s." % (mapFilename))
 	
 	return mapObject

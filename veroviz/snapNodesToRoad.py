@@ -92,7 +92,7 @@ def snapNodesToRoad(nodes=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	# List of lat/lon before snapping
@@ -155,7 +155,7 @@ def getSnapLocBatch(locs=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	snapLocs = privGetSnapLocBatch(locs, dataProvider, dataProviderArgs)
@@ -219,7 +219,7 @@ def getSnapLoc(loc=None, dataProvider=None, dataProviderArgs=None):
 	if (not valFlag):
 		print (errorMsg)
 		return
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	snapLoc = privGetSnapLoc(loc, dataProvider, dataProviderArgs)

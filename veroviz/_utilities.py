@@ -226,7 +226,7 @@ def privExportDataframe(dataframe, filename):
 
 	try:
 		dataframe.to_csv(path_or_buf=filename, encoding='utf-8')
-		if (VRV_SETTING_SHOWOUTPUTMESSAGE):
+		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
 			print("Message: Data written to %s." % (filename))
 	except:
 		print("Error: Cannot export dataframe, please check the inputs.")

@@ -8,7 +8,7 @@ from veroviz._internal import stripCesiumColor
 
 from veroviz._utilities import privInitDataframe
 
-def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=VRV_DEFAULT_LEAFLETICONPREFIX, leafletIconType=VRV_DEFAULT_LEAFLETICONTYPE, leafletColor=VRV_DEFAULT_LEAFLETICONCOLOR, leafletIconText=None, cesiumIconType=VRV_DEFAULT_CESIUMICONTYPE, cesiumColor=VRV_DEFAULT_CESIUMICONCOLOR, cesiumIconText=None):
+def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=None, startNode=1, incrementName=False, incrementStart=1, snapToRoad=False, dataProvider=None, dataProviderArgs=None, popupText=None, leafletIconPrefix=config['VRV_DEFAULT_LEAFLETICONPREFIX'], leafletIconType=config['VRV_DEFAULT_LEAFLETICONTYPE'], leafletColor=config['VRV_DEFAULT_LEAFLETICONCOLOR'], leafletIconText=None, cesiumIconType=config['VRV_DEFAULT_CESIUMICONTYPE'], cesiumColor=config['VRV_DEFAULT_CESIUMICONCOLOR'], cesiumIconText=None):
 
 	"""
 	Given a set of nodes lats and lons, return a node dataframe
@@ -102,7 +102,7 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 
 	return nodes
 
-def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=VRV_DEFAULT_LEAFLETARCCOLOR, leafletWeight=VRV_DEFAULT_LEAFLETARCWEIGHT, leafletStyle=VRV_DEFAULT_LEAFLETARCSTYLE, leafletOpacity=VRV_DEFAULT_LEAFLETARCOPACITY,  leafletCurveType=VRV_DEFAULT_ARCCURVETYPE, leafletCurvature=VRV_DEFAULT_ARCCURVATURE, useArrows=True, cesiumColor=VRV_DEFAULT_CESIUMPATHCOLOR, cesiumWeight=VRV_DEFAULT_CESIUMPATHWEIGHT, cesiumStyle=VRV_DEFAULT_CESIUMPATHSTYLE, cesiumOpacity=VRV_DEFAULT_CESIUMPATHOPACITY, popupText=None):
+def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'],  leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'], useArrows=True, cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], popupText=None):
 
 	"""
 	See createArcsFromLocSeq for docstring

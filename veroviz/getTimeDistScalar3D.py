@@ -93,7 +93,7 @@ def getTimeDistScalar3D(startLoc=None, endLoc=None, outputDistUnits='meters', ou
 	if (not valFlag):
 		print (errorMsg)
 		return [None, None, None]
-	elif (VRV_SETTING_SHOWWARNINGMESSAGE and warningMsg != ""):
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
 	flight = buildNoLoiteringFlight(routeType, startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, climbRateMPS, cruiseSpeedMPS, landSpeedMPS, descentRateMPS)
