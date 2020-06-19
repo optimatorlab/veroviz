@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Global Settings and Defaults &#8212; veroviz 0.4.0 documentation</title>
+    <title>Constants &#8212; veroviz 0.4.1 documentation</title>
     <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="veroviz" href="modules.html" />
+    <link rel="next" title="modules" href="modules.html" />
     <link rel="prev" title="Cesium Style" href="cesium_style.html" /> 
   </head><body>
 <div class="header">
@@ -33,20 +33,23 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="modules.html" title="veroviz"
+          <a href="modules.html" title="modules"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="cesium_style.html" title="Cesium Style"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.1 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Global Settings and Defaults</a><ul>
-<li><a class="reference internal" href="#constants">Constants</a></li>
+<li><a class="reference internal" href="#">Constants</a><ul>
+<li><a class="reference internal" href="#id1">Constants</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">Global Settings and Defaults</a><ul>
 <li><a class="reference internal" href="#default-leaflet-styles">Default Leaflet Styles</a></li>
 <li><a class="reference internal" href="#default-cesium-styles">Default Cesium Styles</a></li>
 <li><a class="reference internal" href="#settings">Settings</a></li>
@@ -59,7 +62,7 @@
                         title="previous chapter">Cesium Style</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="modules.html"
-                        title="next chapter">veroviz</a></p>
+                        title="next chapter">modules</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -85,13 +88,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="global-settings-and-defaults">
-<span id="id1"></span><h1>Global Settings and Defaults<a class="headerlink" href="#global-settings-and-defaults" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="constants">
+<span id="global-settings-and-defaults"></span><h1>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h1>
 <p>The following items are found in <cite>params.py</cite>, which defines default
-constants and settings for for the ‘veroviz’ package.  If you desire,
+constantsfor the ‘veroviz’ package.  If you desire,
 you may modify these values (although this is not recommended).</p>
-<div class="section" id="constants">
-<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h2>Constants<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <dl>
 <dt>Distance conversions</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_KILOMETER</span> <span class="o">=</span> <span class="mf">1000.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_CONST_METERS_PER_MILE</span> <span class="o">=</span> <span class="mf">1609.34</span>
@@ -119,34 +122,40 @@ you may modify these values (although this is not recommended).</p>
 </dd>
 </dl>
 </div>
+</div>
+<div class="section" id="id2">
+<h1>Global Settings and Defaults<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<p>The following are keys for global variable <cite>config</cite> locates in <cite>params.py</cite>,
+which defines default values and settings for the ‘veroviz’ package.
+If you desire, you may modify these values by <cite>setGlobal(newConfig)</cite>.</p>
 <div class="section" id="default-leaflet-styles">
 <h2>Default Leaflet Styles<a class="headerlink" href="#default-leaflet-styles" title="Permalink to this headline">¶</a></h2>
 <dl>
-<dt>Defaults for adding Leaflet objects (e.g., circles, polygons, text)</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_OBJECT_COLOR_FILL</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_FONTSIZE</span> <span class="o">=</span> <span class="mi">24</span>       <span class="c1"># pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_FONTCOLOR</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLET_MAPTILES</span> <span class="o">=</span> <span class="s1">&#39;CartoDB positron&#39;</span>
+<dt>Defaults for adding Leaflet objects (e.g., circles, polygons, text)</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_FILL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">24</span>     <span class="c1"># pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;CartoDB positron&#39;</span>
 </pre></div>
 </div>
 </dd>
-<dt>For the nodes/icons</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETICONPREFIX</span> <span class="o">=</span> <span class="s1">&#39;glyphicon&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETICONTYPE</span> <span class="o">=</span> <span class="s1">&#39;info-sign&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETICONCOLOR</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+<dt>For the nodes/icons</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONPREFIX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;glyphicon&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONTYPE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;info-sign&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONCOLOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
 </pre></div>
 </div>
 </dd>
-<dt>For the arcs</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCWEIGHT</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCSTYLE</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCOPACITY</span> <span class="o">=</span> <span class="mf">0.8</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETARCCOLOR</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span>
+<dt>For the arcs</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETARCWEIGHT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETARCSTYLE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETARCOPACITY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETARCCOLOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span>
 </pre></div>
 </div>
 </dd>
-<dt>For the boundings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGOPACITY</span> <span class="o">=</span> <span class="mf">0.6</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGSTYLE</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_LEAFLETBOUNDINGCOLOR</span> <span class="o">=</span> <span class="s1">&#39;brown&#39;</span>
+<dt>For the boundings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGOPACITY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGSTYLE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGCOLOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;brown&#39;</span>
 </pre></div>
 </div>
 </dd>
@@ -155,16 +164,16 @@ you may modify these values (although this is not recommended).</p>
 <div class="section" id="default-cesium-styles">
 <h2>Default Cesium Styles<a class="headerlink" href="#default-cesium-styles" title="Permalink to this headline">¶</a></h2>
 <dl>
-<dt>For the nodes/icons</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMICONTYPE</span> <span class="o">=</span> <span class="s1">&#39;pin&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMICONSIZE</span> <span class="o">=</span> <span class="mi">40</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMICONCOLOR</span> <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLUE&#39;</span>
+<dt>For the nodes/icons</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMICONTYPE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pin&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMICONSIZE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMICONCOLOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cesium.Color.BLUE&#39;</span>
 </pre></div>
 </div>
 </dd>
-<dt>For the assignments</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHCOLOR</span> <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHWEIGHT</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHSTYLE</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_DEFAULT_CESIUMPATHOPACITY</span> <span class="o">=</span> <span class="mf">0.8</span>
+<dt>For the assignments</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMPATHCOLOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cesium.Color.ORANGE&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMPATHWEIGHT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMPATHSTYLE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_CESIUMPATHOPACITY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span>
 </pre></div>
 </div>
 </dd>
@@ -173,14 +182,14 @@ you may modify these values (although this is not recommended).</p>
 <div class="section" id="settings">
 <h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
 <dl>
-<dt>pgRouting database settings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_PGROUTING_USERNAME</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_PGROUTING_HOST</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_PGROUTING_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<dt>pgRouting database settings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_PGROUTING_USERNAME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_PGROUTING_HOST&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_PGROUTING_PASSWORD&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 </pre></div>
 </div>
 </dd>
-<dt>Information and message settings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span> <span class="o">=</span> <span class="kc">True</span>
+<dt>Information and message settings</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </dd>
@@ -204,12 +213,12 @@ you may modify these values (although this is not recommended).</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="modules.html" title="veroviz"
+          <a href="modules.html" title="modules"
              >next</a> |</li>
         <li class="right" >
           <a href="cesium_style.html" title="Cesium Style"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

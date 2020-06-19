@@ -139,6 +139,14 @@ def checkVersion():
 	return versionStatus
 
 def setGlobal(newConfig):
+	"""
+	This function accepts a dictionary as an input. The key corresponds to a global VeRoViz setting parameter.  This makes it easier for users to change default values for Leaflet entities and default settings.  All the settings are saved in a dictionary named config.  Changes to default config settings are temporary (i.e., lasting only for a particular session).
+
+	Parameters
+	----------
+	newConfig: Dictionary
+		New configurations for default values and global settings, the keys are the same as the global variable `config`. See :ref:`Global Settings and Defaults` for more details.
+	"""
 	global config
 	if ('VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE' in newConfig):
 		config['VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE'] = newConfig['VRV_DEFAULT_DISTANCE_ERROR_TOLERANCE']
