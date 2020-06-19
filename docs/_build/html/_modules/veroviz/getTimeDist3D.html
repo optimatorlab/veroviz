@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.getTimeDist3D &#8212; veroviz 0.4.0 documentation</title>
+    <title>veroviz.getTimeDist3D &#8212; veroviz 0.4.1 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -62,8 +62,8 @@
 <span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">buildNoLoiteringFlight</span>
 <span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">getTimeDistFromFlight</span>
 
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">convertDistance</span>
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">convertTime</span>
+<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="n">privConvertDistance</span>
+<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="n">privConvertTime</span>
 
 <div class="viewcode-block" id="getTimeDist3D"><a class="viewcode-back" href="../../veroviz.getTimeDist3D.html#veroviz.getTimeDist3D.getTimeDist3D">[docs]</a><span class="k">def</span> <span class="nf">getTimeDist3D</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;all2all&#39;</span><span class="p">,</span> <span class="n">fromNodeID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toNodeID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">takeoffSpeedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cruiseSpeedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">landSpeedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cruiseAltMetersAGL</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 	<span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span>	<span class="n">climbRateMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">descentRateMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">):</span>
@@ -188,7 +188,7 @@
 	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
 		<span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
 	<span class="k">try</span><span class="p">:</span>
@@ -258,9 +258,9 @@
 	<span class="n">totalFlightDistance</span> <span class="o">=</span> <span class="p">{}</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fromIDs</span><span class="p">)):</span>
 		<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">toIDs</span><span class="p">)):</span>
-			<span class="n">totalTime</span><span class="p">[</span><span class="n">fromIDs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">toIDs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">totalTimeSec</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">convertTime</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="p">)</span>
-			<span class="n">totalGroundDistance</span><span class="p">[</span><span class="n">fromIDs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">toIDs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">totalGroundDistMeters</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">convertDistance</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="p">)</span>
-			<span class="n">totalFlightDistance</span><span class="p">[</span><span class="n">fromIDs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">toIDs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">totalFlightDistMeters</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">convertDistance</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="p">)</span>
+			<span class="n">totalTime</span><span class="p">[</span><span class="n">fromIDs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">toIDs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">totalTimeSec</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">privConvertTime</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">outputTimeUnits</span><span class="p">)</span>
+			<span class="n">totalGroundDistance</span><span class="p">[</span><span class="n">fromIDs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">toIDs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">totalGroundDistMeters</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">privConvertDistance</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="p">)</span>
+			<span class="n">totalFlightDistance</span><span class="p">[</span><span class="n">fromIDs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">toIDs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="n">totalFlightDistMeters</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">privConvertDistance</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">outputDistUnits</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="p">[</span><span class="n">totalTime</span><span class="p">,</span> <span class="n">totalGroundDistance</span><span class="p">,</span> <span class="n">totalFlightDistance</span><span class="p">]</span></div>
 </pre></div>
@@ -279,7 +279,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>

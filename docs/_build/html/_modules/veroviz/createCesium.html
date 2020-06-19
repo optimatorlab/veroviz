@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.createCesium &#8212; veroviz 0.4.0 documentation</title>
+    <title>veroviz.createCesium &#8212; veroviz 0.4.1 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -66,8 +66,8 @@
 <span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">replaceBackslashToSlash</span>
 <span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">expandCesiumColor</span>
 
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">getMapBoundary</span>
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="n">exportDataframe</span>
+<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="n">privGetMapBoundary</span>
+<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="n">privExportDataframe</span>
 
 <div class="viewcode-block" id="createCesium"><a class="viewcode-back" href="../../veroviz.createCesium.html#veroviz.createCesium.createCesium">[docs]</a><span class="k">def</span> <span class="nf">createCesium</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startTime</span><span class="o">=</span><span class="s1">&#39;08:00:00&#39;</span><span class="p">,</span> <span class="n">postBuffer</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">cesiumDir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">problemDir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodeStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pathColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pathWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pathStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pathOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -159,7 +159,7 @@
 	<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">valFlag</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">errorMsg</span><span class="p">)</span>
 		<span class="k">return</span>
-	<span class="k">elif</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWWARNINGMESSAGE</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+	<span class="k">elif</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
 	<span class="c1"># Set default start date as today</span>
@@ -205,7 +205,7 @@
 	<span class="n">_writeSelector</span><span class="p">(</span><span class="n">fullDir</span><span class="p">,</span> <span class="n">problemDir</span><span class="p">)</span>
 
 	<span class="c1"># Write Configs</span>
-	<span class="n">mapBoundary</span> <span class="o">=</span> <span class="n">getMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="n">assignments</span><span class="p">,</span> <span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+	<span class="n">mapBoundary</span> <span class="o">=</span> <span class="n">privGetMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="n">assignments</span><span class="p">,</span> <span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 	<span class="n">_writeConfigs</span><span class="p">(</span><span class="n">mapBoundary</span><span class="p">,</span> <span class="n">availStart</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fullDir</span><span class="p">,</span> <span class="n">problemDir</span><span class="p">)</span>
 
 	<span class="c1"># Write Nodes</span>
@@ -245,7 +245,7 @@
 
 	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">vrvStr</span><span class="p">)</span>
 	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-	<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Message: File selector was written to </span><span class="si">%s</span><span class="s2"> ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">vrvFilePath</span><span class="p">))</span>
 
 	<span class="k">return</span>
@@ -350,7 +350,7 @@
 	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsStr</span><span class="p">)</span>
 	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]):</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Configs were written to </span><span class="si">%s</span><span class="s2"> ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsFilePath</span><span class="p">))</span>
 
 	<span class="k">return</span>
@@ -407,7 +407,7 @@
 	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsStr</span><span class="p">)</span>
 	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]):</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Nodes were written to </span><span class="si">%s</span><span class="s2"> ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsFilePath</span><span class="p">))</span>
 
 	<span class="k">return</span>
@@ -568,7 +568,7 @@
 	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">czmlStr</span><span class="p">)</span>
 	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]):</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Assignments (.czml) were written to </span><span class="si">%s</span><span class="s2"> ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">czmlFilePath</span><span class="p">))</span>
 
 	<span class="k">return</span>
@@ -721,7 +721,7 @@
 	<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">jsStr</span><span class="p">)</span>
 	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="k">if</span> <span class="p">(</span><span class="n">VRV_SETTING_SHOWOUTPUTMESSAGE</span><span class="p">):</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]):</span>
 		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Assignments (.js) were written to </span><span class="si">%s</span><span class="s2"> ...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsFilePath</span><span class="p">))</span>
 
 	<span class="k">return</span>
@@ -848,7 +848,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>
