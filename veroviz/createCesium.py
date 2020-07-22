@@ -272,11 +272,11 @@ def _writeConfigs(mapBoundary, availStart, path, fullDir, problemDir):
 			childModels = list(dict.fromkeys(path.loc[(path['objectID'] == objectIDs[i]) & (path['modelFile'] == models[j]), 'action'].tolist()))
 			strChildModels = ""
 			for k in range(len(childModels)):
-				strChildModels += "'o-%s-%s-%s', " % (objectIDs[i], models[j], childModels[k])
+				strChildModels += "'o-%s-%s-%s', " % (objectIDs[i].replace("'", r""), models[j].replace("'", r""), childModels[k].replace("'", r""))
 			if (strChildModels != ""):
 				strChildModels = strChildModels[:-2]
-			jsStr += "objectInfo['%s-%s'] = {\n" % (objectIDs[i], models[j])
-			jsStr += "    label : '%s (%s)', \n" % (objectIDs[i], models[j])
+			jsStr += "objectInfo['%s-%s'] = {\n" % (objectIDs[i].replace("'", r""), models[j].replace("'", r"\'"))
+			jsStr += "    label : '%s (%s)', \n" % (objectIDs[i].replace("'", r"\'"), models[j].replace("'", r"\'"))
 			jsStr += "    childModels : [%s],\n" % (strChildModels)
 			jsStr += "    scale : %s, \n" % (path.loc[(path['objectID'] == objectIDs[i]) & (path['modelFile'] == models[j]), 'modelScale'].tolist()[0])
 			jsStr += "    minPxSize : %s \n" %  (path.loc[(path['objectID'] == objectIDs[i]) & (path['modelFile'] == models[j]), 'modelMinPxSize'].tolist()[0])
@@ -332,10 +332,10 @@ def _writeNodes(nodes, cesiumIconColor, fullDir):
 			popupText = indNodes.iloc[i]['popupText']
 
 			jsStr += "    pin[%s] = viewer.entities.add({\n" % (i)
-			jsStr += "        name : '%s',\n" % (indNodes.iloc[i]['cesiumIconText'])
-			jsStr += "        parent : nodePins,"
+			jsStr += "        name : '%s',\n" % (indNodes.iloc[i]['cesiumIconText'].replace("'", r""))
+			jsStr += "        parent : nodePins,\n"
 			if (popupText is not None):
-				jsStr += "        description : '%s',\n" % (popupText)	
+				jsStr += "        description : '%s',\n" % (popupText.replace("'", r"\'"))	
 			jsStr += "        position : Cesium.Cartesian3.fromDegrees(%s, %s),\n" % (indNodes.iloc[i]['lon'], indNodes.iloc[i]['lat'])
 			jsStr += "        billboard : {\n"
 			jsStr += "            image : pinBuilder.fromText('%s', %s, 40).toDataURL(),\n" % (indNodes.iloc[i]['id'], expandCesiumColor(cesiumIconColor) if (cesiumIconColor != None) else expandCesiumColor(indNodes.iloc[i]['cesiumColor']))
@@ -437,8 +437,8 @@ def _writeAssignmentsCZML(path, lstSubAssignments, availStart, availEnd, fullDir
 	# For each combination of 'objectID', 'modelFile'. 'action', we have a section (in fact we treat a combination of those three fields as unique 'odID')
 	for i in range(len(lstCzml)):
 		czmlStr +=             '{ \n'
-		czmlStr +=             '    "id": "%s", \n' % (czmlIDList[i])
-		czmlStr +=             '    "name": "%s", \n' % (czmlIDList[i])
+		czmlStr +=             '    "id": "%s", \n' % (czmlIDList[i].replace("'", r""))
+		czmlStr +=             '    "name": "%s", \n' % (czmlIDList[i].replace("'", r""))
 		czmlStr +=             '    "availability": "%s/%s", \n' % (availStart, availEnd)
 		czmlStr +=             '    "model": { \n'
 		czmlStr +=             '        "show": true, \n'
@@ -455,7 +455,7 @@ def _writeAssignmentsCZML(path, lstSubAssignments, availStart, availEnd, fullDir
 		czmlStr +=             '        "scale":1.0, \n'
 		czmlStr +=             '        "show":[{"boolean":false}], \n'
 		czmlStr +=             '        "style":"FILL", \n'
-		czmlStr +=             '        "text":"Object %s", \n' % (lstCzml[i].iloc[0]['objectID'])
+		czmlStr +=             '        "text":"Object %s", \n' % (lstCzml[i].iloc[0]['objectID'].replace('"', r'\"'))
 		czmlStr +=             '        "verticalOrigin":"BOTTOM"\n'
 		czmlStr +=             '    }, \n'
 		czmlStr +=             '    "path":{ \n'
@@ -550,7 +550,8 @@ def _writeAssignmentsJS(lstSubAssignments, cesiumColor, cesiumWeight, cesiumStyl
 	# Collect all moving objects ID for path names
 	movingObjects = []
 	for i in range(len(lstSubAssignments)):
-		newObjectID = lstSubAssignments[i].iloc[0]['objectID']
+		newObjectID = lstSubAssignments[i].iloc[0]['objectID'].replace("'", r"")
+		newObjectID = newObjectID.replace('"', r'')
 		if (newObjectID not in movingObjects):
 			movingObjects.append(newObjectID)
 	strMovingObjects = ""
@@ -617,10 +618,10 @@ def _writeAssignmentsJS(lstSubAssignments, cesiumColor, cesiumWeight, cesiumStyl
 		if (assignmentDimension == 3):
 			# For each path, generate one polyline entity
 			jsStr +=     "    paths[%d] = viewer.entities.add({\n" % (i)
-			jsStr +=     "        parent: vehiclePolylines['%s'],\n" % (lstSubAssignments[i].iloc[0]['objectID'])
-			jsStr +=     "        name: 'Objects %s',\n" % (lstSubAssignments[i].iloc[0]['objectID'])
+			jsStr +=     "        parent: vehiclePolylines['%s'],\n" % (lstSubAssignments[i].iloc[0]['objectID'].replace("'", r""))
+			jsStr +=     "        name: 'Objects %s',\n" % (lstSubAssignments[i].iloc[0]['objectID'].replace("'", r""))
 			if (popupText is not None):
-				jsStr +=     "        description: '%s',\n" % (lstSubAssignments[i].iloc[0]['popupText'])
+				jsStr +=     "        description: '%s',\n" % (popupText.replace("'", r"\'"))
 			jsStr +=     "        polyline: {\n"
 			jsStr +=     "            positions: Cesium.Cartesian3.fromDegreesArrayHeights([\n"
 			for j in range(0, len(assignmentLats)):
@@ -638,8 +639,8 @@ def _writeAssignmentsJS(lstSubAssignments, cesiumColor, cesiumWeight, cesiumStyl
 		elif (assignmentDimension == 2):
 			# For each path, generate one polyline entity
 			jsStr +=     "    paths[%d] = viewer.entities.add({\n" % (i)
-			jsStr +=     "        parent: vehiclePolylines['%s'],\n" % (lstSubAssignments[i].iloc[0]['objectID'])
-			jsStr +=     "        name: 'Objects %s',\n" % (lstSubAssignments[i].iloc[0]['objectID'])
+			jsStr +=     "        parent: vehiclePolylines['%s'],\n" % (lstSubAssignments[i].iloc[0]['objectID'].replace("'", r""))
+			jsStr +=     "        name: 'Objects %s',\n" % (lstSubAssignments[i].iloc[0]['objectID'].replace("'", r""))
 			jsStr +=     "        polyline: {\n"
 			jsStr +=     "            positions: Cesium.Cartesian3.fromDegreesArray([\n"
 			for j in range(0, len(assignmentLats)):
@@ -759,7 +760,7 @@ def _getPathsDetails(assignments):
 	for i in range(len(lstSubAssignments)):
 		path = path.append({
 			'odID': lstSubAssignments[i].iloc[0]['odID'],
-			'czmlID': 'o-%s-%s-%s' % (lstSubAssignments[i].iloc[0]['objectID'], lstSubAssignments[i].iloc[0]['modelFile'], _getAction(lstSubAssignments[i])),
+			'czmlID': 'o-%s-%s-%s' % (lstSubAssignments[i].iloc[0]['objectID'].replace("'", r""), lstSubAssignments[i].iloc[0]['modelFile'], _getAction(lstSubAssignments[i])),
 			'objectID': lstSubAssignments[i].iloc[0]['objectID'],
 			'modelFile': lstSubAssignments[i].iloc[0]['modelFile'],
 			'action': _getAction(lstSubAssignments[i]),

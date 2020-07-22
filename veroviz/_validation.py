@@ -1103,8 +1103,9 @@ def valCreateCesium(assignments, nodes, startDate, startTime, postBuffer, cesium
 			valFlag = False
 			errorMsg = "Error: `cesiumDir` is required for `createCesium()`. Please provide the full absolute directory for cesium, e.g., `cesiumDir = '/home/user/cesium'` for Linux or `cesiumDir = 'D:/cesium'` for Windows.  Note that shortcuts to home directories, such as in `cesiumDir = '~/cesium'`, are not allowed."
 		else:
-			cesiumServerJsDir = addTailSlash(cesiumDir) + 'server.js'
-			if (not os.path.exists(cesiumServerJsDir)):
+			cesiumServerJsDir  = addTailSlash(cesiumDir) + 'server.js'
+			cesiumServerCjsDir = addTailSlash(cesiumDir) + 'server.cjs'
+			if ((not os.path.exists(cesiumServerJsDir)) and (not os.path.exists(cesiumServerCjsDir))):
 				valFlag = False
 				errorMsg = "Error: Cannot find Cesium application in '%s'. Please provide the full absolute path for cesium, and input as `cesiumDir = CESIUMDIRECTORY`, e.g., `cesiumDir = '/home/user/cesium'` for Linux or `cesiumDir = 'D:/cesium'` for Windows.  Note that shortcuts to home directories, such as in `cesiumDir = '~/cesium'`, are not allowed." % (cesiumDir)
 
@@ -1507,6 +1508,11 @@ def valCreateArcsFromNodeSeq(nodeSeq, nodes, initArcs, startArc, objectID, leafl
 		valFlag = False
 		errorMsg = "Error: `nodeSeq` is required.  Please enter the sequence of locations in the format of [nodeID1, nodeID2, ...]."
 
+	if (valFlag):
+		if (nodes is None):
+			valFlag = False
+			errorMsg = "Error: A `nodes` dataframe is required."
+			
 	if (valFlag):
 		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
 		warningMsg += newWarningMsg
