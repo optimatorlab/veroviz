@@ -1,5 +1,15 @@
 ### Change Log
 
+### Version 0.4.2 (2020-07-22)
+
+This minor release fixed some minor bugs.
+
+- Associated with the `createCesium()` function:
+    - Now checks for the existence of Cesium by looking for either `server.js` or `server.cjs`.
+    - Escapes single quotes in `cesiumIconText` `popupText` fields.  These were causing javascript errors in Cesium.
+- Associated with validation:
+    - `createArcsFromNodeSeq` now requires the existence of a `nodes` dataframe.
+    
 ### Version 0.4.1 (2020-06-18)
 
 - Added `nearestNodes()` function to utilities.  Finds k nearest nodes (based on either time or distance) from a given node or location.
