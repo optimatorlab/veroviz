@@ -10,7 +10,7 @@ from veroviz._weather import privGetWeather
 from veroviz._createEntitiesFromList import privCreateNodesFromLocs
 from veroviz._getTimeDistFromLocs2D import getTimeDistFromLocs2D
 from veroviz._nearestNodes import privNearestNodes
-from veroviz._utilities import privInitDataframe, privConvertDistance, privConvertTime, privConvertSpeed, privGetMapBoundary, privExportDataframe
+from veroviz._utilities import privInitDataframe, privConvertDistance, privConvertTime, privConvertSpeed, privGetMapBoundary, privExportDataframe, privAssignmentsToPaths, privArcsToPaths, privClosestPointLoc2Path
 
 
 def convertSpeed(speed=None, fromUnitsDist=None, fromUnitsTime=None, toUnitsDist=None, toUnitsTime=None):
@@ -1030,6 +1030,8 @@ def importDataframe(filename=None, intCols=False, useIndex=True):
 		print("Error: filename should be a string, please check the inputs.")
 		return
 
+	df = None
+	
 	try:
 		if (useIndex):
 			df = pd.read_csv(filename, index_col=0)	
@@ -1588,7 +1590,7 @@ def closestPointLoc2Path(loc=None, path=None):
 	Parameters
 	----------
 	loc: list, Required
-		The coordinate of the current coordinate, in [lat, lon, alt] format
+		The coordinate of the current coordinate, in [lat, lon, alt] format.
 	path: list of lists, Required
 		Specifies the ordered collection of lat/lon coordinates comprising a path.   This must be a list of lists, of the form `[[lat1, lon1], [lat2, lon2], ..., [latn, lonn]]` or `[[lat1, lon1, alt1], [lat2, lon2, alt2], ..., [latn, lonn, altn]]`.  If an altitude is provided with each coordinate, this component will be ignored. 	
 
@@ -1655,23 +1657,246 @@ def closestPointLoc2Path(loc=None, path=None):
 	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
-	lstLine = []
-	for i in range(1, len(path)):
-		lstLine.append([path[i - 1], path[i]])
-
-	distMeters = float('inf')
-
-	for i in range(len(lstLine)):
-		tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
-
-		if (tmpDistMeters < distMeters):
-			distMeters = tmpDistMeters
-			minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
-
-		if (len(minPoint)==3):
-			minPoint[2] = 0
+	(minPoint, distMeters) = privClosestPointLoc2Path(loc, path)
 
 	return (minPoint, distMeters)
+	
+	
+def closestPointLoc2Assignments(loc=None, assignments=None, objectID=None, ignoreStaticPoints=True):
+
+	"""
+	Finds the point along each path defined by the given assignments dataframe that is closest to a given location.  Returns the [lat, lon] coordinates of these points, and the corresponding distance (in [meters]) from each point to the each path.
+
+	Returns a dictionary of lists of dictionaries.  The first dictionary's keys are objectIDs found in the 'assignments' dataframe.  For each 'objectID', a list is provided.  This list will contain the nearest point and the distance from the given location to that point.  If the objectID does not have any consecutive rows in the 'assignments' dataframe where the ending location differs from the starting location in the next row, then there will be only one result for each objectID.  
+
+	Parameters
+	----------
+	loc: list, Required
+		The coordinate of the current coordinate, in [lat, lon, alt] format.
+	assignments: An :ref:`Assignments` dataframe, Required, default as None
+		Each row of an :ref:`Assignments` dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).
+	objectID: string, Optional, default as None
+		This is an identifier for each object in the `assignments` dataframe.  If `objectID` is None, then paths will be returned for each unique `objectID` found in the `assignments` dataframe.  Otherwise, only paths associated with the given `objectID` will be returned.
+	ignoreStaticPoints: Boolean, Optional, default as True
+		Static (stationary) points are rows in the 'assignments' dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we'll ignore these points, so each segment of the line is of non-zero distance.
+	
+	Returns
+	-------
+	A nested dictionary.  The keys of this dictionary are objectIDs.  For each objectID, a list is provided, where each list corresponds to a path associated with the objectID.  For each list, a dictionary containing keys of `nearestPt` (a list of the form [lat, lon]) and `distMeters` (a scalar) is provided.
+	
+	Example
+	--------
+	Import veroviz and check if the version is up-to-date
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	We'll begin by generating some data, which will be used by the `closestPointLoc2Assignments()` function.
+
+		>>> # Specify 4 locations that could be visited:
+		... locs = [[42.1648, -78.4293], 
+		...         [42.1565, -78.4234], 
+		...         [42.1443, -78.4246],
+		...         [42.1113, -78.4212]]
+        
+        
+		>>> # Now, create an :ref:`Assignments` dataframe for two vehicles (a truck and a car).  
+		... 
+		... # The truck will visit nodes 1 and 2.  
+		... exampleAssignments = vrv.createAssignmentsFromLocSeq2D(
+		...     locSeq         = locs[0:2],
+		...     serviceTimeSec = 30.0,
+		...     objectID       = 'Truck',
+		...     routeType      = 'fastest',
+		...     dataProvider   = 'OSRM-online',
+		...     leafletColor   = 'red')
+		... 
+		... # The truck will then pause 45 seconds before taking a route from node 4 to node 3. 
+		... # There is an obvious break in these routes.  
+		... exampleAssignments = vrv.createAssignmentsFromLocSeq2D(
+		...     initAssignments = exampleAssignments,
+		...     locSeq          = locs[-1:1:-1],
+		...     serviceTimeSec  = 30.0,
+		...     startTimeSec    = max(exampleAssignments['endTimeSec']) + 45,
+		...     objectID        = 'Truck',
+		...     routeType       = 'fastest',
+		...     dataProvider    = 'OSRM-online',
+		...     leafletColor    = 'green')
+		... 
+		... # The car will visit nodes 1 and 4.
+		... exampleAssignments = vrv.createAssignmentsFromLocSeq2D(
+		...     initAssignments = exampleAssignments,
+		...     locSeq          = [locs[0], locs[3]],
+		...     serviceTimeSec  = 30.0,
+		...     objectID        = 'Car',
+		...     routeType       = 'fastest',
+		...     dataProvider    = 'OSRM-online',
+		...     leafletColor    = 'blue') 
+        
+        
+	Visualize the locations and assignments. Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes. 
+		>>> exampleNodes = vrv.createNodesFromLocs(locs = locs)
+		>>> myMap = vrv.createLeaflet(nodes = exampleNodes, arcs = exampleAssignments)
+		>>> myMap
+
+	Specify a location:
+		>>> loc = [42.1382899, -78.3887493]
+	
+	Add a marker for the given location:
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc, 
+		...                              radius = 30,
+		...                              text='Loc', fontColor='black')
+		>>> myMap
+
+	Find the nearest point to the given location for each vehicle in the assignments dataframe.  Note: The truck has two separate paths, so it will have two nearest points (one for each path).
+		>>> closestPoints = vrv.closestPointLoc2Assignments(
+		...	    loc                = loc, 
+		...	    assignments        = exampleAssignments, 
+		...	    objectID           = None, 
+		...	    ignoreStaticPoints = True)	
+		>>> closestPoints
+		{'Truck': [{'nearestPoint': [42.157619, -78.422146], 'distMeters': 15506.568584267798},
+		           {'nearestPoint': [42.129462, -78.409906], 'distMeters': 14152.410369937512}],
+		  'Car':  [{'nearestPoint': [42.150689, -78.398545], 'distMeters': 13441.061529262752}]}		
+		
+	Plot these points on the map:
+		>>> for objectID in closestPoints:
+		...	    for i in range(0, len(closestPoints[objectID])):
+		...	        myMap = vrv.addLeafletMarker(mapObject = myMap, 
+		...	                                     center    = closestPoints[objectID][i]['nearestPoint'],
+		...	                                     radius    = 14)
+		>>>	myMap 	
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Assignments(loc, assignments, objectID, ignoreStaticPoints)
+	if (not valFlag):
+		print (errorMsg)
+		return (None, None)
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
+		print (warningMsg)
+	
+	paths = privAssignmentsToPaths(assignments, objectID, ignoreStaticPoints)
+	
+	closestPoints = {}
+	for tmpObjectID in paths:
+		closestPoints[tmpObjectID] = []
+		for i in range(0, len(paths[tmpObjectID])):
+			(minPoint, distMeters) = privClosestPointLoc2Path(loc, paths[tmpObjectID][i])
+			closestPoints[tmpObjectID].append({'nearestPoint': minPoint, 'distMeters': distMeters})
+
+	return closestPoints	
+	
+	
+def closestPointLoc2Arcs(loc=None, arcs=None, objectID=None, ignoreStaticPoints=True):
+
+	"""
+	Finds the point along each path defined by the given arcs dataframe that is closest to a given location.  Returns the [lat, lon] coordinates of these points, and the corresponding distance (in [meters]) from each point to the each path.
+
+	Returns a dictionary of lists of dictionaries.  The first dictionary's keys are objectIDs found in the 'arcs' dataframe.  For each 'objectID', a list is provided.  This list will contain the nearest point and the distance from the given location to that point.  If the objectID does not have any consecutive rows in the 'arcs' dataframe where the ending location differs from the starting location in the next row, then there will be only one result for each objectID.  
+
+	Parameters
+	----------
+	loc: list, Required
+		The coordinate of the current coordinate, in [lat, lon, alt] format.
+	arcs: An :ref:`Arcs` dataframe, Required, default as None
+		Each row of an :ref:`Arcs` dataframe describes the starting and ending location of an object.
+	objectID: string, Optional, default as None
+		This is an identifier for each object in the `arcs` dataframe.  If `objectID` is None, then paths will be returned for each unique `objectID` found in the `arcs` dataframe.  Otherwise, only paths associated with the given `objectID` will be returned.
+	ignoreStaticPoints: Boolean, Optional, default as True
+		Static (stationary) points are rows in the 'arcs' dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we'll ignore these points, so each segment of the line is of non-zero distance.
+	
+	Returns
+	-------
+	A nested dictionary.  The keys of this dictionary are objectIDs.  For each objectID, a list is provided, where each list corresponds to a path associated with the objectID.  For each list, a dictionary containing keys of `nearestPt` (a list of the form [lat, lon]) and `distMeters` (a scalar) is provided.
+	
+	Example
+	--------
+	Import veroviz and check if the version is up-to-date
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Specify 4 locations that could be visited:
+		>>> locs = [[42.1648, -78.4293], 
+		...         [42.1565, -78.4234], 
+		...         [42.1443, -78.4246],
+		...         [42.1113, -78.4212]]
+		
+		>>> # Now, create an :ref:`Arcs` dataframe for two vehicles.  
+		... 
+		... # The truck will visit nodes 1 and 2. 		
+		... exampleArcs = vrv.createArcsFromLocSeq(
+		... 	locSeq       = locs[0:2],
+		... 	objectID     = 'Truck',
+		... 	leafletColor = 'red')
+		... 
+		... # The truck will then take a route from node 4 to node 3.  There is an obvious break in these routes.  
+		... exampleArcs = vrv.createArcsFromLocSeq(
+		... 	initArcs     = exampleArcs,
+		... 	locSeq       = locs[-1:1:-1],
+		... 	objectID     = 'Truck',
+		... 	leafletColor = 'green')
+		... 
+		... # The car will visit nodes 1 and 4.
+		... exampleArcs = vrv.createArcsFromLocSeq(
+		... 	initArcs     = exampleArcs,
+		... 	locSeq       = [locs[0], locs[3]],
+		... 	objectID     = 'Car',
+		... 	leafletColor = 'blue')		
+
+	Visualize the locations and arcs. Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes. 
+		>>> exampleNodes = vrv.createNodesFromLocs(locs = locs)
+		>>> myMap = vrv.createLeaflet(nodes = exampleNodes, arcs = exampleArcs)
+		>>> myMap
+
+	Specify a location:
+		>>> loc = [42.1382899, -78.3887493]
+	
+	Add a marker for the given location:
+		>>> myMap = vrv.addLeafletMarker(mapObject = myMap,
+		...                              center = loc, 
+		...                              radius = 30,
+		...                              text='Loc', fontColor='black')
+
+	Find the nearest point to the given location for each vehicle in the arcs dataframe.  Note: The truck has two separate paths, so it will have two nearest points (one for each path).
+		>>> closestPoints = vrv.closestPointLoc2Arcs(
+		...	    loc                = loc, 
+		...	    arcs               = exampleArcs, 
+		...	    objectID           = None, 
+		...	    ignoreStaticPoints = True)	
+		>>> closestPoints
+		{'Truck': [{'nearestPoint': [42.157619, -78.422146], 'distMeters': 15506.568584267798},
+		           {'nearestPoint': [42.129462, -78.409906], 'distMeters': 14152.410369937512}],
+		  'Car':  [{'nearestPoint': [42.150689, -78.398545], 'distMeters': 13441.061529262752}]}		
+		
+	Plot these points on the map:
+		>>> for objectID in closestPoints:
+		...	    for i in range(0, len(closestPoints[objectID])):
+		...	        myMap = vrv.addLeafletMarker(mapObject = myMap, 
+		...	                                     center    = closestPoints[objectID][i]['nearestPoint'],
+		...	                                     radius    = 14)
+		>>>	myMap 	
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valClosestPointLoc2Arcs(loc, arcs, objectID, ignoreStaticPoints)
+	if (not valFlag):
+		print (errorMsg)
+		return (None, None)
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
+		print (warningMsg)
+	
+	paths = privArcsToPaths(arcs, objectID, ignoreStaticPoints)
+	
+	closestPoints = {}
+	for tmpObjectID in paths:
+		closestPoints[tmpObjectID] = []
+		for i in range(0, len(paths[tmpObjectID])):
+			(minPoint, distMeters) = privClosestPointLoc2Path(loc, paths[tmpObjectID][i])
+			closestPoints[tmpObjectID].append({'nearestPoint': minPoint, 'distMeters': distMeters})
+
+	return closestPoints
+		
 	
 def closestNode2Loc(loc=None, nodes=None):
 	"""
@@ -1871,6 +2096,256 @@ def nearestNodes(origin=None, nodes=None, k=1, costDict=None, metric='distance',
 			costDict = timeSec
 	
 	return privNearestNodes(nodes, originNodeID, k, costDict)
+	
+	
+def assignmentsToPaths(assignments=None, objectID=None, ignoreStaticPoints=True):
+	"""
+	Returns a dictionary of lists of paths.  The dictionary's keys are objectIDs found in the 'assignments' dataframe.  For each 'objectID', a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the 'assignments' dataframe where the ending location differs from the starting location in the next row, then there will be only one path.  
+
+	Parameters
+	----------
+	assignments: An :ref:`Assignments` dataframe, Required, default as None
+		Each row of an :ref:`Assignments` dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).
+	objectID: string, Optional, default as None
+		This is an identifier for each object in the `assignments` dataframe.  If `objectID` is None, then paths will be returned for each unique `objectID` found in the `assignments` dataframe.  Otherwise, only paths associated with the given `objectID` will be returned.
+	ignoreStaticPoints: Boolean, Optional, default as True
+		Static (stationary) points are rows in the 'assignments' dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we'll ignore these points, so each segment of the line is of non-zero distance.
+	
+	Returns
+	-------
+	A dictionary of lists of paths
+
+	Example
+	--------
+	Import veroviz and check if the version is up-to-date
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	We'll begin by generating some data, which will be used by the `assignmentsToPaths()` function.
+
+		>>> # Specify 4 locations that could be visited:
+		... locs = [[42.1648, -78.4293], 
+		...         [42.1565, -78.4234], 
+		...         [42.1443, -78.4246],
+		...         [42.1113, -78.4212]]
+        
+        
+		>>> # Now, create an :ref:`Assignments` dataframe for two vehicles (a truck and a car).  
+		... 
+		... # The truck will visit nodes 1 and 2.  
+		... exampleAssignments = vrv.createAssignmentsFromLocSeq2D(
+		...     locSeq         = locs[0:2],
+		...     serviceTimeSec = 30.0,
+		...     objectID       = 'Truck',
+		...     routeType      = 'fastest',
+		...     dataProvider   = 'OSRM-online',
+		...     leafletColor   = 'red')
+		... 
+		... # The truck will then pause 45 seconds before taking a route from node 4 to node 3. 
+		... # There is an obvious break in these routes.  
+		... exampleAssignments = vrv.createAssignmentsFromLocSeq2D(
+		...     initAssignments = exampleAssignments,
+		...     locSeq          = locs[-1:1:-1],
+		...     serviceTimeSec  = 30.0,
+		...     startTimeSec    = max(exampleAssignments['endTimeSec']) + 45,
+		...     objectID        = 'Truck',
+		...     routeType       = 'fastest',
+		...     dataProvider    = 'OSRM-online',
+		...     leafletColor    = 'green')
+		... 
+		... # The car will visit nodes 1 and 4.
+		... exampleAssignments = vrv.createAssignmentsFromLocSeq2D(
+		...     initAssignments = exampleAssignments,
+		...     locSeq          = [locs[0], locs[3]],
+		...     serviceTimeSec  = 30.0,
+		...     objectID        = 'Car',
+		...     routeType       = 'fastest',
+		...     dataProvider    = 'OSRM-online',
+		...     leafletColor    = 'blue') 
+        
+        
+	Visualize the locations and assignments. Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes. 
+		>>> exampleNodes = vrv.createNodesFromLocs(locs = locs)
+		>>> vrv.createLeaflet(nodes = exampleNodes, arcs = exampleAssignments)
+
+
+	Generate the paths for each vehicle:
+		>>> myPaths = vrv.assignmentsToPaths(assignments=exampleAssignments, objectID=None, ignoreStaticPoints=True)
+		
+	Investigate some details of the output:	
+		>>> len(myPaths['Truck'])
+		2
+		
+		>>> myPaths['Truck']
+		[[[42.16451, -78.429309], [42.164482, -78.427724], [42.157619, -78.422146]],
+		 [[42.11118, -78.418862],
+		  [42.120028, -78.41856],
+		  [42.119975, -78.415146],
+		  [42.121504, -78.414822],
+		  [42.122706, -78.41427],
+		  [42.126237, -78.412131],
+		  [42.129462, -78.409906],
+		  [42.130688, -78.413378],
+		  [42.130762, -78.418572],
+		  [42.130914, -78.420397],
+		  [42.130984, -78.420506],
+		  [42.137118, -78.428013],
+		  [42.139694, -78.426846],
+		  [42.142291, -78.424425],
+		  [42.14424, -78.424135]]]
+	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valAssignmentsToPaths(assignments, objectID, ignoreStaticPoints)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
+		print (warningMsg)
+
+
+	paths = privAssignmentsToPaths(assignments, objectID, ignoreStaticPoints)
+	
+	return paths
+	    	
+def arcsToPaths(arcs=None, objectID=None, ignoreStaticPoints=True):
+	"""
+	Returns a dictionary of lists of paths.  The dictionary's keys are objectIDs found in the 'arcs' dataframe.  For each 'objectID', a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the 'arcs' dataframe where the ending location differs from the starting location in the next row, then there will be only one path.  
+
+	Parameters
+	----------
+	arcs: An :ref:`Arcs` dataframe, Required, default as None
+		Each row of an :ref:`Arcs` dataframe describes the starting and ending location of an object.
+	objectID: string, Optional, default as None
+		This is an identifier for each object in the `arcs` dataframe.  If `objectID` is None, then paths will be returned for each unique `objectID` found in the `arcs` dataframe.  Otherwise, only paths associated with the given `objectID` will be returned.
+	ignoreStaticPoints: Boolean, Optional, default as True
+		Static (stationary) points are rows in the 'arcs' dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we'll ignore these points, so each segment of the line is of non-zero distance.
+	
+	Returns
+	-------
+	A dictionary of lists of paths
+
+	Example
+	--------
+	Import veroviz and check if the version is up-to-date
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Specify 4 locations that could be visited:
+		>>> locs = [[42.1648, -78.4293], 
+		...         [42.1565, -78.4234], 
+		...         [42.1443, -78.4246],
+		...         [42.1113, -78.4212]]
+		
+		>>> # Now, create an :ref:`Arcs` dataframe for two vehicles.  
+		... 
+		... # The truck will visit nodes 1 and 2. 		
+		... exampleArcs = vrv.createArcsFromLocSeq(
+		... 	locSeq       = locs[0:2],
+		... 	objectID     = 'Truck',
+		... 	leafletColor = 'red')
+		... 
+		... # The truck will then take a route from node 4 to node 3.  There is an obvious break in these routes.  
+		... exampleArcs = vrv.createArcsFromLocSeq(
+		... 	initArcs     = exampleArcs,
+		... 	locSeq       = locs[-1:1:-1],
+		... 	objectID     = 'Truck',
+		... 	leafletColor = 'green')
+		... 
+		... # The car will visit nodes 1 and 4.
+		... exampleArcs = vrv.createArcsFromLocSeq(
+		... 	initArcs     = exampleArcs,
+		... 	locSeq       = [locs[0], locs[3]],
+		... 	objectID     = 'Car',
+		... 	leafletColor = 'blue')		
+
+	Visualize the locations and arcs. Generate a :ref:`Nodes` dataframe from a list of coordinates.  See :meth:`~veroviz.generateNodes.generateNodes` for other methods to generate "nodes" dataframes. 
+		>>> exampleNodes = vrv.createNodesFromLocs(locs = locs)
+		>>> vrv.createLeaflet(nodes = exampleNodes, arcs = exampleArcs)
+
+	Generate the paths for each vehicle:
+		>>> myPaths = vrv.arcsToPaths(arcs=exampleArcs, objectID=None, ignoreStaticPoints=True)
+		>>> myPaths
+		{'Truck': [[[42.1648, -78.4293], [42.1565, -78.4234]],
+		  [[42.1113, -78.4212], [42.1443, -78.4246]]],
+		 'Car': [[[42.1648, -78.4293], [42.1113, -78.4212]]]}
+		
+	Investigate some details of the output:	
+		>>> len(myPaths['Truck'])
+		2
+		
+		>>> myPaths['Truck']
+		[[[42.1648, -78.4293], [42.1565, -78.4234]],
+		 [[42.1113, -78.4212], [42.1443, -78.4246]]]
+ 	"""
+
+	# validation
+	[valFlag, errorMsg, warningMsg] = valArcsToPaths(arcs, objectID, ignoreStaticPoints)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
+		print (warningMsg)
+
+	paths = privArcsToPaths(arcs, objectID, ignoreStaticPoints)
+	
+	return paths
+	
+
+def nodesToLocs(nodes=None, includeAlt=False):
+	"""
+	Returns a list of lists (i.e., locations) from a nodes dataframe.  If `includeAlt` is False (default), the return will be of the form [[lat,lon], ..., [lat,lon]]; otherwise, the return is of the form [[lat,lon,altMeters], ..., [lat,lon,altMeters]].  
+
+	Parameters
+	----------
+	nodes: A :ref:`Nodes` dataframe, Required, default as None
+		Dataframe containing a collection of nodes.
+	includeAlt: Boolean, Optional, default as False
+		If False, only latitude and longitude values are returned.  If True, the value in the `altMeters` column of the nodes dataframe is also returned with each lat/lon pair. 
+	
+	Returns
+	-------
+	A list of lists, with each sub-list representing the location of one node.
+
+	Example
+	--------
+	Import veroviz and check if the version is up-to-date
+		>>> import veroviz as vrv
+		>>> vrv.checkVersion()
+
+	Generate 4 nodes:
+		>>> exampleNodes = vrv.generateNodes(
+		...     nodeDistrib      = 'normal', 
+		...     nodeDistribArgs  = {
+		...         'center'         : [42.90, -78.80], 
+		...         'stdDev'         : 10000
+		...     },
+		...     numNodes         = 4)
+		
+	Convert to locations (including altitudes in meters):
+		>>> vrv.nodesToLocs(exampleNodes, includeAlt=True)
+		[[42.895314077862146, -78.80362790487085, 0.0],
+		 [42.92242495208993, -78.82243490871062, 0.0],
+		 [42.98842769922963, -78.74302258092918, 0.0],
+		 [42.880876136692564, -78.81444943020881, 0.0]]		
+	"""
+	
+	[valFlag, errorMsg, warningMsg] = valNodesToLocs(nodes, includeAlt)
+	if (not valFlag):
+		print (errorMsg)
+		return
+	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
+		print (warningMsg)
+
+	df = pd.DataFrame(nodes[['lat', 'lon', 'altMeters']])
+	
+	if (includeAlt):
+		locs = list(map(list, zip(df.lat, df.lon, df.altMeters)))        
+	else:
+		locs = list(map(list, zip(df.lat, df.lon)))
+	
+	return locs 
+
 	
 def distance2D(loc1=None, loc2=None):
 	"""
@@ -2728,7 +3203,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	BAR_HEIGHT    = 8
 	BAR_STEP_SIZE = 10
 
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(dpi=200)
 
 	if (objectIDorder is None):
 		objectIDorder = list(assignments['objectID'].unique())
@@ -2841,6 +3316,9 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	if (xAxisLabel is not None):
 		ax.set_xlabel(xAxisLabel)
 
+	if (len(yTicks) > len(yLabels)):
+		yTicks = yTicks[0:len(yLabels)]
+		
 	ax.set_xticks(range(int(xMin), int(xMax+1), int(xGridFreq)))
 	ax.set_yticks(yTicks)
 	ax.set_yticklabels(yLabels, minor=False)
@@ -2967,14 +3445,16 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 	
 	return locsWithAlt
 
-def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None): 
+def getElevationDF(dataframe=None, replaceOnlyNone=True, dataProvider=None, dataProviderArgs=None): 
 	"""
-	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).
+	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).  CAUTION: This function will overwrite the elevation data in the input dataframe.
 
 	Parameters
 	----------
 	dataframe: pandas.dataframe, Required
 		The dataframe to be exported.  This can be a :ref:`Nodes`, :ref:`Arcs`, or :ref:`Assignments` dataframe.
+	replaceOnlyNone: Boolean, Optional, default as True
+		If True, only find elevation data associated for rows in which this data is missing from the input dataframe.  If False, find (and overwrite) all elevation data with new values.
 	dataProvider: string, Required, default as None
 		Specifies the data source to be used for obtaining elevation data. See :ref:`Data Providers` for options and requirements.
 	dataProviderArgs: dictionary, Required, default as None
@@ -3024,10 +3504,10 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 		Name: elevMeters, dtype: object
 
 	Find missing elevation data using ORS-online:
-		>>> myNodesORS = vrv.getElevationDF(dataframe        = myNodes, 
-		...                                 dataProvider     = 'ors-online',
-		...                                 dataProviderArgs = {'APIkey': ORS_API_KEY})
-		>>> myNodesORS['elevMeters']
+		>>> vrv.getElevationDF(dataframe        = myNodes, 
+		...                    dataProvider     = 'ors-online',
+		...                    dataProviderArgs = {'APIkey': ORS_API_KEY})
+		>>> myNodes['elevMeters']
 
 		0    460
 		1    448
@@ -3035,10 +3515,11 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 		3    446
 		Name: elevMeters, dtype: int64
 
-	Find missing elevation data using USGS:
-		>>> myNodesUSGS = vrv.getElevationDF(dataframe    = myNodes, 
-		...                                  dataProvider = 'usgs')
-		>>> myNodesUSGS['elevMeters']
+	Overwrite elevation data using USGS:
+		>>> vrv.getElevationDF(dataframe       = myNodes, 
+		...                    replaceOnlyNone = False,
+		...                    dataProvider    = 'usgs')
+		>>> myNodes['elevMeters']
 
 		0    442.58
 		1    447.53
@@ -3046,11 +3527,12 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 		3    444.21
 		Name: elevMeters, dtype: object
 
-	Find missing elevation data using Elevation-API:
-		>>> myNodesElevAPI = vrv.getElevationDF(dataframe        = myNodes, 
-		...                                     dataProvider     = 'elevAPI',
-		...                                     dataProviderArgs = {'APIkey': ELEVAPI_KEY})
-		>>> myNodesElevAPI['elevMeters']
+	Replace elevation data using Elevation-API:
+		>>> vrv.getElevationDF(dataframe        = myNodes, 
+		...                    replaceOnlyNone = False,
+		...                    dataProvider     = 'elevAPI',
+		...                    dataProviderArgs = {'APIkey': ELEVAPI_KEY})
+		>>> myNodes['elevMeters']
 
 		0    192
 		1    192
@@ -3065,19 +3547,17 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 		...     nodes   = myNodes)
 
 	Find missing start/end elevations in the arcs dataframe, using USGS data:
-		>>> myArcsUSGS = vrv.getElevationDF(dataframe        = myArcs, 
-		...                                 dataProvider     = 'usgs')
-		>>> myArcsUSGS[['startElevMeters', 'endElevMeters']]
+		>>> vrv.getElevationDF(dataframe        = myArcs, 
+		...                    dataProvider     = 'usgs')
+		>>> myArcs[['startElevMeters', 'endElevMeters']]
 			startElevMeters	endElevMeters
 		0	187.66	185.15
 		1	185.15	181.1
 		2	181.1	185.64
-
-
 	"""
 
 	# validation
-	[valFlag, errorMsg, warningMsg] = valGetElevationDF(dataframe, dataProvider, dataProviderArgs)
+	[valFlag, errorMsg, warningMsg] = valGetElevationDF(dataframe, replaceOnlyNone, dataProvider, dataProviderArgs)
 	if (not valFlag):
 		print (errorMsg)
 		return None
@@ -3090,9 +3570,9 @@ def getElevationDF(dataframe=None, dataProvider=None, dataProviderArgs=None):
 	# Find out the type of dataframe we have:
 	dfCols = list(dataframe.columns)
 	if (('lat' in dfCols) and ('lon' in dfCols) and ('elevMeters' in dfCols)):
-		dfWithAlt = privGetElevationNodes(dataframe, dataProvider, dataProviderArgs)
+		dfWithAlt = privGetElevationNodes(dataframe, replaceOnlyNone, dataProvider, dataProviderArgs)
 	elif (('startElevMeters' in dfCols) and ('endElevMeters' in dfCols)):
-		dfWithAlt = privGetElevationArcsAsgn(dataframe, dataProvider, dataProviderArgs)	
+		dfWithAlt = privGetElevationArcsAsgn(dataframe, replaceOnlyNone, dataProvider, dataProviderArgs)	
 	else:
 		# This shouldn't happen...validation should catch issues
 		print('Error: Invalid/unknown dataframe configuration.')

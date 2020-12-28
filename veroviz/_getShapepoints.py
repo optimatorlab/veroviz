@@ -3,7 +3,7 @@ from veroviz._common import *
 from veroviz._queryPgRouting import pgrGetShapepointsTimeDist
 from veroviz._queryMapQuest import mqGetShapepointsTimeDist
 from veroviz._queryOSRM import osrmGetShapepointsTimeDist
-from veroviz._queryORS import orsGetShapepointsTimeDist
+from veroviz._queryORS import orsGetShapepointsTimeDist, orsGetElevation
 from veroviz._queryORSlocal import orsLocalGetShapepointsTimeDist
 
 from veroviz._internal import distributeTimeDist

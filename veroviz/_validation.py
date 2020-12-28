@@ -1593,7 +1593,7 @@ def valCreateNodesFromLocs(locs, initNodes, nodeType, nodeName, startNode, incre
 
 	if (valFlag):
 		if (startNode is not None):
-			[valFlag, errorMsg, newWarningMsg] = _valGreaterThanZeroInteger(startNode, "startNode")
+			[valFlag, errorMsg, newWarningMsg] = _valGreaterOrEqualToZeroInteger(startNode, "startNode")
 			warningMsg += newWarningMsg
 
 		if (valFlag and initNodes is not None):
@@ -2013,15 +2013,16 @@ def valCreateAssignmentsFromLocSeq2D(initAssignments, locSeq, serviceTimeSec, mo
 			startLoc = locSeq[i]
 			endLoc   = locSeq[i+1]
 	
-			if (startLoc != endLoc):
-				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
-				warningMsg += newWarningMsg
-
 			if (valFlag and routeType not in ['euclidean2d', 'manhattan']):
 				if (startLoc != endLoc):
 					locs = [startLoc, endLoc]
 					[valFlag, errorMsg, newWarningMsg] = _valDatabase(locs, dataProvider, dataProviderArgs)
 					warningMsg += newWarningMsg
+
+			if (valFlag and startLoc != endLoc):
+				[valFlag, errorMsg, newWarningMsg] = _valRouteType2DForShapepoints(routeType, speedMPS, dummyExpDurationSec, dataProvider)
+				warningMsg += newWarningMsg
+
 
 	if (valFlag):
 		if ((leafletColor != None) or (leafletWeight != None) or (leafletStyle != None) or (leafletOpacity != None)):
@@ -2784,7 +2785,7 @@ def valGetElevationLocs(locs, dataProvider, dataProviderArgs):
 	return [valFlag, errorMsg, warningMsg]    
 
 
-def valGetElevationDF(dataframe, dataProvider, dataProviderArgs):
+def valGetElevationDF(dataframe, replaceOnlyNone, dataProvider, dataProviderArgs):
 	valFlag = True
 	errorMsg = ""
 	warningMsg = ""
@@ -2793,7 +2794,12 @@ def valGetElevationDF(dataframe, dataProvider, dataProviderArgs):
 		valFlag = False
 		errorMsg = "Error: Must provide `dataframe` as pandas dataframe."
 
-
+	if (valFlag):
+		if (type(replaceOnlyNone) is not bool):
+			valFlag = False
+			errorMsg = "Error: `replaceOnlyNone` must be boolean (either `True` or `False`)."
+	
+	
 	if (valFlag):
 		# dataframe must be either a nodes, arcs, or assignments dataframe
 		[tmpValFlag, tmpErrorMsg, newWarningMsg] = valNodes(dataframe)
@@ -2856,6 +2862,97 @@ def valClosestPointLoc2Path(loc, path):
 
 	return [valFlag, errorMsg, warningMsg]
 	
+def valClosestPointLoc2Assignments(loc, assignments, objectID, ignoreStaticPoints):	
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (loc is None):
+		valFlag = False
+		errorMsg = "Error: A location (loc) is required."
+
+	if (valFlag):
+		if (assignments is None):
+			valFlag = False
+			errorMsg = "Error: An assignments dataframe is required."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+		warningMsg += newWarningMsg
+	
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(assignments)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (len(assignments) == 0):
+			valFlag = False
+			errorMsg = "Error: The assignments dataframe is empty."
+	
+	if (objectID is not None):
+		if (valFlag):
+			if (type(objectID) is not str):
+				valFlag = False
+				errorMsg = "Error: `objectID` must be either `None` or a string."
+		if (valFlag):
+			if (objectID not in list(assignments['objectID'])):
+				valFlag = False
+				errorMsg = "Error: `objectID` {} is not found in the `objectID` column of the assignments dataframe.".format(objectID)
+
+	if (valFlag):
+		if (type(ignoreStaticPoints) is not bool):
+			valFlag = False
+			errorMsg = "Error: `ignoreStaticPoints` must be boolean (either `True` or `False`)."
+				
+	return [valFlag, errorMsg, warningMsg]	
+
+
+def valClosestPointLoc2Arcs(loc, arcs, objectID, ignoreStaticPoints):	
+
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (loc is None):
+		valFlag = False
+		errorMsg = "Error: A location (loc) is required."
+
+	if (valFlag):
+		if (arcs is None):
+			valFlag = False
+			errorMsg = "Error: An arcs dataframe is required."
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = _valLatLon(loc)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valArcs(arcs)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (len(arcs) == 0):
+			valFlag = False
+			errorMsg = "Error: The arcs dataframe is empty."
+	
+	if (objectID is not None):
+		if (valFlag):
+			if (type(objectID) is not str):
+				valFlag = False
+				errorMsg = "Error: `objectID` must be either `None` or a string."
+		if (valFlag):
+			if (objectID not in list(arcs['objectID'])):
+				valFlag = False
+				errorMsg = "Error: `objectID` {} is not found in the `objectID` column of the arcs dataframe.".format(objectID)
+
+	if (valFlag):
+		if (type(ignoreStaticPoints) is not bool):
+			valFlag = False
+			errorMsg = "Error: `ignoreStaticPoints` must be boolean (either `True` or `False`)."
+				
+	return [valFlag, errorMsg, warningMsg]	
+
 
 def valNearestNodes(origin, nodes, k, costDict, metric, routeType, speedMPS, dataProvider, dataProviderArgs):
 	valFlag = True
@@ -2919,7 +3016,98 @@ def valNearestNodes(origin, nodes, k, costDict, metric, routeType, speedMPS, dat
 	
 	return [valFlag, errorMsg, warningMsg]
 
+def valArcsToPaths(arcs, objectID, ignoreStaticPoints):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (arcs is None):
+		valFlag = False
+		errorMsg = "Error: An arcs dataframe is required."
 	
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valArcs(arcs)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (len(arcs) == 0):
+			valFlag = False
+			errorMsg = "Error: The arcs dataframe is empty."
+	
+	if (objectID is not None):
+		if (valFlag):
+			if (type(objectID) is not str):
+				valFlag = False
+				errorMsg = "Error: `objectID` must be either `None` or a string."
+		if (valFlag):
+			if (objectID not in list(arcs['objectID'])):
+				valFlag = False
+				errorMsg = "Error: `objectID` {} is not found in the `objectID` column of the arcs dataframe.".format(objectID)
+
+	if (valFlag):
+		if (type(ignoreStaticPoints) is not bool):
+			valFlag = False
+			errorMsg = "Error: `ignoreStaticPoints` must be boolean (either `True` or `False`)."
+				
+	return [valFlag, errorMsg, warningMsg]	
+
+	
+def valAssignmentsToPaths(assignments, objectID, ignoreStaticPoints):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+
+	if (assignments is None):
+		valFlag = False
+		errorMsg = "Error: An assignments dataframe is required."
+	
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valAssignments(assignments)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (len(assignments) == 0):
+			valFlag = False
+			errorMsg = "Error: The assignments dataframe is empty."
+	
+	if (objectID is not None):
+		if (valFlag):
+			if (type(objectID) is not str):
+				valFlag = False
+				errorMsg = "Error: `objectID` must be either `None` or a string."
+		if (valFlag):
+			if (objectID not in list(assignments['objectID'])):
+				valFlag = False
+				errorMsg = "Error: `objectID` {} is not found in the `objectID` column of the assignments dataframe.".format(objectID)
+
+	if (valFlag):
+		if (type(ignoreStaticPoints) is not bool):
+			valFlag = False
+			errorMsg = "Error: `ignoreStaticPoints` must be boolean (either `True` or `False`)."
+				
+	return [valFlag, errorMsg, warningMsg]	
+	
+def valNodesToLocs(nodes, includeAlt):
+	valFlag = True
+	errorMsg = ""
+	warningMsg = ""
+	
+	if (nodes is None):
+		valFlag = False
+		errorMsg = "Error: A nodes dataframe is required."
+	
+	if (valFlag):
+		[valFlag, errorMsg, newWarningMsg] = valNodes(nodes)
+		warningMsg += newWarningMsg
+
+	if (valFlag):
+		if (type(includeAlt) is not bool):
+			valFlag = False
+			errorMsg = "Error: `includeAlt` must be boolean (either `True` or `False`)."
+				
+	return [valFlag, errorMsg, warningMsg]	
+	
+		
 def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID, splitOnColorChange, title, xAxisLabel, xGrid, yGrid, xMin, xMax, xGridFreq, timeFormat, overlayColumn, missingColor, filename):
 	valFlag = True
 	errorMsg = ""
@@ -2948,7 +3136,7 @@ def valCreateGantt(assignments, objectIDorder, separateByModelFile, mergeByodID,
 			for objectID in objectIDorder:
 				if (objectID not in list(assignments['objectID'])):
 					valFlag = False
-					errorMsg = "Error: `objectIDorder` contains a value ({}) that is not found in the `objectID` column of the assignements dataframe.".format(objectID)
+					errorMsg = "Error: `objectIDorder` contains a value ({}) that is not found in the `objectID` column of the assignments dataframe.".format(objectID)
 					break
 	
 	if (valFlag):
