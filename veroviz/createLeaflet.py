@@ -456,7 +456,7 @@ def _drawLeafletNode(mapObject, loc, popupText, iconPrefix, iconType, iconColor,
 			iconSizeX = radius*2		# FIXME -- Not sure if this is good.
 			iconAnchorX = iconSizeX / 2
 				
-			folium.map.Marker(loc, icon=DivIcon(
+			folium.map.Marker(loc, popup=popupText, icon=DivIcon(
 				icon_size = (iconSizeX, fontSize), 
 				icon_anchor = (iconAnchorX, fontSize), 
 				html = "<div style=\"font-size: %dpt; color: %s; text-align: center;\">%s</div>" %  (fontSize, fontColor, iconText)
@@ -1089,7 +1089,7 @@ def addLeafletCircle(mapObject=None, mapFilename=None, mapBackground=config['VRV
 		iconSizeX = 900		# FIXME -- Not sure if this is good.
 		iconAnchorX = iconSizeX / 2
 					
-		folium.map.Marker(center, icon=DivIcon(
+		folium.map.Marker(center, popup=popupText, icon=DivIcon(
 			icon_size = (iconSizeX, fontSize), 
 			icon_anchor = (iconAnchorX, fontSize), 
 			html = "<div style=\"font-size: %dpt; color: %s; text-align: center;\">%s</div>" %  (fontSize, fontColor, text)
@@ -1259,15 +1259,15 @@ def addLeafletMarker(mapObject=None, mapFilename=None, mapBackground=config['VRV
 		except:
 			pass
 
-		iconSizeX = 900		# FIXME -- Not sure if this is good.
+		iconSizeX = radius*2		# FIXME -- Not sure if this is good.
 		iconAnchorX = iconSizeX / 2
-					
-		folium.map.Marker(center, icon=DivIcon(
+										
+		folium.map.Marker(center, popup=popupText, icon=DivIcon(
 			icon_size = (iconSizeX, fontSize), 
 			icon_anchor = (iconAnchorX, fontSize), 
-			html = "<div style=\"font-size: %dpt; color: %s; text-align: center;\">%s</div>" %  (fontSize, fontColor, text)
+			html = '<div style="font-size: %dpt; color: %s; text-align: center;">%s</div>' %  (fontSize, fontColor, text)
 			)).add_to(mapObject)
-
+		
 	if (mapFilename is not None):
 		mapObject.save(mapFilename)
 		if (config['VRV_SETTING_SHOWOUTPUTMESSAGE']):
@@ -1819,7 +1819,7 @@ def addLeafletIsochrones(mapObject=None, mapFilename=None, mapBackground=config[
 	zoomStart: int, Optional, default as None
 		Specifies the default zoom level.  1 --> global view;  18 --> max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).
 	iso: isochrone object, Required, default as None
-		FIXME -- Include link/reference to `isochrones()` function.
+		See the `isochrones()` function for details on how to create this object.
 	showBoundingRegion: boolean, Optional, default as False
 		The isochrone object contains a bounding region, which is the smallest rectangle enclosing the isochrones.  If you wish to include this rectangle on the map, set `showBoundingRegion=True`.  
 	iconPrefix: string, Optional, default as "glyphicon"

@@ -436,7 +436,7 @@ def geoDistance2D(loc1, loc2):
 		Distance, in meters, between two locations.
 	"""
 	
-	distMeters = geopy.distance.distance(loc1, loc2).meters
+	distMeters = geopy.distance.distance(loc1[0:2], loc2[0:2]).meters
 
 	return distMeters
 
@@ -458,7 +458,7 @@ def geoDistance3D(loc1, loc2):
 	"""
 
 	# FIXME! For now we assume the earth is flat
-	groundDist = geopy.distance.distance(loc1, loc2).meters
+	groundDist = geopy.distance.distance(loc1[0:2], loc2[0:2]).meters
 	if (len(loc1)==3):
 		alt1 = loc1[2]
 	else:

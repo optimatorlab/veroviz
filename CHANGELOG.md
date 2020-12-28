@@ -1,5 +1,44 @@
 ### Change Log
 
+### Version 0.4.3 (2020-12-30)
+
+This minor release introduced five new functions, but was mostly about fixing some more bugs.
+
+- New utility functions:
+    - `assignmentsToPaths()`:  Returns a dictionary of lists of paths.  The dictionary's keys are objectIDs found in the 'assignments' dataframe.  For each 'objectID', a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the 'assignments' dataframe where the ending location differs from the starting location in the next row, then there will be only one path.  This function was created to make it easier to use functions like `closestPointLoc2Path()` and `minDistLoc2Path()`,  which require paths as inputs.
+    - `arcsToPaths()`:  Like `assignmentsToPaths()`, but using an `arcs` dataframe as an input.
+	- `nodesToLocs()`:  Returns a list of lists (i.e., locations) from a nodes dataframe, of the form [[lat,lon,alt], ..., [lat,lon,alt]].  
+	- `closestPointLoc2Assignments()`:  Finds the point along each path of an assignments dataframe that is closest to a given location.
+	- `closestPointLoc2Arcs()`:  Like `closestPointLoc2Assignments()`, but using an `arcs` dataframe as an input.
+
+- Corrected an issue with the `nearestNodes()` function, where the wrong nodes were being returned if the nodes dataframe contained a subset of the nodes in the cost dictionary.
+
+- Fixed bug in `createAssignments()` function where the `orsGetElevation()` function was not imported.
+
+- Fixed bug in `createGantt()` function that was exposed by a recent update of `matplotlib`.  The number of y-axis tick marks now correctly matches the number of y-axis labels.
+
+- Fixed bug in the `closestPointLoc2Path()` function, where an error would occur if two consecutive points in the path were actually the same location.
+
+- Fixed bug in `createNodesFromLocs()`, where `startNode` was not allowed to equal zero.
+
+- Updated docstring from the `addLeafletIsochrones()` function, which now provides a reference to the `isochrones()` function.
+	
+- Improved validation of inputs to `createAssignmentsFromLocSeq2D()` function.  It was not properly detecting if an invalid `dataProvider` was given.
+
+- Increased DPI on Gantt charts (`createGantt()`) to improve image quality/size.
+
+- Fixed two bugs in `createCesium()`:
+    - The first was induced by Version 0.4.2, where the process of escaping single quotes was causing problems if the data were not of type `string`.
+    - The second was related to the `cesiumIconText` field of a nodes dataframe was not being used to display text in the pins in Cesium.
+
+- Corrected an issue in `getElevationDF()` where an error was thrown if there was no elevation data missing from the input dataframe.  The function now has a new input argument, `replaceOnlyNone`, which defaults to be `True`.  In this case, the user is warned if there's no missing elevation data (i.e., there's nothing to do).  If `False`, all elevation data will be updated.
+    - FIXME -- Update example in Jupyter notebook
+
+- Corrected an issue in calculating distances using geopy, where locations with differing altitudes were causing an error.
+
+- Fixed an issue in `createLeaflet()`, `addLeafletCircle()`, and `addLeafletMarker()` where popup text wasn't being displayed.
+
+
 ### Version 0.4.2 (2020-07-22)
 
 This minor release fixed some minor bugs.

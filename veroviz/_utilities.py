@@ -1,5 +1,6 @@
 from veroviz._common import *
 from veroviz._internal import *
+from veroviz._geometry import *
 
 def privConvertDistance(distance, fromUnits, toUnits):
 	
@@ -232,3 +233,120 @@ def privExportDataframe(dataframe, filename):
 		print("Error: Cannot export dataframe, please check the inputs.")
 
 	return	
+	
+def privAssignmentsToPaths(assignments, objectID, ignoreStaticPoints):
+	paths = {}
+
+	if (objectID is None):
+		# Find list of unique objectIDs
+		uniqueIDs = list(assignments['objectID'].unique())
+	else:
+		uniqueIDs = [objectID]
+	
+	# For each objectID, sort assignments in ascending order of time
+	for id in uniqueIDs:
+		if (id is None):
+			dummy = pd.DataFrame(assignments[assignments['objectID'].isnull()])
+		else:
+			dummy = pd.DataFrame(assignments[assignments['objectID'] == id])
+
+		# Sort by startTime:
+		dummy = dummy.sort_values(by=['startTimeSec'], ascending=True)
+		dummy = dummy.reset_index(drop=True)
+
+		# Remove rows where start location = end location
+		if (ignoreStaticPoints):
+			dummy = dummy[((dummy['startLat'] != dummy['endLat']) | (dummy['startLon'] != dummy['endLon']))]
+			dummy = dummy.reset_index(drop=True)
+		
+		# Add new columns, with values from the *next* row:
+		dummy[['next_startTimeSec', 'next_startLat', 'next_startLon']] = pd.DataFrame(dummy[1:][['startTimeSec', 'startLat', 'startLon']].values)
+
+		# Calculate break in time? 
+		# No.  The path has no concept of time.
+	
+		# Determine if there's a break in the path, 
+		# based on a break in end/start locations.
+		breakIndices = list(dummy[(dummy['endLat'] != dummy['next_startLat']) & (dummy['endLon'] != dummy['next_startLon'])].index.values)
+	
+		objectPath = []
+		i = 0
+		for j in breakIndices:
+			# Start at first location:
+			subPath = [list(dummy.loc[i][['startLat', 'startLon']].values)]
+
+			# Visit all end locations
+			subPath.extend(dummy.loc[i:j][['endLat', 'endLon']].values.tolist())
+
+			objectPath.append(subPath)
+			i = j+1
+	
+		paths[id] = objectPath
+	
+	return(paths)  
+
+
+def privArcsToPaths(arcs, objectID, ignoreStaticPoints):
+	paths = {}
+
+	if (objectID is None):
+		# Find list of unique objectIDs
+		uniqueIDs = list(arcs['objectID'].unique())
+	else:
+		uniqueIDs = [objectID]
+	
+	for id in uniqueIDs:
+		if (id is None):
+			dummy = pd.DataFrame(arcs[arcs['objectID'].isnull()])
+		else:
+			dummy = pd.DataFrame(arcs[arcs['objectID'] == id])
+
+		# Remove rows where start location = end location
+		if (ignoreStaticPoints):
+			dummy = dummy[((dummy['startLat'] != dummy['endLat']) | (dummy['startLon'] != dummy['endLon']))]
+			dummy = dummy.reset_index(drop=True)
+		
+		# Add new columns, with values from the *next* row:
+		dummy[['next_startLat', 'next_startLon']] = pd.DataFrame(dummy[1:][['startLat', 'startLon']].values)
+
+		# Determine if there's a break in the path, 
+		# based on a break in end/start locations.
+		breakIndices = list(dummy[(dummy['endLat'] != dummy['next_startLat']) & (dummy['endLon'] != dummy['next_startLon'])].index.values)
+	
+		objectPath = []
+		i = 0
+		for j in breakIndices:
+			# Start at first location:
+			subPath = [list(dummy.loc[i][['startLat', 'startLon']].values)]
+
+			# Visit all end locations
+			subPath.extend(dummy.loc[i:j][['endLat', 'endLon']].values.tolist())
+
+			objectPath.append(subPath)
+			i = j+1
+	
+		paths[id] = objectPath
+	
+	return(paths)   
+	
+
+def privClosestPointLoc2Path(loc, path):
+	lstLine = []
+	for i in range(1, len(path)):
+		if (path[i-1] != path[i]):
+			lstLine.append([path[i - 1], path[i]])
+
+	distMeters = float('inf')
+
+	for i in range(len(lstLine)):
+		tmpDistMeters = geoMinDistLoc2Line(loc, lstLine[i])
+
+		if (tmpDistMeters < distMeters):
+			distMeters = tmpDistMeters
+			minPoint = geoClosestPointLoc2Line(loc, lstLine[i])
+
+		if (len(minPoint)==3):
+			minPoint[2] = 0
+
+	return (minPoint, distMeters)
+  	

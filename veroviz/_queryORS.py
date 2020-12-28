@@ -877,7 +877,7 @@ def orsGetElevation(locs, APIkey):
 	------
 	list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], ..., [lat, lon, altMSL]].
 	"""
-	
+		
 	if (len(locs) == 1):
 		dataType = 'point'
 		elevUrl = ('https://api.openrouteservice.org/elevation/point')
@@ -902,7 +902,7 @@ def orsGetElevation(locs, APIkey):
 	headers = {
 				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
 				'Authorization': APIkey,
-				'Content-Type': 'application/json'}
+				'Content-Type': 'application/json; charset=utf-8'}
 
 	try:
 		

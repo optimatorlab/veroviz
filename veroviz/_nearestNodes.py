@@ -11,11 +11,13 @@ def privNearestNodes(nodes, originNodeID, k, costDict):
 
 	data = []
 
-	for keys in costDict.keys():
-		if (keys[0] == originNodeID):
-			if (keys[1] != originNodeID):
-				data.append({'id': keys[1], 'cost': costDict[keys]})
+	for dest in nodes[nodes['id'] != originNodeID]['id'].tolist():
+		if (originNodeID, dest) in costDict.keys():
+			data.append({'id': dest, 'cost': costDict[originNodeID, dest]})
+		
+	dataframe = pd.DataFrame(data)
 
-	dataframe = pd.DataFrame(data) 
+	if (k <= 0):
+		k = len(dataframe)
 
 	return dataframe.sort_values(by=['cost', 'id'], ascending=True).head(k)
