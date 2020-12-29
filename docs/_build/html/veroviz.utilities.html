@@ -72,6 +72,194 @@
   <div class="section" id="module-veroviz.utilities">
 <span id="veroviz-utilities-module"></span><h1>veroviz.utilities module<a class="headerlink" href="#module-veroviz.utilities" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="veroviz.utilities.arcsToPaths">
+<code class="sig-name descname">arcsToPaths</code><span class="sig-paren">(</span><em class="sig-param">arcs=None</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">ignoreStaticPoints=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#arcsToPaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.arcsToPaths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of lists of paths.  The dictionary’s keys are objectIDs found in the ‘arcs’ dataframe.  For each ‘objectID’, a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the ‘arcs’ dataframe where the ending location differs from the starting location in the next row, then there will be only one path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arcs</strong> (An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe, Required, default as None) – Each row of an <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe describes the starting and ending location of an object.</p></li>
+<li><p><strong>objectID</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – This is an identifier for each object in the <cite>arcs</cite> dataframe.  If <cite>objectID</cite> is None, then paths will be returned for each unique <cite>objectID</cite> found in the <cite>arcs</cite> dataframe.  Otherwise, only paths associated with the given <cite>objectID</cite> will be returned.</p></li>
+<li><p><strong>ignoreStaticPoints</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Static (stationary) points are rows in the ‘arcs’ dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we’ll ignore these points, so each segment of the line is of non-zero distance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A dictionary of lists of paths</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Specify 4 locations that could be visited:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1648</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4293</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1565</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4234</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1443</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4246</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1113</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4212</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Now, create an :ref:`Arcs` dataframe for two vehicles.</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will visit nodes 1 and 2.</span>
+<span class="gp">... </span><span class="n">exampleArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>       <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">objectID</span>     <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will then take a route from node 4 to node 3.  There is an obvious break in these routes.</span>
+<span class="gp">... </span><span class="n">exampleArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initArcs</span>     <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>       <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">objectID</span>     <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The car will visit nodes 1 and 4.</span>
+<span class="gp">... </span><span class="n">exampleArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initArcs</span>     <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>       <span class="o">=</span> <span class="p">[</span><span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">locs</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">objectID</span>     <span class="o">=</span> <span class="s1">&#39;Car&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Visualize the locations and arcs. Generate a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe from a list of coordinates.  See <a class="reference internal" href="veroviz.generateNodes.html#veroviz.generateNodes.generateNodes" title="veroviz.generateNodes.generateNodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generateNodes()</span></code></a> for other methods to generate “nodes” dataframes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span> <span class="n">arcs</span> <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Generate the paths for each vehicle:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myPaths</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">arcsToPaths</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="n">exampleArcs</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myPaths</span>
+<span class="go">{&#39;Truck&#39;: [[[42.1648, -78.4293], [42.1565, -78.4234]],</span>
+<span class="go">  [[42.1113, -78.4212], [42.1443, -78.4246]]],</span>
+<span class="go"> &#39;Car&#39;: [[[42.1648, -78.4293], [42.1113, -78.4212]]]}</span>
+</pre></div>
+</div>
+</dd>
+<dt>Investigate some details of the output:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">myPaths</span><span class="p">[</span><span class="s1">&#39;Truck&#39;</span><span class="p">])</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myPaths</span><span class="p">[</span><span class="s1">&#39;Truck&#39;</span><span class="p">]</span>
+<span class="go">[[[42.1648, -78.4293], [42.1565, -78.4234]],</span>
+<span class="go"> [[42.1113, -78.4212], [42.1443, -78.4246]]]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.assignmentsToPaths">
+<code class="sig-name descname">assignmentsToPaths</code><span class="sig-paren">(</span><em class="sig-param">assignments=None</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">ignoreStaticPoints=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#assignmentsToPaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.assignmentsToPaths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of lists of paths.  The dictionary’s keys are objectIDs found in the ‘assignments’ dataframe.  For each ‘objectID’, a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the ‘assignments’ dataframe where the ending location differs from the starting location in the next row, then there will be only one path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>assignments</strong> (An <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe, Required, default as None) – Each row of an <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).</p></li>
+<li><p><strong>objectID</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – This is an identifier for each object in the <cite>assignments</cite> dataframe.  If <cite>objectID</cite> is None, then paths will be returned for each unique <cite>objectID</cite> found in the <cite>assignments</cite> dataframe.  Otherwise, only paths associated with the given <cite>objectID</cite> will be returned.</p></li>
+<li><p><strong>ignoreStaticPoints</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Static (stationary) points are rows in the ‘assignments’ dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we’ll ignore these points, so each segment of the line is of non-zero distance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A dictionary of lists of paths</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>We’ll begin by generating some data, which will be used by the <cite>assignmentsToPaths()</cite> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Specify 4 locations that could be visited:</span>
+<span class="gp">... </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1648</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4293</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1565</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4234</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1443</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4246</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1113</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4212</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Now, create an :ref:`Assignments` dataframe for two vehicles (a truck and a car).</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will visit nodes 1 and 2.</span>
+<span class="gp">... </span><span class="n">exampleAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createAssignmentsFromLocSeq2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>         <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">serviceTimeSec</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>       <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>      <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>   <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>   <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will then pause 45 seconds before taking a route from node 4 to node 3.</span>
+<span class="gp">... </span><span class="c1"># There is an obvious break in these routes.</span>
+<span class="gp">... </span><span class="n">exampleAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createAssignmentsFromLocSeq2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>          <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">serviceTimeSec</span>  <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startTimeSec</span>    <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">exampleAssignments</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">45</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>       <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>    <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>    <span class="o">=</span> <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The car will visit nodes 1 and 4.</span>
+<span class="gp">... </span><span class="n">exampleAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createAssignmentsFromLocSeq2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>          <span class="o">=</span> <span class="p">[</span><span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">locs</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">serviceTimeSec</span>  <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;Car&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>       <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>    <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>    <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl>
+<dt>Visualize the locations and assignments. Generate a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe from a list of coordinates.  See <a class="reference internal" href="veroviz.generateNodes.html#veroviz.generateNodes.generateNodes" title="veroviz.generateNodes.generateNodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generateNodes()</span></code></a> for other methods to generate “nodes” dataframes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span> <span class="n">arcs</span> <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Generate the paths for each vehicle:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myPaths</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">assignmentsToPaths</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="n">exampleAssignments</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Investigate some details of the output:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">myPaths</span><span class="p">[</span><span class="s1">&#39;Truck&#39;</span><span class="p">])</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myPaths</span><span class="p">[</span><span class="s1">&#39;Truck&#39;</span><span class="p">]</span>
+<span class="go">[[[42.16451, -78.429309], [42.164482, -78.427724], [42.157619, -78.422146]],</span>
+<span class="go"> [[42.11118, -78.418862],</span>
+<span class="go">  [42.120028, -78.41856],</span>
+<span class="go">  [42.119975, -78.415146],</span>
+<span class="go">  [42.121504, -78.414822],</span>
+<span class="go">  [42.122706, -78.41427],</span>
+<span class="go">  [42.126237, -78.412131],</span>
+<span class="go">  [42.129462, -78.409906],</span>
+<span class="go">  [42.130688, -78.413378],</span>
+<span class="go">  [42.130762, -78.418572],</span>
+<span class="go">  [42.130914, -78.420397],</span>
+<span class="go">  [42.130984, -78.420506],</span>
+<span class="go">  [42.137118, -78.428013],</span>
+<span class="go">  [42.139694, -78.426846],</span>
+<span class="go">  [42.142291, -78.424425],</span>
+<span class="go">  [42.14424, -78.424135]]]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.utilities.calcArea">
 <code class="sig-name descname">calcArea</code><span class="sig-paren">(</span><em class="sig-param">poly=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#calcArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.calcArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the area, in square meters, of a polygon.</p>
@@ -132,11 +320,10 @@
 <p>:param Specifies the desired distance units for the output. See <a class="reference internal" href="units.html#units"><span class="std std-ref">Units</span></a> for options.:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><em>float</em></p></li>
-<li><p><em>Total length of the path.</em></p></li>
-</ul>
-</p>
+<dd class="field-odd"><p>Total length of the path.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -208,13 +395,226 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="veroviz.utilities.closestPointLoc2Arcs">
+<code class="sig-name descname">closestPointLoc2Arcs</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">arcs=None</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">ignoreStaticPoints=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#closestPointLoc2Arcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.closestPointLoc2Arcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the point along each path defined by the given arcs dataframe that is closest to a given location.  Returns the [lat, lon] coordinates of these points, and the corresponding distance (in [meters]) from each point to the each path.</p>
+<p>Returns a dictionary of lists of dictionaries.  The first dictionary’s keys are objectIDs found in the ‘arcs’ dataframe.  For each ‘objectID’, a list is provided.  This list will contain the nearest point and the distance from the given location to that point.  If the objectID does not have any consecutive rows in the ‘arcs’ dataframe where the ending location differs from the starting location in the next row, then there will be only one result for each objectID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the current coordinate, in [lat, lon, alt] format.</p></li>
+<li><p><strong>arcs</strong> (An <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe, Required, default as None) – Each row of an <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a> dataframe describes the starting and ending location of an object.</p></li>
+<li><p><strong>objectID</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – This is an identifier for each object in the <cite>arcs</cite> dataframe.  If <cite>objectID</cite> is None, then paths will be returned for each unique <cite>objectID</cite> found in the <cite>arcs</cite> dataframe.  Otherwise, only paths associated with the given <cite>objectID</cite> will be returned.</p></li>
+<li><p><strong>ignoreStaticPoints</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Static (stationary) points are rows in the ‘arcs’ dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we’ll ignore these points, so each segment of the line is of non-zero distance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A nested dictionary.  The keys of this dictionary are objectIDs.  For each objectID, a list is provided, where each list corresponds to a path associated with the objectID.  For each list, a dictionary containing keys of <cite>nearestPt</cite> (a list of the form [lat, lon]) and <cite>distMeters</cite> (a scalar) is provided.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Specify 4 locations that could be visited:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1648</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4293</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1565</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4234</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1443</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4246</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1113</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4212</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Now, create an :ref:`Arcs` dataframe for two vehicles.</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will visit nodes 1 and 2.</span>
+<span class="gp">... </span><span class="n">exampleArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>       <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">objectID</span>     <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will then take a route from node 4 to node 3.  There is an obvious break in these routes.</span>
+<span class="gp">... </span><span class="n">exampleArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initArcs</span>     <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>       <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">objectID</span>     <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The car will visit nodes 1 and 4.</span>
+<span class="gp">... </span><span class="n">exampleArcs</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createArcsFromLocSeq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initArcs</span>     <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>       <span class="o">=</span> <span class="p">[</span><span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">locs</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">objectID</span>     <span class="o">=</span> <span class="s1">&#39;Car&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Visualize the locations and arcs. Generate a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe from a list of coordinates.  See <a class="reference internal" href="veroviz.generateNodes.html#veroviz.generateNodes.generateNodes" title="veroviz.generateNodes.generateNodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generateNodes()</span></code></a> for other methods to generate “nodes” dataframes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span> <span class="n">arcs</span> <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Specify a location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.1382899</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.3887493</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Add a marker for the given location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">radius</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Loc&#39;</span><span class="p">,</span> <span class="n">fontColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Find the nearest point to the given location for each vehicle in the arcs dataframe.  Note: The truck has two separate paths, so it will have two nearest points (one for each path).</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">closestPoints</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">closestPointLoc2Arcs</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">loc</span>                <span class="o">=</span> <span class="n">loc</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">arcs</span>               <span class="o">=</span> <span class="n">exampleArcs</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">objectID</span>           <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">ignoreStaticPoints</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">closestPoints</span>
+<span class="go">{&#39;Truck&#39;: [{&#39;nearestPoint&#39;: [42.157619, -78.422146], &#39;distMeters&#39;: 15506.568584267798},</span>
+<span class="go">           {&#39;nearestPoint&#39;: [42.129462, -78.409906], &#39;distMeters&#39;: 14152.410369937512}],</span>
+<span class="go">  &#39;Car&#39;:  [{&#39;nearestPoint&#39;: [42.150689, -78.398545], &#39;distMeters&#39;: 13441.061529262752}]}</span>
+</pre></div>
+</div>
+</dd>
+<dt>Plot these points on the map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">objectID</span> <span class="ow">in</span> <span class="n">closestPoints</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">closestPoints</span><span class="p">[</span><span class="n">objectID</span><span class="p">])):</span>
+<span class="gp">... </span>            <span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                                         <span class="n">center</span>    <span class="o">=</span> <span class="n">closestPoints</span><span class="p">[</span><span class="n">objectID</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nearestPoint&#39;</span><span class="p">],</span>
+<span class="gp">... </span>                                         <span class="n">radius</span>    <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.closestPointLoc2Assignments">
+<code class="sig-name descname">closestPointLoc2Assignments</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">assignments=None</em>, <em class="sig-param">objectID=None</em>, <em class="sig-param">ignoreStaticPoints=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#closestPointLoc2Assignments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.closestPointLoc2Assignments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the point along each path defined by the given assignments dataframe that is closest to a given location.  Returns the [lat, lon] coordinates of these points, and the corresponding distance (in [meters]) from each point to the each path.</p>
+<p>Returns a dictionary of lists of dictionaries.  The first dictionary’s keys are objectIDs found in the ‘assignments’ dataframe.  For each ‘objectID’, a list is provided.  This list will contain the nearest point and the distance from the given location to that point.  If the objectID does not have any consecutive rows in the ‘assignments’ dataframe where the ending location differs from the starting location in the next row, then there will be only one result for each objectID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the current coordinate, in [lat, lon, alt] format.</p></li>
+<li><p><strong>assignments</strong> (An <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe, Required, default as None) – Each row of an <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe describes the starting and ending location of an object, with corresponding start and end times (in seconds).</p></li>
+<li><p><strong>objectID</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – This is an identifier for each object in the <cite>assignments</cite> dataframe.  If <cite>objectID</cite> is None, then paths will be returned for each unique <cite>objectID</cite> found in the <cite>assignments</cite> dataframe.  Otherwise, only paths associated with the given <cite>objectID</cite> will be returned.</p></li>
+<li><p><strong>ignoreStaticPoints</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – Static (stationary) points are rows in the ‘assignments’ dataframe where the starting and ending locations are identical.  If these are included in the path, you get a path segment of zero distance.  By default, we’ll ignore these points, so each segment of the line is of non-zero distance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A nested dictionary.  The keys of this dictionary are objectIDs.  For each objectID, a list is provided, where each list corresponds to a path associated with the objectID.  For each list, a dictionary containing keys of <cite>nearestPt</cite> (a list of the form [lat, lon]) and <cite>distMeters</cite> (a scalar) is provided.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>We’ll begin by generating some data, which will be used by the <cite>closestPointLoc2Assignments()</cite> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Specify 4 locations that could be visited:</span>
+<span class="gp">... </span><span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1648</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4293</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1565</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4234</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1443</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4246</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1113</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4212</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Now, create an :ref:`Assignments` dataframe for two vehicles (a truck and a car).</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will visit nodes 1 and 2.</span>
+<span class="gp">... </span><span class="n">exampleAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createAssignmentsFromLocSeq2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>         <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">serviceTimeSec</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>       <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>      <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>   <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>   <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The truck will then pause 45 seconds before taking a route from node 4 to node 3.</span>
+<span class="gp">... </span><span class="c1"># There is an obvious break in these routes.</span>
+<span class="gp">... </span><span class="n">exampleAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createAssignmentsFromLocSeq2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>          <span class="o">=</span> <span class="n">locs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">serviceTimeSec</span>  <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">startTimeSec</span>    <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">exampleAssignments</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">45</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;Truck&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>       <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>    <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>    <span class="o">=</span> <span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="c1"># The car will visit nodes 1 and 4.</span>
+<span class="gp">... </span><span class="n">exampleAssignments</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createAssignmentsFromLocSeq2D</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">initAssignments</span> <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">locSeq</span>          <span class="o">=</span> <span class="p">[</span><span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">locs</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">serviceTimeSec</span>  <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">objectID</span>        <span class="o">=</span> <span class="s1">&#39;Car&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">routeType</span>       <span class="o">=</span> <span class="s1">&#39;fastest&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dataProvider</span>    <span class="o">=</span> <span class="s1">&#39;OSRM-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">leafletColor</span>    <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl>
+<dt>Visualize the locations and assignments. Generate a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe from a list of coordinates.  See <a class="reference internal" href="veroviz.generateNodes.html#veroviz.generateNodes.generateNodes" title="veroviz.generateNodes.generateNodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generateNodes()</span></code></a> for other methods to generate “nodes” dataframes.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span><span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">exampleNodes</span><span class="p">,</span> <span class="n">arcs</span> <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Specify a location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">42.1382899</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.3887493</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+<dt>Add a marker for the given location:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">center</span> <span class="o">=</span> <span class="n">loc</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">radius</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+<span class="gp">... </span>                             <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Loc&#39;</span><span class="p">,</span> <span class="n">fontColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+<dt>Find the nearest point to the given location for each vehicle in the assignments dataframe.  Note: The truck has two separate paths, so it will have two nearest points (one for each path).</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">closestPoints</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">closestPointLoc2Assignments</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">loc</span>                <span class="o">=</span> <span class="n">loc</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">assignments</span>        <span class="o">=</span> <span class="n">exampleAssignments</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">objectID</span>           <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">ignoreStaticPoints</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">closestPoints</span>
+<span class="go">{&#39;Truck&#39;: [{&#39;nearestPoint&#39;: [42.157619, -78.422146], &#39;distMeters&#39;: 15506.568584267798},</span>
+<span class="go">           {&#39;nearestPoint&#39;: [42.129462, -78.409906], &#39;distMeters&#39;: 14152.410369937512}],</span>
+<span class="go">  &#39;Car&#39;:  [{&#39;nearestPoint&#39;: [42.150689, -78.398545], &#39;distMeters&#39;: 13441.061529262752}]}</span>
+</pre></div>
+</div>
+</dd>
+<dt>Plot these points on the map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">objectID</span> <span class="ow">in</span> <span class="n">closestPoints</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">closestPoints</span><span class="p">[</span><span class="n">objectID</span><span class="p">])):</span>
+<span class="gp">... </span>            <span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
+<span class="gp">... </span>                                         <span class="n">center</span>    <span class="o">=</span> <span class="n">closestPoints</span><span class="p">[</span><span class="n">objectID</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nearestPoint&#39;</span><span class="p">],</span>
+<span class="gp">... </span>                                         <span class="n">radius</span>    <span class="o">=</span> <span class="mi">14</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">myMap</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="veroviz.utilities.closestPointLoc2Path">
 <code class="sig-name descname">closestPointLoc2Path</code><span class="sig-paren">(</span><em class="sig-param">loc=None</em>, <em class="sig-param">path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#closestPointLoc2Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.closestPointLoc2Path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the current coordinate, in [lat, lon, alt] format</p></li>
+<li><p><strong>loc</strong> (<em>list</em><em>, </em><em>Required</em>) – The coordinate of the current coordinate, in [lat, lon, alt] format.</p></li>
 <li><p><strong>path</strong> (<em>list of lists</em><em>, </em><em>Required</em>) – Specifies the ordered collection of lat/lon coordinates comprising a path.   This must be a list of lists, of the form <cite>[[lat1, lon1], [lat2, lon2], …, [latn, lonn]]</cite> or <cite>[[lat1, lon1, alt1], [lat2, lon2, alt2], …, [latn, lonn, altn]]</cite>.  If an altitude is provided with each coordinate, this component will be ignored.</p></li>
 </ul>
 </dd>
@@ -1166,12 +1566,13 @@ OSRM doesn’t have a geocode function.</p>
 
 <dl class="function">
 <dt id="veroviz.utilities.getElevationDF">
-<code class="sig-name descname">getElevationDF</code><span class="sig-paren">(</span><em class="sig-param">dataframe=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getElevationDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getElevationDF" title="Permalink to this definition">¶</a></dt>
-<dd><p>EXPERIMENTAL.  Replaces missing (<cite>None</cite>) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).</p>
+<code class="sig-name descname">getElevationDF</code><span class="sig-paren">(</span><em class="sig-param">dataframe=None</em>, <em class="sig-param">replaceOnlyNone=True</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#getElevationDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.getElevationDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>EXPERIMENTAL.  Replaces missing (<cite>None</cite>) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).  CAUTION: This function will overwrite the elevation data in the input dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dataframe</strong> (<em>pandas.dataframe</em><em>, </em><em>Required</em>) – The dataframe to be exported.  This can be a <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, <a class="reference internal" href="arcs.html#arcs"><span class="std std-ref">Arcs</span></a>, or <a class="reference internal" href="assignments.html#assignments"><span class="std std-ref">Assignments</span></a> dataframe.</p></li>
+<li><p><strong>replaceOnlyNone</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as True</em>) – If True, only find elevation data associated for rows in which this data is missing from the input dataframe.  If False, find (and overwrite) all elevation data with new values.</p></li>
 <li><p><strong>dataProvider</strong> (<em>string</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – Specifies the data source to be used for obtaining elevation data. See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for options and requirements.</p></li>
 <li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
 </ul>
@@ -1223,10 +1624,10 @@ Neither mapQuest, pgRouting, nor OSRM are supported, as they don’t appear to h
 3    None
 Name: elevMeters, dtype: object</p>
 </dd>
-<dt>Find missing elevation data using ORS-online:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesORS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
-<span class="gp">... </span>                                <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
-<span class="gp">... </span>                                <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesORS</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+<dt>Find missing elevation data using ORS-online:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>0    460
@@ -1235,9 +1636,10 @@ Name: elevMeters, dtype: object</p>
 3    446
 Name: elevMeters, dtype: int64</p>
 </dd>
-<dt>Find missing elevation data using USGS:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesUSGS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>    <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
-<span class="gp">... </span>                                 <span class="n">dataProvider</span> <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesUSGS</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+<dt>Overwrite elevation data using USGS:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>       <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">replaceOnlyNone</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">dataProvider</span>    <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>0    442.58
@@ -1246,10 +1648,11 @@ Name: elevMeters, dtype: int64</p>
 3    444.21
 Name: elevMeters, dtype: object</p>
 </dd>
-<dt>Find missing elevation data using Elevation-API:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesElevAPI</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
-<span class="gp">... </span>                                    <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;elevAPI&#39;</span><span class="p">,</span>
-<span class="gp">... </span>                                    <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ELEVAPI_KEY</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodesElevAPI</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
+<dt>Replace elevation data using Elevation-API:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myNodes</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">replaceOnlyNone</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;elevAPI&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ELEVAPI_KEY</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span><span class="p">[</span><span class="s1">&#39;elevMeters&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>0    192
@@ -1265,9 +1668,9 @@ Name: elevMeters, dtype: int64</p>
 </pre></div>
 </div>
 </dd>
-<dt>Find missing start/end elevations in the arcs dataframe, using USGS data:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myArcsUSGS</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myArcs</span><span class="p">,</span>
-<span class="gp">... </span>                                <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">myArcsUSGS</span><span class="p">[[</span><span class="s1">&#39;startElevMeters&#39;</span><span class="p">,</span> <span class="s1">&#39;endElevMeters&#39;</span><span class="p">]]</span>
+<dt>Find missing start/end elevations in the arcs dataframe, using USGS data:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span>        <span class="o">=</span> <span class="n">myArcs</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;usgs&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myArcs</span><span class="p">[[</span><span class="s1">&#39;startElevMeters&#39;</span><span class="p">,</span> <span class="s1">&#39;endElevMeters&#39;</span><span class="p">]]</span>
 <span class="go">        startElevMeters endElevMeters</span>
 <span class="go">0       187.66  185.15</span>
 <span class="go">1       185.15  181.1</span>
@@ -2340,6 +2743,52 @@ Neither mapQuest, pgRouting, nor OSRM are supported, as they don’t appear to h
 <span class="gp">... </span>                 <span class="n">speedMPS</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>                 <span class="n">dataProvider</span>     <span class="o">=</span> <span class="s1">&#39;ors-online&#39;</span><span class="p">,</span>
 <span class="gp">... </span>                 <span class="n">dataProviderArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;APIkey&#39;</span><span class="p">:</span> <span class="n">ORS_API_KEY</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="veroviz.utilities.nodesToLocs">
+<code class="sig-name descname">nodesToLocs</code><span class="sig-paren">(</span><em class="sig-param">nodes=None</em>, <em class="sig-param">includeAlt=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/utilities.html#nodesToLocs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.utilities.nodesToLocs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of lists (i.e., locations) from a nodes dataframe.  If <cite>includeAlt</cite> is False (default), the return will be of the form [[lat,lon], …, [lat,lon]]; otherwise, the return is of the form [[lat,lon,altMeters], …, [lat,lon,altMeters]].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodes</strong> (A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe, Required, default as None) – Dataframe containing a collection of nodes.</p></li>
+<li><p><strong>includeAlt</strong> (<em>Boolean</em><em>, </em><em>Optional</em><em>, </em><em>default as False</em>) – If False, only latitude and longitude values are returned.  If True, the value in the <cite>altMeters</cite> column of the nodes dataframe is also returned with each lat/lon pair.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A list of lists, with each sub-list representing the location of one node.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl>
+<dt>Import veroviz and check if the version is up-to-date</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>Generate 4 nodes:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exampleNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">nodeDistrib</span>      <span class="o">=</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nodeDistribArgs</span>  <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;center&#39;</span>         <span class="p">:</span> <span class="p">[</span><span class="mf">42.90</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s1">&#39;stdDev&#39;</span>         <span class="p">:</span> <span class="mi">10000</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">numNodes</span>         <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Convert to locations (including altitudes in meters):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">nodesToLocs</span><span class="p">(</span><span class="n">exampleNodes</span><span class="p">,</span> <span class="n">includeAlt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[[42.895314077862146, -78.80362790487085, 0.0],</span>
+<span class="go"> [42.92242495208993, -78.82243490871062, 0.0],</span>
+<span class="go"> [42.98842769922963, -78.74302258092918, 0.0],</span>
+<span class="go"> [42.880876136692564, -78.81444943020881, 0.0]]</span>
 </pre></div>
 </div>
 </dd>

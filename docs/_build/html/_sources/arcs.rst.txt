@@ -71,8 +71,8 @@ The table below describes each of the fields/columns of an `Arcs` dataframe:
 |                  | (-90, 90) | leafletCurvature is required; otherwise|
 |                  |           | this argument will not be used. The    |
 |                  |           | curvature specifies the angle between a|
-|                  |           |  straight line connecting the two nodes|
-|                  |           |  and the curved arc emanating from     |
+|                  |           | straight line connecting the two nodes |
+|                  |           | and the curved arc emanating from      |
 |                  |           | those two nodes. Therefore, this value |
 |                  |           | should be in the open interval         |
 |                  |           | (-90, 90), although values in the      |
