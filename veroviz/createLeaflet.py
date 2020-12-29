@@ -38,7 +38,7 @@ weatherMaps = {
 		'attr': 'openweathermap.org'
 	},
 	
-	'precip': { 	
+	'precip': { 
 		'tiles': 'https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=',
 		'attr': 'openweathermap.org'
 	},
@@ -136,7 +136,7 @@ def createLeaflet(mapObject=None, mapFilename=None, mapBackground=config['VRV_DE
 	arcColor: string, Optional, default as None
 		Overrides the `leafletColor` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.
 	arcCurveType: string, Optional, default as 'straight'
-		Choose the type of curve to be shown on leaflet map for :ref:`Arc` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and 'straight'. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.
+		Choose the type of curve to be shown on leaflet map for :ref:`Arcs` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and 'straight'. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.
 	arcCurvature: float in (-90, 90), Conditional, default as 45
 		If choose `Bezier` as `arcCurveType`, then `arcCurvature` is required; otherwise this argument will not be used. The meaning of this argument is as following: link two nodes using straight line, the degrees between this straight line and the curve at two nodes is this argument, therefore it should be greater or equal to 0 and less than 90. A degree between -45 and 45 is recommended.		
 	useArrows: boolean, Optional, default as None
@@ -1345,7 +1345,7 @@ def addLeafletPolygon(mapObject=None, mapFilename=None, mapBackground=config['VR
 		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints), 
 		...     zoomStart = 15, 
 		...     points = campusPoints, 
-		...     popupText = 'Univ. at Buffalo',		
+		...     popupText = 'Univ. at Buffalo',
 		...     lineWeight = 7, 
 		...     lineColor = '#ff00ff', 
 		...     lineOpacity = 0.9, 
@@ -1475,7 +1475,7 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=config['V
 	lineStyle: string, Optional, default 'solid'
 		The style of the polyine.  See :ref:`Leaflet Style` for a list of valid options.  
 	lineCurveType: string, Optional, default as 'straight'
-		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
+		The type of curve to be shown on leaflet map for :ref:`Arcs` dataframes (curves will not be applied to :ref:Assignments dataframes). The options are 'Bezier', 'greatcircle', and 'straight'. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.
 	lineCurvature: float in (-90, 90), Conditional, default as 45
 		If leafletCurveType is 'Bezier', then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.
 	useArrows: boolean, Optional, default as None
@@ -1524,7 +1524,7 @@ def addLeafletPolyline(mapObject=None, mapFilename=None, mapBackground=config['V
 		...     lineCurvature = 30,
 		...     useArrows = True,
 		...     arrowsPerArc = 1)
-		>>> myMap	
+		>>> myMap
 	"""
 
 	# validation
@@ -1711,7 +1711,7 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=config['VRV_D
 
 	"""
 	Add a single icon/pin to a Leaflet map.
-		
+
 	Parameters
 	----------
 	mapObject: Folium object, Optional, default None
@@ -1747,14 +1747,13 @@ def addLeafletIcon(mapObject=None, mapFilename=None, mapBackground=config['VRV_D
 	Import veroviz and check if the version is up-to-date:
 		>>> import veroviz as vrv
 		>>> vrv.checkVersion()
-	
+
 	Define a location:
 		>>> whiteHouse = [38.8977, -77.0365]
 		
 	A minimal example, using mostly default parameters:
 		>>> vrv.addLeafletIcon(location = whiteHouse)
-		
-		
+
 	An example showing all function parameters:
 		>>> vrv.addLeafletIcon(mapObject     = None, 
 		...                    mapFilename   = None, 

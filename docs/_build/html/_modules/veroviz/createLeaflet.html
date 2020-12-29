@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.createLeaflet &#8212; veroviz 0.4.2 documentation</title>
+    <title>veroviz.createLeaflet &#8212; veroviz 0.4.3 documentation</title>
     <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
       </ul>
@@ -96,7 +96,7 @@
 		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;openweathermap.org&#39;</span>
 	<span class="p">},</span>
 	
-	<span class="s1">&#39;precip&#39;</span><span class="p">:</span> <span class="p">{</span> 	
+	<span class="s1">&#39;precip&#39;</span><span class="p">:</span> <span class="p">{</span> 
 		<span class="s1">&#39;tiles&#39;</span><span class="p">:</span> <span class="s1">&#39;https://tile.openweathermap.org/map/precipitation_new/</span><span class="si">{z}</span><span class="s1">/</span><span class="si">{x}</span><span class="s1">/</span><span class="si">{y}</span><span class="s1">.png?appid=&#39;</span><span class="p">,</span>
 		<span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;openweathermap.org&#39;</span>
 	<span class="p">},</span>
@@ -194,7 +194,7 @@
 <span class="sd">	arcColor: string, Optional, default as None</span>
 <span class="sd">		Overrides the `leafletColor` column of an input :ref:`Arcs` or :ref:`Assignments` dataframe.  If provided, all arcs will be displayed with this color.  See :ref:`Leaflet Style` for a list of available colors.</span>
 <span class="sd">	arcCurveType: string, Optional, default as &#39;straight&#39;</span>
-<span class="sd">		Choose the type of curve to be shown on leaflet map for :ref:`Arc` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and &#39;straight&#39;. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.</span>
+<span class="sd">		Choose the type of curve to be shown on leaflet map for :ref:`Arcs` dataframe (curves will not be applied to :ref:`Assignments` dataframes). The options are `Bezier`, `greatcircle`, and &#39;straight&#39;. If `Bezier` is provided, the `arcCurvature` should not be None, leaflet will draw a Bezier curve between given nodes. If `greatcircle` is provided, the curve will go along with the surface of the Earth.</span>
 <span class="sd">	arcCurvature: float in (-90, 90), Conditional, default as 45</span>
 <span class="sd">		If choose `Bezier` as `arcCurveType`, then `arcCurvature` is required; otherwise this argument will not be used. The meaning of this argument is as following: link two nodes using straight line, the degrees between this straight line and the curve at two nodes is this argument, therefore it should be greater or equal to 0 and less than 90. A degree between -45 and 45 is recommended.		</span>
 <span class="sd">	useArrows: boolean, Optional, default as None</span>
@@ -514,7 +514,7 @@
 			<span class="n">iconSizeX</span> <span class="o">=</span> <span class="n">radius</span><span class="o">*</span><span class="mi">2</span>		<span class="c1"># FIXME -- Not sure if this is good.</span>
 			<span class="n">iconAnchorX</span> <span class="o">=</span> <span class="n">iconSizeX</span> <span class="o">/</span> <span class="mi">2</span>
 				
-			<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
+			<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="n">popupText</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
 				<span class="n">icon_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconSizeX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
 				<span class="n">icon_anchor</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconAnchorX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
 				<span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&lt;div style=</span><span class="se">\&quot;</span><span class="s2">font-size: </span><span class="si">%d</span><span class="s2">pt; color: </span><span class="si">%s</span><span class="s2">; text-align: center;</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">%s</span><span class="s2">&lt;/div&gt;&quot;</span> <span class="o">%</span>  <span class="p">(</span><span class="n">fontSize</span><span class="p">,</span> <span class="n">fontColor</span><span class="p">,</span> <span class="n">iconText</span><span class="p">)</span>
@@ -1147,7 +1147,7 @@
 		<span class="n">iconSizeX</span> <span class="o">=</span> <span class="mi">900</span>		<span class="c1"># FIXME -- Not sure if this is good.</span>
 		<span class="n">iconAnchorX</span> <span class="o">=</span> <span class="n">iconSizeX</span> <span class="o">/</span> <span class="mi">2</span>
 					
-		<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
+		<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="n">popupText</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
 			<span class="n">icon_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconSizeX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
 			<span class="n">icon_anchor</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconAnchorX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
 			<span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&lt;div style=</span><span class="se">\&quot;</span><span class="s2">font-size: </span><span class="si">%d</span><span class="s2">pt; color: </span><span class="si">%s</span><span class="s2">; text-align: center;</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">%s</span><span class="s2">&lt;/div&gt;&quot;</span> <span class="o">%</span>  <span class="p">(</span><span class="n">fontSize</span><span class="p">,</span> <span class="n">fontColor</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
@@ -1317,15 +1317,15 @@
 		<span class="k">except</span><span class="p">:</span>
 			<span class="k">pass</span>
 
-		<span class="n">iconSizeX</span> <span class="o">=</span> <span class="mi">900</span>		<span class="c1"># FIXME -- Not sure if this is good.</span>
+		<span class="n">iconSizeX</span> <span class="o">=</span> <span class="n">radius</span><span class="o">*</span><span class="mi">2</span>		<span class="c1"># FIXME -- Not sure if this is good.</span>
 		<span class="n">iconAnchorX</span> <span class="o">=</span> <span class="n">iconSizeX</span> <span class="o">/</span> <span class="mi">2</span>
-					
-		<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
+										
+		<span class="n">folium</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="n">popupText</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="n">DivIcon</span><span class="p">(</span>
 			<span class="n">icon_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconSizeX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
 			<span class="n">icon_anchor</span> <span class="o">=</span> <span class="p">(</span><span class="n">iconAnchorX</span><span class="p">,</span> <span class="n">fontSize</span><span class="p">),</span> 
-			<span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;&lt;div style=</span><span class="se">\&quot;</span><span class="s2">font-size: </span><span class="si">%d</span><span class="s2">pt; color: </span><span class="si">%s</span><span class="s2">; text-align: center;</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">%s</span><span class="s2">&lt;/div&gt;&quot;</span> <span class="o">%</span>  <span class="p">(</span><span class="n">fontSize</span><span class="p">,</span> <span class="n">fontColor</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+			<span class="n">html</span> <span class="o">=</span> <span class="s1">&#39;&lt;div style=&quot;font-size: </span><span class="si">%d</span><span class="s1">pt; color: </span><span class="si">%s</span><span class="s1">; text-align: center;&quot;&gt;</span><span class="si">%s</span><span class="s1">&lt;/div&gt;&#39;</span> <span class="o">%</span>  <span class="p">(</span><span class="n">fontSize</span><span class="p">,</span> <span class="n">fontColor</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 			<span class="p">))</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
-
+		
 	<span class="k">if</span> <span class="p">(</span><span class="n">mapFilename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
 		<span class="n">mapObject</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mapFilename</span><span class="p">)</span>
 		<span class="k">if</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWOUTPUTMESSAGE&#39;</span><span class="p">]):</span>
@@ -1403,7 +1403,7 @@
 <span class="sd">		...     mapBoundary = vrv.getMapBoundary(locs=campusPoints), </span>
 <span class="sd">		...     zoomStart = 15, </span>
 <span class="sd">		...     points = campusPoints, </span>
-<span class="sd">		...     popupText = &#39;Univ. at Buffalo&#39;,		</span>
+<span class="sd">		...     popupText = &#39;Univ. at Buffalo&#39;,</span>
 <span class="sd">		...     lineWeight = 7, </span>
 <span class="sd">		...     lineColor = &#39;#ff00ff&#39;, </span>
 <span class="sd">		...     lineOpacity = 0.9, </span>
@@ -1533,7 +1533,7 @@
 <span class="sd">	lineStyle: string, Optional, default &#39;solid&#39;</span>
 <span class="sd">		The style of the polyine.  See :ref:`Leaflet Style` for a list of valid options.  </span>
 <span class="sd">	lineCurveType: string, Optional, default as &#39;straight&#39;</span>
-<span class="sd">		The type of curve to be shown on leaflet map for :ref:Arc dataframes (curves will not be applied to :ref:Assignments dataframes). The options are &#39;Bezier&#39;, &#39;greatcircle&#39;, and &#39;straight&#39;. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.</span>
+<span class="sd">		The type of curve to be shown on leaflet map for :ref:`Arcs` dataframes (curves will not be applied to :ref:Assignments dataframes). The options are &#39;Bezier&#39;, &#39;greatcircle&#39;, and &#39;straight&#39;. If Bezier is provided, the leafletCurvature is also required. If greatcircle is provided, the arc follow the curvature of the Earth.</span>
 <span class="sd">	lineCurvature: float in (-90, 90), Conditional, default as 45</span>
 <span class="sd">		If leafletCurveType is &#39;Bezier&#39;, then leafletCurvature is required; otherwise this argument will not be used. The curvature specifies the angle between a straight line connecting the two nodes and the curved arc emanating from those two nodes. Therefore, this value should be in the open interval (-90, 90), although values in the (-45, 45) range tend to work best.</span>
 <span class="sd">	useArrows: boolean, Optional, default as None</span>
@@ -1582,7 +1582,7 @@
 <span class="sd">		...     lineCurvature = 30,</span>
 <span class="sd">		...     useArrows = True,</span>
 <span class="sd">		...     arrowsPerArc = 1)</span>
-<span class="sd">		&gt;&gt;&gt; myMap	</span>
+<span class="sd">		&gt;&gt;&gt; myMap</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
 	<span class="c1"># validation</span>
@@ -1769,7 +1769,7 @@
 
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a single icon/pin to a Leaflet map.</span>
-<span class="sd">		</span>
+
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
 <span class="sd">	mapObject: Folium object, Optional, default None</span>
@@ -1805,14 +1805,13 @@
 <span class="sd">	Import veroviz and check if the version is up-to-date:</span>
 <span class="sd">		&gt;&gt;&gt; import veroviz as vrv</span>
 <span class="sd">		&gt;&gt;&gt; vrv.checkVersion()</span>
-<span class="sd">	</span>
+
 <span class="sd">	Define a location:</span>
 <span class="sd">		&gt;&gt;&gt; whiteHouse = [38.8977, -77.0365]</span>
 <span class="sd">		</span>
 <span class="sd">	A minimal example, using mostly default parameters:</span>
 <span class="sd">		&gt;&gt;&gt; vrv.addLeafletIcon(location = whiteHouse)</span>
-<span class="sd">		</span>
-<span class="sd">		</span>
+
 <span class="sd">	An example showing all function parameters:</span>
 <span class="sd">		&gt;&gt;&gt; vrv.addLeafletIcon(mapObject     = None, </span>
 <span class="sd">		...                    mapFilename   = None, </span>
@@ -1877,7 +1876,7 @@
 <span class="sd">	zoomStart: int, Optional, default as None</span>
 <span class="sd">		Specifies the default zoom level.  1 --&gt; global view;  18 --&gt; max zoom.  Note that some map tiles have maximum zoom levels less than 18.  The `zoomStart` will be overridden by a `mapBoundary` (if one is provided).</span>
 <span class="sd">	iso: isochrone object, Required, default as None</span>
-<span class="sd">		FIXME -- Include link/reference to `isochrones()` function.</span>
+<span class="sd">		See the `isochrones()` function for details on how to create this object.</span>
 <span class="sd">	showBoundingRegion: boolean, Optional, default as False</span>
 <span class="sd">		The isochrone object contains a bounding region, which is the smallest rectangle enclosing the isochrones.  If you wish to include this rectangle on the map, set `showBoundingRegion=True`.  </span>
 <span class="sd">	iconPrefix: string, Optional, default as &quot;glyphicon&quot;</span>
@@ -2163,7 +2162,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
       </ul>

@@ -274,7 +274,7 @@ def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
 	Returns
 	-------
 	float
-	Total length of the path.
+		Total length of the path.
 
 	Example
 	-------
@@ -3170,7 +3170,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 	Create a Gantt chart using the default settings:
 		>>> vrv.createGantt(assignments = myAssignments, 
 		...                 xAxisLabel  = 'time [seconds]')
-           
+
 	Create (and save) a Gantt chart using all of the available settings:
 		>>> vrv.createGantt(assignments         = myAssignments, 
 		...                 objectIDorder       = ['truck', 'car'], 
@@ -3188,7 +3188,6 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 		...                 overlayColumn       = 'odID',
 		...                 missingColor        = 'lightgray',
 		...                 filename            = 'myGantt.png')
-                
 	"""
 
 	# validation
