@@ -1,9 +1,0 @@
-,odID,objectID,startLat,startLon,endLat,endLon,leafletColor,leafletWeight,leafletStyle,leafletOpacity,leafletCurveType,leafletCurvature,useArrows,cesiumColor,cesiumWeight,cesiumStyle,cesiumOpacity,popupText,startElevMeters,endElevMeters
-0,1,Truck,43.003922,-78.697982,42.974697,-78.798269,orange,3,solid,0.8,straight,0,True,orange,3,solid,0.8,,,
-1,2,Truck,42.974697,-78.798269,42.951958,-78.795942,orange,3,solid,0.8,straight,0,True,orange,3,solid,0.8,,,
-2,3,Truck,42.951958,-78.795942,42.974264,-78.820277,orange,3,solid,0.8,straight,0,True,orange,3,solid,0.8,,,
-3,4,Truck,42.974264,-78.820277,43.003922,-78.697982,orange,3,solid,0.8,straight,0,True,orange,3,solid,0.8,,,
-4,5,Drone,43.003922,-78.697982,42.998253,-78.79473,blue,3,dotted,0.8,bezier,8,True,blue,3,solid,0.8,,,
-5,6,Drone,42.998253,-78.79473,43.003922,-78.697982,blue,3,dotted,0.8,bezier,8,True,blue,3,solid,0.8,,,
-6,7,Drone,43.003922,-78.697982,42.993819,-78.80298,blue,3,dotted,0.8,bezier,8,True,blue,3,solid,0.8,,,
-7,8,Drone,42.993819,-78.80298,43.003922,-78.697982,blue,3,dotted,0.8,bezier,8,True,blue,3,solid,0.8,,,
