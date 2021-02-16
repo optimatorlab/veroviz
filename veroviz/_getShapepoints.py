@@ -55,7 +55,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 		elif (routeType in ['fastest', 'shortest', 'pedestrian'] and dataProviderDictionary[dataProvider] == 'mapquest'):
 			APIkey = dataProviderArgs['APIkey']
 			[path, time, dist] = mqGetShapepointsTimeDist(startLoc, endLoc, routeType, APIkey)
-		elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck'] and dataProviderDictionary[dataProvider] == 'ors-online'):
+		elif (routeType in ['fastest', 'pedestrian', 'cycling', 'truck', 'wheelchair'] and dataProviderDictionary[dataProvider] == 'ors-online'):
 			APIkey = dataProviderArgs['APIkey']
 			if ('requestExtras' in dataProviderArgs.keys()):
 				requestExtras = dataProviderArgs['requestExtras']
@@ -110,18 +110,30 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 
 		# shapepoint dataframe
 		assignments = privInitDataframe('Assignments')
-
+		
 		# generate assignments
 		for i in range(1, len(path)):
-			startElev   = extras[i-1]['elev'] if (i-1) in extras else None
-			endElev     = extras[i]['elev'] if i in extras else None
-			wayname     = extras[i]['wayname'] if (i-1) in extras else None
-			
-			waycategory = extras[i]['waycategory'] if (i-1) in extras else None
-			surface     = extras[i]['surface'] if (i-1) in extras else None
-			waytype     = extras[i]['waytype'] if (i-1) in extras else None
-			steepness   = extras[i]['steepness'] if (i-1) in extras else None
-			tollway     = extras[i]['tollway'] if (i-1) in extras else None
+			if (i-1) in extras:
+				startElev   = extras[i-1]['elev'] if 'elev' in extras[i-1] else None
+				wayname     = extras[i]['wayname'] if 'wayname' in extras[i] else None
+				waycategory = extras[i]['waycategory'] if 'waycategory' in extras[i] else None
+				surface     = extras[i]['surface'] if 'surface' in extras[i] else None
+				waytype     = extras[i]['waytype'] if 'waytype' in extras[i] else None
+				steepness   = extras[i]['steepness'] if 'steepness' in extras[i] else None
+				tollway     = extras[i]['tollway'] if 'tollway' in extras[i] else None
+			else:
+				startElev   = None
+				wayname     = None
+				waycategory = None
+				surface     = None
+				waytype     = None
+				steepness   = None
+				tollway     = None
+				
+			if i in extras:
+				endElev     = extras[i]['elev'] if 'elev' in extras[i] else None
+			else:
+				endElev     = None			
 			
 			assignments = assignments.append({
 				'odID' : odID,
