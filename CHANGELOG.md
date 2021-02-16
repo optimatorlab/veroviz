@@ -1,5 +1,10 @@
 ### Change Log
 
+### Version 0.4.4 (2021-02-16)
+
+Minor release to fix a bug in `createAssignmentsFromNodeSeq2D()` where 'wheelchair', 'pedestrian', and 'cycling' routeType options were not working properly.
+
+
 ### Version 0.4.3 (2020-12-30)
 
 This minor release introduced five new functions, but was mostly about fixing some more bugs.

@@ -1345,7 +1345,6 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 			dataProvider=dataProvider, 
 			dataProviderArgs=dataProviderArgs)
 
-
 		# Update the assignments dataframe:
 		assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
 
