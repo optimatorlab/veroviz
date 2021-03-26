@@ -26,7 +26,13 @@ def owGetWeather(location, id, metricUnits, APIkey):
 			subDict['timezone'] = data['timezone']
 			subDict['class']    = 'current'
 			for key in data['current']:
-				if (key == 'weather'):
+				if (key == 'rain'):
+					for subkey in data['current']['rain'][0]:
+						subDict['rain_' + subkey] = data['current']['rain'][0][subkey]
+				elif (key == 'snow'):
+					for subkey in data['current']['snow'][0]:
+						subDict['snow_' + subkey] = data['current']['snow'][0][subkey]
+				elif (key == 'weather'):
 					for subkey in data['current']['weather'][0]:
 						subDict['weather_' + subkey] = data['current']['weather'][0][subkey]
 				else:
@@ -39,6 +45,7 @@ def owGetWeather(location, id, metricUnits, APIkey):
 				subDict['lat']      = data['lat'] 
 				subDict['lon']      = data['lon'] 
 				subDict['timezone'] = data['timezone']
+				subDict['class']    = 'minutely'
 				for key in data['minutely'][i]:
 					subDict[key] = data['minutely'][i][key]
 				x.append(subDict)
@@ -50,11 +57,16 @@ def owGetWeather(location, id, metricUnits, APIkey):
 				subDict['lon']      = data['lon'] 
 				subDict['timezone'] = data['timezone']
 				subDict['class']    = 'hourly'
-				for key in data['hourly'][i]:
-					if (key == 'weather'):
+				for key in data['hourly'][i]:				
+					if (key == 'rain'):
+						for subkey in data['hourly'][i]['rain'][0]:
+							subDict['rain_' + subkey] = data['hourly'][i]['rain'][0][subkey]
+					elif (key == 'snow'):
+						for subkey in data['hourly'][i]['snow'][0]:
+							subDict['snow_' + subkey] = data['hourly'][i]['snow'][0][subkey]
+					elif (key == 'weather'):
 						for subkey in data['hourly'][i]['weather'][0]:
 							subDict['weather_' + subkey] = data['hourly'][i]['weather'][0][subkey]
-
 					else:
 						subDict[key] = data['hourly'][i][key]
 				x.append(subDict)
