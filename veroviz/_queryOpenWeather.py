@@ -33,6 +33,16 @@ def owGetWeather(location, id, metricUnits, APIkey):
 					subDict[key] = data['current'][key]
 			x.append(subDict)
 
+			for i in range(0, len(data['minutely'])):
+				subDict = {}
+				subDict['id']       = id
+				subDict['lat']      = data['lat'] 
+				subDict['lon']      = data['lon'] 
+				subDict['timezone'] = data['timezone']
+				for key in data['minutely'][i]:
+					subDict[key] = data['minutely'][i][key]
+				x.append(subDict)
+			
 			for i in range(0, len(data['hourly'])):
 				subDict = {}
 				subDict['id']       = id
