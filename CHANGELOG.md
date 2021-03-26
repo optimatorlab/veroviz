@@ -1,5 +1,10 @@
 ### Change Log
 
+### Version 0.4.5 (2021-03-29)
+
+Added "minutely" weather forecast data as output from `getWeather()` function, and fixed a bug where some output data were being nested as dictionaries in a column.
+
+
 ### Version 0.4.4 (2021-02-16)
 
 Minor release to fix a bug in `createAssignmentsFromNodeSeq2D()` where 'wheelchair', 'pedestrian', and 'cycling' routeType options were not working properly.
