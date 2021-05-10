@@ -60,7 +60,7 @@ If you're using VeRoViz in your research, please consider adding a citation. Our
     author       = {Lan Peng and Chase Murray},
     year         = {2020},
     howpublished = {\url{https://ssrn.com/abstract=3746037}},
-    note         = {Accessed: 2021-01-04}
+    note         = {Accessed: 2021-05-10}
 }
 ```
 
