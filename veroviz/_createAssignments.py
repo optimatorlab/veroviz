@@ -16,7 +16,7 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 
 	dicLoc = loc2Dict(loc)
 	
-	assignments = assignments.append({
+	assignments = pd.concat([assignments, pd.DataFrame({
 		'odID': odID,
 		'objectID': objectID,
 		'modelFile': modelFile,
@@ -51,7 +51,7 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 		'waytype' : None, 
 		'steepness' : None,
 		'tollway' : None
-		}, ignore_index=True, sort=False)
+		})], ignore_index=True, sort=False)
 
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		assignments = pd.concat([initAssignments, assignments], ignore_index=True)

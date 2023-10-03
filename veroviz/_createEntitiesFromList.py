@@ -77,8 +77,9 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 
 	# generate nodes
 	dicLocs = locs2Dict(locs)
+	nodesList = []
 	for i in range(len(locs)):
-		nodes = nodes.append({
+		nodesList.append({
 			'id': ids[i],
 			'lat': dicLocs[i]['lat'],
 			'lon': dicLocs[i]['lon'],
@@ -94,7 +95,9 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 			'cesiumColor': stripCesiumColor(cesiumColor),
 			'cesiumIconText': cesiumIconText if (cesiumIconText != None) else ids[i],
 			'elevMeters': None
-			}, ignore_index=True)
+			})
+
+	nodes = pd.concat([nodes, pd.DataFrame(nodesList)], ignore_index=True)
 
 	# if the user provided an initNode dataframe, add the new points after it
 	if (type(initNodes) is pd.core.frame.DataFrame):
@@ -122,9 +125,10 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 	# arc dataframe
 	arcs = privInitDataframe('Arcs')
 
+	arcsList = []
 	# generate arcs
 	for i in range(len(locSeq) - 1):
-		arcs = arcs.append({
+		arcsList.append({
 			'odID': odIDs[i],
 			'objectID': objectID,
 			'startLat': locSeq[i][0],
@@ -145,8 +149,9 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 			'popupText': popupText, 
 			'startElevMeters': None,
 			'endElevMeters': None
-			}, ignore_index=True)
-
+			})
+	arcs = pd.concat([arcs, pd.DataFrame(arcsList)], ignore_index=True)
+	
 	# if the user provided an initNode dataframe, add the new points after it
 	if (type(initArcs) is pd.core.frame.DataFrame):
 		arcs = pd.concat([initArcs, arcs], ignore_index=True)

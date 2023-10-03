@@ -761,11 +761,13 @@ def _getPathsDetails(assignments):
 	# Get path list from assignments dataframe
 	lstSubAssignments = deconstructAssignments(assignments=assignments, includeStationaryFlag=True, includeVerticalFlag=True)
 
-	# Now we prepare for .czml, the following is a Path Dataframe, which has the same length as lstSubAssignments
-	path = pd.DataFrame(columns=['odID', 'czmlID', 'objectID', 'modelFile', 'action', 'modelScale', 'modelMinPxSize', 'startTimeSec', 'endTimeSec', 'intervalStart', 'intervalEnd', 'indexInlstShapepoints'])
+	# Now we prepare for .czml.
+	# First, create a list of dictionaries, to eventually populate a Path Dataframe, which has the same length as lstSubAssignments
+	pathList = []
+	
 	for i in range(len(lstSubAssignments)):
 		tmpObjectID = str(lstSubAssignments[i].iloc[0]['objectID']).replace("'", r"")
-		path = path.append({
+		pathList.append({
 			'odID': lstSubAssignments[i].iloc[0]['odID'],
 			'czmlID': 'o-%s-%s-%s' % (tmpObjectID, lstSubAssignments[i].iloc[0]['modelFile'], _getAction(lstSubAssignments[i])),
 			'objectID': lstSubAssignments[i].iloc[0]['objectID'],
@@ -778,7 +780,10 @@ def _getPathsDetails(assignments):
 			'intervalStart': "",
 			'intervalEnd': "",
 			'indexInlstShapepoints': i
-			}, ignore_index=True)
+			})
+
+
+	path = pd.DataFrame(pathList)
 	path.sort_values('odID', ascending=True)
 
 	return [path, lstSubAssignments]

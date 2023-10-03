@@ -111,6 +111,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 		# shapepoint dataframe
 		assignments = privInitDataframe('Assignments')
 		
+		asgnList = []
 		# generate assignments
 		for i in range(1, len(path)):
 			if (i-1) in extras:
@@ -135,7 +136,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			else:
 				endElev     = None			
 			
-			assignments = assignments.append({
+			asgnList.append({
 				'odID' : odID,
 				'objectID' : objectID, 
 				'modelFile' : modelFile,
@@ -170,7 +171,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 				'waytype' : waytype, 
 				'steepness' : steepness,
 				'tollway' : tollway
-				}, ignore_index=True)
+				})
 	else:
 		# For maintainability, convert locs into dictionary
 		dicStartLoc = loc2Dict(startLoc)
@@ -181,7 +182,9 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			elev = None
 			
 		assignments = privInitDataframe('Assignments')
-		assignments = assignments.append({
+		
+		asgnList = []
+		asgnList.append({
 			'odID' : odID,
 			'objectID' : objectID, 
 			'modelFile' : modelFile,
@@ -216,7 +219,9 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'waytype' : None, 
 			'steepness' : None,
 			'tollway' : None
-			}, ignore_index=True)
+			})
+
+	assignments = pd.concat([assignments, pd.DataFrame(asgnList)], ignore_index=True)
 
 	return assignments
 
@@ -248,9 +253,11 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 
 	# Build assignments dataframe
 	assignments = privInitDataframe('assignments')
+	
+	asgnList = []
 	for i in range(1, len(flight)):
 		# For all segments in flight profile, loitering happens AFTER arrival at that position
-		assignments = assignments.append({
+		asgnList.append({
 			'odID': odID,
 			'objectID': objectID,
 			'modelFile': modelFile,
@@ -285,11 +292,11 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 			'waytype' : None, 
 			'steepness' : None,
 			'tollway' : None
-			}, ignore_index=True)
+			})
 
 		# If they need loitering, add the line of loitering
 		if (flight.iloc[i]['loiterTime'] != 0):
-			assignments = assignments.append({
+			asgnList.append({
 				'odID': odID,
 				'objectID': objectID,
 				'modelFile': modelFile,
@@ -324,7 +331,9 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'waytype' : None, 
 				'steepness' : None,
 				'tollway' : None
-				}, ignore_index=True)
+				})
+
+	assignments = pd.concat([assignments, pd.DataFrame(asgnList)], ignore_index=True)
 
 	return assignments
 

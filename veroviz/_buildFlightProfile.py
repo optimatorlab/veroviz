@@ -141,18 +141,17 @@ def _buildFlightProfile(startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, r
 	# Total ground distance
 	totalGroundDistance = geoDistancePath2D(markPath)
 
-	# Flight Profile dataframe
-	flight = pd.DataFrame(columns=['lat', 'lon', 'altAGL', 'accuGroundDistance', 'description', 'loiterTime'])
+	flightList = []
 
 	# For the first location, add one row
-	flight = flight.append({
+	flightList.append({
 		'lat': dicStartLoc['lat'],
 		'lon': dicStartLoc['lon'],
 		'altAGL': dicStartLoc['alt'],
 		'accuGroundDistance': 0.0,
 		'description': "beforeTakeoff",
 		'loiterTime': 0.0
-		}, ignore_index=True)	
+		})	
 
 	# Check if distance is enough for taking off and landing
 	if (totalGroundDistance > idealTakeoffGroundDistance + idealLandingGroundDistance):
@@ -161,22 +160,22 @@ def _buildFlightProfile(startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, r
 		landingMileage = geoMileageInPath2D(markPath, totalGroundDistance - idealLandingGroundDistance)
 
 		# if can cruise, it means we need two locations
-		flight = flight.append({
+		flightList.append({
 			'lat': takeoffMileage['loc'][0],
 			'lon': takeoffMileage['loc'][1],
 			'altAGL': cruiseAltMetersAGL,
 			'accuGroundDistance': idealTakeoffGroundDistance,
 			'description': "takeoffAtAlt",
 			'loiterTime': 0.0
-			}, ignore_index=True)
-		flight = flight.append({
+			})
+		flightList.append({
 			'lat': landingMileage['loc'][0],
 			'lon': landingMileage['loc'][1],
 			'altAGL': cruiseAltMetersAGL,
 			'accuGroundDistance': totalGroundDistance - idealLandingGroundDistance,
 			'description': "arrivalAtAlt",
 			'loiterTime': 0.0
-			}, ignore_index=True)
+			})
 	else:
 		# if can not reach cruise altitude, the profile is "triangle", i.e. the takeoffAt position are the same as arrivalAt position
 		deltaAGLTakeoffLanding = dicStartLoc['alt'] - dicEndLoc['alt']
@@ -190,75 +189,78 @@ def _buildFlightProfile(startLoc, cruiseAltMetersAGL, endLoc, takeoffSpeedMPS, r
 
 		takeoffMileage = geoMileageInPath2D(markPath, takeoffGroundDistance)
 
-		flight = flight.append({
+		flightList.append({
 			'lat': takeoffMileage['loc'][0],
 			'lon': takeoffMileage['loc'][1],
 			'altAGL': deltaAGLCruiseTakeoff + dicStartLoc['alt'],
 			'accuGroundDistance': takeoffGroundDistance,
 			'description': "takeoffAtAlt and arrivalAtAlt",
 			'loiterTime': 0.0
-			}, ignore_index=True)
+			})
 
 	# For the last location, add one row
-	flight = flight.append({
+	flightList.append({
 		'lat': dicEndLoc['lat'],
 		'lon': dicEndLoc['lon'],
 		'altAGL': dicEndLoc['alt'],
 		'accuGroundDistance': totalGroundDistance,
 		'description': "afterArrival",
 		'loiterTime': 0.0
-		}, ignore_index=True)
+		})
 
+	# Create dataframe
+	flightDF = pd.DataFrame(flightList)
+	
 	# Reorder flight in order
-	flight = flight.sort_values('accuGroundDistance', ascending=True)
-	flight = flight.reset_index(drop=True)
+	flightDF = flightDF.sort_values('accuGroundDistance', ascending=True)
+	flightDF = flightDF.reset_index(drop=True)
 
 	# Add the 'groundDistance' column to flight dataframe
 	groundDistance = [0.0]
-	for i in range(1, len(flight)):
-		groundDistance.append(geoDistance2D((flight.iloc[i]['lat'], flight.iloc[i]['lon']), (flight.iloc[i - 1]['lat'], flight.iloc[i - 1]['lon'])))
-	flight['groundDistance'] = groundDistance
+	for i in range(1, len(flightDF)):
+		groundDistance.append(geoDistance2D((flightDF.iloc[i]['lat'], flightDF.iloc[i]['lon']), (flightDF.iloc[i - 1]['lat'], flightDF.iloc[i - 1]['lon'])))
+	flightDF['groundDistance'] = groundDistance
 
 	# Add the 'flightDistance' column to flight dataframe
 	flightDistance = [0.0]
-	for i in range(1, len(flight)):
-		deltaHeight = flight.iloc[i]['altAGL'] - flight.iloc[i - 1]['altAGL']
-		groundDistance = flight.iloc[i]['groundDistance']
+	for i in range(1, len(flightDF)):
+		deltaHeight = flightDF.iloc[i]['altAGL'] - flightDF.iloc[i - 1]['altAGL']
+		groundDistance = flightDF.iloc[i]['groundDistance']
 		flightDistance.append(math.sqrt(deltaHeight * deltaHeight + groundDistance * groundDistance))
-	flight['flightDistance'] = flightDistance
+	flightDF['flightDistance'] = flightDistance
 
 	# Add the 'accuFlightDistance' column to flight dataframe
 	accuFlightDistance = [0.0]
-	for i in range(1, len(flight)):
-		accuFlightDistance.append(accuFlightDistance[i - 1] + flight.iloc[i]['flightDistance'])
-	flight['accuFlightDistance'] = accuFlightDistance
+	for i in range(1, len(flightDF)):
+		accuFlightDistance.append(accuFlightDistance[i - 1] + flightDF.iloc[i]['flightDistance'])
+	flightDF['accuFlightDistance'] = accuFlightDistance
 
 	# Add the 'time' column to flight dataframe
 	duration = [0.0]
-	for i in range(1, len(flight)):
-		if (flight.iloc[i]['description'] == "takeoffAtAlt" or flight.iloc[i]['description'] == "takeoffAtAlt and arrivalAtAlt"):
+	for i in range(1, len(flightDF)):
+		if (flightDF.iloc[i]['description'] == "takeoffAtAlt" or flightDF.iloc[i]['description'] == "takeoffAtAlt and arrivalAtAlt"):
 			speed = takeoffSpeedMPS
-			duration.append(flight.iloc[i]['flightDistance'] / speed)
-		elif (flight.iloc[i]['description'] == "arrivalAtAlt"):
+			duration.append(flightDF.iloc[i]['flightDistance'] / speed)
+		elif (flightDF.iloc[i]['description'] == "arrivalAtAlt"):
 			speed = cruiseSpeedMPS
-			duration.append(flight.iloc[i]['flightDistance'] / speed)
-		elif(flight.iloc[i]['description'] == "afterArrival"):
+			duration.append(flightDF.iloc[i]['flightDistance'] / speed)
+		elif(flightDF.iloc[i]['description'] == "afterArrival"):
 			speed = landSpeedMPS
-			duration.append(flight.iloc[i]['flightDistance'] / speed)
-	flight['timeFromPreviousPosition'] = duration
+			duration.append(flightDF.iloc[i]['flightDistance'] / speed)
+	flightDF['timeFromPreviousPosition'] = duration
 
 	# Add the 'accuTime' column to flight dataframe
 	startTimeSec = []
 	endTimeSec = []
 	startTimeSec.append(0.0)
-	endTimeSec.append(flight.iloc[0]['loiterTime'])
-	for i in range(1, len(flight)):
-		startTimeSec.append(endTimeSec[i - 1] + flight.iloc[i]['timeFromPreviousPosition'])
-		endTimeSec.append(endTimeSec[i - 1] + flight.iloc[i]['timeFromPreviousPosition'] + flight.iloc[i]['loiterTime'])
-	flight['pathStartTimeSec'] = startTimeSec
-	flight['pathEndTimeSec'] = endTimeSec
+	endTimeSec.append(flightDF.iloc[0]['loiterTime'])
+	for i in range(1, len(flightDF)):
+		startTimeSec.append(endTimeSec[i - 1] + flightDF.iloc[i]['timeFromPreviousPosition'])
+		endTimeSec.append(endTimeSec[i - 1] + flightDF.iloc[i]['timeFromPreviousPosition'] + flightDF.iloc[i]['loiterTime'])
+	flightDF['pathStartTimeSec'] = startTimeSec
+	flightDF['pathEndTimeSec'] = endTimeSec
 
-	return flight
+	return flightDF
 
 def _buildFlightPath(path, speedMPS):
 
@@ -279,8 +281,10 @@ def _buildFlightPath(path, speedMPS):
 	"""
 
 	# Flight Profile dataframe
-	flight = pd.DataFrame(columns=['lat', 'lon', 'altAGL', 'accuGroundDistance', 'description', 'loiterTime', 'groundDistance', 'flightDistance', 'accuFlightDistance', 'timeFromPreviousPosition' ,'pathStartTimeSec', 'pathEndTimeSec'])
+	flightDF = pd.DataFrame(columns=['lat', 'lon', 'altAGL', 'accuGroundDistance', 'description', 'loiterTime', 'groundDistance', 'flightDistance', 'accuFlightDistance', 'timeFromPreviousPosition' ,'pathStartTimeSec', 'pathEndTimeSec'])
 
+	flightList = []
+	
 	# Check and guarantee that each point in path has 3 dimension
 	dicPath = locs2Dict(path)
 
@@ -303,7 +307,7 @@ def _buildFlightPath(path, speedMPS):
 		accuPathTime += timeFromPreviousPosition
 
 		# And one way point to the flight path
-		flight = flight.append({
+		flightList.append({
 			'lat': dicPath[i]['lat'],
 			'lon': dicPath[i]['lon'],
 			'altAGL': dicPath[i]['alt'],
@@ -316,9 +320,11 @@ def _buildFlightPath(path, speedMPS):
 			'timeFromPreviousPosition': accuFlightDistance / speedMPS,
 			'pathStartTimeSec': accuPathTime, 
 			'pathEndTimeSec': accuPathTime
-			}, ignore_index=True)
+			})
 
-	return flight
+	flightDF = pd.concat([flightDF, pd.DataFrame(flightList)], ignore_index=True)
+	
+	return flightDF
 
 def getTimeDistFromFlight(flight):
 	"""

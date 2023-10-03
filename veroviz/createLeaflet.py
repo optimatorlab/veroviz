@@ -516,10 +516,11 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 
 		
 			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
+			newPathList = []
 			if (newArcCurveType == 'greatcircle'):
 				curvePoints = _getCurveGreatCircle([arcs.iloc[i]['startLat'], arcs.iloc[i]['startLon']], [arcs.iloc[i]['endLat'], arcs.iloc[i]['endLon']])
 				for j in range(1, len(curvePoints)):		
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : arcs.iloc[i]['odID'],
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -531,11 +532,12 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
 						'useArrows' : arcs.iloc[i]['useArrows'],
 						'popupText' : arcs.iloc[i]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)
 			elif (newArcCurveType == 'bezier'):
 				curvePoints = _getCurveBezier([arcs.iloc[i]['startLat'], arcs.iloc[i]['startLon']], [arcs.iloc[i]['endLat'], arcs.iloc[i]['endLon']], newArcCurvature)
 				for j in range(1, len(curvePoints)):		
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : arcs.iloc[i]['odID'],
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -547,9 +549,10 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
 						'useArrows' : arcs.iloc[i]['useArrows'],
 						'popupText' : arcs.iloc[i]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)						
 			elif (newArcCurveType == 'straight'):
-				newPath = newPath.append({
+				newPathList.append({
 					'odID' : arcs.iloc[i]['odID'],
 					'startLat' : arcs.iloc[i]['startLat'],
 					'startLon' : arcs.iloc[i]['startLon'],
@@ -561,7 +564,9 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 					'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
 					'useArrows' : arcs.iloc[i]['useArrows'],
 					'popupText' : arcs.iloc[i]['popupText']
-					}, ignore_index=True)
+					})
+				newPath = pd.DataFrame(newPathList)
+					
 			lstPath.append(newPath.copy())
 
 	# For Assignments dataframe, use deconstructAssignments to generate a list of assignments dataframe
@@ -581,10 +586,11 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			newDestine = [lstOD[i].iloc[len(lstOD[i]) - 1]['endLat'], lstOD[i].iloc[len(lstOD[i]) - 1]['endLon']]
 
 			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
+			newPathList = []
 			if (newArcCurveType == 'greatcircle'):
 				curvePoints = _getCurveGreatCircle(newOrigin, newDestine)
 				for j in range(1, len(curvePoints)):			  
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : i,
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -596,11 +602,12 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
 						'useArrows' : lstOD[i].iloc[0]['useArrows'],
 						'popupText' : lstOD[i].iloc[0]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)		
 			elif (newArcCurveType == 'bezier'):
 				curvePoints = _getCurveBezier(newOrigin, newDestine, newArcCurvature)
 				for j in range(1, len(curvePoints)):			  
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : i,
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -612,9 +619,11 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
 						'useArrows' : lstOD[i].iloc[0]['useArrows'],
 						'popupText' : lstOD[i].iloc[0]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)	
 			elif (newArcCurveType == 'straight'):
 				newPath = lstOD[i]
+				
 			lstPath.append(newPath.copy())
 			
 	# For each path, generate the arcs and arrows accordingly
