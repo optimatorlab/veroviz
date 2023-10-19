@@ -630,9 +630,9 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 	for i in range(len(lstPath)):
 		lstPath[i] = lstPath[i].reset_index(drop=True)
 		arcPath = []
-		arcPath.append([lstPath[i]['startLat'][0], lstPath[i]['startLon'][0]])
+		arcPath.append([float(lstPath[i]['startLat'][0]), float(lstPath[i]['startLon'][0])])
 		for j in range(len(lstPath[i])):
-			arcPath.append([lstPath[i]['endLat'][j], lstPath[i]['endLon'][j]])
+			arcPath.append([float(lstPath[i]['endLat'][j]), float(lstPath[i]['endLon'][j])])
 
 		# FIXMELP -- Some of these values below aren't used anywhere that I can see.
 		#            For example, curveType or curvature.
@@ -682,16 +682,18 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			else:
 				popupText = None	
 			
+			# '''
 			# Folium draw arcs	
 			folium.PolyLine(
 				[arcPath[j-1], arcPath[j]], 
 				color = newColor, 
-				weight = newWeight, 
-				opacity = newOpacity, 
+				weight = float(newWeight), 
+				opacity = float(newOpacity), 
 				dash_array = dashArray,
 				popup = popupText
 			).add_to(mapObject)	
-		
+			# '''
+			
 		# Check if we add arrows
 		arrowFlag = False
 		if (useArrows == True):

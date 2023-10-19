@@ -3642,6 +3642,7 @@ def getWeather(location=None, id=None, initDF=None, metricUnits=False, dataProvi
 
 	# Combine with init dataframe:
 	if (type(initDF) is pd.core.frame.DataFrame):
-		weatherDF = pd.concat([initDF, weatherDF], ignore_index=True, sort=False)
+		if (len(initDF) > 0):
+			weatherDF = pd.concat([initDF, weatherDF], ignore_index=True, sort=False)
 
 	return weatherDF

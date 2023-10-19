@@ -72,9 +72,6 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 	if (snapToRoad):
 		locs = privGetSnapLocBatch(locs=locs, dataProvider=dataProvider, dataProviderArgs=dataProviderArgs)
 
-	# node dataframe
-	nodes = privInitDataframe('Nodes')
-
 	# generate nodes
 	dicLocs = locs2Dict(locs)
 	nodesList = []
@@ -97,13 +94,14 @@ def privCreateNodesFromLocs(locs=None, initNodes=None, nodeType=None, nodeName=N
 			'elevMeters': None
 			})
 
-	nodes = pd.concat([nodes, pd.DataFrame(nodesList)], ignore_index=True)
+	nodesDF = pd.DataFrame(nodesList, columns = privInitDataframe('Nodes').columns)
 
 	# if the user provided an initNode dataframe, add the new points after it
 	if (type(initNodes) is pd.core.frame.DataFrame):
-		nodes = pd.concat([initNodes, nodes], ignore_index=True)
+		if (len(initNodes) > 0):
+			nodesDF = pd.concat([initNodes, nodesDF], ignore_index=True)
 
-	return nodes
+	return nodesDF
 
 def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=None, leafletColor=config['VRV_DEFAULT_LEAFLETARCCOLOR'], leafletWeight=config['VRV_DEFAULT_LEAFLETARCWEIGHT'], leafletStyle=config['VRV_DEFAULT_LEAFLETARCSTYLE'], leafletOpacity=config['VRV_DEFAULT_LEAFLETARCOPACITY'],  leafletCurveType=config['VRV_DEFAULT_ARCCURVETYPE'], leafletCurvature=config['VRV_DEFAULT_ARCCURVATURE'], useArrows=True, cesiumColor=config['VRV_DEFAULT_CESIUMPATHCOLOR'], cesiumWeight=config['VRV_DEFAULT_CESIUMPATHWEIGHT'], cesiumStyle=config['VRV_DEFAULT_CESIUMPATHSTYLE'], cesiumOpacity=config['VRV_DEFAULT_CESIUMPATHOPACITY'], popupText=None):
 
@@ -123,7 +121,7 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 	odIDs = [n for n in range(startArc, startArc + numArcs)]
 
 	# arc dataframe
-	arcs = privInitDataframe('Arcs')
+	arcsDF = privInitDataframe('Arcs')
 
 	arcsList = []
 	# generate arcs
@@ -150,10 +148,12 @@ def privCreateArcsFromLocSeq(locSeq=None, initArcs=None, startArc=1, objectID=No
 			'startElevMeters': None,
 			'endElevMeters': None
 			})
-	arcs = pd.concat([arcs, pd.DataFrame(arcsList)], ignore_index=True)
+			
+	arcsDF = pd.DataFrame(arcsList, columns = arcsDF.columns)
 	
 	# if the user provided an initNode dataframe, add the new points after it
 	if (type(initArcs) is pd.core.frame.DataFrame):
-		arcs = pd.concat([initArcs, arcs], ignore_index=True)
+		if (len(initArcs) > 0):
+			arcsDF = pd.concat([initArcs, arcsDF], ignore_index=True)
 
-	return arcs
+	return arcsDF

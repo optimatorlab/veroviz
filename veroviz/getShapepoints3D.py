@@ -183,9 +183,11 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> # Initialize an empty "assignments" dataframe:
 		>>> assignmentsDF = vrv.initDataframe('assignments')
 
-		>>> # Append to the assignments dataframe.
+		>>> # Initialize an "assignments" dataframe:
 		>>> # The assignments dataframe will hold all shapepoints for all vehicles.
-		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_1], ignore_index=True, sort=False)
+		>>> assignmentsDF = pd.DataFrame(shapepoints3D_1, columns = vrv.initDataframe('assignments').columns)
+		
+		>>> # Append to the assignments dataframe.
 		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_2], ignore_index=True, sort=False)
 		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_3a], ignore_index=True, sort=False)
 		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_3b], ignore_index=True, sort=False)
@@ -318,10 +320,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...        loiterPosition     = 'arrivalAtAlt',
 		...        cesiumColor        = 'orange')
 		
-		>>> # Initialize an empty "assignments" dataframe:
-		>>> assignmentsDF = vrv.initDataframe('assignments')
-
-		>>> # Append to the assignments dataframe.
+		>>> # Create an assignments dataframe.
 		>>> # The assignments dataframe will hold all shapepoints for both vehicles.
 		>>> assignmentsDF = pd.concat([truckShapepoints, droneShapepoints_1, droneShapepoints_2], 
 		...                          ignore_index=True, sort=False)

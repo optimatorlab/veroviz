@@ -322,7 +322,10 @@ def _buildFlightPath(path, speedMPS):
 			'pathEndTimeSec': accuPathTime
 			})
 
-	flightDF = pd.concat([flightDF, pd.DataFrame(flightList)], ignore_index=True)
+	if (len(flightDF) == 0):
+		flightDF = pd.DataFrame(flightList, columns=flightDF.columns)
+	else:
+		flightDF = pd.concat([flightDF, pd.DataFrame(flightList)], ignore_index=True)
 	
 	return flightDF
 

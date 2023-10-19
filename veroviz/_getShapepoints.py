@@ -109,8 +109,6 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 		dicPath = locs2Dict(path)
 
 		# shapepoint dataframe
-		assignments = privInitDataframe('Assignments')
-		
 		asgnList = []
 		# generate assignments
 		for i in range(1, len(path)):
@@ -180,9 +178,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			[[lat, lon, elev]] = orsGetElevation([startLoc], dataProviderArgs['APIkey'])
 		else:
 			elev = None
-			
-		assignments = privInitDataframe('Assignments')
-		
+					
 		asgnList = []
 		asgnList.append({
 			'odID' : odID,
@@ -221,7 +217,7 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'tollway' : None
 			})
 
-	assignments = pd.concat([assignments, pd.DataFrame(asgnList)], ignore_index=True)
+	assignments = pd.DataFrame(asgnList, columns = privInitDataframe('Assignments').columns)
 
 	return assignments
 
@@ -252,8 +248,6 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 		loiterTime=remainLoiterTime)
 
 	# Build assignments dataframe
-	assignments = privInitDataframe('assignments')
-	
 	asgnList = []
 	for i in range(1, len(flight)):
 		# For all segments in flight profile, loitering happens AFTER arrival at that position
@@ -333,7 +327,7 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'tollway' : None
 				})
 
-	assignments = pd.concat([assignments, pd.DataFrame(asgnList)], ignore_index=True)
+	assignments = pd.DataFrame(asgnList, columns = privInitDataframe('assignments').columns)
 
 	return assignments
 

@@ -12,49 +12,46 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 	modelFile = addHeadSlash(modelFile)
 
 	# assignment dataframe
-	assignments = privInitDataframe('Assignments')
-
 	dicLoc = loc2Dict(loc)
-	
-	assignments = pd.concat([assignments, pd.DataFrame({
-		'odID': odID,
-		'objectID': objectID,
-		'modelFile': modelFile,
-		'modelScale': modelScale,
-		'modelMinPxSize': modelMinPxSize,
-		'startTimeSec': startTimeSec,
-		'startLat': dicLoc['lat'],
-		'startLon': dicLoc['lon'],
-		'startAltMeters': dicLoc['alt'],
-		'endTimeSec': endTimeSec,
-		'endLat': dicLoc['lat'],
-		'endLon': dicLoc['lon'],
-		'endAltMeters': dicLoc['alt'],
-		'ganttColor': ganttColor,
-		'popupText': popupText,
-		'leafletColor': None, 
-		'leafletWeight': None,
-		'leafletStyle': None,
-		'leafletOpacity': None,
-		'leafletCurveType': None,
-		'leafletCurvature': None,
-		'cesiumColor': None,
-		'cesiumWeight': None,
-		'cesiumStyle': None,
-		'cesiumOpacity': None, 
-		'useArrows': None,
-		'startElevMeters' : None,
-		'endElevMeters' : None,
-		'wayname' : None,
-		'waycategory' : None,
-		'surface' : None,
-		'waytype' : None, 
-		'steepness' : None,
-		'tollway' : None
-		})], ignore_index=True, sort=False)
+	assignments = pd.DataFrame([{'odID': odID,
+								'objectID': objectID,
+								'modelFile': modelFile,
+								'modelScale': modelScale,
+								'modelMinPxSize': modelMinPxSize,
+								'startTimeSec': startTimeSec,
+								'startLat': dicLoc['lat'],
+								'startLon': dicLoc['lon'],
+								'startAltMeters': dicLoc['alt'],
+								'endTimeSec': endTimeSec,
+								'endLat': dicLoc['lat'],
+								'endLon': dicLoc['lon'],
+								'endAltMeters': dicLoc['alt'],
+								'ganttColor': ganttColor,
+								'popupText': popupText,
+								'leafletColor': None, 
+								'leafletWeight': None,
+								'leafletStyle': None,
+								'leafletOpacity': None,
+								'leafletCurveType': None,
+								'leafletCurvature': None,
+								'cesiumColor': None,
+								'cesiumWeight': None,
+								'cesiumStyle': None,
+								'cesiumOpacity': None, 
+								'useArrows': None,
+								'startElevMeters' : None,
+								'endElevMeters' : None,
+								'wayname' : None,
+								'waycategory' : None,
+								'surface' : None,
+								'waytype' : None, 
+								'steepness' : None,
+								'tollway' : None
+								}], columns = privInitDataframe('Assignments').columns)
 
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		assignments = pd.concat([initAssignments, assignments], ignore_index=True)
+		if (len(initAssignments) > 0):
+			assignments = pd.concat([initAssignments, assignments], ignore_index=True)
 				
 	return assignments
 	
