@@ -55,8 +55,7 @@ def deconstructAssignments(assignments=None, includeStationaryFlag=False, includ
 					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
 				else:
 					lstSubAssignments.append(tmpSubAssignment.copy())
-					tmpSubAssignment = privInitDataframe('Assignments')
-					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
+					tmpSubAssignment = pd.DataFrame(collection.loc[i: i, :].copy(), columns = tmpSubAssignment.columns)
 		lstSubAssignments.append(tmpSubAssignment.copy())
 
 	# Re-index odID for lstRoutes
