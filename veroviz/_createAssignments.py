@@ -28,27 +28,28 @@ def privAddStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFi
 								'endAltMeters': dicLoc['alt'],
 								'ganttColor': ganttColor,
 								'popupText': popupText,
-								'leafletColor': None, 
-								'leafletWeight': None,
-								'leafletStyle': None,
-								'leafletOpacity': None,
-								'leafletCurveType': None,
-								'leafletCurvature': None,
+								'leafletColor': config['VRV_DEFAULT_LEAFLETARCCOLOR'],
+								'leafletWeight': config['VRV_DEFAULT_LEAFLETARCWEIGHT'],
+								'leafletStyle': config['VRV_DEFAULT_LEAFLETARCSTYLE'],
+								'leafletOpacity': config['VRV_DEFAULT_LEAFLETARCOPACITY'],
+								'leafletCurveType': config['VRV_DEFAULT_ARCCURVETYPE'],
+								'leafletCurvature': config['VRV_DEFAULT_ARCCURVATURE'],
 								'cesiumColor': None,
-								'cesiumWeight': None,
+								'cesiumWeight': config['VRV_DEFAULT_CESIUMPATHWEIGHT'],
 								'cesiumStyle': None,
-								'cesiumOpacity': None, 
-								'useArrows': None,
-								'startElevMeters' : None,
-								'endElevMeters' : None,
+								'cesiumOpacity': config['VRV_DEFAULT_CESIUMPATHOPACITY'], 
+								'useArrows': False, # None,
+								'startElevMeters' : 0, # None,
+								'endElevMeters' : 0, # None,
 								'wayname' : None,
 								'waycategory' : None,
 								'surface' : None,
 								'waytype' : None, 
-								'steepness' : None,
-								'tollway' : None
+								'steepness' : 0, # None,
+								'tollway' : False # None
 								}], columns = privInitDataframe('Assignments').columns)
-
+	
+	assignments = assignments.astype(dtypeMapping['assignments'])
 	if (type(initAssignments) is pd.core.frame.DataFrame):
 		if (len(initAssignments) > 0):
 			assignments = pd.concat([initAssignments, assignments], ignore_index=True)

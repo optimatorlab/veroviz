@@ -749,7 +749,9 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 
 	# Update the assignments dataframe:
 	if (assignmentsDF is not None):
-		assignmentsDF = pd.concat([initAssignments, tmpShapepoints], ignore_index=True, sort=False)
+		# Exclude all-NA columns before concatenation
+		initCleaned = initAssignments.dropna(axis=1, how='all')	
+		assignmentsDF = pd.concat([initCleaned, tmpShapepoints], ignore_index=True, sort=False)
 	else:
 		assignmentsDF = pd.DataFrame(tmpShapepoints, columns = privInitDataframe('assignments').columns)		
 					
@@ -1003,7 +1005,7 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		if (len(initAssignments > 0)):
+		if (len(initAssignments) > 0):
 			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 
 	startTime = startTimeSec
@@ -1295,7 +1297,7 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		if (len(initAssignments > 0)):
+		if (len(initAssignments) > 0):
 			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 
 			# Increase odID as necessary:

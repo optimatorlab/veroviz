@@ -116,6 +116,43 @@ config = {
 	"VRV_SETTING_SHOWWARNINGMESSAGE" : True
 }
 
+dtypeMapping = {'assignments': {
+	'odID'             : int,       
+	'objectID'         : str,
+	'modelFile'        : str,
+	'modelScale'       : int,
+	'modelMinPxSize'   : int,
+	'startTimeSec'     : int,
+	'startLat'         : float,
+	'startLon'         : float,
+	'startAltMeters'   : float,
+	'endTimeSec'       : int,
+	'endLat'           : float,
+	'endLon'           : float,
+	'endAltMeters'     : float,
+	'leafletColor'     : str,
+	'leafletOpacity'   : float,
+	'leafletStyle'     : str,
+	'leafletCurveType' : str,
+	'leafletCurvature' : float,
+	'useArrows'        : bool,
+	'cesiumWeight'     : int,
+	'cesiumColor'      : str,
+	'cesiumOpacity'    : float,
+	'cesiumStyle'      : str,
+	'cesiumWeight'     : int,
+	'ganttColor'       : str,
+	'popupText'        : str,
+	'startElevMeters'  : float,
+	'endElevMeters'    : float,
+	'wayname'          : str,
+	'waycategory'      : str,
+	'surface'          : str,
+	'waytype'          : str,
+	'steepness'        : int,
+	'tollway'          : bool
+}}
+
 # For validation
 nodesColumnList = [
 	'id', 

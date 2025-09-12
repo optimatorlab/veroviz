@@ -343,7 +343,8 @@ def _writeNodes(nodes, cesiumIconColor, fullDir):
 			jsStr += "        position : Cesium.Cartesian3.fromDegrees(%s, %s),\n" % (indNodes.iloc[i]['lon'], indNodes.iloc[i]['lat'])
 			jsStr += "        billboard : {\n"
 			jsStr += "            image : pinBuilder.fromText('%s', %s, 40).toDataURL(),\n" % (tmpIconText, expandCesiumColor(cesiumIconColor) if (cesiumIconColor != None) else expandCesiumColor(indNodes.iloc[i]['cesiumColor']))
-			jsStr += "            verticalOrigin : Cesium.VerticalOrigin.BOTTOM\n"
+			jsStr += "            verticalOrigin : Cesium.VerticalOrigin.BOTTOM, \n"
+			jsStr += "            heightReference : Cesium.HeightReference.RELATIVE_TO_GROUND \n"
 			jsStr += "        }\n"
 			jsStr += "    });\n\n"
 
@@ -448,7 +449,8 @@ def _writeAssignmentsCZML(path, lstSubAssignments, availStart, availEnd, fullDir
 		czmlStr +=             '        "show": true, \n'
 		czmlStr +=             '        "gltf": "%s", \n' % (lstCzml[i].iloc[0]['modelFile'])
 		czmlStr +=             '        "scale": %d, \n' % (lstCzml[i].iloc[0]['modelScale']/100.0)
-		czmlStr +=             '        "minimumPixelSize": %d \n' % (lstCzml[i].iloc[0]['modelMinPxSize'])
+		czmlStr +=             '        "minimumPixelSize": %d, \n' % (lstCzml[i].iloc[0]['modelMinPxSize'])
+		czmlStr +=             '        "heightReference": "RELATIVE_TO_GROUND" \n'		
 		czmlStr +=             '    }, \n'
 		czmlStr +=             '    "label": { \n'
 		czmlStr +=             '        "fillColor":[{"rgba":[255,255,0,255]}], \n'
@@ -698,7 +700,7 @@ def _getCesiumTime(startDate, startTime, timeSec):
 	timeZero = dateutil.parser.parse("%s %s" % (startDate, startTime))
 
 	# Return timeSec in cesium format (semi-Julian format)
-	cesiumTime = datetime.datetime.strftime(timeZero + datetime.timedelta(seconds = timeSec), '%Y-%m-%dT%H:%M:%SZ')
+	cesiumTime = datetime.datetime.strftime(timeZero + datetime.timedelta(seconds = float(timeSec)), '%Y-%m-%dT%H:%M:%SZ')
 
 	return cesiumTime
 

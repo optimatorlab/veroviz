@@ -121,18 +121,18 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 				steepness   = extras[i]['steepness'] if 'steepness' in extras[i] else None
 				tollway     = extras[i]['tollway'] if 'tollway' in extras[i] else None
 			else:
-				startElev   = None
+				startElev   = 0     # None
 				wayname     = None
 				waycategory = None
 				surface     = None
 				waytype     = None
-				steepness   = None
-				tollway     = None
+				steepness   = 0     # None
+				tollway     = False # None
 				
 			if i in extras:
 				endElev     = extras[i]['elev'] if 'elev' in extras[i] else None
 			else:
-				endElev     = None			
+				endElev     = 0 # None			
 			
 			asgnList.append({
 				'odID' : odID,
@@ -213,11 +213,13 @@ def privGetShapepoints2D(odID=1, objectID=None, modelFile=None, startLoc=None, e
 			'waycategory' : None,
 			'surface' : None,
 			'waytype' : None, 
-			'steepness' : None,
-			'tollway' : None
+			'steepness' : 0, # None,
+			'tollway' : False # None
 			})
 
 	assignments = pd.DataFrame(asgnList, columns = privInitDataframe('Assignments').columns)
+
+	assignments = assignments.astype(dtypeMapping['assignments'])
 
 	return assignments
 
@@ -278,14 +280,14 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 			'cesiumOpacity': cesiumOpacity,
 			'ganttColor': ganttColor, 
 			'popupText': popupText,
-			'startElevMeters' : None,
-			'endElevMeters' : None,
+			'startElevMeters' : 0, # None,
+			'endElevMeters' : 0, # None,
 			'wayname' : None,
 			'waycategory' : None,
 			'surface' : None,
 			'waytype' : None, 
-			'steepness' : None,
-			'tollway' : None
+			'steepness' : 0, # None,
+			'tollway' : False  # None
 			})
 
 		# If they need loitering, add the line of loitering
@@ -317,17 +319,19 @@ def privGetShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0
 				'cesiumOpacity': cesiumOpacity,
 				'ganttColor': ganttColorLoiter, 
 				'popupText': popupText,
-				'startElevMeters' : None,
-				'endElevMeters' : None,
+				'startElevMeters' : 0, # None,
+				'endElevMeters' : 0, # None,
 				'wayname' : None,
 				'waycategory' : None,
 				'surface' : None,
 				'waytype' : None, 
-				'steepness' : None,
-				'tollway' : None
+				'steepness' : 0,  # None
+				'tollway' : False # None
 				})
 
 	assignments = pd.DataFrame(asgnList, columns = privInitDataframe('assignments').columns)
+
+	assignments = assignments.astype(dtypeMapping['assignments'])
 
 	return assignments
 
