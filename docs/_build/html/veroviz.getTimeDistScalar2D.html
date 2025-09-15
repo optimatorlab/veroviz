@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.getTimeDistScalar2D module &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>veroviz.getTimeDistScalar2D module &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="_static/documentation_options.js?v=03f3338f"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="veroviz.getTimeDistScalar3D module" href="veroviz.getTimeDistScalar3D.html" />
@@ -23,7 +22,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,19 +37,34 @@
         <li class="right" >
           <a href="veroviz.getTimeDist3D.html" title="veroviz.getTimeDist3D module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.getTimeDistScalar2D module</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="veroviz.getTimeDist3D.html"
-                        title="previous chapter">veroviz.getTimeDist3D module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="veroviz.getTimeDistScalar3D.html"
-                        title="next chapter">veroviz.getTimeDistScalar3D module</a></p>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">veroviz.getTimeDistScalar2D module</a><ul>
+<li><a class="reference internal" href="#veroviz.getTimeDistScalar2D.getTimeDistScalar2D"><code class="docutils literal notranslate"><span class="pre">getTimeDistScalar2D()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="veroviz.getTimeDist3D.html"
+                          title="previous chapter">veroviz.getTimeDist3D module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="veroviz.getTimeDistScalar3D.html"
+                          title="next chapter">veroviz.getTimeDistScalar3D module</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -58,16 +72,16 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -76,14 +90,14 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-veroviz.getTimeDistScalar2D">
-<span id="veroviz-gettimedistscalar2d-module"></span><h1>veroviz.getTimeDistScalar2D module<a class="headerlink" href="#module-veroviz.getTimeDistScalar2D" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="veroviz.getTimeDistScalar2D.getTimeDistScalar2D">
-<code class="sig-name descname">getTimeDistScalar2D</code><span class="sig-paren">(</span><em class="sig-param">startLoc=None</em>, <em class="sig-param">endLoc=None</em>, <em class="sig-param">outputDistUnits='meters'</em>, <em class="sig-param">outputTimeUnits='seconds'</em>, <em class="sig-param">routeType='euclidean2D'</em>, <em class="sig-param">speedMPS=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/getTimeDistScalar2D.html#getTimeDistScalar2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.getTimeDistScalar2D.getTimeDistScalar2D" title="Permalink to this definition">¶</a></dt>
+  <section id="module-veroviz.getTimeDistScalar2D">
+<span id="veroviz-gettimedistscalar2d-module"></span><h1>veroviz.getTimeDistScalar2D module<a class="headerlink" href="#module-veroviz.getTimeDistScalar2D" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="veroviz.getTimeDistScalar2D.getTimeDistScalar2D">
+<span class="sig-name descname"><span class="pre">getTimeDistScalar2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startLoc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endLoc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDistUnits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'meters'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputTimeUnits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'seconds'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">routeType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean2D'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speedMPS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataProvider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataProviderArgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/getTimeDistScalar2D.html#getTimeDistScalar2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#veroviz.getTimeDistScalar2D.getTimeDistScalar2D" title="Link to this definition">¶</a></dt>
 <dd><p>Returns scalar values of time and distance between 2 points in 2 dimensions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>startLoc</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – The starting location, expressed as either [lat, lon] or [lat, lon, alt].  Differences in altitude between the starting and ending locations will be ignored (this is a 2D function).</p></li>
 <li><p><strong>endLoc</strong> (<em>list</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – The ending location, expressed as either [lat, lon] or [lat, lon, alt].   Differences in altitude between the starting and ending locations will be ignored (this is a 2D function).</p></li>
@@ -95,7 +109,7 @@
 <li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>time</strong> (<em>float</em>) – Travel time from the start location to the end location.  Units are determined by <cite>outputTimeUnits</cite>, which default to be in seconds.</p></li>
 <li><p><strong>dist</strong> (<em>float</em>) – Distance from the start location to the end location.  Units are determined by <cite>outputDistUnits</cite>, which default to be in meters.</p></li>
@@ -109,13 +123,13 @@
 </div>
 <p class="rubric">Example</p>
 <dl>
-<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<dt>Import veroviz and check if the version is up-to-date:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">veroviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vrv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd>
-<dt>Example 1</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="go">&gt;&gt;&gt;</span>
+<dt>Example 1</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeSec</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDistScalar2D</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">startLoc</span>         <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">endLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.90</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
@@ -129,7 +143,7 @@
 </pre></div>
 </div>
 </dd>
-<dt>Example 2 - This example includes all functional arguments:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeMin</span><span class="p">,</span> <span class="n">distMiles</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDistScalar2D</span><span class="p">(</span>
+<dt>Example 2 - This example includes all functional arguments:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">timeMin</span><span class="p">,</span> <span class="n">distMiles</span><span class="p">]</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">getTimeDistScalar2D</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">startLoc</span>         <span class="o">=</span> <span class="p">[</span><span class="mf">42.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">endLoc</span>           <span class="o">=</span> <span class="p">[</span><span class="mf">42.90</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">outputTimeUnits</span>  <span class="o">=</span> <span class="s1">&#39;minutes&#39;</span><span class="p">,</span>
@@ -146,15 +160,16 @@
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -169,14 +184,15 @@
         <li class="right" >
           <a href="veroviz.getTimeDist3D.html" title="veroviz.getTimeDist3D module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.getTimeDistScalar2D module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

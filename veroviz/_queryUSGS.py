@@ -19,7 +19,8 @@ def usgsGetElevation(locs):
 	try:
 		for i in range(0, len(locs)):
 			# USGS uses x=lon, y=lat:
-			elevUrl = ('https://nationalmap.gov/epqs/pqs.php?x=%s&y=%s&units=Meters&output=json' % (locs[i][1], locs[i][0]))
+			# elevUrl = ('https://nationalmap.gov/epqs/pqs.php?x=%s&y=%s&units=Meters&output=json' % (locs[i][1], locs[i][0]))
+			elevUrl = f'https://epqs.nationalmap.gov/v1/json?x={locs[i][1]}&y={locs[i][0]}&units=Meters'
 	
 			http = urllib3.PoolManager()
 			response = http.request('GET', elevUrl)
@@ -29,17 +30,12 @@ def usgsGetElevation(locs):
 	
 			if (http_status == 200):
 				# OK
-				abbrev = data['USGS_Elevation_Point_Query_Service']['Elevation_Query']
-				alt    = abbrev['Elevation']
-				lat    = abbrev['y']
-				lon    = abbrev['x']
+				alt    = float(data['value'])
+				lat    = data['location']['y']
+				lon    = data['location']['x']
 
-				# Returns "-1000000" (a string) if no elev data exist
-				if (type(alt) is str):
-					alt = -1000000
-				else:
-					if (len(locs[i]) > 2):
-						alt += locs[i][2]
+				if (len(locs[i]) > 2):
+					alt += locs[i][2]
 
 				locsWithAlt.append([ lat, lon, alt ])
 		

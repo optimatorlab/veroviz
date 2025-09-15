@@ -1,17 +1,15 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.createLeaflet &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>veroviz.createLeaflet &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="../../_static/documentation_options.js?v=03f3338f"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
@@ -21,7 +19,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -30,23 +28,24 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.createLeaflet</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -56,39 +55,39 @@
           <div class="body" role="main">
             
   <h1>Source code for veroviz.createLeaflet</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valCreateLeaflet</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletCircle</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletMarker</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletPolygon</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletPolyline</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletText</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletIcon</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletIsochrones</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="n">valAddLeafletWeather</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">replaceBackslashToSlash</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="n">splitLeafletCustomIconType</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._common</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valCreateLeaflet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletCircle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletMarker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletPolygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletPolyline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletText</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletIcon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletIsochrones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">valAddLeafletWeather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._internal</span><span class="w"> </span><span class="kn">import</span> <span class="n">replaceBackslashToSlash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._internal</span><span class="w"> </span><span class="kn">import</span> <span class="n">splitLeafletCustomIconType</span>
 
-<span class="kn">from</span> <span class="nn">veroviz._deconstructAssignments</span> <span class="k">import</span> <span class="n">deconstructAssignments</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._deconstructAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">deconstructAssignments</span>
 
-<span class="kn">from</span> <span class="nn">veroviz._createEntitiesFromList</span> <span class="k">import</span> <span class="n">privCreateArcsFromLocSeq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._createEntitiesFromList</span><span class="w"> </span><span class="kn">import</span> <span class="n">privCreateArcsFromLocSeq</span>
 
-<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="n">privGetMapBoundary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetMapBoundary</span>
 
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoDistancePath2D</span>
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoMileageInPath2D</span>
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoDistance2D</span>
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoGetHeading</span>
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="n">geoPointInDistance2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">geoDistancePath2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">geoMileageInPath2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">geoDistance2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">geoGetHeading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">geoPointInDistance2D</span>
 
-<span class="n">foliumMaps</span> <span class="o">=</span> <span class="p">[</span>
-	<span class="s1">&#39;cartodb positron&#39;</span><span class="p">,</span> 
-	<span class="s1">&#39;cartodb dark_matter&#39;</span><span class="p">,</span> 
-	<span class="s1">&#39;openstreetmap&#39;</span><span class="p">,</span> 
-	<span class="s1">&#39;stamen terrain&#39;</span><span class="p">,</span> 
-	<span class="s1">&#39;stamen toner&#39;</span><span class="p">,</span> 
-	<span class="s1">&#39;stamen watercolor&#39;</span>
-<span class="p">]</span>
+<span class="n">foliumMaps</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="s1">&#39;cartodb positron&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;copy; CARTO&#39;</span><span class="p">},</span>  
+	<span class="s1">&#39;cartodb dark_matter&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;copy; CARTO&#39;</span><span class="p">},</span> 
+	<span class="s1">&#39;openstreetmap&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;copy; OpenStreetMap contributors&#39;</span><span class="p">},</span>
+	<span class="s1">&#39;stamen terrain&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;copy; Stadia Maps &amp;copy; Stamen Design &amp;copy; OpenMapTiles &amp;copy; OpenStreetMap contributors&#39;</span><span class="p">},</span>
+	<span class="s1">&#39;stamen toner&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;copy; Stadia Maps &amp;copy; Stamen Design &amp;copy; OpenMapTiles &amp;copy; OpenStreetMap contributors&#39;</span><span class="p">},</span>
+	<span class="s1">&#39;stamen watercolor&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;attr&#39;</span><span class="p">:</span> <span class="s1">&#39;&amp;copy; Stadia Maps &amp;copy; Stamen Design &amp;copy; OpenStreetMap contributors&#39;</span><span class="p">}</span>
+<span class="p">}</span>
 
 <span class="n">weatherMaps</span> <span class="o">=</span> <span class="p">{</span>
 	<span class="s1">&#39;clouds&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -156,9 +155,11 @@
 	<span class="p">},</span>
 <span class="p">}</span>
 	
-<div class="viewcode-block" id="createLeaflet"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.createLeaflet">[docs]</a><span class="k">def</span> <span class="nf">createLeaflet</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurveType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurvature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT&#39;</span><span class="p">],</span> <span class="n">boundingOpacity</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGOPACITY&#39;</span><span class="p">],</span> <span class="n">boundingStyle</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGSTYLE&#39;</span><span class="p">],</span> <span class="n">boundingColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGCOLOR&#39;</span><span class="p">]):</span>
+<div class="viewcode-block" id="createLeaflet">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.createLeaflet">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">createLeaflet</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurveType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurvature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT&#39;</span><span class="p">],</span> <span class="n">boundingOpacity</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGOPACITY&#39;</span><span class="p">],</span> <span class="n">boundingStyle</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGSTYLE&#39;</span><span class="p">],</span> <span class="n">boundingColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGCOLOR&#39;</span><span class="p">]):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	createLeaflet is used to generate Leaflet objects using folium. The function takes a boundingRegion polygon, `Nodes`, `Arcs`, and `Assignments` dataframes as inputs, and creates a folium/leaflet map showing boundings, nodes and/or arcs. </span>
 
 <span class="sd">	Parameters</span>
@@ -381,7 +382,8 @@
 	
 	<span class="k">return</span> <span class="n">mapObject</span></div>
 
-<span class="k">def</span> <span class="nf">_createLeafletMap</span><span class="p">(</span><span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_createLeafletMap</span><span class="p">(</span><span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 	<span class="k">try</span><span class="p">:</span>
 		<span class="n">mapBackground</span> <span class="o">=</span> <span class="n">mapBackground</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -396,12 +398,12 @@
 	
 	<span class="c1"># Add the chosen map background first:</span>
 	<span class="k">if</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">foliumMaps</span><span class="p">):</span>
-		<span class="n">folium</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">mapBackground</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
+		<span class="n">folium</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">mapBackground</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="n">foliumMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
 	<span class="k">elif</span> <span class="p">(</span><span class="n">mapBackground</span> <span class="ow">in</span> <span class="n">customMaps</span><span class="p">):</span>
 		<span class="n">folium</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">tiles</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;tiles&#39;</span><span class="p">],</span>
 						 <span class="n">attr</span><span class="o">=</span><span class="n">customMaps</span><span class="p">[</span><span class="n">mapBackground</span><span class="p">][</span><span class="s1">&#39;attr&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>
-	
-	<span class="sd">&#39;&#39;&#39;</span>
+<span class="w">	</span>
+<span class="w">	</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">	# Now, loop over our other map background options (excluding the chosen one):</span>
 <span class="sd">	for (mBG in foliumMaps):</span>
 <span class="sd">		if (mBG != mapBackground):</span>
@@ -415,8 +417,8 @@
 	
 	<span class="k">return</span> <span class="n">mapObject</span>
 
-<span class="k">def</span> <span class="nf">_createLeafletNodes</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_createLeafletNodes</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A sub-function to create leaflet nodes</span>
 
 <span class="sd">	Parameters</span>
@@ -473,7 +475,7 @@
 	<span class="k">return</span> <span class="n">mapObject</span>
 
 
-<span class="k">def</span> <span class="nf">_drawLeafletNode</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">popupText</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="p">,</span> <span class="n">iconType</span><span class="p">,</span> <span class="n">iconColor</span><span class="p">,</span> <span class="n">iconText</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_drawLeafletNode</span><span class="p">(</span><span class="n">mapObject</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">popupText</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="p">,</span> <span class="n">iconType</span><span class="p">,</span> <span class="n">iconColor</span><span class="p">,</span> <span class="n">iconText</span><span class="p">):</span>
 	
 	<span class="c1"># Format popup text</span>
 	<span class="k">if</span> <span class="p">(</span><span class="n">popupText</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
@@ -522,8 +524,8 @@
 
 	<span class="k">return</span>
 
-<span class="k">def</span> <span class="nf">_createLeafletArcs</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurveType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurvature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arrowSize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_createLeafletArcs</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcWeight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcOpacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurveType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcCurvature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arrowSize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A sub-function to create leaflet arcs</span>
 <span class="sd">	</span>
 <span class="sd">	Parameters</span>
@@ -574,10 +576,11 @@
 
 		
 			<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;odID&#39;</span><span class="p">,</span> <span class="s1">&#39;startLat&#39;</span><span class="p">,</span> <span class="s1">&#39;startLon&#39;</span><span class="p">,</span> <span class="s1">&#39;endLat&#39;</span><span class="p">,</span> <span class="s1">&#39;endLon&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletColor&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletWeight&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletStyle&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletOpacity&#39;</span><span class="p">,</span> <span class="s1">&#39;useArrows&#39;</span><span class="p">])</span>
+			<span class="n">newPathList</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">if</span> <span class="p">(</span><span class="n">newArcCurveType</span> <span class="o">==</span> <span class="s1">&#39;greatcircle&#39;</span><span class="p">):</span>
 				<span class="n">curvePoints</span> <span class="o">=</span> <span class="n">_getCurveGreatCircle</span><span class="p">([</span><span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">],</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">]],</span> <span class="p">[</span><span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">],</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">]])</span>
 				<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">curvePoints</span><span class="p">)):</span>		
-					<span class="n">newPath</span> <span class="o">=</span> <span class="n">newPath</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+					<span class="n">newPathList</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
 						<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;odID&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 						<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
@@ -589,11 +592,12 @@
 						<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;popupText&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
-						<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+						<span class="p">})</span>
+				<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">newPathList</span><span class="p">)</span>
 			<span class="k">elif</span> <span class="p">(</span><span class="n">newArcCurveType</span> <span class="o">==</span> <span class="s1">&#39;bezier&#39;</span><span class="p">):</span>
 				<span class="n">curvePoints</span> <span class="o">=</span> <span class="n">_getCurveBezier</span><span class="p">([</span><span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">],</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">]],</span> <span class="p">[</span><span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">],</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">]],</span> <span class="n">newArcCurvature</span><span class="p">)</span>
 				<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">curvePoints</span><span class="p">)):</span>		
-					<span class="n">newPath</span> <span class="o">=</span> <span class="n">newPath</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+					<span class="n">newPathList</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
 						<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;odID&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 						<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
@@ -605,9 +609,10 @@
 						<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;popupText&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
-						<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+						<span class="p">})</span>
+				<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">newPathList</span><span class="p">)</span>						
 			<span class="k">elif</span> <span class="p">(</span><span class="n">newArcCurveType</span> <span class="o">==</span> <span class="s1">&#39;straight&#39;</span><span class="p">):</span>
-				<span class="n">newPath</span> <span class="o">=</span> <span class="n">newPath</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+				<span class="n">newPathList</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
 					<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;odID&#39;</span><span class="p">],</span>
 					<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">],</span>
 					<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">],</span>
@@ -619,7 +624,9 @@
 					<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">],</span>
 					<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">],</span>
 					<span class="s1">&#39;popupText&#39;</span> <span class="p">:</span> <span class="n">arcs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
-					<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+					<span class="p">})</span>
+				<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">newPathList</span><span class="p">)</span>
+					
 			<span class="n">lstPath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newPath</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
 
 	<span class="c1"># For Assignments dataframe, use deconstructAssignments to generate a list of assignments dataframe</span>
@@ -639,10 +646,11 @@
 			<span class="n">newDestine</span> <span class="o">=</span> <span class="p">[</span><span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">],</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">]]</span>
 
 			<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;odID&#39;</span><span class="p">,</span> <span class="s1">&#39;startLat&#39;</span><span class="p">,</span> <span class="s1">&#39;startLon&#39;</span><span class="p">,</span> <span class="s1">&#39;endLat&#39;</span><span class="p">,</span> <span class="s1">&#39;endLon&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletColor&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletWeight&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletStyle&#39;</span><span class="p">,</span> <span class="s1">&#39;leafletOpacity&#39;</span><span class="p">,</span> <span class="s1">&#39;useArrows&#39;</span><span class="p">])</span>
+			<span class="n">newPathList</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">if</span> <span class="p">(</span><span class="n">newArcCurveType</span> <span class="o">==</span> <span class="s1">&#39;greatcircle&#39;</span><span class="p">):</span>
 				<span class="n">curvePoints</span> <span class="o">=</span> <span class="n">_getCurveGreatCircle</span><span class="p">(</span><span class="n">newOrigin</span><span class="p">,</span> <span class="n">newDestine</span><span class="p">)</span>
 				<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">curvePoints</span><span class="p">)):</span>			  
-					<span class="n">newPath</span> <span class="o">=</span> <span class="n">newPath</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+					<span class="n">newPathList</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
 						<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">i</span><span class="p">,</span>
 						<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 						<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
@@ -654,11 +662,12 @@
 						<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;popupText&#39;</span> <span class="p">:</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
-						<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+						<span class="p">})</span>
+				<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">newPathList</span><span class="p">)</span>		
 			<span class="k">elif</span> <span class="p">(</span><span class="n">newArcCurveType</span> <span class="o">==</span> <span class="s1">&#39;bezier&#39;</span><span class="p">):</span>
 				<span class="n">curvePoints</span> <span class="o">=</span> <span class="n">_getCurveBezier</span><span class="p">(</span><span class="n">newOrigin</span><span class="p">,</span> <span class="n">newDestine</span><span class="p">,</span> <span class="n">newArcCurvature</span><span class="p">)</span>
 				<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">curvePoints</span><span class="p">)):</span>			  
-					<span class="n">newPath</span> <span class="o">=</span> <span class="n">newPath</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+					<span class="n">newPathList</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
 						<span class="s1">&#39;odID&#39;</span> <span class="p">:</span> <span class="n">i</span><span class="p">,</span>
 						<span class="s1">&#39;startLat&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
 						<span class="s1">&#39;startLon&#39;</span> <span class="p">:</span> <span class="n">curvePoints</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
@@ -670,18 +679,20 @@
 						<span class="s1">&#39;leafletOpacity&#39;</span> <span class="p">:</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;leafletOpacity&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;useArrows&#39;</span> <span class="p">:</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;useArrows&#39;</span><span class="p">],</span>
 						<span class="s1">&#39;popupText&#39;</span> <span class="p">:</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;popupText&#39;</span><span class="p">]</span>
-						<span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+						<span class="p">})</span>
+				<span class="n">newPath</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">newPathList</span><span class="p">)</span>	
 			<span class="k">elif</span> <span class="p">(</span><span class="n">newArcCurveType</span> <span class="o">==</span> <span class="s1">&#39;straight&#39;</span><span class="p">):</span>
 				<span class="n">newPath</span> <span class="o">=</span> <span class="n">lstOD</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+				
 			<span class="n">lstPath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newPath</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
 			
 	<span class="c1"># For each path, generate the arcs and arrows accordingly</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lstPath</span><span class="p">)):</span>
 		<span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 		<span class="n">arcPath</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="n">arcPath</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+		<span class="n">arcPath</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLat&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;startLon&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])])</span>
 		<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
-			<span class="n">arcPath</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]])</span>
+			<span class="n">arcPath</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLat&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lstPath</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;endLon&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">])])</span>
 
 		<span class="c1"># FIXMELP -- Some of these values below aren&#39;t used anywhere that I can see.</span>
 		<span class="c1">#            For example, curveType or curvature.</span>
@@ -731,16 +742,18 @@
 			<span class="k">else</span><span class="p">:</span>
 				<span class="n">popupText</span> <span class="o">=</span> <span class="kc">None</span>	
 			
+			<span class="c1"># &#39;&#39;&#39;</span>
 			<span class="c1"># Folium draw arcs	</span>
 			<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span>
 				<span class="p">[</span><span class="n">arcPath</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">arcPath</span><span class="p">[</span><span class="n">j</span><span class="p">]],</span> 
 				<span class="n">color</span> <span class="o">=</span> <span class="n">newColor</span><span class="p">,</span> 
-				<span class="n">weight</span> <span class="o">=</span> <span class="n">newWeight</span><span class="p">,</span> 
-				<span class="n">opacity</span> <span class="o">=</span> <span class="n">newOpacity</span><span class="p">,</span> 
+				<span class="n">weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">newWeight</span><span class="p">),</span> 
+				<span class="n">opacity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">newOpacity</span><span class="p">),</span> 
 				<span class="n">dash_array</span> <span class="o">=</span> <span class="n">dashArray</span><span class="p">,</span>
 				<span class="n">popup</span> <span class="o">=</span> <span class="n">popupText</span>
 			<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">mapObject</span><span class="p">)</span>	
-		
+			<span class="c1"># &#39;&#39;&#39;</span>
+			
 		<span class="c1"># Check if we add arrows</span>
 		<span class="n">arrowFlag</span> <span class="o">=</span> <span class="kc">False</span>
 		<span class="k">if</span> <span class="p">(</span><span class="n">useArrows</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
@@ -758,8 +771,8 @@
 
 	<span class="k">return</span> <span class="n">mapObject</span>
 
-<span class="k">def</span> <span class="nf">_createLeafletBoundingRegion</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT&#39;</span><span class="p">],</span> <span class="n">boundingOpacity</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGOPACITY&#39;</span><span class="p">],</span> <span class="n">boundingStyle</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGSTYLE&#39;</span><span class="p">],</span> <span class="n">boundingColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGCOLOR&#39;</span><span class="p">],</span> <span class="n">boundingIsFitEarthCurvature</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_createLeafletBoundingRegion</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingRegion</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">boundingWeight</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGWEIGHT&#39;</span><span class="p">],</span> <span class="n">boundingOpacity</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGOPACITY&#39;</span><span class="p">],</span> <span class="n">boundingStyle</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGSTYLE&#39;</span><span class="p">],</span> <span class="n">boundingColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETBOUNDINGCOLOR&#39;</span><span class="p">],</span> <span class="n">boundingIsFitEarthCurvature</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A sub-function to create leaflet bounding region</span>
 
 <span class="sd">	Parameters</span>
@@ -824,8 +837,8 @@
 
 	<span class="k">return</span> <span class="n">mapObject</span>
 
-<span class="k">def</span> <span class="nf">_createLeafletArrowsPathOnGround</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowDistanceInMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_createLeafletArrowsPathOnGround</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowDistanceInMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A sub-function to generate arrows for one path that curved to the Earth</span>
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
@@ -890,8 +903,8 @@
 	
 	<span class="k">return</span> <span class="n">mapObject</span>
 
-<span class="k">def</span> <span class="nf">_createLeafletArrowsPathProjected</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowDistanceInMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_createLeafletArrowsPathProjected</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;equal_division_spacing&#39;</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowDistanceInMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A sub-function to generate arrows for one path that curved to the Earth</span>
 <span class="sd">	Parameters</span>
 <span class="sd">	----------</span>
@@ -956,7 +969,7 @@
 	
 	<span class="k">return</span> <span class="n">mapObject</span>
 
-<span class="k">def</span> <span class="nf">_getCurveBezier</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">numShapepoint</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_getCurveBezier</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">numShapepoint</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
 	<span class="n">midLoc</span> <span class="o">=</span> <span class="p">[(</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">startLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">endLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span>
 	<span class="n">distanceAwayFromStartLoc</span> <span class="o">=</span> <span class="p">(</span><span class="n">geoDistance2D</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">))</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">curvature</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
 	<span class="n">headingFromStartLocToRefLoc</span> <span class="o">=</span> <span class="n">geoGetHeading</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">)</span> <span class="o">-</span> <span class="n">curvature</span>
@@ -974,7 +987,7 @@
 		<span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newLoc</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">path</span>
 
-<span class="k">def</span> <span class="nf">_getCurveGreatCircle</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">numShapepoint</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_getCurveGreatCircle</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">,</span> <span class="n">numShapepoint</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
 	<span class="n">odPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">]</span>
 	<span class="n">direction</span> <span class="o">=</span> <span class="n">geoGetHeading</span><span class="p">(</span><span class="n">startLoc</span><span class="p">,</span> <span class="n">endLoc</span><span class="p">)</span>
 	<span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
@@ -986,9 +999,11 @@
 	<span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endLoc</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">path</span>
 
-<div class="viewcode-block" id="addLeafletCircle"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletCircle">[docs]</a><span class="k">def</span> <span class="nf">addLeafletCircle</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">],</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">],</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+<div class="viewcode-block" id="addLeafletCircle">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletCircle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletCircle</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">],</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">],</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a circle, with a radius specified in [meters], to a Leaflet map.</span>
 <span class="sd">	</span>
 <span class="sd">	Note</span>
@@ -1159,10 +1174,13 @@
 			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
 
 	<span class="k">return</span> <span class="n">mapObject</span></div>
-	
-<div class="viewcode-block" id="addLeafletMarker"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletMarker">[docs]</a><span class="k">def</span> <span class="nf">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">],</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">],</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+	
+<div class="viewcode-block" id="addLeafletMarker">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletMarker">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletMarker</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">],</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">],</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a circle-shaped marker, with a radius specified in [pixels], to a Leaflet map.</span>
 <span class="sd">	</span>
 <span class="sd">	Note</span>
@@ -1333,8 +1351,11 @@
 
 	<span class="k">return</span> <span class="n">mapObject</span>	</div>
 
-<div class="viewcode-block" id="addLeafletPolygon"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletPolygon">[docs]</a><span class="k">def</span> <span class="nf">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="addLeafletPolygon">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletPolygon">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletPolygon</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a polygon, as defined by an ordered collection of lat/lon coordinates, to a Leaflet map.</span>
 <span class="sd">		</span>
 <span class="sd">	Note</span>
@@ -1499,9 +1520,12 @@
 
 	<span class="k">return</span> <span class="n">mapObject</span></div>
 
-<div class="viewcode-block" id="addLeafletPolyline"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletPolyline">[docs]</a><span class="k">def</span> <span class="nf">addLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">lineCurveType</span><span class="o">=</span><span class="s1">&#39;straight&#39;</span><span class="p">,</span> <span class="n">lineCurvature</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="addLeafletPolyline">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletPolyline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletPolyline</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_OBJECT_COLOR_LINE&#39;</span><span class="p">],</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">lineCurveType</span><span class="o">=</span><span class="s1">&#39;straight&#39;</span><span class="p">,</span> <span class="n">lineCurvature</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">useArrows</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">arrowsPerArc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a polyline, as described by an ordered collection of lat/lon coordinates, to a Leaflet map.  </span>
 <span class="sd">		</span>
 <span class="sd">	Note</span>
@@ -1645,8 +1669,11 @@
 
 	<span class="k">return</span> <span class="n">mapObject</span></div>
 
-<div class="viewcode-block" id="addLeafletText"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletText">[docs]</a><span class="k">def</span> <span class="nf">addLeafletText</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anchorPoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">],</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">],</span> <span class="n">horizAlign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="addLeafletText">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletText">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletText</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anchorPoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTSIZE&#39;</span><span class="p">],</span> <span class="n">fontColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_FONTCOLOR&#39;</span><span class="p">],</span> <span class="n">horizAlign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a text label to a Leaflet map. </span>
 <span class="sd">		</span>
 <span class="sd">	Parameters</span>
@@ -1763,11 +1790,14 @@
 			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
 
 	<span class="k">return</span> <span class="n">mapObject</span></div>
-	
-	
-<div class="viewcode-block" id="addLeafletIcon"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletIcon">[docs]</a><span class="k">def</span> <span class="nf">addLeafletIcon</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONPREFIX&#39;</span><span class="p">],</span> <span class="n">iconType</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONTYPE&#39;</span><span class="p">],</span> <span class="n">iconColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONCOLOR&#39;</span><span class="p">],</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+	
+	
+<div class="viewcode-block" id="addLeafletIcon">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletIcon">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletIcon</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONPREFIX&#39;</span><span class="p">],</span> <span class="n">iconType</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONTYPE&#39;</span><span class="p">],</span> <span class="n">iconColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONCOLOR&#39;</span><span class="p">],</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Add a single icon/pin to a Leaflet map.</span>
 
 <span class="sd">	Parameters</span>
@@ -1858,9 +1888,12 @@
 			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
 
 	<span class="k">return</span> <span class="n">mapObject</span>	</div>
+
 		
-<div class="viewcode-block" id="addLeafletIsochrones"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletIsochrones">[docs]</a><span class="k">def</span> <span class="nf">addLeafletIsochrones</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iso</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">showBoundingRegion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONPREFIX&#39;</span><span class="p">],</span> <span class="n">iconType</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONTYPE&#39;</span><span class="p">],</span> <span class="n">iconColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONCOLOR&#39;</span><span class="p">],</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="addLeafletIsochrones">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletIsochrones">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletIsochrones</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">],</span> <span class="n">mapBoundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoomStart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iso</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">showBoundingRegion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iconPrefix</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONPREFIX&#39;</span><span class="p">],</span> <span class="n">iconType</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONTYPE&#39;</span><span class="p">],</span> <span class="n">iconColor</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLETICONCOLOR&#39;</span><span class="p">],</span> <span class="n">iconText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">popupText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWeight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lineOpacity</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">fillOpacity</span><span class="o">=</span><span class="mf">0.3</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Easily draw isochrones on a Leaflet map.  Be sure to run the `isochrones()` function first.</span>
 <span class="sd">		</span>
 <span class="sd">	Parameters</span>
@@ -2046,10 +2079,13 @@
 			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Message: Map page written to </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mapFilename</span><span class="p">))</span>
 
 	<span class="k">return</span> <span class="n">mapObject</span>	</div>
+
 	
 	
-<div class="viewcode-block" id="addLeafletWeather"><a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletWeather">[docs]</a><span class="k">def</span> <span class="nf">addLeafletWeather</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapType</span><span class="o">=</span><span class="s1">&#39;precip&#39;</span><span class="p">,</span> <span class="n">APIkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">]):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="addLeafletWeather">
+<a class="viewcode-back" href="../../veroviz.createLeaflet.html#veroviz.createLeaflet.addLeafletWeather">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">addLeafletWeather</span><span class="p">(</span><span class="n">mapObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapType</span><span class="o">=</span><span class="s1">&#39;precip&#39;</span><span class="p">,</span> <span class="n">APIkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapFilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mapBackground</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_DEFAULT_LEAFLET_MAPTILES&#39;</span><span class="p">]):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Adds map tiles showing weather conditions to a Leaflet map.  Weather tiles are obtained via openweathermap.org (an API key is required).</span>
 
 <span class="sd">	Parameters</span>
@@ -2143,17 +2179,19 @@
 
 
 
+
 	<span class="c1"># weatherMaps	</span>
 	
 	
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -2162,14 +2200,15 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.createLeaflet</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

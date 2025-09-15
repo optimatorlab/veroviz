@@ -18,13 +18,13 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'veroviz'
-copyright = '2019, optimatorlab'
+copyright = '2019-2025, optimatorlab'
 author = 'Chase Murray; Lan Peng'
 
 # The short X.Y version
-version = '0.4.5'
+version = '0.4.6'
 # The full version, including alpha/beta/rc tags
-release = '0.4.5'
+release = '0.4.6'
 
 
 # -- General configuration ---------------------------------------------------
@@ -37,14 +37,14 @@ release = '0.4.5'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+	"sphinx.ext.napoleon",
 	'sphinx.ext.autodoc',
 	'sphinx.ext.doctest',
 	'sphinx.ext.coverage',
 	'sphinx.ext.mathjax',
 	'sphinx.ext.ifconfig',
 	'sphinx.ext.viewcode',
-	'sphinx.ext.githubpages',
-	"sphinx.ext.napoleon"
+	'sphinx.ext.githubpages'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -64,7 +64,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

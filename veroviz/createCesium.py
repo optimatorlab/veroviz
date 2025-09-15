@@ -78,7 +78,7 @@ def createCesium(assignments=None, nodes=None, startDate=None, startTime='08:00:
 		>>> myAssignments = vrv.getShapepoints2D(
 		...     odID           = 0,
 		...     objectID       = 'truck',
-		...     modelFile      = 'veroviz/models/ub_truck.gltf',
+		...     modelFile      = 'veroviz/models/ub_truck.glb',
 		...     modelScale     = 80, 
 		...     modelMinPxSize = 20, 
 		...     startLoc       = list(myNodes.loc[0][['lat', 'lon']].values),
@@ -263,8 +263,8 @@ def _writeConfigs(mapBoundary, availStart, path, fullDir, problemDir):
 	# The hierarchy is: objectID (one) - modelID (many), modelID (one) - child model (many)
 	# E.g., For drones
 	# objectID - UAV, 
-	# model - UAV-drone.gltf; UAV-drone_package.gltf, 
-	# child model - 'o-UAV-drone_package.gltf-move'; 'o-UAV-drone_package.gltf-vertical'; 'o-UAV-drone_package.gltf-stationary'
+	# model - UAV-drone.glb; UAV-drone_package.glb, 
+	# child model - 'o-UAV-drone_package.glb-move'; 'o-UAV-drone_package.glb-vertical'; 'o-UAV-drone_package.glb-stationary'
 	objectIDs = list(dict.fromkeys(path['objectID'].tolist()))
 	for i in range(len(objectIDs)):
 		models = list(dict.fromkeys(path.loc[path['objectID'] == objectIDs[i], 'modelFile'].tolist()))
@@ -343,7 +343,8 @@ def _writeNodes(nodes, cesiumIconColor, fullDir):
 			jsStr += "        position : Cesium.Cartesian3.fromDegrees(%s, %s),\n" % (indNodes.iloc[i]['lon'], indNodes.iloc[i]['lat'])
 			jsStr += "        billboard : {\n"
 			jsStr += "            image : pinBuilder.fromText('%s', %s, 40).toDataURL(),\n" % (tmpIconText, expandCesiumColor(cesiumIconColor) if (cesiumIconColor != None) else expandCesiumColor(indNodes.iloc[i]['cesiumColor']))
-			jsStr += "            verticalOrigin : Cesium.VerticalOrigin.BOTTOM\n"
+			jsStr += "            verticalOrigin : Cesium.VerticalOrigin.BOTTOM, \n"
+			jsStr += "            heightReference : Cesium.HeightReference.RELATIVE_TO_GROUND \n"
 			jsStr += "        }\n"
 			jsStr += "    });\n\n"
 
@@ -448,7 +449,8 @@ def _writeAssignmentsCZML(path, lstSubAssignments, availStart, availEnd, fullDir
 		czmlStr +=             '        "show": true, \n'
 		czmlStr +=             '        "gltf": "%s", \n' % (lstCzml[i].iloc[0]['modelFile'])
 		czmlStr +=             '        "scale": %d, \n' % (lstCzml[i].iloc[0]['modelScale']/100.0)
-		czmlStr +=             '        "minimumPixelSize": %d \n' % (lstCzml[i].iloc[0]['modelMinPxSize'])
+		czmlStr +=             '        "minimumPixelSize": %d, \n' % (lstCzml[i].iloc[0]['modelMinPxSize'])
+		czmlStr +=             '        "heightReference": "RELATIVE_TO_GROUND" \n'		
 		czmlStr +=             '    }, \n'
 		czmlStr +=             '    "label": { \n'
 		czmlStr +=             '        "fillColor":[{"rgba":[255,255,0,255]}], \n'
@@ -698,7 +700,7 @@ def _getCesiumTime(startDate, startTime, timeSec):
 	timeZero = dateutil.parser.parse("%s %s" % (startDate, startTime))
 
 	# Return timeSec in cesium format (semi-Julian format)
-	cesiumTime = datetime.datetime.strftime(timeZero + datetime.timedelta(seconds = timeSec), '%Y-%m-%dT%H:%M:%SZ')
+	cesiumTime = datetime.datetime.strftime(timeZero + datetime.timedelta(seconds = float(timeSec)), '%Y-%m-%dT%H:%M:%SZ')
 
 	return cesiumTime
 
@@ -761,11 +763,13 @@ def _getPathsDetails(assignments):
 	# Get path list from assignments dataframe
 	lstSubAssignments = deconstructAssignments(assignments=assignments, includeStationaryFlag=True, includeVerticalFlag=True)
 
-	# Now we prepare for .czml, the following is a Path Dataframe, which has the same length as lstSubAssignments
-	path = pd.DataFrame(columns=['odID', 'czmlID', 'objectID', 'modelFile', 'action', 'modelScale', 'modelMinPxSize', 'startTimeSec', 'endTimeSec', 'intervalStart', 'intervalEnd', 'indexInlstShapepoints'])
+	# Now we prepare for .czml.
+	# First, create a list of dictionaries, to eventually populate a Path Dataframe, which has the same length as lstSubAssignments
+	pathList = []
+	
 	for i in range(len(lstSubAssignments)):
 		tmpObjectID = str(lstSubAssignments[i].iloc[0]['objectID']).replace("'", r"")
-		path = path.append({
+		pathList.append({
 			'odID': lstSubAssignments[i].iloc[0]['odID'],
 			'czmlID': 'o-%s-%s-%s' % (tmpObjectID, lstSubAssignments[i].iloc[0]['modelFile'], _getAction(lstSubAssignments[i])),
 			'objectID': lstSubAssignments[i].iloc[0]['objectID'],
@@ -778,7 +782,10 @@ def _getPathsDetails(assignments):
 			'intervalStart': "",
 			'intervalEnd': "",
 			'indexInlstShapepoints': i
-			}, ignore_index=True)
+			})
+
+
+	path = pd.DataFrame(pathList)
 	path.sort_values('odID', ascending=True)
 
 	return [path, lstSubAssignments]

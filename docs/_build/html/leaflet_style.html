@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <title>Leaflet Style &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Leaflet Style &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="_static/documentation_options.js?v=03f3338f"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Cesium Style" href="cesium_style.html" />
@@ -23,7 +22,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,13 +37,15 @@
         <li class="right" >
           <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Leaflet Style</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Leaflet Style</a><ul>
 <li><a class="reference internal" href="#leaflet-map-background-map-tiles">Leaflet Map Background (Map Tiles)</a></li>
 <li><a class="reference internal" href="#leaflet-weather-map-overlays">Leaflet Weather Map Overlays</a></li>
@@ -56,12 +57,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="flight_profile_and_flight_path.html"
-                        title="previous chapter">Flight Profile and Flight Path</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="cesium_style.html"
-                        title="next chapter">Cesium Style</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="flight_profile_and_flight_path.html"
+                          title="previous chapter">Flight Profile and Flight Path</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cesium_style.html"
+                          title="next chapter">Cesium Style</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -69,16 +75,16 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -87,16 +93,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="leaflet-style">
-<span id="id1"></span><h1>Leaflet Style<a class="headerlink" href="#leaflet-style" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="leaflet-map-background-map-tiles">
-<h2>Leaflet Map Background (Map Tiles)<a class="headerlink" href="#leaflet-map-background-map-tiles" title="Permalink to this headline">¶</a></h2>
+  <section id="leaflet-style">
+<span id="id1"></span><h1>Leaflet Style<a class="headerlink" href="#leaflet-style" title="Link to this heading">¶</a></h1>
+<section id="leaflet-map-background-map-tiles">
+<h2>Leaflet Map Background (Map Tiles)<a class="headerlink" href="#leaflet-map-background-map-tiles" title="Link to this heading">¶</a></h2>
 <p><em>VeRoViz</em> provides several options for the <cite>mapBackground</cite> field:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 37%" />
-<col style="width: 63%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><cite>mapBackground</cite> options</p></th>
 <th class="head"><p>Preview</p></th>
@@ -144,15 +146,11 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="leaflet-weather-map-overlays">
-<h2>Leaflet Weather Map Overlays<a class="headerlink" href="#leaflet-weather-map-overlays" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="leaflet-weather-map-overlays">
+<h2>Leaflet Weather Map Overlays<a class="headerlink" href="#leaflet-weather-map-overlays" title="Link to this heading">¶</a></h2>
 <p>Starting with version 0.4.0, <em>VeRoViz</em> also provides several weather condition “overlays” for Leaflet maps.  These options are enabled via the <cite>mapType</cite> field of the <cite>addLeafletWeather()</cite> function.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 37%" />
-<col style="width: 63%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><cite>mapType</cite> options</p></th>
 <th class="head"><p>Preview</p></th>
@@ -176,23 +174,19 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="leaflet-colors">
-<h2>Leaflet Colors<a class="headerlink" href="#leaflet-colors" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="leaflet-colors">
+<h2>Leaflet Colors<a class="headerlink" href="#leaflet-colors" title="Link to this heading">¶</a></h2>
 <p>Leaflet supports the following colors: ‘beige’, ‘black’, ‘blue’, ‘cadetblue’, ‘darkblue’, ‘darkgreen’, ‘gray’,
 ‘darkpurple’, ‘darkred’,  ‘green’, ‘lightblue’, ‘lightgray’,
 ‘lightgreen’, ‘lightred’, ‘orange’, ‘pink’, ‘purple’, and ‘red’.</p>
-</div>
-<div class="section" id="leaflet-prefix-and-leaflet-type">
-<h2>Leaflet Prefix and Leaflet Type<a class="headerlink" href="#leaflet-prefix-and-leaflet-type" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="leaflet-prefix-and-leaflet-type">
+<h2>Leaflet Prefix and Leaflet Type<a class="headerlink" href="#leaflet-prefix-and-leaflet-type" title="Link to this heading">¶</a></h2>
 <p>Leaflet provides numerous icons.  Both an <cite>iconPrefix</cite> and an
 <cite>iconType</cite> are required to specify a particular icon.  Some of the available options
 for both of the icon prefixes are shown below:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 32%" />
-<col style="width: 68%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><cite>iconPrefix</cite> options</p></th>
 <th class="head"><p><cite>iconType</cite> options</p></th>
@@ -229,13 +223,13 @@ of the circle icon is specified by the
 <a class="reference external" href="https://getbootstrap.com/docs/3.3/components/">https://getbootstrap.com/docs/3.3/components</a></p>
 <p>For ‘fa’, see
 <a class="reference external" href="https://fontawesome.com/icons?d=gallery&amp;m=free">https://fontawesome.com/icons?d=gallery&amp;m=free</a></p>
-</div>
-<div class="section" id="leaflet-line-styles">
-<h2>Leaflet Line Styles<a class="headerlink" href="#leaflet-line-styles" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="leaflet-line-styles">
+<h2>Leaflet Line Styles<a class="headerlink" href="#leaflet-line-styles" title="Link to this heading">¶</a></h2>
 <p>The following line styles are available: ‘solid’, ‘dashed’, ‘dotted’</p>
-</div>
-<div class="section" id="default-settings-for-leaflet">
-<h2>Default settings for Leaflet<a class="headerlink" href="#default-settings-for-leaflet" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="default-settings-for-leaflet">
+<h2>Default settings for Leaflet<a class="headerlink" href="#default-settings-for-leaflet" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
 <dt>Default colors</dt><dd><ul>
@@ -265,16 +259,17 @@ of the circle icon is specified by the
 </li>
 </ul>
 <p>For more default settings, see <a class="reference internal" href="global_settings_and_defaults.html#global-settings-and-defaults"><span class="std std-ref">Constants</span></a></p>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -289,12 +284,13 @@ of the circle icon is specified by the
         <li class="right" >
           <a href="flight_profile_and_flight_path.html" title="Flight Profile and Flight Path"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Leaflet Style</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

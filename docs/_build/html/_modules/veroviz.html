@@ -1,17 +1,15 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="../_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>veroviz &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="../_static/documentation_options.js?v=03f3338f"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
@@ -21,7 +19,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -30,22 +28,23 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.4.5 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -55,126 +54,128 @@
           <div class="body" role="main">
             
   <h1>Source code for veroviz</h1><div class="highlight"><pre>
-<span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.4.5&#39;</span>
+<span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.4.6&#39;</span>
 
 <span class="c1"># Generate Objects</span>
-<span class="kn">from</span> <span class="nn">veroviz.generateNodes</span> <span class="k">import</span> <span class="n">generateNodes</span>
-<span class="kn">from</span> <span class="nn">veroviz.generateNodes</span> <span class="k">import</span> <span class="n">createNodesFromLocs</span>
-<span class="kn">from</span> <span class="nn">veroviz.generateArcs</span> <span class="k">import</span> <span class="n">createArcsFromLocSeq</span>
-<span class="kn">from</span> <span class="nn">veroviz.generateArcs</span> <span class="k">import</span> <span class="n">createArcsFromNodeSeq</span>
-<span class="kn">from</span> <span class="nn">veroviz.snapNodesToRoad</span> <span class="k">import</span> <span class="n">snapNodesToRoad</span>
-<span class="kn">from</span> <span class="nn">veroviz.snapNodesToRoad</span> <span class="k">import</span> <span class="n">getSnapLoc</span>
-<span class="kn">from</span> <span class="nn">veroviz.snapNodesToRoad</span> <span class="k">import</span> <span class="n">getSnapLocBatch</span>
-<span class="kn">from</span> <span class="nn">veroviz.getTimeDist2D</span> <span class="k">import</span> <span class="n">getTimeDist2D</span>
-<span class="kn">from</span> <span class="nn">veroviz.getTimeDistScalar2D</span> <span class="k">import</span> <span class="n">getTimeDistScalar2D</span>
-<span class="kn">from</span> <span class="nn">veroviz.getTimeDist3D</span> <span class="k">import</span> <span class="n">getTimeDist3D</span>
-<span class="kn">from</span> <span class="nn">veroviz.getTimeDistScalar3D</span> <span class="k">import</span> <span class="n">getTimeDistScalar3D</span>
-<span class="kn">from</span> <span class="nn">veroviz.getShapepoints2D</span> <span class="k">import</span> <span class="n">getShapepoints2D</span>
-<span class="kn">from</span> <span class="nn">veroviz.getShapepoints3D</span> <span class="k">import</span> <span class="n">getShapepoints3D</span>
-<span class="kn">from</span> <span class="nn">veroviz.createAssignments</span> <span class="k">import</span> <span class="n">addAssignment2D</span>
-<span class="kn">from</span> <span class="nn">veroviz.createAssignments</span> <span class="k">import</span> <span class="n">addAssignment3D</span>
-<span class="kn">from</span> <span class="nn">veroviz.createAssignments</span> <span class="k">import</span> <span class="n">addStaticAssignment</span>
-<span class="kn">from</span> <span class="nn">veroviz.createAssignments</span> <span class="k">import</span> <span class="n">createAssignmentsFromArcs2D</span>
-<span class="kn">from</span> <span class="nn">veroviz.createAssignments</span> <span class="k">import</span> <span class="n">createAssignmentsFromNodeSeq2D</span>
-<span class="kn">from</span> <span class="nn">veroviz.createAssignments</span> <span class="k">import</span> <span class="n">createAssignmentsFromLocSeq2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.generateNodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">generateNodes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.generateNodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">createNodesFromLocs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.generateArcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">createArcsFromLocSeq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.generateArcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">createArcsFromNodeSeq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.snapNodesToRoad</span><span class="w"> </span><span class="kn">import</span> <span class="n">snapNodesToRoad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.snapNodesToRoad</span><span class="w"> </span><span class="kn">import</span> <span class="n">getSnapLoc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.snapNodesToRoad</span><span class="w"> </span><span class="kn">import</span> <span class="n">getSnapLocBatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.getTimeDist2D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDist2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.getTimeDistScalar2D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDistScalar2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.getTimeDist3D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDist3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.getTimeDistScalar3D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDistScalar3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.getShapepoints2D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getShapepoints2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.getShapepoints3D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getShapepoints3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">addAssignment2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">addAssignment3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">addStaticAssignment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">createAssignmentsFromArcs2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">createAssignmentsFromNodeSeq2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">createAssignmentsFromLocSeq2D</span>
 
 <span class="c1"># Utilities</span>
-<span class="kn">from</span> <span class="nn">veroviz.utilities</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Visualize objects</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">createLeaflet</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletCircle</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletMarker</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletPolygon</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletPolyline</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletText</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletIcon</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletIsochrones</span>
-<span class="kn">from</span> <span class="nn">veroviz.createLeaflet</span> <span class="k">import</span> <span class="n">addLeafletWeather</span>
-<span class="kn">from</span> <span class="nn">veroviz.createCesium</span> <span class="k">import</span> <span class="n">createCesium</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">createLeaflet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletCircle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletMarker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletPolygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletPolyline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletText</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletIcon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletIsochrones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createLeaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLeafletWeather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz.createCesium</span><span class="w"> </span><span class="kn">import</span> <span class="n">createCesium</span>
 
 <span class="c1"># Internal shared small functions/constants/validation</span>
-<span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._params</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._common</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._params</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._internal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># pgRouting related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetSnapToRoadLatLon</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetNearestStreet</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryPgRouting</span> <span class="k">import</span> <span class="n">pgrGetTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryPgRouting</span><span class="w"> </span><span class="kn">import</span> <span class="n">pgrGetSnapToRoadLatLon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryPgRouting</span><span class="w"> </span><span class="kn">import</span> <span class="n">pgrGetNearestStreet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryPgRouting</span><span class="w"> </span><span class="kn">import</span> <span class="n">pgrGetShapepointsTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryPgRouting</span><span class="w"> </span><span class="kn">import</span> <span class="n">pgrGetTimeDist</span>
 
 <span class="c1"># ORS-online related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetSnapToRoadLatLon</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistAll2All</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistOne2Many</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetTimeDistMany2One</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGeocode</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsReverseGeocode</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsIsochrones</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORS</span> <span class="k">import</span> <span class="n">orsGetElevation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGetSnapToRoadLatLon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGetShapepointsTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGetTimeDistAll2All</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGetTimeDistOne2Many</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGetTimeDistMany2One</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGeocode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsReverseGeocode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsIsochrones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORS</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsGetElevation</span>
 
 <span class="c1"># ORS-local related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetSnapToRoadLatLon</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetTimeDistAll2All</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetTimeDistOne2Many</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalGetTimeDistMany2One</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryORSlocal</span> <span class="k">import</span> <span class="n">orsLocalIsochrones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORSlocal</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsLocalGetSnapToRoadLatLon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORSlocal</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsLocalGetShapepointsTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORSlocal</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsLocalGetTimeDistAll2All</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORSlocal</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsLocalGetTimeDistOne2Many</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORSlocal</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsLocalGetTimeDistMany2One</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryORSlocal</span><span class="w"> </span><span class="kn">import</span> <span class="n">orsLocalIsochrones</span>
 
 <span class="c1"># OSRM related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetSnapToRoadLatLon</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetTimeDistOnePair</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryOSRM</span> <span class="k">import</span> <span class="n">osrmGetTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryOSRM</span><span class="w"> </span><span class="kn">import</span> <span class="n">osrmGetSnapToRoadLatLon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryOSRM</span><span class="w"> </span><span class="kn">import</span> <span class="n">osrmGetShapepointsTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryOSRM</span><span class="w"> </span><span class="kn">import</span> <span class="n">osrmGetTimeDistOnePair</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryOSRM</span><span class="w"> </span><span class="kn">import</span> <span class="n">osrmGetTimeDist</span>
 
 <span class="c1"># MapQuest related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetSnapToRoadLatLon</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetSnapToRoadLatLonBatch</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetShapepointsTimeDist</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistAll2All</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistOne2Many</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGetTimeDistMany2One</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqGeocode</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryMapQuest</span> <span class="k">import</span> <span class="n">mqReverseGeocode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGetSnapToRoadLatLon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGetSnapToRoadLatLonBatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGetShapepointsTimeDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGetTimeDistAll2All</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGetTimeDistOne2Many</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGetTimeDistMany2One</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqGeocode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryMapQuest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mqReverseGeocode</span>
 
 <span class="c1"># USGS related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryUSGS</span> <span class="k">import</span> <span class="n">usgsGetElevation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryUSGS</span><span class="w"> </span><span class="kn">import</span> <span class="n">usgsGetElevation</span>
 
 <span class="c1"># Elevation-API.io related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryElevationapiio</span> <span class="k">import</span> <span class="n">elevapiGetElevation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryElevationapiio</span><span class="w"> </span><span class="kn">import</span> <span class="n">elevapiGetElevation</span>
 
 <span class="c1"># OpenWeather related</span>
-<span class="kn">from</span> <span class="nn">veroviz._queryOpenWeather</span> <span class="k">import</span> <span class="n">owGetWeather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._queryOpenWeather</span><span class="w"> </span><span class="kn">import</span> <span class="n">owGetWeather</span>
 
 <span class="c1"># 3D function related</span>
-<span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">buildNoLoiteringFlight</span>
-<span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">getTimeDistFromFlight</span>
-<span class="kn">from</span> <span class="nn">veroviz._buildFlightProfile</span> <span class="k">import</span> <span class="n">addLoiterTimeToFlight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._buildFlightProfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">buildNoLoiteringFlight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._buildFlightProfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDistFromFlight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._buildFlightProfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">addLoiterTimeToFlight</span>
 
 <span class="c1"># Function related to travel matrices generating</span>
-<span class="kn">from</span> <span class="nn">veroviz._getTimeDistFromLocs2D</span> <span class="k">import</span> <span class="n">getTimeDistFromLocs2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._getTimeDistFromLocs2D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDistFromLocs2D</span>
 
 <span class="c1"># Functions related to snapping nodes to road</span>
-<span class="kn">from</span> <span class="nn">veroviz._getSnapLoc</span> <span class="k">import</span> <span class="n">privGetSnapLocBatch</span>
-<span class="kn">from</span> <span class="nn">veroviz._getSnapLoc</span> <span class="k">import</span> <span class="n">privGetSnapLoc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._getSnapLoc</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetSnapLocBatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._getSnapLoc</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetSnapLoc</span>
 
 <span class="c1"># Functions that deconstruct an Assignments dataframe for `createLeaflet` and `createCesium`</span>
-<span class="kn">from</span> <span class="nn">veroviz._deconstructAssignments</span> <span class="k">import</span> <span class="n">deconstructAssignments</span>
-<span class="kn">from</span> <span class="nn">veroviz._createEntitiesFromList</span> <span class="k">import</span> <span class="n">privCreateNodesFromLocs</span>
-<span class="kn">from</span> <span class="nn">veroviz._createEntitiesFromList</span> <span class="k">import</span> <span class="n">privCreateArcsFromLocSeq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._deconstructAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">deconstructAssignments</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._createEntitiesFromList</span><span class="w"> </span><span class="kn">import</span> <span class="n">privCreateNodesFromLocs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._createEntitiesFromList</span><span class="w"> </span><span class="kn">import</span> <span class="n">privCreateArcsFromLocSeq</span>
 
 <span class="c1"># Functions related to assignments/shapepoints:</span>
-<span class="kn">from</span> <span class="nn">veroviz._createAssignments</span> <span class="k">import</span> <span class="n">privAddStaticAssignment</span>
-<span class="kn">from</span> <span class="nn">veroviz._getShapepoints</span> <span class="k">import</span> <span class="n">privGetShapepoints2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._createAssignments</span><span class="w"> </span><span class="kn">import</span> <span class="n">privAddStaticAssignment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._getShapepoints</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetShapepoints2D</span>
 
 
 <span class="c1"># Check the current version and latest version of veroviz</span>
-<div class="viewcode-block" id="checkVersion"><a class="viewcode-back" href="../veroviz.html#veroviz.checkVersion">[docs]</a><span class="k">def</span> <span class="nf">checkVersion</span><span class="p">():</span>
+<div class="viewcode-block" id="checkVersion">
+<a class="viewcode-back" href="../veroviz.html#veroviz.checkVersion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkVersion</span><span class="p">():</span>
 	<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
 
 	<span class="n">versionStatus</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -195,8 +196,11 @@
 
 	<span class="k">return</span> <span class="n">versionStatus</span></div>
 
-<div class="viewcode-block" id="setGlobal"><a class="viewcode-back" href="../veroviz.html#veroviz.setGlobal">[docs]</a><span class="k">def</span> <span class="nf">setGlobal</span><span class="p">(</span><span class="n">newConfig</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="setGlobal">
+<a class="viewcode-back" href="../veroviz.html#veroviz.setGlobal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">setGlobal</span><span class="p">(</span><span class="n">newConfig</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function accepts a dictionary as an input. The key corresponds to a global VeRoViz setting parameter.  This makes it easier for users to change default values for Leaflet entities and default settings.  All the settings are saved in a dictionary named config.  Changes to default config settings are temporary (i.e., lasting only for a particular session).</span>
 
 <span class="sd">	Parameters</span>
@@ -280,14 +284,16 @@
 	<span class="k">if</span> <span class="p">(</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span> <span class="ow">in</span> <span class="n">newConfig</span><span class="p">):</span>
 		<span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">newConfig</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span><span class="p">]</span>
 	<span class="k">return</span></div>
+
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -296,13 +302,14 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.4.5 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

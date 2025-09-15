@@ -45,7 +45,7 @@ def deconstructAssignments(assignments=None, includeStationaryFlag=False, includ
 		tmpSubAssignment = privInitDataframe('Assignments')
 		for i in range(len(collection)):
 			if (len(tmpSubAssignment) == 0):
-				tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
+				tmpSubAssignment = pd.DataFrame(collection.loc[i: i, :].copy(), columns = tmpSubAssignment.columns)
 			else:
 				if (tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endLat'] == collection.iloc[i]['startLat'] 
 					and tmpSubAssignment.iloc[len(tmpSubAssignment) - 1]['endLon'] == collection.iloc[i]['startLon'] 
@@ -55,8 +55,7 @@ def deconstructAssignments(assignments=None, includeStationaryFlag=False, includ
 					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
 				else:
 					lstSubAssignments.append(tmpSubAssignment.copy())
-					tmpSubAssignment = privInitDataframe('Assignments')
-					tmpSubAssignment = pd.concat([tmpSubAssignment, collection.loc[i: i, :].copy()], ignore_index= True, sort=True)
+					tmpSubAssignment = pd.DataFrame(collection.loc[i: i, :].copy(), columns = tmpSubAssignment.columns)
 		lstSubAssignments.append(tmpSubAssignment.copy())
 
 	# Re-index odID for lstRoutes

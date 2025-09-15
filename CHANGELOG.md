@@ -1,5 +1,14 @@
 ### Change Log
 
+### Version 0.4.6 (2025-09-15)
+
+Fixed things that became broken since v0.4.5 was released.  In particular:
+- Updated code to be compatible with newer versions of Pandas and Numpy. 
+- Updated API URLs for openweather.
+- Updated API URL for USGS elevation.
+- Updated API URL for Elevation API.
+
+
 ### Version 0.4.5 (2021-03-29)
 
 Added "minutely" weather forecast data as output from `getWeather()` function, and fixed a bug where some output data were being nested as dictionaries in a column.

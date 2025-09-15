@@ -6,7 +6,7 @@ def owGetWeather(location, id, metricUnits, APIkey):
 	else:
 		units = 'imperial'
 	
-	weatherUrl = ('https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&units=%s' % (location[0], location[1], APIkey, units))
+	weatherUrl = ('https://api.openweathermap.org/data/3.0/onecall?lat=%s&lon=%s&appid=%s&units=%s' % (location[0], location[1], APIkey, units))
 	
 	try:
 		http = urllib3.PoolManager()
@@ -98,10 +98,22 @@ def owGetWeather(location, id, metricUnits, APIkey):
 
 			df = pd.DataFrame(x)
 
-			df['dt']      = pd.to_datetime(df['dt'], unit='s', errors='ignore')
-			df['sunrise'] = pd.to_datetime(df['sunrise'], unit='s', errors='ignore')
-			df['sunset']  = pd.to_datetime(df['sunset'], unit='s', errors='ignore')
-            
+			try:
+				df['dt'] = pd.to_datetime(df['dt'], unit='s')
+			except Exception:
+				# Handle invalid dates, e.g., by appending NaT or the original value
+				df['dt'] = pd.NaT
+			
+			try:
+				df['sunrise'] = pd.to_datetime(df['sunrise'], unit='s')
+			except Exception:
+				df['sunrise'] = pd.NaT
+				
+			try:
+				df['sunset'] = pd.to_datetime(df['sunset'], unit='s')
+			except Exception:
+				df['sunset'] =  pd.NaT
+
 			return df
 		else:
 			# Error of some kind

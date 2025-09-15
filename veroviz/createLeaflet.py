@@ -23,14 +23,14 @@ from veroviz._geometry import geoDistance2D
 from veroviz._geometry import geoGetHeading
 from veroviz._geometry import geoPointInDistance2D
 
-foliumMaps = [
-	'cartodb positron', 
-	'cartodb dark_matter', 
-	'openstreetmap', 
-	'stamen terrain', 
-	'stamen toner', 
-	'stamen watercolor'
-]
+foliumMaps = {
+	'cartodb positron': {'attr': '&copy; CARTO'},  
+	'cartodb dark_matter':  {'attr': '&copy; CARTO'}, 
+	'openstreetmap':  {'attr': '&copy; OpenStreetMap contributors'},
+	'stamen terrain':  {'attr': '&copy; Stadia Maps &copy; Stamen Design &copy; OpenMapTiles &copy; OpenStreetMap contributors'},
+	'stamen toner':  {'attr': '&copy; Stadia Maps &copy; Stamen Design &copy; OpenMapTiles &copy; OpenStreetMap contributors'},
+	'stamen watercolor':  {'attr': '&copy; Stadia Maps &copy; Stamen Design &copy; OpenStreetMap contributors'}
+}
 
 weatherMaps = {
 	'clouds': {
@@ -338,7 +338,7 @@ def _createLeafletMap(mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], cent
 	
 	# Add the chosen map background first:
 	if (mapBackground in foliumMaps):
-		folium.TileLayer(mapBackground).add_to(mapObject)
+		folium.TileLayer(mapBackground, attr=foliumMaps[mapBackground]['attr']).add_to(mapObject)
 	elif (mapBackground in customMaps):
 		folium.TileLayer(tiles=customMaps[mapBackground]['tiles'],
 						 attr=customMaps[mapBackground]['attr']).add_to(mapObject)
@@ -516,10 +516,11 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 
 		
 			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
+			newPathList = []
 			if (newArcCurveType == 'greatcircle'):
 				curvePoints = _getCurveGreatCircle([arcs.iloc[i]['startLat'], arcs.iloc[i]['startLon']], [arcs.iloc[i]['endLat'], arcs.iloc[i]['endLon']])
 				for j in range(1, len(curvePoints)):		
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : arcs.iloc[i]['odID'],
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -531,11 +532,12 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
 						'useArrows' : arcs.iloc[i]['useArrows'],
 						'popupText' : arcs.iloc[i]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)
 			elif (newArcCurveType == 'bezier'):
 				curvePoints = _getCurveBezier([arcs.iloc[i]['startLat'], arcs.iloc[i]['startLon']], [arcs.iloc[i]['endLat'], arcs.iloc[i]['endLon']], newArcCurvature)
 				for j in range(1, len(curvePoints)):		
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : arcs.iloc[i]['odID'],
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -547,9 +549,10 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
 						'useArrows' : arcs.iloc[i]['useArrows'],
 						'popupText' : arcs.iloc[i]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)						
 			elif (newArcCurveType == 'straight'):
-				newPath = newPath.append({
+				newPathList.append({
 					'odID' : arcs.iloc[i]['odID'],
 					'startLat' : arcs.iloc[i]['startLat'],
 					'startLon' : arcs.iloc[i]['startLon'],
@@ -561,7 +564,9 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 					'leafletOpacity' : arcs.iloc[i]['leafletOpacity'],
 					'useArrows' : arcs.iloc[i]['useArrows'],
 					'popupText' : arcs.iloc[i]['popupText']
-					}, ignore_index=True)
+					})
+				newPath = pd.DataFrame(newPathList)
+					
 			lstPath.append(newPath.copy())
 
 	# For Assignments dataframe, use deconstructAssignments to generate a list of assignments dataframe
@@ -581,10 +586,11 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			newDestine = [lstOD[i].iloc[len(lstOD[i]) - 1]['endLat'], lstOD[i].iloc[len(lstOD[i]) - 1]['endLon']]
 
 			newPath = pd.DataFrame(columns=['odID', 'startLat', 'startLon', 'endLat', 'endLon', 'leafletColor', 'leafletWeight', 'leafletStyle', 'leafletOpacity', 'useArrows'])
+			newPathList = []
 			if (newArcCurveType == 'greatcircle'):
 				curvePoints = _getCurveGreatCircle(newOrigin, newDestine)
 				for j in range(1, len(curvePoints)):			  
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : i,
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -596,11 +602,12 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
 						'useArrows' : lstOD[i].iloc[0]['useArrows'],
 						'popupText' : lstOD[i].iloc[0]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)		
 			elif (newArcCurveType == 'bezier'):
 				curvePoints = _getCurveBezier(newOrigin, newDestine, newArcCurvature)
 				for j in range(1, len(curvePoints)):			  
-					newPath = newPath.append({
+					newPathList.append({
 						'odID' : i,
 						'startLat' : curvePoints[j - 1][0],
 						'startLon' : curvePoints[j - 1][1],
@@ -612,18 +619,20 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 						'leafletOpacity' : lstOD[i].iloc[0]['leafletOpacity'],
 						'useArrows' : lstOD[i].iloc[0]['useArrows'],
 						'popupText' : lstOD[i].iloc[0]['popupText']
-						}, ignore_index=True)
+						})
+				newPath = pd.DataFrame(newPathList)	
 			elif (newArcCurveType == 'straight'):
 				newPath = lstOD[i]
+				
 			lstPath.append(newPath.copy())
 			
 	# For each path, generate the arcs and arrows accordingly
 	for i in range(len(lstPath)):
 		lstPath[i] = lstPath[i].reset_index(drop=True)
 		arcPath = []
-		arcPath.append([lstPath[i]['startLat'][0], lstPath[i]['startLon'][0]])
+		arcPath.append([float(lstPath[i]['startLat'][0]), float(lstPath[i]['startLon'][0])])
 		for j in range(len(lstPath[i])):
-			arcPath.append([lstPath[i]['endLat'][j], lstPath[i]['endLon'][j]])
+			arcPath.append([float(lstPath[i]['endLat'][j]), float(lstPath[i]['endLon'][j])])
 
 		# FIXMELP -- Some of these values below aren't used anywhere that I can see.
 		#            For example, curveType or curvature.
@@ -673,16 +682,18 @@ def _createLeafletArcs(mapObject=None, arcs=None, arcWeight=None, arcOpacity=Non
 			else:
 				popupText = None	
 			
+			# '''
 			# Folium draw arcs	
 			folium.PolyLine(
 				[arcPath[j-1], arcPath[j]], 
 				color = newColor, 
-				weight = newWeight, 
-				opacity = newOpacity, 
+				weight = float(newWeight), 
+				opacity = float(newOpacity), 
 				dash_array = dashArray,
 				popup = popupText
 			).add_to(mapObject)	
-		
+			# '''
+			
 		# Check if we add arrows
 		arrowFlag = False
 		if (useArrows == True):

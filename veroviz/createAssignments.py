@@ -124,7 +124,7 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		...     'car':   {'model': 'veroviz/models/car_red.gltf',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...     'truck': {'model': 'veroviz/models/ub_truck.glb',
 		...               'leafletColor': 'blue',
 		...               'cesiumColor': 'blue'}
 		>>> }
@@ -309,14 +309,12 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = privInitDataframe('assignments')
+	assignmentsDF = None
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
-		
-		# Increase odID as necessary:
-		if (len(assignmentsDF) > 0):
+		if (len(initAssignments) > 0):
+			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 			odID = max(max(assignmentsDF['odID'])+1, odID)
 	
 	tmpShapepoints = privGetShapepoints2D(
@@ -351,8 +349,11 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	endTimeSec = max(tmpShapepoints['endTimeSec'])
 
 	# Update the assignments dataframe:
-	assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
-	
+	if (assignmentsDF is not None):
+		assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+	else:
+		assignmentsDF = pd.DataFrame(tmpShapepoints, columns = privInitDataframe('assignments').columns)
+		
 	return (assignmentsDF, endTimeSec)
 	
 
@@ -463,8 +464,8 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 
 	Define some information about our drone, for later use:
 		>>> vehicleProperties = {
-		...     'drone': {'modelPackage': 'veroviz/models/drone_package.gltf',
-		...               'modelEmpty': 'veroviz/models/drone.gltf',
+		...     'drone': {'modelPackage': 'veroviz/models/drone_package.glb',
+		...               'modelEmpty': 'veroviz/models/drone.glb',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
 		>>> }
@@ -550,11 +551,11 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 
 	Define some information about our 2 vehicles, for use below:
 		>>> vehicleProperties = {
-		...     'drone': {'modelPackage': 'veroviz/models/drone_package.gltf',
-		...               'modelEmpty': 'veroviz/models/drone.gltf',
+		...     'drone': {'modelPackage': 'veroviz/models/drone_package.glb',
+		...               'modelEmpty': 'veroviz/models/drone.glb',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...     'truck': {'model': 'veroviz/models/ub_truck.glb',
 		...               'leafletColor': 'blue',
 		...               'cesiumColor': 'blue'}
 		>>> }
@@ -703,15 +704,12 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
-	# Initialize an assignments dataframe:
-	assignmentsDF = privInitDataframe('assignments')
-
+	assignmentsDF = None
+	
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
-
-		# Increase odID as necessary:
-		if (len(assignmentsDF) > 0):
+		if (len(initAssignments) > 0):
+			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 			odID = max(max(assignmentsDF['odID'])+1, odID)
 
 	tmpShapepoints = privGetShapepoints3D(
@@ -750,8 +748,13 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 	endTimeSec = max(tmpShapepoints['endTimeSec'])
 
 	# Update the assignments dataframe:
-	assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
-	
+	if (assignmentsDF is not None):
+		# Exclude all-NA columns before concatenation
+		initCleaned = initAssignments.dropna(axis=1, how='all')	
+		assignmentsDF = pd.concat([initCleaned, tmpShapepoints], ignore_index=True, sort=False)
+	else:
+		assignmentsDF = pd.DataFrame(tmpShapepoints, columns = privInitDataframe('assignments').columns)		
+					
 	return (assignmentsDF, endTimeSec)
 
 
@@ -808,7 +811,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 		>>> myAssignments = vrv.getShapepoints2D(
 		...     odID           = 0,
 		...     objectID       = 'truck',
-		...     modelFile      = 'veroviz/models/ub_truck.gltf',
+		...     modelFile      = 'veroviz/models/ub_truck.glb',
 		...     modelScale     = 80, 
 		...     modelMinPxSize = 20, 
 		...     startLoc       = list(myNodes.loc[0][['lat', 'lon']].values),
@@ -822,7 +825,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 		...     initAssignments = myAssignments, 
 		...     odID            = 0, 
 		...     objectID        = 'truck', 
-		...     modelFile       = 'veroviz/models/ub_truck.gltf', 
+		...     modelFile       = 'veroviz/models/ub_truck.glb', 
 		...     modelScale      = 80, 
 		...     modelMinPxSize  = 20, 
 		...     loc             = list(myAssignments[myAssignments['objectID']=='truck'][['endLat', 'endLon']].values[0]), 
@@ -998,11 +1001,12 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = privInitDataframe('assignments')
+	assignmentsDF = None
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+		if (len(initAssignments) > 0):
+			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 
 	startTime = startTimeSec
 
@@ -1062,9 +1066,11 @@ def createAssignmentsFromArcs2D(initAssignments=None, arcs=None, serviceTimeSec=
 			dataProvider=dataProvider, 
 			dataProviderArgs=dataProviderArgs)
 
-
 		# Update the assignments dataframe:
-		assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+		if (assignmentsDF is not None):
+			assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+		else:
+			assignmentsDF = pd.DataFrame(tmpShapepoints, columns = privInitDataframe('assignments').columns)
 
 		odID += 1
 
@@ -1287,14 +1293,14 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 		print (warningMsg)
 		
 	# Initialize an assignments dataframe:
-	assignmentsDF = privInitDataframe('assignments')
+	assignmentsDF = None
 
 	# if the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+		if (len(initAssignments) > 0):
+			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 
-		# Increase odID as necessary:
-		if (len(assignmentsDF) > 0):
+			# Increase odID as necessary:
 			odID = max(max(assignmentsDF['odID'])+1, odID)
 
 	startTime = startTimeSec
@@ -1346,8 +1352,11 @@ def createAssignmentsFromNodeSeq2D(initAssignments=None, nodeSeq=None, nodes=Non
 			dataProviderArgs=dataProviderArgs)
 
 		# Update the assignments dataframe:
-		assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
-
+		if (assignmentsDF is not None):
+			assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+		else:
+			assignmentsDF = pd.DataFrame(tmpShapepoints, columns = privInitDataframe('assignments').columns)
+			
 		odID += 1
 
 		# Update the time
@@ -1547,15 +1556,13 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 		
-	# Initialize an assignments dataframe:
-	assignmentsDF = privInitDataframe('assignments')
-
-	# if the user provided an initAssignments dataframe, add the new points after it
+	assignmentsDF = None	
+	# If the user provided an initAssignments dataframe, add the new points after it
 	if (type(initAssignments) is pd.core.frame.DataFrame):
-		assignmentsDF = pd.concat([assignmentsDF, initAssignments], ignore_index=True, sort=False)
+		if (len(initAssignments) > 0):
+			assignmentsDF = pd.DataFrame(initAssignments.copy(), columns = privInitDataframe('assignments').columns)
 
-		# Increase odID as necessary:
-		if (len(assignmentsDF) > 0):
+			# Increase odID as necessary:
 			odID = max(max(assignmentsDF['odID'])+1, odID)
 
 	startTime = startTimeSec
@@ -1603,8 +1610,11 @@ def createAssignmentsFromLocSeq2D(initAssignments=None, locSeq=None, serviceTime
 
 
 		# Update the assignments dataframe:
-		assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
-
+		if (assignmentsDF is not None):
+			assignmentsDF = pd.concat([assignmentsDF, tmpShapepoints], ignore_index=True, sort=False)
+		else:
+			assignmentsDF = pd.DataFrame(tmpShapepoints, columns = privInitDataframe('assignments').columns)
+			
 		odID += 1
 
 		# Update the time

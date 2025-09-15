@@ -1,0 +1,9 @@
+,id,lat,lon,altMeters,nodeName,nodeType,popupText,leafletIconPrefix,leafletIconType,leafletColor,leafletIconText,cesiumIconType,cesiumColor,cesiumIconText,elevMeters
+0,0,47.567258,-122.189889,0.0,Depot,depot,0,glyphicon,star,blue,0,pin,blue,0,
+1,1,47.608239,-122.324083,0.0,Cust 1,customer,1,glyphicon,home,red,1,pin,red,1,
+2,2,47.5992,-122.327818,0.0,Cust 2,customer,2,glyphicon,home,red,2,pin,red,2,
+3,3,47.627743,-122.311275,0.0,Cust 3,customer,3,glyphicon,home,red,3,pin,red,3,
+4,4,47.617816,-122.358286,0.0,Cust 4,customer,4,glyphicon,home,red,4,pin,red,4,
+5,5,47.621129,-122.362482,0.0,Cust 5,customer,5,glyphicon,home,red,5,pin,red,5,
+6,6,47.62311,-122.357715,0.0,Cust 6,customer,6,glyphicon,home,red,6,pin,red,6,
+7,7,47.617081,-122.357265,0.0,Cust 7,customer,7,glyphicon,home,red,7,pin,red,7,

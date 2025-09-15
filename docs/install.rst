@@ -44,6 +44,8 @@ MapQuest is a commercial data source, but users may issue a limited number of re
 
 MapQuest provides perhaps the most detailed results of the data providers. However, keep in mind that the free API key has a monthly limit on the number of queries.
 
+(Updated 2025-09-15) MapQuest now requires a credit card to obtain an API key.  VeRoViz will begin phasing out support for the MapQuest API in future releases.
+
 .. _apply for OpenWeatherMap APIkey:
 
 Apply for OpenWeatherMap API key
@@ -58,6 +60,4 @@ You may register for a free API key at https://openweathermap.org/api.
 Apply for Elevation-API key
 ---------------------------
 
-Elevation-API provides elevation data for practically any location on the globe.  Elevations at 5km resolutions are available for free; higher-resolution data may be obtained for a nominal fee. Support for Elevation-API integration is available in VeRoViz version 0.4.0.
-						
-You may register for a free API key at https://elevation-api.io.
+(Updated 2025-09-15) Elevation-API (formerly https://elevation-api.io) has been replaced by Open-Elevation (https://open-elevation.com), which does not require an API key.

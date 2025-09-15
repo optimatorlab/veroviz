@@ -1,0 +1,4 @@
+,id,lat,lon,altMeters,nodeName,nodeType,popupText,leafletIconPrefix,leafletIconType,leafletColor,leafletIconText,cesiumIconType,cesiumColor,cesiumIconText,elevMeters
+0,1,42.1538,-78.4253,0,,,1,glyphicon,info-sign,blue,1,pin,blue,1,
+1,2,42.3465,-78.6234,0,,,2,glyphicon,info-sign,blue,2,pin,blue,2,
+2,3,42.6343,-78.1146,0,,,3,glyphicon,info-sign,blue,3,pin,blue,3,

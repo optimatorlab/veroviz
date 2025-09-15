@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <title>Install Dependencies &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Install Dependencies &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="_static/documentation_options.js?v=03f3338f"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Data Providers" href="dataproviders.html" />
@@ -23,7 +22,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,13 +37,15 @@
         <li class="right" >
           <a href="index.html" title="Welcome to veroviz’s documentation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Install Dependencies</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Install Dependencies</a><ul>
 <li><a class="reference internal" href="#install-pgrouting">Install pgRouting</a></li>
 <li><a class="reference internal" href="#install-cesium">Install Cesium</a></li>
@@ -56,12 +57,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to veroviz’s documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="dataproviders.html"
-                        title="next chapter">Data Providers</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Welcome to veroviz’s documentation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="dataproviders.html"
+                          title="next chapter">Data Providers</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -69,16 +75,16 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -87,49 +93,50 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="install-dependencies">
-<h1>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline">¶</a></h1>
+  <section id="install-dependencies">
+<h1>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Link to this heading">¶</a></h1>
 <p>Some <em>VeRoViz</em> functionality requires additional software or API keys.</p>
-<div class="section" id="install-pgrouting">
-<span id="id1"></span><h2>Install pgRouting<a class="headerlink" href="#install-pgrouting" title="Permalink to this headline">¶</a></h2>
+<section id="install-pgrouting">
+<span id="id1"></span><h2>Install pgRouting<a class="headerlink" href="#install-pgrouting" title="Link to this heading">¶</a></h2>
 <p>pgRouting is an extension to the PostGIS/PostgreSQL geospatial database, which provides geospatial routing functionality. In VeRoViz, installing pgRouting will enable the <cite>pgRouting</cite> option for generating nodes, building traveling matrices, querying shapepoints along routes, etc.</p>
 <p>pgRouting is not required for VeRoViz.  If it is not installed, other data providers may be used.</p>
 <p>See <a class="reference external" href="https://veroviz.org/documentation.html">https://veroviz.org/documentation.html</a> for pgRouting installation instructions.</p>
-</div>
-<div class="section" id="install-cesium">
-<span id="apply-for-cesium-ion-key"></span><h2>Install Cesium<a class="headerlink" href="#install-cesium" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="install-cesium">
+<span id="apply-for-cesium-ion-key"></span><h2>Install Cesium<a class="headerlink" href="#install-cesium" title="Link to this heading">¶</a></h2>
 <p>Cesium is an open-source JavaScript library for rendering 3D maps.  The VeRoViz <a class="reference internal" href="veroviz.createCesium.html#veroviz.createCesium.createCesium" title="veroviz.createCesium.createCesium"><code class="xref py py-meth docutils literal notranslate"><span class="pre">createCesium()</span></code></a> function generates files to display solutions in Cesium.</p>
 <p>See <a class="reference external" href="https://veroviz.org/documentation.html">https://veroviz.org/documentation.html</a> for Cesium installation instructions.</p>
-</div>
-<div class="section" id="apply-for-ors-api-key">
-<span id="apply-for-ors-apikey"></span><h2>Apply for ORS API key<a class="headerlink" href="#apply-for-ors-api-key" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="apply-for-ors-api-key">
+<span id="apply-for-ors-apikey"></span><h2>Apply for ORS API key<a class="headerlink" href="#apply-for-ors-api-key" title="Link to this heading">¶</a></h2>
 <p>OpenRouteService (ORS) is currently the suggested data provider for VeRoViz. It uses data from OpenStreetMaps. ORS offers a free API key with a generous daily query limit. ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in May, 2020).</p>
 <p>Register for a free ORS API key here: <a class="reference external" href="https://openrouteservice.org/dev/#/signup">https://openrouteservice.org/dev/#/signup</a>.</p>
-</div>
-<div class="section" id="apply-for-mapquest-api-key">
-<span id="apply-for-mapquest-apikey"></span><h2>Apply for MapQuest API key<a class="headerlink" href="#apply-for-mapquest-api-key" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="apply-for-mapquest-api-key">
+<span id="apply-for-mapquest-apikey"></span><h2>Apply for MapQuest API key<a class="headerlink" href="#apply-for-mapquest-api-key" title="Link to this heading">¶</a></h2>
 <p>MapQuest is a commercial data source, but users may issue a limited number of requests for free. You may apply for a MapQuest API key here: <a class="reference external" href="https://developer.mapquest.com/documentation">https://developer.mapquest.com/documentation</a>.</p>
 <p>MapQuest provides perhaps the most detailed results of the data providers. However, keep in mind that the free API key has a monthly limit on the number of queries.</p>
-</div>
-<div class="section" id="apply-for-openweathermap-api-key">
-<span id="apply-for-openweathermap-apikey"></span><h2>Apply for OpenWeatherMap API key<a class="headerlink" href="#apply-for-openweathermap-api-key" title="Permalink to this headline">¶</a></h2>
+<p>(Updated 2025-09-15) MapQuest now requires a credit card to obtain an API key.  VeRoViz will begin phasing out support for the MapQuest API in future releases.</p>
+</section>
+<section id="apply-for-openweathermap-api-key">
+<span id="apply-for-openweathermap-apikey"></span><h2>Apply for OpenWeatherMap API key<a class="headerlink" href="#apply-for-openweathermap-api-key" title="Link to this heading">¶</a></h2>
 <p>OWM provides current, forecast, and historical weather data, as well as map overlays for Leaflet.  Support for OWM integration is available in VeRoViz version 0.4.0.</p>
 <p>You may register for a free API key at <a class="reference external" href="https://openweathermap.org/api">https://openweathermap.org/api</a>.</p>
-</div>
-<div class="section" id="apply-for-elevation-api-key">
-<span id="apply-for-elevationapi-key"></span><h2>Apply for Elevation-API key<a class="headerlink" href="#apply-for-elevation-api-key" title="Permalink to this headline">¶</a></h2>
-<p>Elevation-API provides elevation data for practically any location on the globe.  Elevations at 5km resolutions are available for free; higher-resolution data may be obtained for a nominal fee. Support for Elevation-API integration is available in VeRoViz version 0.4.0.</p>
-<p>You may register for a free API key at <a class="reference external" href="https://elevation-api.io">https://elevation-api.io</a>.</p>
-</div>
-</div>
+</section>
+<section id="apply-for-elevation-api-key">
+<span id="apply-for-elevationapi-key"></span><h2>Apply for Elevation-API key<a class="headerlink" href="#apply-for-elevation-api-key" title="Link to this heading">¶</a></h2>
+<p>(Updated 2025-09-15) Elevation-API (formerly <a class="reference external" href="https://elevation-api.io">https://elevation-api.io</a>) has been replaced by Open-Elevation (<a class="reference external" href="https://open-elevation.com">https://open-elevation.com</a>), which does not require an API key.</p>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -144,12 +151,13 @@
         <li class="right" >
           <a href="index.html" title="Welcome to veroviz’s documentation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Install Dependencies</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

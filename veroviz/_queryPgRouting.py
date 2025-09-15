@@ -308,11 +308,11 @@ def pgrGetTimeDist(fromLocs, toLocs, databaseName):
 
 	Parameters
 	----------
-	fromLoc: list, Conditional
+	fromLocs: list, Conditional
 		Used in 'one2many' mode. To state the coordinate of the starting node
 	locs: list of lists
 		Used in 'all2all', 'one2many', 'many2one' modes. A list of coordinates, in the format of [[lat1, lon1], [lat2, lon2], ...]
-	toLoc: list, Conditional
+	toLocs: list, Conditional
 		Used in 'many2one' mode. To state the coordinate of the ending node
 	databaseName: string	
 		If you are hosting a data provider on your local machine (e.g., pgRouting), you'll need to specify the name of the local database. 

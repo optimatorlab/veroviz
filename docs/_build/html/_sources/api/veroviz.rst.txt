@@ -1,0 +1,117 @@
+veroviz package
+===============
+
+Submodules
+----------
+
+veroviz.createAssignments module
+--------------------------------
+
+.. automodule:: veroviz.createAssignments
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.createCesium module
+---------------------------
+
+.. automodule:: veroviz.createCesium
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.createLeaflet module
+----------------------------
+
+.. automodule:: veroviz.createLeaflet
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.generateArcs module
+---------------------------
+
+.. automodule:: veroviz.generateArcs
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.generateNodes module
+----------------------------
+
+.. automodule:: veroviz.generateNodes
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.getShapepoints2D module
+-------------------------------
+
+.. automodule:: veroviz.getShapepoints2D
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.getShapepoints3D module
+-------------------------------
+
+.. automodule:: veroviz.getShapepoints3D
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.getTimeDist2D module
+----------------------------
+
+.. automodule:: veroviz.getTimeDist2D
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.getTimeDist3D module
+----------------------------
+
+.. automodule:: veroviz.getTimeDist3D
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.getTimeDistScalar2D module
+----------------------------------
+
+.. automodule:: veroviz.getTimeDistScalar2D
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.getTimeDistScalar3D module
+----------------------------------
+
+.. automodule:: veroviz.getTimeDistScalar3D
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.snapNodesToRoad module
+------------------------------
+
+.. automodule:: veroviz.snapNodesToRoad
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+veroviz.utilities module
+------------------------
+
+.. automodule:: veroviz.utilities
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: veroviz
+   :members:
+   :show-inheritance:
+   :undoc-members:

@@ -26,7 +26,7 @@ def privGetElevationLocs(locs, dataProvider, dataProviderArgs):
 		locsWithAlt = usgsGetElevation(locs)
 		return locsWithAlt
 	elif (elevDataProviderDictionary[dataProvider] == 'elevapi'):
-		locsWithAlt = elevapiGetElevation(locs, dataProviderArgs['APIkey'])
+		locsWithAlt = elevapiGetElevation(locs)
 		return locsWithAlt
 
 

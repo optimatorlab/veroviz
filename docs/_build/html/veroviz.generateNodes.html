@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.generateNodes module &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>veroviz.generateNodes module &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="_static/documentation_options.js?v=03f3338f"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="veroviz.getShapepoints2D module" href="veroviz.getShapepoints2D.html" />
@@ -23,7 +22,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,19 +37,35 @@
         <li class="right" >
           <a href="veroviz.generateArcs.html" title="veroviz.generateArcs module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="veroviz.html" accesskey="U">veroviz package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.generateNodes module</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="veroviz.generateArcs.html"
-                        title="previous chapter">veroviz.generateArcs module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="veroviz.getShapepoints2D.html"
-                        title="next chapter">veroviz.getShapepoints2D module</a></p>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">veroviz.generateNodes module</a><ul>
+<li><a class="reference internal" href="#veroviz.generateNodes.createNodesFromLocs"><code class="docutils literal notranslate"><span class="pre">createNodesFromLocs()</span></code></a></li>
+<li><a class="reference internal" href="#veroviz.generateNodes.generateNodes"><code class="docutils literal notranslate"><span class="pre">generateNodes()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="veroviz.generateArcs.html"
+                          title="previous chapter">veroviz.generateArcs module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="veroviz.getShapepoints2D.html"
+                          title="next chapter">veroviz.getShapepoints2D module</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -58,16 +73,16 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -76,16 +91,16 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-veroviz.generateNodes">
-<span id="veroviz-generatenodes-module"></span><h1>veroviz.generateNodes module<a class="headerlink" href="#module-veroviz.generateNodes" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="veroviz.generateNodes.createNodesFromLocs">
-<code class="sig-name descname">createNodesFromLocs</code><span class="sig-paren">(</span><em class="sig-param">locs=None</em>, <em class="sig-param">initNodes=None</em>, <em class="sig-param">nodeType=None</em>, <em class="sig-param">nodeName=None</em>, <em class="sig-param">startNode=1</em>, <em class="sig-param">incrementName=False</em>, <em class="sig-param">incrementStart=1</em>, <em class="sig-param">snapToRoad=False</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">leafletIconPrefix='glyphicon'</em>, <em class="sig-param">leafletIconType='info-sign'</em>, <em class="sig-param">leafletColor='blue'</em>, <em class="sig-param">leafletIconText=None</em>, <em class="sig-param">cesiumIconType='pin'</em>, <em class="sig-param">cesiumColor='blue'</em>, <em class="sig-param">cesiumIconText=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#createNodesFromLocs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateNodes.createNodesFromLocs" title="Permalink to this definition">¶</a></dt>
+  <section id="module-veroviz.generateNodes">
+<span id="veroviz-generatenodes-module"></span><h1>veroviz.generateNodes module<a class="headerlink" href="#module-veroviz.generateNodes" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="veroviz.generateNodes.createNodesFromLocs">
+<span class="sig-name descname"><span class="pre">createNodesFromLocs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initNodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startNode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incrementName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incrementStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapToRoad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataProvider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataProviderArgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popupText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletIconPrefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'glyphicon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletIconType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info-sign'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletIconText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cesiumIconType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cesiumColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cesiumIconText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#createNodesFromLocs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#veroviz.generateNodes.createNodesFromLocs" title="Link to this definition">¶</a></dt>
 <dd><p>This function generates a “nodes” dataframe from a given collection of [lat, lon], or [lat, lon, alt], coordinates.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>locs</strong> (<em>list of lists</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – A list of locations, in the form of [[lat, lon, alt], [lat, lon, alt], …] or [[lat, lon], [lat, lon], …].  If no altitudes are provided, all will be assumed to be 0 meters above ground level.</p></li>
+<li><p><strong>locs</strong> (<em>list</em><em> of </em><em>lists</em><em>, </em><em>Required</em><em>, </em><em>default as None</em>) – A list of locations, in the form of [[lat, lon, alt], [lat, lon, alt], …] or [[lat, lon], [lat, lon], …].  If no altitudes are provided, all will be assumed to be 0 meters above ground level.</p></li>
 <li><p><strong>initNodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Optional, default as None) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe containing an existing set of nodes. If <cite>initNodes</cite> is provided, this function will append to that dataframe.</p></li>
 <li><p><strong>nodeType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A user-defined text field that can be used to classify nodes. This field is to categorize a batch of nodes (e.g., “warehouses”). If provided, all nodes generated by the <cite>generateNodes()</cite> function call will be given this value. The nodeType is not used by VeRoViz explicitly.</p></li>
 <li><p><strong>nodeName</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – The name of all nodes that are to be generated by this function call. This field is a more detailed description (e.g., “Buffalo WH” or “Berlin WH”). The nodeName is not used by VeRoViz explicitly.  If provided, all nodes will use this nodeName.  See the <cite>incrementName</cite> flag below.</p></li>
@@ -105,21 +120,21 @@
 <li><p><strong>cesiumIconText</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – Text that will be permanently displayed within the node on a Cesium map. If this field is None, in Cesium the node will be displayed with the <cite>id</cite> value.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe generated from the given list of coordinates.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <dl>
-<dt>Import veroviz and check if it is the latest version:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<dt>Import veroviz and check if it is the latest version:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">veroviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vrv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd>
-<dt>Generate nodes from a list of [lat, lon] pairs (no altitude specified):</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodes2D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<dt>Generate nodes from a list of [lat, lon] pairs (no altitude specified):</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodes2D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">locs</span><span class="o">=</span><span class="p">[</span>
 <span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
 <span class="gp">... </span>        <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
@@ -128,7 +143,7 @@
 </pre></div>
 </div>
 </dd>
-<dt>Generate nodes from a list of [lat, lon, alt] pairs:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodes3D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
+<dt>Generate nodes from a list of [lat, lon, alt] pairs:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nodes3D</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">locs</span><span class="o">=</span><span class="p">[</span>
 <span class="gp">... </span>        <span class="p">[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
 <span class="gp">... </span>        <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span>
@@ -137,7 +152,7 @@
 </pre></div>
 </div>
 </dd>
-<dt>This example includes all function arguments:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myLocs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
+<dt>This example includes all function arguments:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myLocs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.1538</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.4253</span><span class="p">],</span>
 <span class="gp">... </span>          <span class="p">[</span><span class="mf">42.3465</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.6234</span><span class="p">],</span>
 <span class="gp">... </span>          <span class="p">[</span><span class="mf">42.6343</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.1146</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createNodesFromLocs</span><span class="p">(</span>
@@ -163,19 +178,19 @@
 </pre></div>
 </div>
 </dd>
-<dt>Display the nodes on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes2D</span><span class="p">)</span>
+<dt>Display the nodes on a Leaflet map:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes2D</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="veroviz.generateNodes.generateNodes">
-<code class="sig-name descname">generateNodes</code><span class="sig-paren">(</span><em class="sig-param">initNodes=None</em>, <em class="sig-param">nodeType=None</em>, <em class="sig-param">nodeName=None</em>, <em class="sig-param">numNodes=None</em>, <em class="sig-param">startNode=1</em>, <em class="sig-param">incrementName=False</em>, <em class="sig-param">incrementStart=1</em>, <em class="sig-param">nodeDistrib=None</em>, <em class="sig-param">nodeDistribArgs=None</em>, <em class="sig-param">snapToRoad=False</em>, <em class="sig-param">popupText=None</em>, <em class="sig-param">leafletIconPrefix='glyphicon'</em>, <em class="sig-param">leafletIconType='info-sign'</em>, <em class="sig-param">leafletColor='blue'</em>, <em class="sig-param">leafletIconText=None</em>, <em class="sig-param">cesiumIconType='pin'</em>, <em class="sig-param">cesiumColor='blue'</em>, <em class="sig-param">cesiumIconText=None</em>, <em class="sig-param">dataProvider=None</em>, <em class="sig-param">dataProviderArgs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#generateNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#veroviz.generateNodes.generateNodes" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="veroviz.generateNodes.generateNodes">
+<span class="sig-name descname"><span class="pre">generateNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initNodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numNodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startNode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incrementName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incrementStart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeDistrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodeDistribArgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snapToRoad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popupText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletIconPrefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'glyphicon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletIconType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info-sign'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leafletIconText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cesiumIconType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cesiumColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cesiumIconText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataProvider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataProviderArgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/veroviz/generateNodes.html#generateNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#veroviz.generateNodes.generateNodes" title="Link to this definition">¶</a></dt>
 <dd><p>This function generates a collection of nodes (locations).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>initNodes</strong> (<a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a>, Optional, default as None) – A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe containing an existing set of nodes. If <cite>initNodes</cite> is provided, this function will append to that dataframe.</p></li>
 <li><p><strong>nodeType</strong> (<em>string</em><em>, </em><em>Optional</em><em>, </em><em>default as None</em>) – A user-defined text field that can be used to classify nodes. This field is to categorize a batch of nodes (e.g., “warehouses”). If provided, all nodes generated by the <cite>generateNodes()</cite> function call will be given this value. The nodeType is not used by VeRoViz explicitly.</p></li>
@@ -199,10 +214,10 @@
 <li><p><strong>dataProviderArgs</strong> (<em>dictionary</em><em>, </em><em>Conditional</em><em>, </em><em>default as None</em>) – For some data providers, additional parameters are required (e.g., API keys or database names). See <a class="reference internal" href="dataproviders.html#data-providers"><span class="std std-ref">Data Providers</span></a> for the additional arguments required for each supported data provider.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a> dataframe of generated nodes.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="nodes.html#nodes"><span class="std std-ref">Nodes</span></a></p>
 </dd>
 </dl>
@@ -210,10 +225,6 @@
 <p class="admonition-title">Note</p>
 <p>VeRoViz currently supports the following distribution options.  For each distribution, specific additional parameters (arguments) must be provided in the <cite>nodeDistribArgs</cite> Python dictionary.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 67%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p><cite>nodeDistrib</cite> Option</p></th>
 <th class="head"><p>Keys in <cite>nodeDistribArgs</cite> Dictionary</p></th>
@@ -284,12 +295,12 @@ generated location and its nearest road.</p></td>
 </div>
 <p class="rubric">Examples</p>
 <dl>
-<dt>First import veroviz and check if it is the latest version:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">veroviz</span> <span class="k">as</span> <span class="nn">vrv</span>
+<dt>First import veroviz and check if it is the latest version:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">veroviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vrv</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vrv</span><span class="o">.</span><span class="n">checkVersion</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd>
-<dt>This first example will generate 20 nodes, normally distributed. The distribution is centered at lat 42.30, lon 78.00. The distribution has a standard deviation of 1000 meters.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<dt>This first example will generate 20 nodes, normally distributed. The distribution is centered at lat 42.30, lon 78.00. The distribution has a standard deviation of 1000 meters.</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">numNodes</span>        <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeType</span>        <span class="o">=</span> <span class="s1">&#39;depot&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeDistrib</span>     <span class="o">=</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
@@ -301,7 +312,7 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>View the center point, 1 std dev, 3 std devs, and resulting nodes on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span>      <span class="o">=</span> <span class="p">[</span><span class="mf">42.30</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
+<dt>View the center point, 1 std dev, 3 std devs, and resulting nodes on a Leaflet map:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span>      <span class="o">=</span> <span class="p">[</span><span class="mf">42.30</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
 <span class="gp">... </span>                             <span class="n">fillOpacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletCircle</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap</span><span class="p">,</span>
 <span class="gp">... </span>                             <span class="n">center</span>    <span class="o">=</span> <span class="p">[</span><span class="mf">42.30</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.00</span><span class="p">],</span>
@@ -316,7 +327,7 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>The following examples require a bounding region. For example:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bounding</span> <span class="o">=</span> <span class="p">[</span>
+<dt>The following examples require a bounding region. For example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bounding</span> <span class="o">=</span> <span class="p">[</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">42.98355351219673</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.90518188476564</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">43.04731443361136</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.83857727050783</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">43.02221961002041</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.7108612060547</span><span class="p">],</span>
@@ -328,7 +339,7 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>The second example will give us 20 nodes, normally-distributed, centered at [42.30, 78.00], with a standard deviation of 2000 meters about the center.  However, the nodes must also fall within the bounding region.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<dt>The second example will give us 20 nodes, normally-distributed, centered at [42.30, 78.00], with a standard deviation of 2000 meters about the center.  However, the nodes must also fall within the bounding region.</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">numNodes</span>        <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeType</span>        <span class="o">=</span> <span class="s1">&#39;depot&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeDistrib</span>     <span class="o">=</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
@@ -341,7 +352,7 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>View the center point, 1 std dev, 3 std devs, bounding region, and resulting nodes on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span>      <span class="o">=</span> <span class="p">[</span><span class="mf">42.90</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
+<dt>View the center point, 1 std dev, 3 std devs, bounding region, and resulting nodes on a Leaflet map:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletMarker</span><span class="p">(</span><span class="n">center</span>      <span class="o">=</span> <span class="p">[</span><span class="mf">42.90</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
 <span class="gp">... </span>                              <span class="n">fillOpacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap2</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">addLeafletCircle</span><span class="p">(</span><span class="n">mapObject</span> <span class="o">=</span> <span class="n">myMap2</span><span class="p">,</span>
 <span class="gp">... </span>                              <span class="n">center</span>    <span class="o">=</span> <span class="p">[</span><span class="mf">42.90</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">],</span>
@@ -357,7 +368,7 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>The third example will generate 20 nodes uniformly distributed in a given bounding region:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes3</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<dt>The third example will generate 20 nodes uniformly distributed in a given bounding region:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes3</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">numNodes</span>        <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeDistrib</span>     <span class="o">=</span> <span class="s1">&#39;uniformBB&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeDistribArgs</span> <span class="o">=</span> <span class="p">{</span>
@@ -367,13 +378,13 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>View the bounding region and generated nodes on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap3</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span>          <span class="o">=</span> <span class="n">myNodes3</span><span class="p">,</span>
+<dt>View the bounding region and generated nodes on a Leaflet map:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap3</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span>          <span class="o">=</span> <span class="n">myNodes3</span><span class="p">,</span>
 <span class="gp">... </span>                           <span class="n">boundingRegion</span> <span class="o">=</span> <span class="n">bounding</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap3</span>
 </pre></div>
 </div>
 </dd>
-<dt>The final example includes all available function arguments:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes4</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
+<dt>The final example includes all available function arguments:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myNodes4</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">generateNodes</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">initNodes</span>         <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeType</span>          <span class="o">=</span> <span class="s1">&#39;warehouse&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">nodeName</span>          <span class="o">=</span> <span class="s1">&#39;WH &#39;</span><span class="p">,</span>
@@ -400,7 +411,7 @@ generated location and its nearest road.</p></td>
 </pre></div>
 </div>
 </dd>
-<dt>View the bounding region and generated nodes on a Leaflet map:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap4</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span>          <span class="o">=</span> <span class="n">myNodes4</span><span class="p">,</span>
+<dt>View the bounding region and generated nodes on a Leaflet map:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myMap4</span> <span class="o">=</span> <span class="n">vrv</span><span class="o">.</span><span class="n">createLeaflet</span><span class="p">(</span><span class="n">nodes</span>          <span class="o">=</span> <span class="n">myNodes4</span><span class="p">,</span>
 <span class="gp">... </span>                           <span class="n">boundingRegion</span> <span class="o">=</span> <span class="n">bounding</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myMap4</span>
 </pre></div>
@@ -409,15 +420,16 @@ generated location and its nearest road.</p></td>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -432,14 +444,15 @@ generated location and its nearest road.</p></td>
         <li class="right" >
           <a href="veroviz.generateArcs.html" title="veroviz.generateArcs module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >veroviz</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="veroviz.html" >veroviz package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.generateNodes module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

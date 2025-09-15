@@ -158,14 +158,14 @@ def getTimeDist3D(nodes=None, matrixType='all2all', fromNodeID=None, toNodeID=No
 	toLocs = []
 	for i in range(0, len(fromIDs)):
 		fromLocs.append([
-			float(nodes.loc[nodes['id'] == fromIDs[i], 'lat']), 
-			float(nodes.loc[nodes['id'] == fromIDs[i], 'lon']), 
-			float(nodes.loc[nodes['id'] == fromIDs[i], 'altMeters'])])
+			float(nodes.loc[nodes['id'] == fromIDs[i], 'lat'].item()), 
+			float(nodes.loc[nodes['id'] == fromIDs[i], 'lon'].item()), 
+			float(nodes.loc[nodes['id'] == fromIDs[i], 'altMeters'].item())])
 	for i in range(0, len(toIDs)):
 		toLocs.append([
-			float(nodes.loc[nodes['id'] == toIDs[i], 'lat']), 
-			float(nodes.loc[nodes['id'] == toIDs[i], 'lon']), 
-			float(nodes.loc[nodes['id'] == toIDs[i], 'altMeters'])])
+			float(nodes.loc[nodes['id'] == toIDs[i], 'lat'].item()), 
+			float(nodes.loc[nodes['id'] == toIDs[i], 'lon'].item()), 
+			float(nodes.loc[nodes['id'] == toIDs[i], 'altMeters'].item())])
 
 	# Do queries to find DICTIONARIES of distance and time matrices
 	totalTimeSec = {}

@@ -91,7 +91,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> shapepoints3D_1 = vrv.getShapepoints3D(
 		...     odID               = 1,
 		...     objectID           = 'square flight', 
-		...     modelFile          = '/veroviz/models/drone.gltf',
+		...     modelFile          = '/veroviz/models/drone.glb',
 		...     startLoc           = [42.80, -78.80],
 		...     endLoc             = [42.80, -78.77],
 		...     cruiseAltMetersAGL = 220,
@@ -109,7 +109,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> shapepoints3D_2 = vrv.getShapepoints3D(
 		...     odID               = 2,
 		...     objectID           = 'straight flight', 
-		...     modelFile          = '/veroviz/models/drone.gltf',
+		...     modelFile          = '/veroviz/models/drone.glb',
 		...     startLoc           = [42.80, -78.80],
 		...     endLoc             = [42.80, -78.77, 219],
 		...     cruiseAltMetersAGL = None,
@@ -127,7 +127,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> shapepoints3D_3a = vrv.getShapepoints3D(
 		...     odID               = 3,
 		...     objectID           = 'trapezoid a', 
-		...     modelFile          = '/veroviz/models/drone.gltf',
+		...     modelFile          = '/veroviz/models/drone.glb',
 		...     startLoc           = [42.80, -78.80],
 		...     endLoc             = [42.80, -78.77],
 		...     cruiseAltMetersAGL = 220,
@@ -143,7 +143,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> shapepoints3D_3b = vrv.getShapepoints3D(
 		...     odID               = 4,
 		...     objectID           = 'trapezoid b', 
-		...     modelFile          = '/veroviz/models/drone.gltf',
+		...     modelFile          = '/veroviz/models/drone.glb',
 		...     startLoc           = [42.80, -78.80],
 		...     endLoc             = [42.80, -78.77],
 		...     cruiseAltMetersAGL = 220,
@@ -162,7 +162,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> shapepoints3D_4 = vrv.getShapepoints3D(
 		...     odID               = 5,
 		...     objectID           = 'triangle', 
-		...     modelFile          = '/veroviz/models/drone.gltf',
+		...     modelFile          = '/veroviz/models/drone.glb',
 		...     startLoc           = [42.80, -78.80],
 		...     endLoc             = [42.80, -78.77],
 		...     cruiseAltMetersAGL = 220,
@@ -183,9 +183,11 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> # Initialize an empty "assignments" dataframe:
 		>>> assignmentsDF = vrv.initDataframe('assignments')
 
-		>>> # Append to the assignments dataframe.
+		>>> # Initialize an "assignments" dataframe:
 		>>> # The assignments dataframe will hold all shapepoints for all vehicles.
-		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_1], ignore_index=True, sort=False)
+		>>> assignmentsDF = pd.DataFrame(shapepoints3D_1, columns = vrv.initDataframe('assignments').columns)
+		
+		>>> # Append to the assignments dataframe.
 		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_2], ignore_index=True, sort=False)
 		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_3a], ignore_index=True, sort=False)
 		>>> assignmentsDF = pd.concat([assignmentsDF, shapepoints3D_3b], ignore_index=True, sort=False)
@@ -203,7 +205,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> shapepoints3D = vrv.getShapepoints3D(
 		...     odID               = 1,
 		...     objectID           = 'drone', 
-		...     modelFile          = '/veroviz/models/drone.gltf', 
+		...     modelFile          = '/veroviz/models/drone.glb', 
 		...     startTimeSec       = 120.0, 
 		...     startLoc           = [42.80, -78.90], 
 		...     endLoc             = [42.85, -78.95], 
@@ -256,7 +258,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> truckShapepoints = vrv.getShapepoints2D(
 		...        odID             = 1,
 		...        objectID         = 'truck', 
-		...        modelFile        = 'veroviz/models/ub_truck.gltf', 
+		...        modelFile        = 'veroviz/models/ub_truck.glb', 
 		...        modelScale       = 100,
 		...        modelMinPxSize   = 75,
 		...        startTimeSec     = 0,
@@ -274,7 +276,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...    initAssignments = truckShapepoints, 
 		...    odID            = 1, 
 		...    objectID        = 'truck', 
-		...    modelFile       = 'veroviz/models/ub_truck.gltf', 
+		...    modelFile       = 'veroviz/models/ub_truck.glb', 
 		...    modelScale      = 100,
 		...    modelMinPxSize  = 75,
 		...    loc             = list(nodes[nodes['id']==3][['lat', 'lon']].values[0]), 
@@ -285,7 +287,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> droneShapepoints_1 = vrv.getShapepoints3D(
 		...        odID               = 2,
 		...        objectID           = 'drone', 
-		...        modelFile          = '/veroviz/models/drone.gltf',
+		...        modelFile          = '/veroviz/models/drone.glb',
 		...        startTimeSec       = 0,
 		...        startLoc           = list(nodes[nodes['id']==1][['lat', 'lon']].values[0]),
 		...        endLoc             = list(nodes[nodes['id']==2][['lat', 'lon']].values[0]),
@@ -303,7 +305,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		>>> droneShapepoints_2 = vrv.getShapepoints3D(
 		...        odID               = 2,
 		...        objectID           = 'drone', 
-		...        modelFile          = '/veroviz/models/drone.gltf',
+		...        modelFile          = '/veroviz/models/drone.glb',
 		...        startTimeSec       = max(droneShapepoints_1['endTimeSec']),
 		...        startLoc           = list(nodes[nodes['id']==2][['lat', 'lon']].values[0]),
 		...        endLoc             = list(nodes[nodes['id']==3][['lat', 'lon']].values[0]),
@@ -318,10 +320,7 @@ def getShapepoints3D(odID=1, objectID=None, modelFile=None, startTimeSec=0.0, st
 		...        loiterPosition     = 'arrivalAtAlt',
 		...        cesiumColor        = 'orange')
 		
-		>>> # Initialize an empty "assignments" dataframe:
-		>>> assignmentsDF = vrv.initDataframe('assignments')
-
-		>>> # Append to the assignments dataframe.
+		>>> # Create an assignments dataframe.
 		>>> # The assignments dataframe will hold all shapepoints for both vehicles.
 		>>> assignmentsDF = pd.concat([truckShapepoints, droneShapepoints_1, droneShapepoints_2], 
 		...                          ignore_index=True, sort=False)
