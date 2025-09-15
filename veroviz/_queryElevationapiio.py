@@ -1,33 +1,37 @@
 from veroviz._common import *
 
-def elevapiGetElevation(locs, APIkey):
+def elevapiGetElevation(locs):
 	"""
-	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  See https://elevation-api.io for more info.
-
+	Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.
+	See https://github.com/Jorl17/open-elevation/blob/master/docs/api.md for more info.
+	No API key is required.
+	
 	Parameters
 	----------
 	locs: list of lists, Required, default as None
 		A list of one or more GPS coordinate of the form [[lat, lon], ...] or [[lat, lon, alt], ...].  If altitude is included in locs, the function will add the elevation to the input altitude.  Otherwise, the input altitude will be assumed to be 0.
-	APIkey: string
-		Enables access to ORS server.
 	
 	Return
 	------
 	list of lists, of the form [[lat, lon, altMSL], [lat, lon, altMSL], ..., [lat, lon, altMSL]].
 	"""
     
-    
-	elevUrl = ('https://elevation-api.io/api/elevation')
-	points = []
+    # Old:
+	# elevUrl = ('https://elevation-api.io/api/elevation')
+
+	# 2025-09-13.  See https://github.com/Jorl17/open-elevation/blob/master/docs/api.md
+	elevUrl = 'https://api.open-elevation.com/api/v1/lookup'
+
+	locations = []
 	for i in range(0, len(locs)):
-		points.append([locs[i][0], locs[i][1]])
+		locations.append({"latitude": locs[i][0], 
+						  "longitude": locs[i][1]})
 
 	encoded_body = json.dumps({
-		"points": points})
+		"locations": locations})
 	
 	headers = {
 				'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-				'Authorization': APIkey,
 				'Content-Type': 'application/json'}
 
 	try:
@@ -42,10 +46,10 @@ def elevapiGetElevation(locs, APIkey):
 		
 		if (http_status == 200):
 			# OK			
-			for i in range(0, len(data['elevations'])):
-				lat = data['elevations'][i]['lat']
-				lon = data['elevations'][i]['lon']
-				alt = data['elevations'][i]['elevation']
+			for i in range(0, len(data['results'])):
+				lat = data['results'][i]['latitude']
+				lon = data['results'][i]['longitude']
+				alt = data['results'][i]['elevation']
 				
 				if (len(locs[i]) > 2):
 					alt += locs[i][2]

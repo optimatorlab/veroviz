@@ -78,7 +78,7 @@ def createCesium(assignments=None, nodes=None, startDate=None, startTime='08:00:
 		>>> myAssignments = vrv.getShapepoints2D(
 		...     odID           = 0,
 		...     objectID       = 'truck',
-		...     modelFile      = 'veroviz/models/ub_truck.gltf',
+		...     modelFile      = 'veroviz/models/ub_truck.glb',
 		...     modelScale     = 80, 
 		...     modelMinPxSize = 20, 
 		...     startLoc       = list(myNodes.loc[0][['lat', 'lon']].values),
@@ -263,8 +263,8 @@ def _writeConfigs(mapBoundary, availStart, path, fullDir, problemDir):
 	# The hierarchy is: objectID (one) - modelID (many), modelID (one) - child model (many)
 	# E.g., For drones
 	# objectID - UAV, 
-	# model - UAV-drone.gltf; UAV-drone_package.gltf, 
-	# child model - 'o-UAV-drone_package.gltf-move'; 'o-UAV-drone_package.gltf-vertical'; 'o-UAV-drone_package.gltf-stationary'
+	# model - UAV-drone.glb; UAV-drone_package.glb, 
+	# child model - 'o-UAV-drone_package.glb-move'; 'o-UAV-drone_package.glb-vertical'; 'o-UAV-drone_package.glb-stationary'
 	objectIDs = list(dict.fromkeys(path['objectID'].tolist()))
 	for i in range(len(objectIDs)):
 		models = list(dict.fromkeys(path.loc[path['objectID'] == objectIDs[i], 'modelFile'].tolist()))

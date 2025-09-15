@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <title>Data Providers &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data Providers &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="_static/documentation_options.js?v=03f3338f"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Dataframes" href="dataframes.html" />
@@ -23,7 +22,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -38,13 +37,15 @@
         <li class="right" >
           <a href="install.html" title="Install Dependencies"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Data Providers</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Data Providers</a><ul>
 <li><a class="reference internal" href="#none">None</a></li>
 <li><a class="reference internal" href="#pgrouting-pgr">pgRouting (pgr)</a></li>
@@ -57,12 +58,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="install.html"
-                        title="previous chapter">Install Dependencies</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="dataframes.html"
-                        title="next chapter">Dataframes</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="install.html"
+                          title="previous chapter">Install Dependencies</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="dataframes.html"
+                          title="next chapter">Dataframes</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -70,16 +76,16 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -88,23 +94,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="data-providers">
-<span id="id1"></span><h1>Data Providers<a class="headerlink" href="#data-providers" title="Permalink to this headline">¶</a></h1>
+  <section id="data-providers">
+<span id="id1"></span><h1>Data Providers<a class="headerlink" href="#data-providers" title="Link to this heading">¶</a></h1>
 <p><em>VeRoViz</em> supports the use of several data providers for querying travel directions, travel time/distance matrices, and snapping nodes to a road network.  Integration with additional data providers is planned for a future <em>VeRoViz</em> release.</p>
 <p>Functions that employ data from these providers require specification of the <cite>dataProvider</cite> itself, as well as additional arguments that are unique to the chosen <cite>dataProvider</cite> (e.g., an <cite>APIkey</cite> or a <cite>databaseName</cite>).  The <cite>routeType</cite> field can be used to differentiate between a ‘fastest’ route, a ‘shortest’ route, ‘pedestrian’ routes, etc.</p>
 <p>The following table summarizes the options and requirements for each data provider currently supported by <em>VeRoViz</em>:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 18%" />
-<col style="width: 6%" />
-<col style="width: 6%" />
-<col style="width: 5%" />
-<col style="width: 0%" />
-<col style="width: 15%" />
-<col style="width: 15%" />
-<col style="width: 14%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head" colspan="9"><p><cite>dataProvider</cite> field options</p></th>
 </tr>
@@ -256,12 +251,12 @@ options</p></td>
 </tbody>
 </table>
 <p>Additionally, starting in version 0.4.0, VeRoViz supports integration with OpenWeatherMap and Elevation-API.  See the bottom of this page for more information on these two data providers.</p>
-<div class="section" id="none">
-<h2>None<a class="headerlink" href="#none" title="Permalink to this headline">¶</a></h2>
+<section id="none">
+<h2>None<a class="headerlink" href="#none" title="Link to this heading">¶</a></h2>
 <p>No data provider is chosen. Nodes and arcs are generated without consideration of any underlying road networks. Only simple types of node distributions or route types can be applied without a data provider.</p>
-</div>
-<div class="section" id="pgrouting-pgr">
-<h2>pgRouting (pgr)<a class="headerlink" href="#pgrouting-pgr" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="pgrouting-pgr">
+<h2>pgRouting (pgr)<a class="headerlink" href="#pgrouting-pgr" title="Link to this heading">¶</a></h2>
 <p>pgRouting is an open-source database application that must be installed locally on the user’s computer.  You will need to <a class="reference internal" href="install.html#install-pgrouting"><span class="std std-ref">Install pgRouting</span></a> before
 using related functions.</p>
 <p>We recommend that users update their local pgRouting database frequently, as the source data (from OpenStreetMap) changes over time.</p>
@@ -270,44 +265,45 @@ from <code class="xref py py-meth docutils literal notranslate"><span class="pre
 to cover the region of interest. VeRoViz can not calculate the coordinates outside
 the boundary of pgRouting data.</p>
 <p>See the <a class="reference external" href="http://docs.pgrouting.org/latest/en/index.html">pgRouting documentation</a> for more details.</p>
-</div>
-<div class="section" id="mapquest-mq">
-<h2>MapQuest (mq)<a class="headerlink" href="#mapquest-mq" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="mapquest-mq">
+<h2>MapQuest (mq)<a class="headerlink" href="#mapquest-mq" title="Link to this heading">¶</a></h2>
 <p>MapQuest is a commercial data source, but users may issue a limited number of requests for free.  You will need to <a class="reference internal" href="install.html#apply-for-mapquest-apikey"><span class="std std-ref">Apply for MapQuest API key</span></a>
 before using related functions.  MapQuest provides perhaps the most detailed results of the data providers.  However, keep in mind that the free API key has a monthly limit on the number of queries.</p>
 <p>See the <a class="reference external" href="https://developer.mapquest.com/documentation/">MapQuest documentation</a> for more details.</p>
-</div>
-<div class="section" id="osrm">
-<h2>OSRM<a class="headerlink" href="#osrm" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="osrm">
+<h2>OSRM<a class="headerlink" href="#osrm" title="Link to this heading">¶</a></h2>
 <p>The Open Source Routing Machine is available via both an online API (in which case no installation is required) or as a local installation.  Currently, however, VeRoViz only supports the online API.</p>
 <p>For the online API, no API key is required.  Please note, though, that this API is hosted on a “demo” server, which is not intended for high-volume user requests.  It is recommended that users use OSRM only for small-scale testing/evaluation; please don’t overload the OSRM demo server with large-scale problems.  Be advised that excessive OSRM requests will often result in server timeouts.</p>
 <p>The routes and travel matrix data provided by OSRM are based on OpenStreetMaps.  OSRM’s results are typically less detailed than those provided by MapQuest.</p>
 <p>See the <a class="reference external" href="http://project-osrm.org/docs/v5.22.0/api/#general-options">OSRM documentation</a> for more details.</p>
-</div>
-<div class="section" id="ors">
-<h2>ORS<a class="headerlink" href="#ors" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="ors">
+<h2>ORS<a class="headerlink" href="#ors" title="Link to this heading">¶</a></h2>
 <p>OpenRouteService is currently the suggested data provider for VeRoViz.  Like OSRM, it uses data from OpenStreetMaps.  ORS offers a free API key with a generous daily query limit.  ORS also provides an open-source engine that can be installed locally, which VeRoViz now supports (as of version 0.4.0, in May, 2020).</p>
 <p>See the <a class="reference external" href="https://openrouteservice.org">ORS documentation</a> for more information.</p>
-</div>
-<div class="section" id="openweathermap-owm">
-<h2>OpenWeatherMap (OWM)<a class="headerlink" href="#openweathermap-owm" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="openweathermap-owm">
+<h2>OpenWeatherMap (OWM)<a class="headerlink" href="#openweathermap-owm" title="Link to this heading">¶</a></h2>
 <p>OWM provides current, forecast, and historical weather data, as well as map overlays for Leaflet.  Support for OWM integration is available in VeRoViz version 0.4.0.</p>
 <p>See the <a class="reference external" href="https://openweathermap.org/api.">OWM documentation</a> for more information.</p>
-</div>
-<div class="section" id="elevation-api">
-<h2>Elevation-API<a class="headerlink" href="#elevation-api" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="elevation-api">
+<h2>Elevation-API<a class="headerlink" href="#elevation-api" title="Link to this heading">¶</a></h2>
 <p>Elevation-API provides elevation data for practically any location on the globe.  Elevations at 5km resolutions are available for free; higher-resolution data may be obtained for a nominal fee. Support for Elevation-API integration is available in VeRoViz version 0.4.0.</p>
 <p>See the <a class="reference external" href="https://elevation-api.io.">Elevation-API documentation</a> for more information.</p>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -322,12 +318,13 @@ before using related functions.  MapQuest provides perhaps the most detailed res
         <li class="right" >
           <a href="install.html" title="Install Dependencies"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.5 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">veroviz 0.4.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Data Providers</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

@@ -23,14 +23,14 @@ from veroviz._geometry import geoDistance2D
 from veroviz._geometry import geoGetHeading
 from veroviz._geometry import geoPointInDistance2D
 
-foliumMaps = [
-	'cartodb positron', 
-	'cartodb dark_matter', 
-	'openstreetmap', 
-	'stamen terrain', 
-	'stamen toner', 
-	'stamen watercolor'
-]
+foliumMaps = {
+	'cartodb positron': {'attr': '&copy; CARTO'},  
+	'cartodb dark_matter':  {'attr': '&copy; CARTO'}, 
+	'openstreetmap':  {'attr': '&copy; OpenStreetMap contributors'},
+	'stamen terrain':  {'attr': '&copy; Stadia Maps &copy; Stamen Design &copy; OpenMapTiles &copy; OpenStreetMap contributors'},
+	'stamen toner':  {'attr': '&copy; Stadia Maps &copy; Stamen Design &copy; OpenMapTiles &copy; OpenStreetMap contributors'},
+	'stamen watercolor':  {'attr': '&copy; Stadia Maps &copy; Stamen Design &copy; OpenStreetMap contributors'}
+}
 
 weatherMaps = {
 	'clouds': {
@@ -338,7 +338,7 @@ def _createLeafletMap(mapBackground=config['VRV_DEFAULT_LEAFLET_MAPTILES'], cent
 	
 	# Add the chosen map background first:
 	if (mapBackground in foliumMaps):
-		folium.TileLayer(mapBackground).add_to(mapObject)
+		folium.TileLayer(mapBackground, attr=foliumMaps[mapBackground]['attr']).add_to(mapObject)
 	elif (mapBackground in customMaps):
 		folium.TileLayer(tiles=customMaps[mapBackground]['tiles'],
 						 attr=customMaps[mapBackground]['attr']).add_to(mapObject)

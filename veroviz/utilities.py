@@ -270,7 +270,7 @@ def calcPerimeter2D(path=None, closeLoop=False, distUnits='meters'):
 	Indicates whether the path should be closed (i.e., connecting the last location to the first).
 	distUnits: string, Optional, default as 'meters'
 	Specifies the desired distance units for the output. See :ref:`Units` for options.
-
+	
 	Returns
 	-------
 	float
@@ -1957,7 +1957,7 @@ def closestNode2Loc(loc=None, nodes=None):
 	elif (config['VRV_SETTING_SHOWWARNINGMESSAGE'] and warningMsg != ""):
 		print (warningMsg)
 
-	distMeters = float('Inf')
+	distMeters = sys.maxsize  # float('Inf')
 	minNodeID = None
 
 	for i in range(len(nodes)):
@@ -2538,10 +2538,10 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 
 	Define some information about our 2 vehicles, for use below:
 		>>> vehicleProperties = {
-		...     'drone': {'model': 'veroviz/models/drone.gltf',
+		...     'drone': {'model': 'veroviz/models/drone.glb',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...     'truck': {'model': 'veroviz/models/ub_truck.glb',
 		...               'leafletColor': 'blue',
 		...               'cesiumColor': 'blue'}
 		... }
@@ -2640,7 +2640,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 	uniqueIDs = list(asgnCopy['objectID'].unique())
 
 	# Replace "-1" end time with +infinity
-	asgnCopy.loc[asgnCopy['endTimeSec'] < 0, 'endTimeSec'] = float('Inf')
+	asgnCopy.loc[asgnCopy['endTimeSec'] < 0, 'endTimeSec'] = sys.maxsize  # float('Inf')
 
 	for objectID in uniqueIDs:
 		tmpAsgn = asgnCopy[(asgnCopy['objectID'] == objectID) & 
@@ -2664,7 +2664,7 @@ def findLocsAtTime(assignments=None, timeSec=0.0):
 				endTimeSec = tmpAsgn['endTimeSec'].at[id]
 
 				# Find percentage of time:
-				if (endTimeSec < float('Inf')):
+				if (endTimeSec < sys.maxsize):
 					pct = (timeSec - startTimeSec) / (endTimeSec - startTimeSec)
 				else:
 					pct = 0.0
@@ -3144,7 +3144,7 @@ def createGantt(assignments=None, objectIDorder=None, separateByModelFile=False,
 		>>> vehicleProperties = {
 		...     'car':   {'model': 'veroviz/models/car_red.gltf',
 		...               'color': 'red'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...     'truck': {'model': 'veroviz/models/ub_truck.glb',
 		...               'color': 'blue'}
 		>>> }
 
@@ -3382,11 +3382,9 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 		>>> import os
 		>>> 
 		>>> ORS_API_KEY = os.environ['ORSKEY']
-		>>> ELEVAPI_KEY = os.environ['ELEVAPIKEY']
 		>>> 
 		>>> # Otherwise, you may specify your keys here:
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
-		>>> # ELEVAPI_KEY = 'YOUR_ELEVATIONAPI_KEY_GOES_HERE'                     	
 
 	Define a set of locations:
 		>>> locs = [[42.8871085, -78.8731949],
@@ -3427,7 +3425,6 @@ def getElevationLocs(locs=None, dataProvider=None, dataProviderArgs=None):
 	Use Elevation-API:
 		>>> vrv.getElevationLocs(locs             = [[42.888, -78.864, 100]], 
 		...                      dataProvider     = 'elevapi',
-		...                      dataProviderArgs = {'APIkey': ELEVAPI_KEY})
 
 		[[42.888, -78.864, 292.0]]		 
 	"""
@@ -3479,11 +3476,9 @@ def getElevationDF(dataframe=None, replaceOnlyNone=True, dataProvider=None, data
 		>>> import os
 		>>> 
 		>>> ORS_API_KEY = os.environ['ORSKEY']
-		>>> ELEVAPI_KEY = os.environ['ELEVAPIKEY']
 		>>> 
 		>>> # Otherwise, you may specify your keys here:
 		>>> # ORS_API_KEY = 'YOUR_ORS_KEY_GOES_HERE'
-		>>> # ELEVAPI_KEY = 'YOUR_ELEVATIONAPI_KEY_GOES_HERE'                     	
 
 	Create a Nodes dataframe.  Note that, by default, there is no elevation data:
 		>>> myNodes = vrv.generateNodes(
@@ -3530,7 +3525,6 @@ def getElevationDF(dataframe=None, replaceOnlyNone=True, dataProvider=None, data
 		>>> vrv.getElevationDF(dataframe        = myNodes, 
 		...                    replaceOnlyNone = False,
 		...                    dataProvider     = 'elevAPI',
-		...                    dataProviderArgs = {'APIkey': ELEVAPI_KEY})
 		>>> myNodes['elevMeters']
 
 		0    192

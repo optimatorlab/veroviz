@@ -1,17 +1,15 @@
-
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <title>veroviz.utilities &#8212; veroviz 0.4.5 documentation</title>
-    <link rel="stylesheet" href="../../_static/lglb-sphinx-doc.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>veroviz.utilities &#8212; veroviz 0.4.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/lglb-sphinx-doc.css?v=89a288d6" />
+    <script src="../../_static/documentation_options.js?v=03f3338f"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
@@ -21,7 +19,7 @@
  </a></p>
 </div>
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -30,23 +28,24 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" accesskey="U">veroviz</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.utilities</a></li> 
       </ul>
     </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
 
@@ -56,23 +55,25 @@
           <div class="body" role="main">
             
   <h1>Source code for veroviz.utilities</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">veroviz._common</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._validation</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._geometry</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._internal</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">veroviz._geocode</span> <span class="k">import</span> <span class="n">privGeocode</span><span class="p">,</span> <span class="n">privReverseGeocode</span>
-<span class="kn">from</span> <span class="nn">veroviz._isochrones</span> <span class="k">import</span> <span class="n">privIsochrones</span>
-<span class="kn">from</span> <span class="nn">veroviz._elevation</span> <span class="k">import</span> <span class="n">privGetElevationLocs</span>
-<span class="kn">from</span> <span class="nn">veroviz._elevation</span> <span class="k">import</span> <span class="n">privGetElevationNodes</span><span class="p">,</span> <span class="n">privGetElevationArcsAsgn</span>
-<span class="kn">from</span> <span class="nn">veroviz._weather</span> <span class="k">import</span> <span class="n">privGetWeather</span>
-<span class="kn">from</span> <span class="nn">veroviz._createEntitiesFromList</span> <span class="k">import</span> <span class="n">privCreateNodesFromLocs</span>
-<span class="kn">from</span> <span class="nn">veroviz._getTimeDistFromLocs2D</span> <span class="k">import</span> <span class="n">getTimeDistFromLocs2D</span>
-<span class="kn">from</span> <span class="nn">veroviz._nearestNodes</span> <span class="k">import</span> <span class="n">privNearestNodes</span>
-<span class="kn">from</span> <span class="nn">veroviz._utilities</span> <span class="k">import</span> <span class="n">privInitDataframe</span><span class="p">,</span> <span class="n">privConvertDistance</span><span class="p">,</span> <span class="n">privConvertTime</span><span class="p">,</span> <span class="n">privConvertSpeed</span><span class="p">,</span> <span class="n">privGetMapBoundary</span><span class="p">,</span> <span class="n">privExportDataframe</span><span class="p">,</span> <span class="n">privAssignmentsToPaths</span><span class="p">,</span> <span class="n">privArcsToPaths</span><span class="p">,</span> <span class="n">privClosestPointLoc2Path</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._common</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._validation</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geometry</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._internal</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._geocode</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGeocode</span><span class="p">,</span> <span class="n">privReverseGeocode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._isochrones</span><span class="w"> </span><span class="kn">import</span> <span class="n">privIsochrones</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._elevation</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetElevationLocs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._elevation</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetElevationNodes</span><span class="p">,</span> <span class="n">privGetElevationArcsAsgn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._weather</span><span class="w"> </span><span class="kn">import</span> <span class="n">privGetWeather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._createEntitiesFromList</span><span class="w"> </span><span class="kn">import</span> <span class="n">privCreateNodesFromLocs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._getTimeDistFromLocs2D</span><span class="w"> </span><span class="kn">import</span> <span class="n">getTimeDistFromLocs2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._nearestNodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">privNearestNodes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">veroviz._utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">privInitDataframe</span><span class="p">,</span> <span class="n">privConvertDistance</span><span class="p">,</span> <span class="n">privConvertTime</span><span class="p">,</span> <span class="n">privConvertSpeed</span><span class="p">,</span> <span class="n">privGetMapBoundary</span><span class="p">,</span> <span class="n">privExportDataframe</span><span class="p">,</span> <span class="n">privAssignmentsToPaths</span><span class="p">,</span> <span class="n">privArcsToPaths</span><span class="p">,</span> <span class="n">privClosestPointLoc2Path</span>
 
 
-<div class="viewcode-block" id="convertSpeed"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertSpeed">[docs]</a><span class="k">def</span> <span class="nf">convertSpeed</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnitsDist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnitsTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnitsDist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnitsTime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="convertSpeed">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertSpeed">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertSpeed</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnitsDist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnitsTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnitsDist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnitsTime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Convert a speed to different units.</span>
 
 <span class="sd">	Parameters</span>
@@ -111,10 +112,13 @@
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 	
 	<span class="k">return</span> <span class="n">privConvertSpeed</span><span class="p">(</span><span class="n">speed</span><span class="p">,</span> <span class="n">fromUnitsDist</span><span class="p">,</span> <span class="n">fromUnitsTime</span><span class="p">,</span> <span class="n">toUnitsDist</span><span class="p">,</span> <span class="n">toUnitsTime</span><span class="p">)</span></div>
+
 	
 
-<div class="viewcode-block" id="convertDistance"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertDistance">[docs]</a><span class="k">def</span> <span class="nf">convertDistance</span><span class="p">(</span><span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="convertDistance">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertDistance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertDistance</span><span class="p">(</span><span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Convert a distance to different units.</span>
 
 <span class="sd">	Parameters</span>
@@ -150,10 +154,13 @@
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">privConvertDistance</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">fromUnits</span><span class="p">,</span> <span class="n">toUnits</span><span class="p">)</span></div>
+
 	
 
-<div class="viewcode-block" id="convertTime"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertTime">[docs]</a><span class="k">def</span> <span class="nf">convertTime</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="convertTime">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertTime">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertTime</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Convert a time to different units.</span>
 
 <span class="sd">	Parameters</span>
@@ -191,8 +198,11 @@
 	<span class="k">return</span> <span class="n">privConvertTime</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">fromUnits</span><span class="p">,</span> <span class="n">toUnits</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="convertArea"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertArea">[docs]</a><span class="k">def</span> <span class="nf">convertArea</span><span class="p">(</span><span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="convertArea">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertArea">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertArea</span><span class="p">(</span><span class="n">area</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fromUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">toUnits</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Convert an area from `fromUnits` to `toUnits`.</span>
 <span class="sd">	</span>
 <span class="sd">	Parameters</span>
@@ -259,8 +269,11 @@
 	
 	<span class="k">return</span> <span class="n">convArea</span></div>
 
-<div class="viewcode-block" id="lengthFromNodeSeq"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.lengthFromNodeSeq">[docs]</a><span class="k">def</span> <span class="nf">lengthFromNodeSeq</span><span class="p">(</span><span class="n">nodeSeq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lengthDict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="lengthFromNodeSeq">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.lengthFromNodeSeq">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lengthFromNodeSeq</span><span class="p">(</span><span class="n">nodeSeq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lengthDict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculate the total &quot;length&quot; (either in time or distance) along a path defined by a sequence of node IDs.</span>
 
 <span class="sd">	Parameters</span>
@@ -316,8 +329,11 @@
 		<span class="n">length</span> <span class="o">+=</span> <span class="n">lengthDict</span><span class="p">[</span><span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nodeSeq</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
 	<span class="k">return</span> <span class="n">length</span></div>
 
-<div class="viewcode-block" id="calcPerimeter2D"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.calcPerimeter2D">[docs]</a><span class="k">def</span> <span class="nf">calcPerimeter2D</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">closeLoop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">distUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="calcPerimeter2D">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.calcPerimeter2D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calcPerimeter2D</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">closeLoop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">distUnits</span><span class="o">=</span><span class="s1">&#39;meters&#39;</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculate the total geodesic distance along a path defined by [lat, lon] coordinates.</span>
 
 <span class="sd">	Parameters</span>
@@ -328,7 +344,7 @@
 <span class="sd">	Indicates whether the path should be closed (i.e., connecting the last location to the first).</span>
 <span class="sd">	distUnits: string, Optional, default as &#39;meters&#39;</span>
 <span class="sd">	Specifies the desired distance units for the output. See :ref:`Units` for options.</span>
-
+<span class="sd">	</span>
 <span class="sd">	Returns</span>
 <span class="sd">	-------</span>
 <span class="sd">	float</span>
@@ -361,8 +377,11 @@
 
 	<span class="k">return</span> <span class="n">dist</span></div>
 
-<div class="viewcode-block" id="calcArea"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.calcArea">[docs]</a><span class="k">def</span> <span class="nf">calcArea</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="calcArea">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.calcArea">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calcArea</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculate the area, in square meters, of a polygon.</span>
 <span class="sd">	</span>
 <span class="sd">	Parameters</span>
@@ -407,8 +426,11 @@
 	
 	<span class="k">return</span> <span class="n">area</span>		</div>
 
-<div class="viewcode-block" id="initDataframe"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.initDataframe">[docs]</a><span class="k">def</span> <span class="nf">initDataframe</span><span class="p">(</span><span class="n">dataframeType</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="initDataframe">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.initDataframe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">initDataframe</span><span class="p">(</span><span class="n">dataframeType</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Return an empty dataframe of a given type.</span>
 
 <span class="sd">	Parameters</span>
@@ -437,10 +459,13 @@
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">privInitDataframe</span><span class="p">(</span><span class="n">dataframeType</span><span class="p">)</span></div>
+
 	
 	
-<div class="viewcode-block" id="getMapBoundary"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getMapBoundary">[docs]</a><span class="k">def</span> <span class="nf">getMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="getMapBoundary">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getMapBoundary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Find the smallest rectangle that encloses a collection of nodes, arcs, assignments, and/or locations.  This function returns a list of lists, of the form [minLat, maxLon], [maxLat, minLon]].  This is equivalent to finding the southeast and northwest corners of the rectangle.</span>
 <span class="sd">	</span>
 <span class="sd">	Parameters</span>
@@ -512,8 +537,11 @@
 	<span class="k">return</span> <span class="n">privGetMapBoundary</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">arcs</span><span class="p">,</span> <span class="n">locs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="convertMatricesDataframeToDictionary"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertMatricesDataframeToDictionary">[docs]</a><span class="k">def</span> <span class="nf">convertMatricesDataframeToDictionary</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="convertMatricesDataframeToDictionary">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertMatricesDataframeToDictionary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertMatricesDataframeToDictionary</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dataframe into  a dictionary, such that the indices of columns and rows become a tuple key for the dictionary.</span>
 
 <span class="sd">	Parameters</span>
@@ -610,8 +638,11 @@
 
 	<span class="k">return</span> <span class="n">dictionary</span></div>
 
-<div class="viewcode-block" id="convertMatricesDictionaryToDataframe"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertMatricesDictionaryToDataframe">[docs]</a><span class="k">def</span> <span class="nf">convertMatricesDictionaryToDataframe</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="convertMatricesDictionaryToDataframe">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.convertMatricesDictionaryToDataframe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convertMatricesDictionaryToDataframe</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function is intended for use with time/distance matrices, which are stored in veroviz as Python dictionaries. This function transforms a matrix dictionary into a pandas dataframe.  The dictionary is assumed to have 2-tuple indices (the first index represents the ID of the &quot;from&quot; location, the second index is the ID of the &quot;to&quot; location).  In the resulting pandas dataframe, the row indices will represent the &quot;from&quot; location, the column indices the &quot;to&quot; location.</span>
 
 <span class="sd">	Parameters</span>
@@ -724,8 +755,11 @@
 
 	<span class="k">return</span> <span class="n">dataframe</span></div>
 
-<div class="viewcode-block" id="exportDataToCSV"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.exportDataToCSV">[docs]</a><span class="k">def</span> <span class="nf">exportDataToCSV</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="exportDataToCSV">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.exportDataToCSV">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">exportDataToCSV</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Export a dataframe or python time/distance matrix dictionary to a `.csv` file.</span>
 
 <span class="sd">	Parameters</span>
@@ -840,8 +874,11 @@
 
 	<span class="k">return</span></div>
 
-<div class="viewcode-block" id="importDataFromCSV"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.importDataFromCSV">[docs]</a><span class="k">def</span> <span class="nf">importDataFromCSV</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="importDataFromCSV">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.importDataFromCSV">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">importDataFromCSV</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Import from a `.csv` file into a dataframe or python time/distance matrix dictionary.</span>
 
 <span class="sd">	Parameters</span>
@@ -984,8 +1021,11 @@
 
 	<span class="k">return</span> <span class="n">data</span></div>
 
-<div class="viewcode-block" id="exportDataframe"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.exportDataframe">[docs]</a><span class="k">def</span> <span class="nf">exportDataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="exportDataframe">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.exportDataframe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">exportDataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Exports a nodes, arcs, or assignments dataframe to a `.csv` file.</span>
 
 <span class="sd">	Parameters</span>
@@ -1022,10 +1062,13 @@
 		<span class="k">return</span>
 
 	<span class="k">return</span> <span class="n">privExportDataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
 	
 
-<div class="viewcode-block" id="importDataframe"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.importDataframe">[docs]</a><span class="k">def</span> <span class="nf">importDataframe</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">intCols</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="importDataframe">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.importDataframe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">importDataframe</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">intCols</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Imports a VeRoViz nodes, arcs, or assignments dataframe from a .csv file.  This function returns a pandas dataframe.</span>
 
 <span class="sd">	Parameters</span>
@@ -1102,8 +1145,11 @@
 
 	<span class="k">return</span> <span class="n">df</span></div>
 
-<div class="viewcode-block" id="getConvexHull"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getConvexHull">[docs]</a><span class="k">def</span> <span class="nf">getConvexHull</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="getConvexHull">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getConvexHull">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getConvexHull</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Find the convex hull of a set of points.</span>
 <span class="sd">	</span>
 <span class="sd">	Parameters</span>
@@ -1162,8 +1208,11 @@
 
 	<span class="k">return</span> <span class="n">ch</span></div>
 
-<div class="viewcode-block" id="isPointInPoly"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPointInPoly">[docs]</a><span class="k">def</span> <span class="nf">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="isPointInPoly">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPointInPoly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">isPointInPoly</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determine if a point is inside a polygon.  Points that are along the perimeter of the polygon (including vertices) are considered to be &quot;inside&quot;.</span>
 
 <span class="sd">	Parameters</span>
@@ -1261,8 +1310,11 @@
 		
 	<span class="k">return</span> <span class="n">inside</span></div>
 
-<div class="viewcode-block" id="isPathInPoly"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPathInPoly">[docs]</a><span class="k">def</span> <span class="nf">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="isPathInPoly">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPathInPoly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">isPathInPoly</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determine if a given path is completely within the boundary of a polygon. </span>
 
 <span class="sd">	Parameters</span>
@@ -1358,8 +1410,11 @@
 
 	<span class="k">return</span> <span class="n">inside</span></div>
 
-<div class="viewcode-block" id="isPathCrossPoly"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPathCrossPoly">[docs]</a><span class="k">def</span> <span class="nf">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="isPathCrossPoly">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPathCrossPoly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">isPathCrossPoly</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">poly</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Determine if a given path crosses the boundary of a polygon.</span>
 
 <span class="sd">	Parameters</span>
@@ -1449,8 +1504,11 @@
 
 	<span class="k">return</span> <span class="n">crossFlag</span></div>
 
-<div class="viewcode-block" id="isPassPath"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPassPath">[docs]</a><span class="k">def</span> <span class="nf">isPassPath</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="isPassPath">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isPassPath">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">isPassPath</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">	Determine if any point along a path is within tolerance meters of a stationary point (i.e., did our path pass by the target?).</span>
 
 <span class="sd">	Parameters</span>
@@ -1525,8 +1583,11 @@
 
 	<span class="k">return</span> <span class="n">passFlag</span></div>
 
-<div class="viewcode-block" id="pointInDistance2D"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.pointInDistance2D">[docs]</a><span class="k">def</span> <span class="nf">pointInDistance2D</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="pointInDistance2D">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.pointInDistance2D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pointInDistance2D</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distMeters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Find the [lat, lon, alt] coordinate of a point that is a given distance away from a current location at a given heading. This can be useful for determining where a vehicle may be in the future (assuming constant velocity and straight-line travel).</span>
 
 <span class="sd">	Parameters</span>
@@ -1577,8 +1638,11 @@
 
 	<span class="k">return</span> <span class="n">newLoc</span></div>
 
-<div class="viewcode-block" id="minDistLoc2Path"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.minDistLoc2Path">[docs]</a><span class="k">def</span> <span class="nf">minDistLoc2Path</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="minDistLoc2Path">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.minDistLoc2Path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">minDistLoc2Path</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculate the minimum distance, in [meters], from a single stationary location (target) to any point along a path.</span>
 
 <span class="sd">	Parameters</span>
@@ -1641,8 +1705,11 @@
 
 	<span class="k">return</span> <span class="n">distMeters</span></div>
 
-<div class="viewcode-block" id="closestPointLoc2Path"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestPointLoc2Path">[docs]</a><span class="k">def</span> <span class="nf">closestPointLoc2Path</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="closestPointLoc2Path">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestPointLoc2Path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">closestPointLoc2Path</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Finds the point along a given line that is closest to a given location.  Returns the [lat, lon] coordinates of the point, and the corresponding distance (in [meters]) from that point to the line.</span>
 
 <span class="sd">	Parameters</span>
@@ -1718,11 +1785,14 @@
 	<span class="p">(</span><span class="n">minPoint</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">)</span> <span class="o">=</span> <span class="n">privClosestPointLoc2Path</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="p">(</span><span class="n">minPoint</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">)</span></div>
-	
-	
-<div class="viewcode-block" id="closestPointLoc2Assignments"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestPointLoc2Assignments">[docs]</a><span class="k">def</span> <span class="nf">closestPointLoc2Assignments</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+	
+	
+<div class="viewcode-block" id="closestPointLoc2Assignments">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestPointLoc2Assignments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">closestPointLoc2Assignments</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Finds the point along each path defined by the given assignments dataframe that is closest to a given location.  Returns the [lat, lon] coordinates of these points, and the corresponding distance (in [meters]) from each point to the each path.</span>
 
 <span class="sd">	Returns a dictionary of lists of dictionaries.  The first dictionary&#39;s keys are objectIDs found in the &#39;assignments&#39; dataframe.  For each &#39;objectID&#39;, a list is provided.  This list will contain the nearest point and the distance from the given location to that point.  If the objectID does not have any consecutive rows in the &#39;assignments&#39; dataframe where the ending location differs from the starting location in the next row, then there will be only one result for each objectID.  </span>
@@ -1844,11 +1914,14 @@
 			<span class="n">closestPoints</span><span class="p">[</span><span class="n">tmpObjectID</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;nearestPoint&#39;</span><span class="p">:</span> <span class="n">minPoint</span><span class="p">,</span> <span class="s1">&#39;distMeters&#39;</span><span class="p">:</span> <span class="n">distMeters</span><span class="p">})</span>
 
 	<span class="k">return</span> <span class="n">closestPoints</span>	</div>
-	
-	
-<div class="viewcode-block" id="closestPointLoc2Arcs"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestPointLoc2Arcs">[docs]</a><span class="k">def</span> <span class="nf">closestPointLoc2Arcs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
-	<span class="sd">&quot;&quot;&quot;</span>
+	
+	
+<div class="viewcode-block" id="closestPointLoc2Arcs">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestPointLoc2Arcs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">closestPointLoc2Arcs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Finds the point along each path defined by the given arcs dataframe that is closest to a given location.  Returns the [lat, lon] coordinates of these points, and the corresponding distance (in [meters]) from each point to the each path.</span>
 
 <span class="sd">	Returns a dictionary of lists of dictionaries.  The first dictionary&#39;s keys are objectIDs found in the &#39;arcs&#39; dataframe.  For each &#39;objectID&#39;, a list is provided.  This list will contain the nearest point and the distance from the given location to that point.  If the objectID does not have any consecutive rows in the &#39;arcs&#39; dataframe where the ending location differs from the starting location in the next row, then there will be only one result for each objectID.  </span>
@@ -1954,10 +2027,13 @@
 			<span class="n">closestPoints</span><span class="p">[</span><span class="n">tmpObjectID</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;nearestPoint&#39;</span><span class="p">:</span> <span class="n">minPoint</span><span class="p">,</span> <span class="s1">&#39;distMeters&#39;</span><span class="p">:</span> <span class="n">distMeters</span><span class="p">})</span>
 
 	<span class="k">return</span> <span class="n">closestPoints</span></div>
+
 		
 	
-<div class="viewcode-block" id="closestNode2Loc"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestNode2Loc">[docs]</a><span class="k">def</span> <span class="nf">closestNode2Loc</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="closestNode2Loc">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.closestNode2Loc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">closestNode2Loc</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns the closest node in the dataframe to the given location.  Also returns the Euclidean distance (in [meters]) from the location to the nearest node.</span>
 
 <span class="sd">	Parameters</span>
@@ -2015,7 +2091,7 @@
 	<span class="k">elif</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;VRV_SETTING_SHOWWARNINGMESSAGE&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">warningMsg</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 		<span class="nb">print</span> <span class="p">(</span><span class="n">warningMsg</span><span class="p">)</span>
 
-	<span class="n">distMeters</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)</span>
+	<span class="n">distMeters</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>  <span class="c1"># float(&#39;Inf&#39;)</span>
 	<span class="n">minNodeID</span> <span class="o">=</span> <span class="kc">None</span>
 
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)):</span>
@@ -2031,9 +2107,12 @@
 		<span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 
 	<span class="k">return</span> <span class="p">[</span><span class="n">minNodeID</span><span class="p">,</span> <span class="n">distMeters</span><span class="p">]</span>	</div>
+
 	
-<div class="viewcode-block" id="nearestNodes"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.nearestNodes">[docs]</a><span class="k">def</span> <span class="nf">nearestNodes</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">costDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="nearestNodes">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.nearestNodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nearestNodes</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">costDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">routeType</span><span class="o">=</span><span class="s1">&#39;euclidean2D&#39;</span><span class="p">,</span> <span class="n">speedMPS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns a pandas dataframe with 2 columns, &#39;id&#39; and &#39;cost&#39;.  The &#39;id&#39; column represents a nodeID, the &#39;cost&#39; represents either a time or a distance (consistent with the data provided by costDict).  The dataframe is sorted according to ascending values of &#39;cost&#39;.  The top k rows are returned (i.e., the nearest k nodes).</span>
 
 <span class="sd">	Parameters</span>
@@ -2154,10 +2233,13 @@
 			<span class="n">costDict</span> <span class="o">=</span> <span class="n">timeSec</span>
 	
 	<span class="k">return</span> <span class="n">privNearestNodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">originNodeID</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">costDict</span><span class="p">)</span></div>
+
 	
 	
-<div class="viewcode-block" id="assignmentsToPaths"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.assignmentsToPaths">[docs]</a><span class="k">def</span> <span class="nf">assignmentsToPaths</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="assignmentsToPaths">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.assignmentsToPaths">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">assignmentsToPaths</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns a dictionary of lists of paths.  The dictionary&#39;s keys are objectIDs found in the &#39;assignments&#39; dataframe.  For each &#39;objectID&#39;, a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the &#39;assignments&#39; dataframe where the ending location differs from the starting location in the next row, then there will be only one path.  </span>
 
 <span class="sd">	Parameters</span>
@@ -2265,9 +2347,12 @@
 	<span class="n">paths</span> <span class="o">=</span> <span class="n">privAssignmentsToPaths</span><span class="p">(</span><span class="n">assignments</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="p">)</span>
 	
 	<span class="k">return</span> <span class="n">paths</span></div>
+
 	    	
-<div class="viewcode-block" id="arcsToPaths"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.arcsToPaths">[docs]</a><span class="k">def</span> <span class="nf">arcsToPaths</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="arcsToPaths">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.arcsToPaths">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">arcsToPaths</span><span class="p">(</span><span class="n">arcs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns a dictionary of lists of paths.  The dictionary&#39;s keys are objectIDs found in the &#39;arcs&#39; dataframe.  For each &#39;objectID&#39;, a list is provided.  This list will contain one or more paths associated with that objectID.  If the objectID does not have any consecutive rows in the &#39;arcs&#39; dataframe where the ending location differs from the starting location in the next row, then there will be only one path.  </span>
 
 <span class="sd">	Parameters</span>
@@ -2348,10 +2433,13 @@
 	<span class="n">paths</span> <span class="o">=</span> <span class="n">privArcsToPaths</span><span class="p">(</span><span class="n">arcs</span><span class="p">,</span> <span class="n">objectID</span><span class="p">,</span> <span class="n">ignoreStaticPoints</span><span class="p">)</span>
 	
 	<span class="k">return</span> <span class="n">paths</span></div>
+
 	
 
-<div class="viewcode-block" id="nodesToLocs"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.nodesToLocs">[docs]</a><span class="k">def</span> <span class="nf">nodesToLocs</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">includeAlt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="nodesToLocs">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.nodesToLocs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nodesToLocs</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">includeAlt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns a list of lists (i.e., locations) from a nodes dataframe.  If `includeAlt` is False (default), the return will be of the form [[lat,lon], ..., [lat,lon]]; otherwise, the return is of the form [[lat,lon,altMeters], ..., [lat,lon,altMeters]].  </span>
 
 <span class="sd">	Parameters</span>
@@ -2404,9 +2492,12 @@
 	
 	<span class="k">return</span> <span class="n">locs</span> </div>
 
+
 	
-<div class="viewcode-block" id="distance2D"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.distance2D">[docs]</a><span class="k">def</span> <span class="nf">distance2D</span><span class="p">(</span><span class="n">loc1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="distance2D">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.distance2D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance2D</span><span class="p">(</span><span class="n">loc1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculates the geodesic distance, in meters, between two locations, using the geopy library.  Altitude is ignored.</span>
 
 <span class="sd">	Parameters</span>
@@ -2442,8 +2533,11 @@
 
 	<span class="k">return</span> <span class="n">distMeters</span></div>
 
-<div class="viewcode-block" id="distance3D"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.distance3D">[docs]</a><span class="k">def</span> <span class="nf">distance3D</span><span class="p">(</span><span class="n">loc1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="distance3D">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.distance3D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">distance3D</span><span class="p">(</span><span class="n">loc1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loc2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Estimates the distance, in meters, between two point, including changes in altitude.  The calculation combines geopy&#39;s geodesic distance (along the surface of an ellipsoidal model of the earth) with a simple estimate of additional travel distance due to altitude changes.</span>
 
 <span class="sd">	Parameters</span>
@@ -2479,8 +2573,11 @@
 
 	<span class="k">return</span> <span class="n">distMeters</span></div>
 
-<div class="viewcode-block" id="distancePath2D"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.distancePath2D">[docs]</a><span class="k">def</span> <span class="nf">distancePath2D</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="distancePath2D">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.distancePath2D">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">distancePath2D</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Calculate the total geodesic distance, in meters, along a path defined by [lat, lon] coordinates.  </span>
 
 <span class="sd">	Parameters</span>
@@ -2515,8 +2612,11 @@
 
 	<span class="k">return</span> <span class="n">dist</span></div>
 
-<div class="viewcode-block" id="getHeading"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getHeading">[docs]</a><span class="k">def</span> <span class="nf">getHeading</span><span class="p">(</span><span class="n">currentLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">goalLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="getHeading">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getHeading">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getHeading</span><span class="p">(</span><span class="n">currentLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">goalLoc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Finds the heading required to travel from a current location to a goal location.  North is 0-degrees, east is 90-degrees, south is 180-degrees, west is 270-degrees.</span>
 
 <span class="sd">	Parameters</span>
@@ -2556,8 +2656,11 @@
 
 	<span class="k">return</span> <span class="n">bearingInDegree</span></div>
 
-<div class="viewcode-block" id="findLocsAtTime"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.findLocsAtTime">[docs]</a><span class="k">def</span> <span class="nf">findLocsAtTime</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="findLocsAtTime">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.findLocsAtTime">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">findLocsAtTime</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeSec</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Finds the estimated location of each unique `objectID` in an input `assignments` dataframe at the given time.  The output is a dictionary, where the keys are unique objectIDs.  The corresponding value for each `objectID` key will be `None` if the object is not defined at the given value of `timeSec`, the value will be a list of the form [lat, lon, alt] if a single match is found, or the value will be a list of lists of the form [[lat1, lon1, alt1], ..., [latn, lonn, altn]] if n matches are found.  In the latter case, this is typically indicative of duplicate entries in the assignments dataframe (as each object should not appear in multiple locations simultaneously).</span>
 
 <span class="sd">	Parameters</span>
@@ -2596,10 +2699,10 @@
 
 <span class="sd">	Define some information about our 2 vehicles, for use below:</span>
 <span class="sd">		&gt;&gt;&gt; vehicleProperties = {</span>
-<span class="sd">		...     &#39;drone&#39;: {&#39;model&#39;: &#39;veroviz/models/drone.gltf&#39;,</span>
+<span class="sd">		...     &#39;drone&#39;: {&#39;model&#39;: &#39;veroviz/models/drone.glb&#39;,</span>
 <span class="sd">		...               &#39;leafletColor&#39;: &#39;red&#39;,</span>
 <span class="sd">		...               &#39;cesiumColor&#39;: &#39;red&#39;},</span>
-<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.gltf&#39;,</span>
+<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.glb&#39;,</span>
 <span class="sd">		...               &#39;leafletColor&#39;: &#39;blue&#39;,</span>
 <span class="sd">		...               &#39;cesiumColor&#39;: &#39;blue&#39;}</span>
 <span class="sd">		... }</span>
@@ -2698,7 +2801,7 @@
 	<span class="n">uniqueIDs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 
 	<span class="c1"># Replace &quot;-1&quot; end time with +infinity</span>
-	<span class="n">asgnCopy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)</span>
+	<span class="n">asgnCopy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>  <span class="c1"># float(&#39;Inf&#39;)</span>
 
 	<span class="k">for</span> <span class="n">objectID</span> <span class="ow">in</span> <span class="n">uniqueIDs</span><span class="p">:</span>
 		<span class="n">tmpAsgn</span> <span class="o">=</span> <span class="n">asgnCopy</span><span class="p">[(</span><span class="n">asgnCopy</span><span class="p">[</span><span class="s1">&#39;objectID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">objectID</span><span class="p">)</span> <span class="o">&amp;</span> 
@@ -2722,7 +2825,7 @@
 				<span class="n">endTimeSec</span> <span class="o">=</span> <span class="n">tmpAsgn</span><span class="p">[</span><span class="s1">&#39;endTimeSec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
 
 				<span class="c1"># Find percentage of time:</span>
-				<span class="k">if</span> <span class="p">(</span><span class="n">endTimeSec</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)):</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">endTimeSec</span> <span class="o">&lt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">):</span>
 					<span class="n">pct</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeSec</span> <span class="o">-</span> <span class="n">startTimeSec</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">endTimeSec</span> <span class="o">-</span> <span class="n">startTimeSec</span><span class="p">)</span>
 				<span class="k">else</span><span class="p">:</span>
 					<span class="n">pct</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -2754,9 +2857,12 @@
 				<span class="n">output</span><span class="p">[</span><span class="n">objectID</span><span class="p">]</span> <span class="o">=</span> <span class="n">outList</span>
 	
 	<span class="k">return</span> <span class="n">output</span>			</div>
+
 				
-<div class="viewcode-block" id="geocode"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.geocode">[docs]</a><span class="k">def</span> <span class="nf">geocode</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="geocode">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.geocode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">geocode</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Convert a street address, city, state, or zip code to GPS coordinates ([lat, lon] format).</span>
 
 <span class="sd">	Parameters</span>
@@ -2844,9 +2950,12 @@
 	<span class="n">loc</span> <span class="o">=</span> <span class="n">privGeocode</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dataProvider</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="p">)</span>
 	
 	<span class="k">return</span> <span class="n">loc</span></div>
+
 	
-<div class="viewcode-block" id="reverseGeocode"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.reverseGeocode">[docs]</a><span class="k">def</span> <span class="nf">reverseGeocode</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="reverseGeocode">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.reverseGeocode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reverseGeocode</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Convert a GPS coordinate (of the form [lat, lon] or [lat, lon, alt]) to an address.  If altitude is provided it will be ignored.</span>
 
 <span class="sd">	Parameters</span>
@@ -2996,8 +3105,11 @@
 
 	<span class="k">return</span> <span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">address</span><span class="p">)</span>	</div>
 
-<div class="viewcode-block" id="isochrones"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isochrones">[docs]</a><span class="k">def</span> <span class="nf">isochrones</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locationType</span><span class="o">=</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="n">travelMode</span><span class="o">=</span><span class="s1">&#39;driving-car&#39;</span><span class="p">,</span> <span class="n">rangeType</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">rangeSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">smoothing</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="isochrones">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.isochrones">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">isochrones</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">locationType</span><span class="o">=</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="n">travelMode</span><span class="o">=</span><span class="s1">&#39;driving-car&#39;</span><span class="p">,</span> <span class="n">rangeType</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">rangeSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">smoothing</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Finds isochrones (lines corresponding to points of equal distance or time from a given location) to or from a given location.  </span>
 
 <span class="sd">	Parameters</span>
@@ -3130,8 +3242,11 @@
 	
 	<span class="k">return</span> <span class="n">iso</span></div>
 
-<div class="viewcode-block" id="createGantt"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.createGantt">[docs]</a><span class="k">def</span> <span class="nf">createGantt</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectIDorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">separateByModelFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mergeByodID</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">splitOnColorChange</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xAxisLabel</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">xGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">yGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xMin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xMax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xGridFreq</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">timeFormat</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">overlayColumn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">missingColor</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="createGantt">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.createGantt">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">createGantt</span><span class="p">(</span><span class="n">assignments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objectIDorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">separateByModelFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mergeByodID</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">splitOnColorChange</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xAxisLabel</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">xGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">yGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xMin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xMax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xGridFreq</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">timeFormat</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">overlayColumn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">missingColor</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	EXPERIMENTAL.  Draws a Gantt chart from an :ref:`Assignments` dataframe.  This has the appearance of a horizontal bar chart.  The x-axis indicates the elapsed time.  Each `objectID` forms a horizontal bar.</span>
 
 <span class="sd">	Parameters</span>
@@ -3202,7 +3317,7 @@
 <span class="sd">		&gt;&gt;&gt; vehicleProperties = {</span>
 <span class="sd">		...     &#39;car&#39;:   {&#39;model&#39;: &#39;veroviz/models/car_red.gltf&#39;,</span>
 <span class="sd">		...               &#39;color&#39;: &#39;red&#39;},</span>
-<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.gltf&#39;,</span>
+<span class="sd">		...     &#39;truck&#39;: {&#39;model&#39;: &#39;veroviz/models/ub_truck.glb&#39;,</span>
 <span class="sd">		...               &#39;color&#39;: &#39;blue&#39;}</span>
 <span class="sd">		&gt;&gt;&gt; }</span>
 
@@ -3406,9 +3521,12 @@
 	<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
 
 	<span class="k">return</span> <span class="n">fig</span></div>
+
 	
-<div class="viewcode-block" id="getElevationLocs"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getElevationLocs">[docs]</a><span class="k">def</span> <span class="nf">getElevationLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
-	<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="getElevationLocs">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getElevationLocs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getElevationLocs</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>    
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	EXPERIMENTAL.  Finds the elevation, in units of meters above mean sea level (MSL), for a given location or list of locations.  </span>
 
 <span class="sd">	Parameters</span>
@@ -3440,11 +3558,9 @@
 <span class="sd">		&gt;&gt;&gt; import os</span>
 <span class="sd">		&gt;&gt;&gt; </span>
 <span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
-<span class="sd">		&gt;&gt;&gt; ELEVAPI_KEY = os.environ[&#39;ELEVAPIKEY&#39;]</span>
 <span class="sd">		&gt;&gt;&gt; </span>
 <span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your keys here:</span>
 <span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
-<span class="sd">		&gt;&gt;&gt; # ELEVAPI_KEY = &#39;YOUR_ELEVATIONAPI_KEY_GOES_HERE&#39;                     	</span>
 
 <span class="sd">	Define a set of locations:</span>
 <span class="sd">		&gt;&gt;&gt; locs = [[42.8871085, -78.8731949],</span>
@@ -3485,7 +3601,6 @@
 <span class="sd">	Use Elevation-API:</span>
 <span class="sd">		&gt;&gt;&gt; vrv.getElevationLocs(locs             = [[42.888, -78.864, 100]], </span>
 <span class="sd">		...                      dataProvider     = &#39;elevapi&#39;,</span>
-<span class="sd">		...                      dataProviderArgs = {&#39;APIkey&#39;: ELEVAPI_KEY})</span>
 
 <span class="sd">		[[42.888, -78.864, 292.0]]		 </span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -3502,8 +3617,11 @@
 	
 	<span class="k">return</span> <span class="n">locsWithAlt</span></div>
 
-<div class="viewcode-block" id="getElevationDF"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getElevationDF">[docs]</a><span class="k">def</span> <span class="nf">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replaceOnlyNone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span> 
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="getElevationDF">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getElevationDF">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getElevationDF</span><span class="p">(</span><span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replaceOnlyNone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span> 
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	EXPERIMENTAL.  Replaces missing (`None`) values for elevation columns of the provided dataframe.  New values are in units of meters above mean sea level (MSL).  CAUTION: This function will overwrite the elevation data in the input dataframe.</span>
 
 <span class="sd">	Parameters</span>
@@ -3537,11 +3655,9 @@
 <span class="sd">		&gt;&gt;&gt; import os</span>
 <span class="sd">		&gt;&gt;&gt; </span>
 <span class="sd">		&gt;&gt;&gt; ORS_API_KEY = os.environ[&#39;ORSKEY&#39;]</span>
-<span class="sd">		&gt;&gt;&gt; ELEVAPI_KEY = os.environ[&#39;ELEVAPIKEY&#39;]</span>
 <span class="sd">		&gt;&gt;&gt; </span>
 <span class="sd">		&gt;&gt;&gt; # Otherwise, you may specify your keys here:</span>
 <span class="sd">		&gt;&gt;&gt; # ORS_API_KEY = &#39;YOUR_ORS_KEY_GOES_HERE&#39;</span>
-<span class="sd">		&gt;&gt;&gt; # ELEVAPI_KEY = &#39;YOUR_ELEVATIONAPI_KEY_GOES_HERE&#39;                     	</span>
 
 <span class="sd">	Create a Nodes dataframe.  Note that, by default, there is no elevation data:</span>
 <span class="sd">		&gt;&gt;&gt; myNodes = vrv.generateNodes(</span>
@@ -3588,7 +3704,6 @@
 <span class="sd">		&gt;&gt;&gt; vrv.getElevationDF(dataframe        = myNodes, </span>
 <span class="sd">		...                    replaceOnlyNone = False,</span>
 <span class="sd">		...                    dataProvider     = &#39;elevAPI&#39;,</span>
-<span class="sd">		...                    dataProviderArgs = {&#39;APIkey&#39;: ELEVAPI_KEY})</span>
 <span class="sd">		&gt;&gt;&gt; myNodes[&#39;elevMeters&#39;]</span>
 
 <span class="sd">		0    192</span>
@@ -3637,8 +3752,11 @@
 		
 	<span class="k">return</span> <span class="n">dfWithAlt</span></div>
 
-<div class="viewcode-block" id="getWeather"><a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getWeather">[docs]</a><span class="k">def</span> <span class="nf">getWeather</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initDF</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metricUnits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  
-	<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="getWeather">
+<a class="viewcode-back" href="../../veroviz.utilities.html#veroviz.utilities.getWeather">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getWeather</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initDF</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metricUnits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dataProvider</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataProviderArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	EXPERIMENTAL.  Get weather information (current and forecasted) for a specified [lat, lon] location.</span>
 
 <span class="sd">	Parameters</span>
@@ -3700,17 +3818,20 @@
 
 	<span class="c1"># Combine with init dataframe:</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">initDF</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-		<span class="n">weatherDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">initDF</span><span class="p">,</span> <span class="n">weatherDF</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">initDF</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="n">weatherDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">initDF</span><span class="p">,</span> <span class="n">weatherDF</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 	<span class="k">return</span> <span class="n">weatherDF</span></div>
+
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -3719,14 +3840,15 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">veroviz 0.4.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="../veroviz.html" >veroviz</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">veroviz.utilities</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, optimatorlab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    &#169; Copyright 2019-2025, optimatorlab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

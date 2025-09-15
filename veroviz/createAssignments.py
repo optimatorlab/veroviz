@@ -124,7 +124,7 @@ def addAssignment2D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 		...     'car':   {'model': 'veroviz/models/car_red.gltf',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...     'truck': {'model': 'veroviz/models/ub_truck.glb',
 		...               'leafletColor': 'blue',
 		...               'cesiumColor': 'blue'}
 		>>> }
@@ -464,8 +464,8 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 
 	Define some information about our drone, for later use:
 		>>> vehicleProperties = {
-		...     'drone': {'modelPackage': 'veroviz/models/drone_package.gltf',
-		...               'modelEmpty': 'veroviz/models/drone.gltf',
+		...     'drone': {'modelPackage': 'veroviz/models/drone_package.glb',
+		...               'modelEmpty': 'veroviz/models/drone.glb',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
 		>>> }
@@ -551,11 +551,11 @@ def addAssignment3D(initAssignments=None, odID=1, objectID=None, modelFile=None,
 
 	Define some information about our 2 vehicles, for use below:
 		>>> vehicleProperties = {
-		...     'drone': {'modelPackage': 'veroviz/models/drone_package.gltf',
-		...               'modelEmpty': 'veroviz/models/drone.gltf',
+		...     'drone': {'modelPackage': 'veroviz/models/drone_package.glb',
+		...               'modelEmpty': 'veroviz/models/drone.glb',
 		...               'leafletColor': 'red',
 		...               'cesiumColor': 'red'},
-		...     'truck': {'model': 'veroviz/models/ub_truck.gltf',
+		...     'truck': {'model': 'veroviz/models/ub_truck.glb',
 		...               'leafletColor': 'blue',
 		...               'cesiumColor': 'blue'}
 		>>> }
@@ -811,7 +811,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 		>>> myAssignments = vrv.getShapepoints2D(
 		...     odID           = 0,
 		...     objectID       = 'truck',
-		...     modelFile      = 'veroviz/models/ub_truck.gltf',
+		...     modelFile      = 'veroviz/models/ub_truck.glb',
 		...     modelScale     = 80, 
 		...     modelMinPxSize = 20, 
 		...     startLoc       = list(myNodes.loc[0][['lat', 'lon']].values),
@@ -825,7 +825,7 @@ def addStaticAssignment(initAssignments=None, odID=1, objectID=None, modelFile=N
 		...     initAssignments = myAssignments, 
 		...     odID            = 0, 
 		...     objectID        = 'truck', 
-		...     modelFile       = 'veroviz/models/ub_truck.gltf', 
+		...     modelFile       = 'veroviz/models/ub_truck.glb', 
 		...     modelScale      = 80, 
 		...     modelMinPxSize  = 20, 
 		...     loc             = list(myAssignments[myAssignments['objectID']=='truck'][['endLat', 'endLon']].values[0]), 
